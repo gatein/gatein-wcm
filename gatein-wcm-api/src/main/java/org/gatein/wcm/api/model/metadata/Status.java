@@ -24,22 +24,31 @@
 package org.gatein.wcm.api.model.metadata;
 
 import java.util.Date;
+import java.util.List;
 
 import org.exoplatform.services.organization.User;
+import org.gatein.wcm.api.model.content.Content;
+import org.gatein.wcm.api.model.publishing.PublishFlow;
+import org.gatein.wcm.api.model.publishing.PublishPoint;
+import org.gatein.wcm.api.model.publishing.PublishTask;
 
 /**
  * 
  * Content can participate in basic workflows that represents a publication process. <br />
  * Status class represent state of content inside a publication process. <br />
- * Status' type is open for basic processes or complex ones, it has not a close type enum of possible choices. <br />
  * 
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
  *
  */
 public class Status {
-
-	String id;
-	String type;
+	
+	Content content;
+	
+	PublishFlow contentFlow;
+	PublishPoint currentStatus;
+		
 	Date created;
 	User statusBy;
+	
+	List<PublishTask> history;
 }

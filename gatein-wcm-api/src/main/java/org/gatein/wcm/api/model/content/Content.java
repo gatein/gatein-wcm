@@ -53,7 +53,7 @@ public class Content implements Serializable {
 	ACL acl;	
 	Date created;
 	Date lastModified;	
-	List<Status> status;
+	Status status;
 	User createdBy;
 	User lastModifiedBy;	
 	List<Comment> comments;
