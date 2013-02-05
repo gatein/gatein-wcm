@@ -20,30 +20,10 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+package org.gatein.wcm.api.services.exceptions;
 
-package org.gatein.wcm.api.services;
+public class PublishException extends Exception {
 
-import java.util.List;
+	private static final long serialVersionUID = -7919341726764893105L;
 
-import org.gatein.wcm.api.model.publishing.PublishTask;
-import org.gatein.wcm.api.services.exceptions.ContentIOException;
-import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
-import org.gatein.wcm.api.services.exceptions.PublishException;
-
-/**
- * 
- * Defines administration API for publishing services. <br>
- * 
- * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
- *
- */
-public interface PublishService {
-
-	public List<PublishTask> getTodoList()
-		throws ContentIOException, ContentSecurityException;
-	
-	public PublishTask resolveTask(PublishTask task, PublishTask.TaskStatus status, String comments)
-		throws PublishException, ContentIOException, ContentSecurityException;
-	
-	
 }

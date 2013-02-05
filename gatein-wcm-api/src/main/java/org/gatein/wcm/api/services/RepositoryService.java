@@ -48,5 +48,9 @@ public interface RepositoryService {
 	 */	
 	public ContentService createContentSession(String idRepository, User user)
 		throws ContentIOException, ContentSecurityException;
+	
+	
+	public PublishService createPublishSession(String idRepository, User user)
+		throws ContentIOException, ContentSecurityException;
 			
 }
