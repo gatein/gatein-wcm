@@ -32,6 +32,7 @@ import org.gatein.wcm.api.model.security.Principal;
 import org.gatein.wcm.api.services.exceptions.ContentException;
 import org.gatein.wcm.api.services.exceptions.ContentIOException;
 import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
+import org.gatein.wcm.api.services.exceptions.PublishException;
 
 /**
  * 
@@ -570,10 +571,13 @@ public interface ContentService {
 	 *  - Possibility to include own processes.
 	 *  - Interesting possibility to embed jBPM 5 for customs processes.
 	 *  
-	 */
+	 */	
+	public Content publishNext(Content content)
+		throws PublishException, ContentIOException, ContentSecurityException;
 	
-	
-	
+	public Content publishBack(Content content)
+		throws PublishException, ContentIOException, ContentSecurityException;
+		
 	/*
 	 * Session API.
 	 * 
