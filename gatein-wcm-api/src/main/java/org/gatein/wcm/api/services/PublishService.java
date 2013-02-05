@@ -20,28 +20,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.gatein.wcm.api.model.publishing;
 
-import java.util.List;
+package org.gatein.wcm.api.services;
 
-import org.gatein.wcm.api.model.security.Principal;
+public class PublishService {
 
-/**
- * 
- * Represents a state in a publish flow. <br>
- * Connects with the previous state and next state in the flow. <br>
- * Defines groups of Principals that can approve/decline content in this state. <br>
- * 
- * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
- *
- */
-public class PublishPoint {
-	
-	Integer order;
-	String description;
-	PublishPoint next;
-	PublishPoint back;
-	
-	List<Principal> granted;
-	
 }

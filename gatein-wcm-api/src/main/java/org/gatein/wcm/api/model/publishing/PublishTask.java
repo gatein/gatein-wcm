@@ -22,26 +22,43 @@
  */
 package org.gatein.wcm.api.model.publishing;
 
-import java.util.List;
+import java.util.Date;
 
+import org.exoplatform.services.organization.User;
+import org.gatein.wcm.api.model.content.Content;
 import org.gatein.wcm.api.model.security.Principal;
 
 /**
  * 
- * Represents a state in a publish flow. <br>
- * Connects with the previous state and next state in the flow. <br>
- * Defines groups of Principals that can approve/decline content in this state. <br>
+ * Represents a publishing tasks. <br>
+ * It's created when a user wants to publish a content and trigger a publishing flow. <br>
+ * Defines: <br>
+ * <li> what is the publishing state of the content.
+ * <li> who are the Principals granted to resolve this task.
+ * <li> who are the User from Principals who takes this tasks.
+ * <li> lifecycle of the task.
  * 
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
  *
  */
-public class PublishPoint {
+public class PublishTask {
+
+	public enum TaskStatus {
+		PENDING, ACCEPTED, REJECTED
+	}
 	
-	Integer order;
-	String description;
-	PublishPoint next;
-	PublishPoint back;
+	Content content;
+	PublishFlow flow;
+	PublishPoint from;
+	PublishPoint to;
+	Principal assigned;
 	
-	List<Principal> granted;
+	User executeBy;
+	
+	Date created;
+	Date finished;
+	
+	String comments;
+	
 	
 }
