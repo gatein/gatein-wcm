@@ -577,7 +577,7 @@ public interface ContentService {
 	
 	public Content publishBack(Content content)
 		throws PublishException, ContentIOException, ContentSecurityException;
-		
+		   
 	/*
 	 * Session API.
 	 * 
