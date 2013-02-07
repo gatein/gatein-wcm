@@ -30,6 +30,7 @@ import org.gatein.wcm.api.model.metadata.Comment;
 import org.gatein.wcm.api.model.metadata.Property;
 import org.gatein.wcm.api.model.publishing.PublishStatus;
 import org.gatein.wcm.api.model.security.ACL;
+import org.gatein.wcm.api.model.security.Principal;
 import org.gatein.wcm.api.model.security.User;
 
 /**
@@ -102,7 +103,7 @@ public interface Content {
 	 * @return This method will return the publishing roles attached to this content. <br>
 	 * If null the publishing roles active will be delegated to the parent publishing roles.
 	 */
-	public List<String> getPublishingRoles();
+	public List<Principal> getPublishingRoles();
 	
 	/**
 	 * 

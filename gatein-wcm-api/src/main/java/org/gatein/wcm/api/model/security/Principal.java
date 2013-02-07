@@ -39,11 +39,21 @@ package org.gatein.wcm.api.model.security;
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
  *
  */
-public class Principal {
+public interface Principal {
 
-	String id;	
-	PrincipalType type;
-	
+	/**
+	 * 
+	 * @return This method returns ID of the principal. <br>
+	 * A Principal can represent an user or a group, or a group+membership.
+	 */
+	public String getId();
+
+	/**
+	 * 
+	 * @return This method returns Type of principal (user or group).
+	 */
+	public PrincipalType getType();
+		
 	public enum PrincipalType {
 		USER, GROUP;
 	}

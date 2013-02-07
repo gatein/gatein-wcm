@@ -53,7 +53,7 @@ public interface ContentService {
 		
 	/**
 	 * 
-	 * Creates a new simple content in the default repository.
+	 * Creates a new text content in the default repository.
 	 * 
 	 * @param id - Key under which to store the content. 
 	 * @param locale - Locale under content is stored.
@@ -67,7 +67,7 @@ public interface ContentService {
 	 * @throws ContentIOException if any IO related problem with repository.
 	 * @throws ContentSecurityException if user has not been granted to create content under specified location.
 	 */
-	public Content createContentSimple(String id, String locale, String location, String html, String encoding)
+	public Content createTextContent(String id, String locale, String location, String html, String encoding)
 		throws ContentException, ContentIOException, ContentSecurityException;
 	
 	/**
@@ -84,7 +84,7 @@ public interface ContentService {
 	 * @throws ContentIOException if any IO related problem with repository.
 	 * @throws ContentSecurityException if user has not been granted to create content under specified location.
 	 */
-	public Content createContentFolder(String id, String locale, String location)
+	public Content createFolder(String id, String locale, String location)
 		throws ContentException, ContentIOException, ContentSecurityException;
 	
 	/**
@@ -105,7 +105,7 @@ public interface ContentService {
 	 * @throws ContentIOException if any IO related problem with repository.
 	 * @throws ContentSecurityException if user has not been granted to create content under specified location.
 	 */
-	public Content createContentResource(String id, String locale, String location, String contentType, Long size, String fileName, InputStream content)
+	public Content createBinaryContent(String id, String locale, String location, String contentType, Long size, String fileName, InputStream content)
 		throws ContentException, ContentIOException, ContentSecurityException;
 	
 	/**
@@ -138,24 +138,64 @@ public interface ContentService {
 	 */
 	public List<String> getContentLocales(String location)
 		throws ContentException, ContentIOException, ContentSecurityException;
+		
+	/**
+	 * 
+	 * Updates a existing text content in the default repository.
+	 *  
+	 * @param location - Location where to store the content. <br>
+	 * String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+	 * where "/" is the root of repository and &lt;id&gt; folders ID
+	 * @param locale - Locale under content is stored.
+	 * @param html - HTML content as string.
+	 * @param encoding - Specific encoding, by default UTF8.
+	 * @return Content updated (if ok), null (if error).
+	 * @throws ContentException if the location doesn't exists in the repository.
+	 * @throws ContentIOException if any IO related problem with repository.
+	 * @throws ContentSecurityException if user has not been granted to create content under specified location.
+	 */
+	public Content updateTextContent(String location, String locale, String html, String encoding)
+		throws ContentException, ContentIOException, ContentSecurityException;	
+
+	/**
+	 * 
+	 * Moves or renames an existing folder in the default repository.
+	 * 
+	 * @param location - Location where to store the content. <br>
+	 * String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+	 * where "/" is the root of repository and &lt;id&gt; folders ID
+	 * @param locale - Locale under content is stored.
+	 * @return Content updated (if ok), null (if error).
+	 * @throws ContentException if the id exists in the repository (folder can not be updated, folder gets latest version of their most recent item).
+	 * @throws ContentIOException if any IO related problem with repository.
+	 * @throws ContentSecurityException if user has not been granted to create content under specified location.
+	 */
+	public Content updateFolder(String location, String locale, String newLocation)
+		throws ContentException, ContentIOException, ContentSecurityException;	
 	
 	/**
 	 * 
-	 * Modify a content previously created. <br>
-	 * Update implicitly version. <br>
-	 * As we are modifying a Content attached with a specific locale, we don't have to specify the locale again. <br>
+	 * Updates new file resource in the default repository.
 	 * 
-	 * @param content Content object to update.
-	 * @return Content object updated.
-	 * @throws ContentException if content doesn't exist or has some inconsistency. 
+	 * @param id - Key under which to store the resource.
+	 * @param locale - Locale under content is stored.
+	 * @param location - Location where to store the content. <br>
+	 * String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+	 * where "/" is the root of repository and &lt;id&gt; folders ID
+	 * @param contentType - ContentType's file.
+	 * @param size - Size's file.
+	 * @param fileName - Name's file.
+	 * @param content - Source of the file.
+	 * @return Content updated (if ok), null (if error).
+	 * @throws ContentException if the id doesn't exist in the repository
 	 * @throws ContentIOException if any IO related problem with repository.
-	 * @throws ContentSecurityException if user has not been granted to modify content under specified location.
+	 * @throws ContentSecurityException if user has not been granted to create content under specified location.
 	 */
-	public Content modifyContent(Content content)
-		throws ContentException, ContentIOException, ContentSecurityException;
+	public Content updateBinaryContent(String location, String locale, String contentType, Long size, String fileName, InputStream content)
+		throws ContentException, ContentIOException, ContentSecurityException;	
 		
 	/**
-	 * Removes content from a specified location. <br>
+	 * Deletes content from a specified location. <br>
 	 * 
 	 * @param location - Location where the content is stored. <br>
 	 * String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
@@ -166,7 +206,7 @@ public interface ContentService {
 	 * @throws ContentIOException if any IO related problem with repository.
 	 * @throws ContentSecurityException if user has not been granted to modify content under specified location.
 	 */
-	public String removeContent(String location, String locale)
+	public String deleteContent(String location, String locale)
 			throws ContentException, ContentIOException, ContentSecurityException;
 	
 	/*
@@ -180,51 +220,59 @@ public interface ContentService {
 	/**
 	 * 
 	 * Creates new Category in the repository. <br>
-	 * Categories are horizontal to the content, they are not stored in a particular location. <br>
 	 * Categories can be organized in a hierarchical tree of categories parents and children.
 	 * 
 	 * @param id - Category id.
 	 * @param locale - Locale of category.
 	 * @param description - Category description.
+	 * @param categoryLocation - Location where the category is stored. <br>
+	 * String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+	 * where "/" is the root of repository and &lt;id&gt; folders ID 
 	 * @return Category created (if ok), null (if error).
 	 * @throws ContentException if the id exists (categories are not versionable items).
 	 * @throws ContentIOException if any IO related problem with repository.
 	 * @throws ContentSecurityException if user has not been granted to create categories.
 	 */
-	public Category createCategory(String id, String locale, String description)
+	public Category createCategory(String id, String locale, String description, String categoryLocation)
 		throws ContentException, ContentIOException, ContentSecurityException;
-	
+
 	/**
 	 * 
-	 * Creates a relation parent -> child between two categories. <br>
+	 * Updates existing Category in the repository. <br>
+	 * Categories can be organized in a hierarchical tree of categories parents and children.
 	 * 
-	 * @param idCategory - Parent category ID.
-	 * @param idChild - Child category ID.
-	 * @return Parent Category updated.
-	 * @throws ContentException if parent or child category don't exist.
+	 * @param categoryLocation - Location where the category is stored. <br>
+	 * String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+	 * where "/" is the root of repository and &lt;id&gt; folders ID 
+	 * @param locale - Locale of category.
+	 * @param description - Category description.
+	 * @return Category created (if ok), null (if error).
+	 * @throws ContentException if the categoryLocation doesn't exist
 	 * @throws ContentIOException if any IO related problem with repository.
 	 * @throws ContentSecurityException if user has not been granted to create categories.
 	 */
-	public Category addCategoryChild(String idCategory, String idChild)
-		throws ContentException, ContentIOException, ContentSecurityException;
+	public Category updateCategory(String categoryLocation, String locale, String description)
+			throws ContentException, ContentIOException, ContentSecurityException;
 	
 	/**
+	 *
+	 * Updates an existing Category into a new categoryLocation. <br>
 	 * 
-	 * Creates a relation child -> parent between two categories. <br>
-	 * 
-	 * @param idCategory - Child category ID.
-	 * @param idParent - Parent category ID.
-	 * @return Child category updated.
-	 * @throws ContentException if parent or child category don't exist.
+	 * @param categoryLocation - Location where the category is stored. <br>
+	 * String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+	 * where "/" is the root of repository and &lt;id&gt; folders ID 
+	 * @param newLocation - New Location where category will be moved
+	 * @return Category updated
+	 * @throws ContentException if the categoryLocation doesn't exist.
 	 * @throws ContentIOException if any IO related problem with repository.
 	 * @throws ContentSecurityException if user has not been granted to create categories.
 	 */
-	public Category addCategoryParent(String idCategory, String idParent)
-		throws ContentException, ContentIOException, ContentSecurityException;
+	public Category updateCategory(String categoryLocation, String newLocation)
+			throws ContentException, ContentIOException, ContentSecurityException;
 	
 	/**
 	 * 
-	 * Attach a Category in a Content.
+	 * Attaches a Category in a Content.
 	 * 
 	 * @param location - Content location id
 	 * @param idCategory - Category ID.
@@ -233,12 +281,12 @@ public interface ContentService {
 	 * @throws ContentIOException if any IO related problem with repository.
 	 * @throws ContentSecurityException if user has not been granted to create categories.
 	 */
-	public Content addContentCategory(String location, String idCategory)
+	public Content addContentCategory(String location, Category category)
 		throws ContentException, ContentIOException, ContentSecurityException;	
 
 	/**
 	 * 
-	 * Remove a Category from repository.
+	 * Deletes a Category from repository.
 	 * 
 	 * @param idCategory - Category ID.
 	 * @return parent Category.
@@ -246,7 +294,7 @@ public interface ContentService {
 	 * @throws ContentIOException if any IO related problem with repository.
 	 * @throws ContentSecurityException if user has not been granted to create categories.
 	 */
-	public Category removeCategory(String idCategory)
+	public Category deleteCategory(String categoryLocation)
 		throws ContentException, ContentIOException, ContentSecurityException;
 	
 	/**
@@ -268,7 +316,7 @@ public interface ContentService {
 	
 	/**
 	 * 	
-	 * Add a comment under the specified Content location. <br>
+	 * Creates a comment under the specified Content location. <br>
 	 * 
 	 * @param location - Location where the content is stored. <br>
 	 * String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
@@ -280,12 +328,12 @@ public interface ContentService {
 	 * @throws ContentIOException if any IO related problem with repository.
 	 * @throws ContentSecurityException if user has not been granted to create comments.
 	 */
-	public Content addContentComment(String location, String locale, String comment)
+	public Content createContentComment(String location, String locale, String comment)
 		throws ContentException, ContentIOException, ContentSecurityException;
 
 	/**
 	 * 	
-	 * Remove a comment under the specified Content location. <br>
+	 * Removes a comment under the specified Content location. <br>
 	 * 
 	 * @param location - Location where the content is stored. <br>
 	 * String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
@@ -297,12 +345,12 @@ public interface ContentService {
 	 * @throws ContentIOException if any IO related problem with repository.
 	 * @throws ContentSecurityException if user has not been granted to create comments.
 	 */	
-	public Content removeContentComment(String location, String locale, String idComment)
+	public Content deleteContentComment(String location, String locale, String idComment)
 			throws ContentException, ContentIOException, ContentSecurityException;	
 	
 	/**
 	 * 
-	 * Attach a property in the form KEY/VALUE to a Content. <br>
+	 * Creates a property in the form KEY/VALUE to a Content. <br>
 	 * Properties are shared between locales of same Content. <br>
 	 * 
 	 * @param location - Location where the content is stored. <br>
@@ -315,12 +363,12 @@ public interface ContentService {
 	 * @throws ContentIOException if any IO related problem with repository.
 	 * @throws ContentSecurityException if user has not been granted to create properties.
 	 */
-	public Content addContentProperty(String location, String name, String value)
+	public Content createContentProperty(String location, String name, String value)
 		throws ContentException, ContentIOException, ContentSecurityException;
 	
 	/**
 	 * 
-	 * Modify a property in the form KEY/VALUE to a Content. <br>
+	 * Modifies a property in the form KEY/VALUE to a Content. <br>
 	 * Properties are shared between locales of same Content. <br>
 	 * 
 	 * @param location - Location where the content is stored. <br>
@@ -333,12 +381,12 @@ public interface ContentService {
 	 * @throws ContentIOException if any IO related problem with repository.
 	 * @throws ContentSecurityException if user has not been granted to create properties.
 	 */
-	public Content modifyContentProperty(String location, String name, String value)
+	public Content updateContentProperty(String location, String name, String value)
 			throws ContentException, ContentIOException, ContentSecurityException;
 		
 	/**
 	 * 
-	 * Remove a property in the form KEY/VALUE to a Content. <br>
+	 * Deletes a property in the form KEY/VALUE to a Content. <br>
 	 * Properties are shared between locales of same Content. <br>
 	 * 
 	 * @param location - Location where the content is stored. <br>
@@ -350,7 +398,7 @@ public interface ContentService {
 	 * @throws ContentIOException if any IO related problem with repository.
 	 * @throws ContentSecurityException if user has not been granted to create properties.
 	 */	
-	public Content removeContentProperty(String location, String name)
+	public Content deleteContentProperty(String location, String name)
 			throws ContentException, ContentIOException, ContentSecurityException;
 
 	/*
@@ -365,7 +413,7 @@ public interface ContentService {
 	
 	/**
 	 * 
-	 * Add an authorization to a specific content. <br>
+	 * Adds an authorization to a specific content. <br>
 	 * 
 	 * in org.gatein.wcm a Principal can represent: <br>
 	 * - A user. <br>
@@ -393,7 +441,7 @@ public interface ContentService {
 	 * @throws ContentIOException if any IO related problem with repository.
 	 * @throws ContentSecurityException if user has not been granted to add ACLs.
 	 */
-	public Content addContentACL(String location, Principal principal, ACE.PermissionType permission)
+	public Content createContentACE(String location, Principal principal, ACE.PermissionType permission)
 		throws ContentException, ContentIOException, ContentSecurityException;
 	
 	/**
@@ -426,7 +474,7 @@ public interface ContentService {
 	 * @throws ContentSecurityException if user has not been granted to add ACLs.
 	 */
 	
-	public Content removeContentACL(String location, Principal principal)
+	public Content deleteContentACE(String location, Principal principal)
 		throws ContentException, ContentIOException, ContentSecurityException;
 	
 	/*
@@ -544,7 +592,7 @@ public interface ContentService {
 	 * @throws ContentIOException if any IO related problem with repository.
 	 * @throws ContentSecurityException if user has not been granted to modify content under specified location.
 	 */
-	public String removeContent(String location, String locale, Integer version)
+	public String deleteContent(String location, String locale, Integer version)
 		throws ContentException, ContentIOException, ContentSecurityException;	
 	
 	/**
@@ -560,7 +608,7 @@ public interface ContentService {
 	 * @throws ContentIOException if any IO related problem with repository.
 	 * @throws ContentSecurityException if user has not been granted to modify content under specified location.
 	 */
-	public String purgeContet(String location)
+	public String deleteContet(String location)
 		throws ContentException, ContentIOException, ContentSecurityException;
 	
 	/*
@@ -569,13 +617,12 @@ public interface ContentService {
 	 * Context:
 	 *  - Task manager todo_list for basic approvals.
 	 *  - Possibility to include own processes.
-	 *  - Interesting possibility to embed jBPM 5 for customs processes.
 	 *  
 	 */	
-	public Content publishNext(Content content)
+	public Content submitPublish(Content content)
 		throws PublishException, ContentIOException, ContentSecurityException;
 	
-	public Content publishBack(Content content)
+	public Content submitDraft(Content content)
 		throws PublishException, ContentIOException, ContentSecurityException;
 		   
 	/*

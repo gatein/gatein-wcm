@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.exoplatform.services.organization.User;
 import org.gatein.wcm.api.model.content.Content;
+import org.gatein.wcm.api.model.security.Principal;
 
 /**
  * 
@@ -64,7 +65,7 @@ public interface PublishTask {
 	 * @return This method returns the list of roles associated to this task. <br>
 	 * It invokes to this.getContent().getPublishingRoles().
 	 */
-	public List<String> getPublishingRoles();
+	public List<Principal> getPublishingRoles();
 
 	/**
 	 * 

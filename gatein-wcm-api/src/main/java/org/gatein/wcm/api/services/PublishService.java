@@ -42,8 +42,7 @@ public interface PublishService {
 	public List<PublishTask> getTodoList()
 		throws ContentIOException, ContentSecurityException;
 	
-	public PublishTask resolveTask(PublishTask task, PublishTask.TaskStatus status, String comments)
+	public PublishTask resolveTask(PublishTask task, PublishTask.Status status, String comments)
 		throws PublishException, ContentIOException, ContentSecurityException;
-	
-	
+		
 }

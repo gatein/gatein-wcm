@@ -31,7 +31,7 @@ public class BasicUseTest {
 			// Creating content			
 			String html = "<div><h1>Main Content</h1></div>";						
 			
-			Content main_content = contentService.createContentSimple("main", "es", "/", html, "UTF8");
+			Content main_content = contentService.createTextContent("main", "es", "/", html, "UTF8");
 			
 			// Closing a session
 			contentService.closeSession();
