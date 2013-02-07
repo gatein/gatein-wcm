@@ -22,16 +22,15 @@
  */
 package org.gatein.wcm.api.model.content;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import org.exoplatform.services.organization.User;
 import org.gatein.wcm.api.model.metadata.Category;
 import org.gatein.wcm.api.model.metadata.Comment;
 import org.gatein.wcm.api.model.metadata.Property;
-import org.gatein.wcm.api.model.metadata.Status;
+import org.gatein.wcm.api.model.publishing.PublishStatus;
 import org.gatein.wcm.api.model.security.ACL;
+import org.gatein.wcm.api.model.security.User;
 
 /**
  * 
@@ -42,25 +41,109 @@ import org.gatein.wcm.api.model.security.ACL;
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
  *
  */
-public class Content implements Serializable {
+public interface Content {
 
-	private static final long serialVersionUID = 1L;
+	/**
+	 *  
+	 * @return This method returns the version of the content.
+	 */
+	public Integer getVersion();
+
+	/**
+	 * 
+	 * @return This method returns ID of the document. <br>
+	 * ID will be unique in a folder.
+	 */
+	public String getId();
 	
-	Integer version;
-	String id;
-	String locale;
-	String location;
-	ACL acl;	
-	Date created;
-	Date lastModified;	
-	Status status;
-	User createdBy;
-	User lastModifiedBy;	
-	List<Comment> comments;
-	List<Category> categories;
-	List<Property> properties;
+	/**
+	 * 
+	 * @return This method returns locale of the document. <br>
+	 */
+	public String getLocale();
+
+	/**
+	 * 
+	 * @return This method returns path to the document. <br>
+	 * This method doesn't include the ID of the document. <br>
+	 * Example: <br>
+	 * Path: "/folder1/folder2/folder3/mydocument" <br>
+	 * <b>getLocation()</b> will return "/folder1/folder2/folder3".
+	 */
+	public String getLocation();
 	
-	boolean locked;
-	User lockOwner;	
-		
+	/**
+	 *  
+	 * @return This method returns the current Access Control List for this content. <br> 
+	 * An ACL defines a groups of permissions for different users and/or roles. <br>
+	 */
+	public ACL getAcl();
+	
+	/**
+	 * 
+	 * @return This method returns when the content where created.
+	 */
+	public Date getCreated();
+	
+	/**
+	 * 
+	 * @return This method returns when content was last modified.
+	 */
+	public Date getLastModified();
+	
+	/**
+	 * 
+	 * @return This method returns the publishing status of content.
+	 */
+	public PublishStatus getPublishStatus();
+	
+	/**
+	 * 
+	 * @return This method will return the publishing roles attached to this content. <br>
+	 * If null the publishing roles active will be delegated to the parent publishing roles.
+	 */
+	public List<String> getPublishingRoles();
+	
+	/**
+	 * 
+	 * @return This method returns User who created the content.
+	 */
+	public User getCreatedBy();
+
+	/**
+	 * 
+	 * @return This method returns last user who modified the content.
+	 */
+	public User getLastModifiedBy();
+
+	/**
+	 * 
+	 * @return This method returns comments attached to a content. 
+	 */
+	public List<Comment> getComments();
+	
+	/**
+	 * 
+	 * @return This method will returns categories attached to a content.
+	 */
+	public List<Category> getCategories();
+	
+	/**
+	 * 
+	 * @return This method will return properties attached to a content.
+	 */
+	public List<Property> getProperties();
+	
+	/**
+	 * 
+	 * @return This method returns if content is locked for writting.
+	 */
+	boolean isLocked();
+
+	/**
+	 * 
+	 * @return This method returns User owner of Lock
+	 */
+	public User getLockOwner();
+	
 }

@@ -43,6 +43,7 @@
 	<modules>
 		<module>gatein-wcm-api</module>
 		<module>gatein-wcm-portlets</module>
+		<module>gatein-wcm-impl-modeshape-embedded</module>
 	</modules>
 
 	<dependencyManagement>
@@ -71,7 +72,15 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-
+			
+			<dependency>
+				<groupId>org.modeshape.bom</groupId>
+				<artifactId>modeshape-bom-embedded</artifactId>
+				<version>${modeshape.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>	
+			
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>servlet-api</artifactId>

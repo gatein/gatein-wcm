@@ -20,21 +20,61 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.gatein.wcm.api.model.publishing;
 
+import java.util.Date;
 import java.util.List;
+
+import org.gatein.wcm.api.model.content.Content;
+import org.gatein.wcm.api.model.security.User;
 
 /**
  * 
- * Represents a publish flow to define the state of a content. <br>
- * States of a flow are represented by a list of Publish Point. <br>
- * In this version of the API PublishFlow only represent linear flows. <br>
+ * Content can participate in basic workflows that represents a publication process. <br />
+ * Status class represent state of content inside a publication process. <br />
  * 
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
  *
  */
-public class PublishFlow {
+public interface PublishStatus {
+	
+	public enum Status {
+		DRAFT, PUBLISHED
+	}
+		
+	/**
+	 * 
+	 * @return This method returns Content associated with this Status.
+	 */
+	public Content getContent();
 
-	List<PublishPoint> flow;
+	/**
+	 * 
+	 * @return This method returns status of the content. <br>
+	 * It will be one of this values:
+	 * <li> PublishStatus.Status.DRAFT
+	 * <li> PublishStatus.Status.PUBLISHED
+	 * 
+	 */
+	public Status getStatus();
+	
+	/**
+	 * 
+	 * @return This method returns date created of this status.
+	 */
+	public Date getCreated();
+	
+	/**
+	 * 
+	 * @return This method returns User responsible of last status.
+	 */
+	public User getStatusBy();
+	
+	/**
+	 * 
+	 * @return This method returns a list of publishing tasks representing history of publishing process.
+	 */
+	public List<PublishTask> getHistory();
 	
 }

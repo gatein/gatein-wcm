@@ -39,11 +39,17 @@ import java.util.List;
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
  *
  */
-public class ACL {
+public interface ACL {
 
-	String id;
-	String description;
+	/**
+	 * 
+	 * @return This method return 
+	 */
+	public String getId();
 	
-	List<ACE> aces;
+	public String getDescription();
+	
+	public List<ACE> getAces();
+	
 	
 }

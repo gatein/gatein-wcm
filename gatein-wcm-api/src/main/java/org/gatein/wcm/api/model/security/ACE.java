@@ -32,11 +32,20 @@ package org.gatein.wcm.api.model.security;
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
  *
  */
-public class ACE {
+public interface ACE {
 
-	Principal principalId;
-	PermissionType permission;
+	/**
+	 * 
+	 * @return This method returns principal associated to this permission.
+	 */
+	public Principal getPrincipal();
 	
+	/**
+	 * 
+	 * @return This method returns permission associated to this principal.
+	 */
+	public PermissionType getPermission();
+		
 	/**
 	 * 
 	 * PermissionType modes: <br>

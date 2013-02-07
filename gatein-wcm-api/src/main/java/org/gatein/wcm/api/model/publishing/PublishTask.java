@@ -23,10 +23,10 @@
 package org.gatein.wcm.api.model.publishing;
 
 import java.util.Date;
+import java.util.List;
 
 import org.exoplatform.services.organization.User;
 import org.gatein.wcm.api.model.content.Content;
-import org.gatein.wcm.api.model.security.Principal;
 
 /**
  * 
@@ -41,24 +41,53 @@ import org.gatein.wcm.api.model.security.Principal;
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
  *
  */
-public class PublishTask {
+public interface PublishTask {
 
-	public enum TaskStatus {
+	public enum Status {
 		PENDING, ACCEPTED, REJECTED
 	}
+
+	/**
+	 * 
+	 * @return This method returns status of task completion
+	 */
+	public Status getStatus();
 	
-	Content content;
-	PublishFlow flow;
-	PublishPoint from;
-	PublishPoint to;
-	Principal assigned;
+	/**
+	 * 
+	 * @return This method returns the content object to publish.
+	 */
+	public Content getContent();
 	
-	User executeBy;
+	/** 
+	 * 
+	 * @return This method returns the list of roles associated to this task. <br>
+	 * It invokes to this.getContent().getPublishingRoles().
+	 */
+	public List<String> getPublishingRoles();
+
+	/**
+	 * 
+	 * @return This method returns the user assigned to resolve this publishing task.
+	 */
+	public User getExecuteBy();
 	
-	Date created;
-	Date finished;
+	/**
+	 * 
+	 * @return This method returns date when this task were created.
+	 */
+	public Date getCreated();
 	
-	String comments;
+	/**
+	 * 
+	 * @return This method returns date when this task were finished.
+	 */
+	public Date getFinished();
 	
-	
+	/**
+	 * 
+	 * @return This method returns comments of the task.
+	 */
+	public String getComment();
+
 }

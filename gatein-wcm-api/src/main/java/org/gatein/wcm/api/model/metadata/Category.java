@@ -34,13 +34,43 @@ import java.util.List;
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
  *
  */
-public class Category {
+public interface Category {
 
-	String id;
-	String locale;
-	String description;
 	
-	Category parentCategory;
-	List<Category> childCategories;
+	/**
+	 * 
+	 * @return This method returns ID of Category.
+	 */
+	public String getId();
+	
+	/**
+	 * 
+	 * @return This method returns locale of Category.
+	 */
+	public String getLocale();
+	
+	/**
+	 * 
+	 * @return This method returns description of Category
+	 */
+	public String getDescription();
+	
+	/**
+	 * 
+	 * @param description New description of Category 
+	 */
+	public void setDescription(String description);
+	
+	/**
+	 * 
+	 * @return This method returns parent Category for this category.
+	 */
+	public Category getParentCategory();
+	
+	/**
+	 * 
+	 * @return This method returns child categories.
+	 */
+	public List<Category> getChildCategories();
 	
 }

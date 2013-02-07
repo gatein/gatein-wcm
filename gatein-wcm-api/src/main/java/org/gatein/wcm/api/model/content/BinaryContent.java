@@ -33,13 +33,30 @@ import java.io.InputStream;
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
  *
  */
-public class Resource extends Content {
+public interface BinaryContent extends Content {
 
-	private static final long serialVersionUID = 2L;
+	/**
+	 * 
+	 * @return This method returns ContentType of file stored.
+	 */
+	public String getContentType();
+		
+	/**
+	 * 
+	 * @return This method returns size of file stored.
+	 */
+	public Long getSize();
 	
-	String contentType;
-	Long size;
-	String fileName;
-	InputStream content;	
+	/**
+	 * 
+	 * @return This method returns name of file stored.
+	 */
+	public String getFileName();
+	
+	/**
+	 * 
+	 * @return This method will return an InputStream of file stored.
+	 */
+	public InputStream getContent();
 	
 }

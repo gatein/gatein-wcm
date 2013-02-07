@@ -32,8 +32,18 @@ package org.gatein.wcm.api.model.metadata;
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
  *
  */
-public class Property {
+public interface Property {
 
-	String name;
-	String value;
+	/**
+	 * 
+	 * @return This method returns name of the property.
+	 */
+	public String getName();
+
+	/**
+	 * 
+	 * @return This method returns value of the property.
+	 */
+	public String getValue();
+	
 }

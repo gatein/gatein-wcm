@@ -20,28 +20,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.gatein.wcm.api.model.publishing;
-
-import java.util.List;
-
-import org.gatein.wcm.api.model.security.Principal;
+package org.gatein.wcm.api.model.content;
 
 /**
  * 
- * Represents a state in a publish flow. <br>
- * Connects with the previous state and next state in the flow. <br>
- * Defines groups of Principals that can approve/decline content in this state. <br>
+ * HTML document representation. <br />
+ * In this first approach we represent whole document as a simple string. <br />
+ * Multiples encoding are possible. <br />
  * 
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
  *
  */
-public class PublishPoint {
+public interface TextContent extends Content {
+
+	/**
+	 * 
+	 * @return This method returns text of the content.
+	 */
+	public String getContent();
 	
-	Integer order;
-	String description;
-	PublishPoint next;
-	PublishPoint back;
-	
-	List<Principal> granted;
-	
+	/**
+	 * 
+	 * @return This method returns encoding of the content stored.
+	 */
+	public String getEncoding();
+		
 }

@@ -34,10 +34,13 @@ import java.util.List;
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
  *
  */
-public class Folder extends Content {
+public interface Folder extends Content {
 
-	private static final long serialVersionUID = 4L;
-
-	List<Content> content;
+	/**
+	 * 
+	 * @return List of the content under this folder. <br>
+	 * Can be also recursive.
+	 */
+	public List<Content> getChildren();
 	
 }

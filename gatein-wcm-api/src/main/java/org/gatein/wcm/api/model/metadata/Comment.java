@@ -25,8 +25,8 @@ package org.gatein.wcm.api.model.metadata;
 
 import java.util.Date;
 
-import org.exoplatform.services.organization.User;
 import org.gatein.wcm.api.model.content.Content;
+import org.gatein.wcm.api.model.security.User;
 
 /**
  * 
@@ -35,12 +35,42 @@ import org.gatein.wcm.api.model.content.Content;
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
  *
  */
-public class Comment {
+public interface Comment {
 
-	String id;
-	Date created;
-	User createdBy;
-	String comment;
+	/**
+	 * 
+	 * @return This method returns ID of the Comment.
+	 */
+	public String getId();
 	
-	Content content;
+	/**
+	 * 
+	 * @return This method returns timestamp when comment was created.
+	 */
+	public Date getCreated();
+
+	/**
+	 * 
+	 * @return This method returns user who created comment.
+	 */
+	public User getCreatedBy();
+
+	/**
+	 * 
+	 * @return This method returns text of the comment.
+	 */
+	public String getComment();
+	
+	/**
+	 * 
+	 * @param comment This method update text of the comment.
+	 */
+	public void setComment(String comment);
+	
+	/**
+	 * 
+	 * @return This method returns content where comment is attached
+	 */
+	public Content getContent();
+	
 }
