@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.jcr.Credentials;
 import javax.jcr.SimpleCredentials;
+import javax.security.auth.login.LoginException;
 
 import org.modeshape.common.i18n.I18nResource;
 import org.modeshape.common.logging.Logger;
@@ -19,11 +20,16 @@ public class GateInWCMProvider implements AuthenticationProvider {
 	public ExecutionContext authenticate(Credentials credentials, String repositoryName,
 			String workspaceName, ExecutionContext repositoryContext, Map<String, Object> sessionAttributes) {
 		
-		if (credentials instanceof SimpleCredentials) {
-			SimpleCredentials sCredentials = (SimpleCredentials)credentials;
-			return repositoryContext.with( new GateInSecurityContext( sCredentials ) );
-		}		
+		try {		
+			if (credentials instanceof SimpleCredentials) {
+				SimpleCredentials sCredentials = (SimpleCredentials)credentials;
+				return repositoryContext.with( new GateInSecurityContext( sCredentials ) );
+			}				
 		
+		} catch (LoginException e) {
+			LOGGER.warn( new GateInWCMProvider.LogMsg( e.toString() ), e.toString() );
+			return null;
+		}
 		return null;
 	}
 
@@ -32,10 +38,16 @@ public class GateInWCMProvider implements AuthenticationProvider {
 
 		SimpleCredentials sCredentials = null;
 		
-		protected GateInSecurityContext( Credentials credentials ) {			
+		protected GateInSecurityContext( Credentials credentials ) 
+			throws LoginException
+		{			
 			// TODO Expecting SimpleCredentials
 			sCredentials = (SimpleCredentials)credentials;
-			LOGGER.info(new GateInWCMProvider.LogMsg("Getting security credentials "), sCredentials.getUserID());							
+			LOGGER.info(new GateInWCMProvider.LogMsg("Getting security credentials "), sCredentials.getUserID());	
+			
+			if (!sCredentials.getUserID().equals( new String( sCredentials.getPassword() ) )) {
+				throw new LoginException("GateInSecurityContext: user should be equals as password !! ");
+			}
 		}
 		
 		public String getUserName() {			
