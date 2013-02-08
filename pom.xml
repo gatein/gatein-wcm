@@ -74,14 +74,6 @@
 			</dependency>
 			
 			<dependency>
-				<groupId>org.modeshape.bom</groupId>
-				<artifactId>modeshape-bom-embedded</artifactId>
-				<version>${modeshape.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>	
-			
-			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>servlet-api</artifactId>
 				<version>${version.javax.servlet}</version>

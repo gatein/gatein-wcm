@@ -27,13 +27,7 @@
 			<url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
 		</license>
 	</licenses>
-	<dependencies>			
-	    <dependency>
-	      <groupId>org.exoplatform.core</groupId>
-	      <artifactId>exo.core.component.organization.api</artifactId>
-	      <version>2.5.1-CP01</version>
-	      <scope>provided</scope>
-	    </dependency>		
+	<dependencies>					
 		<dependency>
 			<groupId>javax.jcr</groupId>
 			<artifactId>jcr</artifactId>
@@ -42,10 +36,6 @@
 			<groupId>org.modeshape</groupId>
 			<artifactId>modeshape-jcr-api</artifactId>
 		</dependency>				
-	    <dependency>
-	      <groupId>org.modeshape</groupId>
-	      <artifactId>modeshape-jcr</artifactId>
-	    </dependency>
 
 
 		<dependency>
