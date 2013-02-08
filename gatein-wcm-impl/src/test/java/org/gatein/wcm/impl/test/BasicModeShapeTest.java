@@ -3,7 +3,9 @@ package org.gatein.wcm.impl.test;
 import java.io.File;
 
 import javax.annotation.Resource;
+import javax.jcr.LoginException;
 import javax.jcr.Repository;
+import javax.jcr.SimpleCredentials;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -40,7 +42,7 @@ public class BasicModeShapeTest {
 		
 		try {
 		
-			System.out.println( "[[ START TEST ]]" );
+			System.out.println( "[[ START TEST accesing_repository ]]" );
 			
 			if ( repositories != null ) {
 				for ( String repo : repositories.getRepositoryNames() ) {
@@ -58,7 +60,7 @@ public class BasicModeShapeTest {
 			} else {
 				Assert.assertTrue( false );
 			}
-			System.out.println( "[[ END TEST ]]" );
+			System.out.println( "[[ END TEST accesing_repository ]]" );
 		
 		} catch ( Exception e) {
 			
@@ -67,6 +69,50 @@ public class BasicModeShapeTest {
 		}
 	}
 	
+	@Test
+	public void simple_credentials() {
+		
+		try {    
+		
+			System.out.println( "[[ START TEST  simple_credentials ]]" );
+			
+			if ( repositories != null ) {
+				for ( String repo : repositories.getRepositoryNames() ) {
+					System.out.println( "[[ REPO: " + repo + " ]]" );
+				}
+			}
+			
+			if ( repository != null ) {
+				
+				SimpleCredentials credentials = new SimpleCredentials("admin" , "admin".toCharArray());
+				
+				javax.jcr.Session session = repository.login(credentials, "default");
+				System.out.println("[[ Repo /jcr/sample.... RootNode... ");
+				System.out.println( session.getRootNode().toString() );
+				
+				session.logout();
+				
+				credentials = new SimpleCredentials("admin" , "bad".toCharArray());
+							
+				session =  repository.login(credentials, "default");
+				 
+				Assert.assertTrue(true);
+			} else {
+				Assert.assertTrue( false );
+			}
+			System.out.println( "[[ END TEST  simple_credentials ]]" );
+		
+		} catch ( LoginException e) {
+			
+			System.out.println( " [[ Expected: " + e.toString() + " ]] ");
+			System.out.println( " [[ END TEST simple_credentials ]] " );
+			
+		} catch ( Exception e) {
+			
+			Assert.fail( e.toString() );
+			
+		}
+	}	
 	
 	
 	
