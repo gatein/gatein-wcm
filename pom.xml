@@ -42,8 +42,9 @@
 
 	<modules>
 		<module>gatein-wcm-api</module>
+		<!-- Uncomment to activate it -->
 		<!-- <module>gatein-wcm-portlets</module> -->
-		<module>gatein-wcm-impl-modeshape-embedded</module>
+		<module>gatein-wcm-impl</module>
 	</modules>
 
 	<dependencyManagement>
