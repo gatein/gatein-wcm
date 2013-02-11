@@ -6,7 +6,7 @@ echo " - Install JBoss AS 7.1.1 "
 echo "   For example: unzip jboss-as-7.1.1.Final.zip -d /opt/Software/servers "
 echo 
 echo " - Install modeshape 3.1.1.Final into JBossAS 7.1.1 "
-echo "   For example: unzip modeshape-3.1.1.Final-jboss-71-dist.zip "
+echo "   For example: unzip modeshape-3.1.1.Final-jboss-71-dist.zip -d /opt/Software/servers/jboss-as-7.1.1.Final"
 echo
 
 # Check if argument
