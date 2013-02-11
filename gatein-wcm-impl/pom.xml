@@ -62,7 +62,7 @@
 		<dependency>
 			<groupId>org.gatein.wcm</groupId>
 			<artifactId>gatein-wcm-api</artifactId>
-			<version>1.0.0.DRAFT</version>
+			<version>0.0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
@@ -84,7 +84,6 @@
 		        <dependency>
 		            <groupId>org.jboss.as</groupId>
 		            <artifactId>jboss-as-arquillian-container-managed</artifactId>
-		            <version>7.1.1.Final</version>
 		            <scope>test</scope>
 		        </dependency>
 		        <dependency>
@@ -97,5 +96,5 @@
 		</profile>    
 	</profiles>
 		
-	<groupId>org.gatein.wcm</groupId>
+	<description>GateIn WCM implementation</description>
 </project>

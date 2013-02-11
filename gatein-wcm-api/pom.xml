@@ -37,7 +37,6 @@
     <dependency>
     	<groupId>junit</groupId>
     	<artifactId>junit</artifactId>
-    	<version>4.8.1</version>
     	<scope>test</scope>
     </dependency>
   </dependencies>
@@ -72,7 +71,5 @@
     </plugins>
   </build>
 
-  <groupId>org.gatein.wcm</groupId>
-  <version>1.0.0.DRAFT</version>
   <description>GateIn WCM model and API services</description>
 </project>

@@ -45,6 +45,7 @@
 		<!-- Uncomment to activate it -->
 		<!-- <module>gatein-wcm-portlets</module> -->
 		<module>gatein-wcm-impl</module>
+		<module>gatein-wcm-impl-sec</module>
 	</modules>
 
 	<dependencyManagement>
@@ -73,6 +74,14 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+
+			<dependency>
+			  <groupId>org.modeshape.bom</groupId>
+			  <artifactId>modeshape-bom-embedded</artifactId>
+			  <version>${modeshape.version}</version>
+			  <type>pom</type>
+			  <scope>import</scope>
+			</dependency>        
 			
 			<dependency>
 				<groupId>javax.servlet</groupId>
