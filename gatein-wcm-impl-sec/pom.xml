@@ -49,4 +49,5 @@
     </dependency>
   </dependencies>
 
+  <name>GateIn WCM ModeShape Security Provider</name>
 </project>
