@@ -6,3 +6,6 @@ target
 
 .faces-config.xml.faceside
 .faces-config.xml.jsfdia
+
+.directory
+*~
