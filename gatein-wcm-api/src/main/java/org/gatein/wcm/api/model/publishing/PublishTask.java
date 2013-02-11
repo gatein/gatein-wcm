@@ -25,9 +25,9 @@ package org.gatein.wcm.api.model.publishing;
 import java.util.Date;
 import java.util.List;
 
-import org.exoplatform.services.organization.User;
 import org.gatein.wcm.api.model.content.Content;
 import org.gatein.wcm.api.model.security.Principal;
+import org.gatein.wcm.api.model.security.User;
 
 /**
  * 

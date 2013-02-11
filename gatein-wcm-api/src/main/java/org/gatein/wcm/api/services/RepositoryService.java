@@ -22,7 +22,7 @@
  */
 package org.gatein.wcm.api.services;
 
-import org.exoplatform.services.organization.User;
+import org.gatein.wcm.api.model.security.User;
 import org.gatein.wcm.api.services.exceptions.ContentIOException;
 import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
 

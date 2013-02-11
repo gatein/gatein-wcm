@@ -33,12 +33,6 @@
 
   <dependencies>
 
-    <dependency>
-      <groupId>org.exoplatform.core</groupId>
-      <artifactId>exo.core.component.organization.api</artifactId>
-      <version>2.5.1-CP01</version>
-      <scope>provided</scope>
-    </dependency>
 
     <dependency>
     	<groupId>junit</groupId>

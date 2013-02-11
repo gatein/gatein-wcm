@@ -34,7 +34,12 @@
     <dependency>
       <groupId>org.modeshape</groupId>
       <artifactId>modeshape-jcr</artifactId>
-    </dependency>         
+    </dependency>
+    <dependency>
+    	<groupId>org.gatein.wcm</groupId>
+    	<artifactId>gatein-wcm-api</artifactId>
+    	<version>1.0.0.DRAFT</version>
+    </dependency>
  </dependencies>
-  
+
 </project>

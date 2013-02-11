@@ -32,5 +32,9 @@ package org.gatein.wcm.api.services.exceptions;
 public class ContentSecurityException extends Exception {
 
 	private static final long serialVersionUID = 2113146312414252797L;
+	
+	public ContentSecurityException(String msg) {
+		super( msg );
+	}
 
 }

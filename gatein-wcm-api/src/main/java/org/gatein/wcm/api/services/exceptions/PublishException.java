@@ -26,4 +26,8 @@ public class PublishException extends Exception {
 
 	private static final long serialVersionUID = -7919341726764893105L;
 
+	public PublishException(String msg) {
+		super( msg );
+	}
+ 	
 }

@@ -1,7 +1,7 @@
 package org.gatein.wcm.api.test;
 
-import org.exoplatform.services.organization.User;
 import org.gatein.wcm.api.model.content.Content;
+import org.gatein.wcm.api.model.security.User;
 import org.gatein.wcm.api.services.ContentService;
 import org.gatein.wcm.api.services.RepositoryService;
 import org.gatein.wcm.api.services.exceptions.ContentException;
