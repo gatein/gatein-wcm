@@ -49,7 +49,7 @@ cp gatein-wcm-impl-sec/target/gatein-wcm-impl-sec-0.0.1-SNAPSHOT.jar $JBOSS_HOME
 # Final message
 echo "Finished GateIn WCM configuration."
 echo
-echo "Tested running: mvn clean install -Denv.JBOSS_HOME=<path_to_jboss-as-7.1.1+modeshape-3.1.1>"
+echo "Test it running: mvn clean install -Denv.JBOSS_HOME=<path_to_jboss-as-7.1.1+modeshape-3.1.1>"
 
 
 
