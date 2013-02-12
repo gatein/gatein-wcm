@@ -15,9 +15,12 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.jboss.logging.Logger;
 
 @RunWith(Arquillian.class)
 public class BasicCDITest {
+
+    private static final Logger log = Logger.getLogger("org.gatein.wcm.tests");
 
     @Deployment
     public static Archive<?> createDeployment() {
@@ -34,11 +37,11 @@ public class BasicCDITest {
     @Test
     public void accesing_from_module() {
 
-        System.out.println("[[ START TEST  accesing_from_module ]]");
+        log.info("[[ START TEST  accesing_from_module ]]");
 
-        System.out.println(repos);
+        log.info(repos);
 
-        System.out.println("[[ END TEST  accesing_from_module ]]");
+        log.info("[[ END TEST  accesing_from_module ]]");
 
         Assert.assertTrue(repos != null);
 

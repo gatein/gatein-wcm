@@ -19,7 +19,7 @@ import org.modeshape.jcr.security.SecurityContext;
 
 public class WCMModeShapeProvider implements AuthenticationProvider {
 
-    private static final Logger LOGGER = Logger.getLogger(WCMModeShapeProvider.class);
+    private static final Logger log = Logger.getLogger(WCMModeShapeProvider.class);
 
     public ExecutionContext authenticate(Credentials credentials, String repositoryName, String workspaceName,
             ExecutionContext repositoryContext, Map<String, Object> sessionAttributes) {
@@ -31,7 +31,7 @@ public class WCMModeShapeProvider implements AuthenticationProvider {
             }
 
         } catch (LoginException e) {
-            LOGGER.warn(new WCMModeShapeProvider.LogMsg(e.toString()), e.toString());
+            log.warn(new WCMModeShapeProvider.LogMsg(e.toString()), e.toString());
             return null;
         }
         return null;
@@ -46,7 +46,7 @@ public class WCMModeShapeProvider implements AuthenticationProvider {
         protected WCMSecurityContext(Credentials credentials) throws LoginException {
             // Expecting JCR SimpleCredentials
             sCredentials = (SimpleCredentials) credentials;
-            LOGGER.info(new WCMModeShapeProvider.LogMsg("Getting security credentials "), sCredentials.getUserID());
+            log.info(new WCMModeShapeProvider.LogMsg("Getting security credentials "), sCredentials.getUserID());
 
             try {
                 wcmSecurityService = WCMSecurityFactory.getSecurityService();
@@ -71,7 +71,7 @@ public class WCMModeShapeProvider implements AuthenticationProvider {
             try {
                 return wcmSecurityService.hasRole(loggedUser, role);
             } catch (ContentSecurityException e) {
-                LOGGER.error(new WCMModeShapeProvider.LogMsg("Error getting role: " + e.getMessage()), loggedUser);
+                log.error(new WCMModeShapeProvider.LogMsg("Error getting role: " + e.getMessage()), loggedUser);
             }
 
             return false;

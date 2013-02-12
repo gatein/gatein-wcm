@@ -17,9 +17,12 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.modeshape.jcr.api.Repositories;
+import org.jboss.logging.Logger;
 
 @RunWith(Arquillian.class)
 public class BasicModeShapeTest {
+
+    private static final Logger log = Logger.getLogger("org.gatein.wcm.tests");
 
     @Deployment
     public static Archive<?> createDeployment() {
@@ -40,25 +43,25 @@ public class BasicModeShapeTest {
 
         try {
 
-            System.out.println("[[ START TEST accesing_repository ]]");
+            log.info("[[ START TEST accesing_repository ]]");
 
             if (repositories != null) {
                 for (String repo : repositories.getRepositoryNames()) {
-                    System.out.println("[[ REPO: " + repo + " ]]");
+                    log.info("[[ REPO: " + repo + " ]]");
                 }
             }
 
             if (repository != null) {
 
                 javax.jcr.Session session = repository.login("default");
-                System.out.println("[[ Repo /jcr/sample.... RootNode... ");
-                System.out.println(session.getRootNode().toString());
+                log.info("[[ Repo /jcr/sample.... RootNode... ");
+                log.info(session.getRootNode().toString());
 
                 Assert.assertTrue(true);
             } else {
                 Assert.assertTrue(false);
             }
-            System.out.println("[[ END TEST accesing_repository ]]");
+            log.info("[[ END TEST accesing_repository ]]");
 
         } catch (Exception e) {
 
@@ -72,7 +75,7 @@ public class BasicModeShapeTest {
 
         try {
 
-            System.out.println("[[ START TEST  simple_credentials ]]");
+            log.info("[[ START TEST  simple_credentials ]]");
 
             if (repositories != null) {
                 for (String repo : repositories.getRepositoryNames()) {
@@ -98,12 +101,12 @@ public class BasicModeShapeTest {
             } else {
                 Assert.assertTrue(false);
             }
-            System.out.println("[[ END TEST  simple_credentials ]]");
+            log.info("[[ END TEST  simple_credentials ]]");
 
         } catch (LoginException e) {
 
-            System.out.println(" [[ Expected: " + e.toString() + " ]] ");
-            System.out.println(" [[ END TEST simple_credentials ]] ");
+            log.info(" [[ Expected: " + e.toString() + " ]] ");
+            log.info(" [[ END TEST simple_credentials ]] ");
 
         } catch (Exception e) {
 
