@@ -266,7 +266,11 @@
                 <smtp-server outbound-socket-binding-ref="mail-smtp"/>
             </mail-session>
         </subsystem>
-        <subsystem xmlns="urn:jboss:domain:naming:1.1"/>
+        <subsystem xmlns="urn:jboss:domain:naming:1.1">
+	  <bindings>
+	    <object-factory name="java:jboss/gatein-wcm" module="org.gatein.wcm.gatein-wcm-impl" class="org.gatein.wcm.impl.WCMServicesManager" />
+	  </bindings>
+	</subsystem>
         <subsystem xmlns="urn:jboss:domain:osgi:1.2" activation="lazy">
             <properties>
                 <property name="org.osgi.framework.startlevel.beginning">
