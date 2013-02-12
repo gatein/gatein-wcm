@@ -40,7 +40,7 @@ public class BasicCDITest {
 
         System.out.println("[[ END TEST  accesing_from_module ]]");
 
-        Assert.assertTrue(true);
+        Assert.assertTrue(repos != null);
 
     }
 
