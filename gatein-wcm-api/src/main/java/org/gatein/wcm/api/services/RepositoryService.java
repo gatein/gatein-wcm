@@ -22,34 +22,33 @@
  */
 package org.gatein.wcm.api.services;
 
-import org.gatein.wcm.api.model.security.User;
 import org.gatein.wcm.api.services.exceptions.ContentIOException;
 import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
 
 /**
- * 
+ *
  * Repository is an abstraction layer of content storage. <br>
- * 
- * 
+ *
+ *
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
- * 
+ *
  */
 public interface RepositoryService {
 
     /**
-     * 
+     *
      * Opens a content sessions and returns a content API. <br>
-     * 
+     *
      * @param idRepository - Repository id.
      * @param user - User of the content session.
      * @return ContentService API for given repository id.
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create Session on given repository.
      */
-    public ContentService createContentSession(String idRepository, User user) throws ContentIOException,
+    public ContentService createContentSession(String idRepository, String idWorkspace, String user, String password) throws ContentIOException,
             ContentSecurityException;
 
-    public PublishService createPublishSession(String idRepository, User user) throws ContentIOException,
+    public PublishService createPublishSession(String idRepository, String idWorkspace, String user, String password) throws ContentIOException,
             ContentSecurityException;
 
 }

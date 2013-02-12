@@ -7,6 +7,7 @@ public class WCMSecurityFactory {
 
     private static SecurityService securityInstance = null;
 
+    // TODO This is only for dummy testing, this is a known bottleneck in a load test.
     public static synchronized SecurityService getSecurityService() throws ContentIOException {
         if (securityInstance == null)
             securityInstance = new DummySecurityService();

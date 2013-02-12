@@ -6,16 +6,18 @@ import javax.annotation.Resource;
 
 import junit.framework.Assert;
 
+import org.gatein.wcm.api.services.ContentService;
 import org.gatein.wcm.api.services.RepositoryService;
+import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.jboss.logging.Logger;
 
 @RunWith(Arquillian.class)
 public class BasicCDITest {
@@ -35,16 +37,54 @@ public class BasicCDITest {
 
 
     @Test
-    public void accesing_from_module() {
+    public void good_password() {
 
-        log.info("[[ START TEST  accesing_from_module ]]");
+        log.info("[[ START TEST  good_password ]]");
 
-        log.info(repos);
+        try {
 
-        log.info("[[ END TEST  accesing_from_module ]]");
+            ContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
 
-        Assert.assertTrue(repos != null);
+            log.info( cs );
+            log.info("[[ END TEST  good_password ]]");
 
+            Assert.assertTrue( true );
+
+        } catch (Exception e) {
+
+            log.error(e.getMessage());
+
+            Assert.assertTrue( false );
+        }
     }
+
+    @Test
+    public void bad_password() {
+
+        log.info("[[ START TEST  bad_password ]]");
+
+        try {
+
+            ContentService cs = repos.createContentSession("sample", "default", "admin", "badpassword");
+
+            log.info( cs );
+
+            log.error("Expecting exception...");
+            Assert.assertTrue( false );
+
+        } catch (ContentSecurityException e) {
+
+            log.info(" [[ Expected: " + e.getMessage());
+            log.info("[[ END TEST  bad_password ]]");
+
+            Assert.assertTrue( true );
+
+        } catch (Exception e) {
+
+
+            Assert.assertTrue( false );
+        }
+    }
+
 
 }
