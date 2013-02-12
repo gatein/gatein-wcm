@@ -19,5 +19,5 @@ Installation
 - unzip unzip jboss-as-7.1.1.Final.zip -d /opt/Software/servers
 - unzip modeshape-3.1.1.Final-jboss-71-dist.zip -d /opt/Software/servers/jboss-as-7.1.1.Final
 - edit ${basedir}/setup.properties with JBOSS_HOME=/opt/Software/servers/jboss-as-7.1.1.Final
-- run setup.sh
+- run ${basedir}/setup.sh
 - run mvn clean install -Denv.JBOSS_HOME=/opt/Software/servers/jboss-as-7.1.1.Final
