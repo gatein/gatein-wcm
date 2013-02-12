@@ -34,7 +34,6 @@ public class WCMServicesManager implements RepositoryService, ObjectFactory {
 
     @Override
     public Object getObjectInstance(Object arg0, Name arg1, Context arg2, Hashtable<?, ?> arg3) throws Exception {
-        // TODO Auto-generated method stub
         return this;
     }
 
