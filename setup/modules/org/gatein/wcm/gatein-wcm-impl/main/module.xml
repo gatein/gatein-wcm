@@ -30,7 +30,7 @@
   <dependencies>
     <module name="org.gatein.wcm.gatein-wcm-api" export="true" />
     <module name="javax.api" />
-    <module name="org.jboss.logging" />
+    <module name="org.jboss.logging" /> 
   </dependencies>
   
 </module>
