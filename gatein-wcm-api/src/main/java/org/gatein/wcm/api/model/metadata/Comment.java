@@ -33,44 +33,44 @@ import org.gatein.wcm.api.model.security.User;
  * Content can have comments, creating a basic collaboration system. <br />
  * 
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
- *
+ * 
  */
 public interface Comment {
 
-	/**
-	 * 
-	 * @return This method returns ID of the Comment.
-	 */
-	public String getId();
-	
-	/**
-	 * 
-	 * @return This method returns timestamp when comment was created.
-	 */
-	public Date getCreated();
+    /**
+     * 
+     * @return This method returns ID of the Comment.
+     */
+    public String getId();
 
-	/**
-	 * 
-	 * @return This method returns user who created comment.
-	 */
-	public User getCreatedBy();
+    /**
+     * 
+     * @return This method returns timestamp when comment was created.
+     */
+    public Date getCreated();
 
-	/**
-	 * 
-	 * @return This method returns text of the comment.
-	 */
-	public String getComment();
-	
-	/**
-	 * 
-	 * @param comment This method update text of the comment.
-	 */
-	public void setComment(String comment);
-	
-	/**
-	 * 
-	 * @return This method returns content where comment is attached
-	 */
-	public Content getContent();
-	
+    /**
+     * 
+     * @return This method returns user who created comment.
+     */
+    public User getCreatedBy();
+
+    /**
+     * 
+     * @return This method returns text of the comment.
+     */
+    public String getComment();
+
+    /**
+     * 
+     * @param comment This method update text of the comment.
+     */
+    public void setComment(String comment);
+
+    /**
+     * 
+     * @return This method returns content where comment is attached
+     */
+    public Content getContent();
+
 }

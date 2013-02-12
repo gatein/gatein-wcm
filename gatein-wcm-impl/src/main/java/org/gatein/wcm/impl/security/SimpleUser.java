@@ -4,90 +4,88 @@ import java.util.Date;
 
 import org.gatein.wcm.api.model.security.User;
 
-public class SimpleUser 
-	implements User
-{
+public class SimpleUser implements User {
 
-	String userName;
-	String password;
-	String firstName;
-	String lastName;
-	String email;
-	Date createdDate;
-	Date lastLoginTime;
-	String displayName;
-	String organizationId;
-		
-	protected void setUserName(String userName) {
-		this.userName = userName;
-	}
+    String userName;
+    String password;
+    String firstName;
+    String lastName;
+    String email;
+    Date createdDate;
+    Date lastLoginTime;
+    String displayName;
+    String organizationId;
 
-	public String getUserName() {
-		return userName;
-	}
+    protected void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getUserName() {
+        return userName;
+    }
 
-	public void setPassword(String s) {
-		password = s;		
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public void setPassword(String s) {
+        password = s;
+    }
 
-	public void setFirstName(String s) {
-		firstName = s;		
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public String getLastName() {
-		return lastName;
-	}
+    public void setFirstName(String s) {
+        firstName = s;
+    }
 
-	public void setLastName(String s) {
-		lastName = s;		
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public void setLastName(String s) {
+        lastName = s;
+    }
 
-	public void setEmail(String s) {
-		email = s;		
-	}
-	
-	protected void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-	
-	protected void setLastLoginTime(Date lastLoginTime) {
-		this.lastLoginTime = lastLoginTime;
-	}
+    public void setEmail(String s) {
+        email = s;
+    }
 
-	public Date getLastLoginTime() {
-		return lastLoginTime;
-	}
+    protected void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
 
-	public String getDisplayName() {
-		return displayName;
-	}
+    public Date getCreatedDate() {
+        return createdDate;
+    }
 
-	public void setDisplayName(String s) {
-		displayName = s;		
-	}
+    protected void setLastLoginTime(Date lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
+    }
 
-	public String getOrganizationId() {
-		return organizationId;
-	}
+    public Date getLastLoginTime() {
+        return lastLoginTime;
+    }
 
-	public void setOrganizationId(String s) {
-		organizationId = s;		
-	}
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String s) {
+        displayName = s;
+    }
+
+    public String getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(String s) {
+        organizationId = s;
+    }
 
 }

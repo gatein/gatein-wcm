@@ -30,37 +30,35 @@ package org.gatein.wcm.api.model.security;
  * <br>
  * 
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
- *
+ * 
  */
 public interface ACE {
 
-	/**
-	 * 
-	 * @return This method returns principal associated to this permission.
-	 */
-	public Principal getPrincipal();
-	
-	/**
-	 * 
-	 * @return This method returns permission associated to this principal.
-	 */
-	public PermissionType getPermission();
-		
-	/**
-	 * 
-	 * PermissionType modes: <br>
-	 * <li> NONE: no access.
-	 * <li> READ: principal defined can access and read content.
-	 * <li> COMMENTS: principal defined can access, read content and add comments.
-	 * <li> WRITE: principal defined can modify content.
-	 * <li> ALL: principal defined can delete content.<br>
-	 * <br>
-	 * 
-	 * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
-	 *
-	 */
-	public enum PermissionType {
-		NONE, READ, COMMENTS, WRITE, ALL
-	}
-	
+    /**
+     * 
+     * @return This method returns principal associated to this permission.
+     */
+    public Principal getPrincipal();
+
+    /**
+     * 
+     * @return This method returns permission associated to this principal.
+     */
+    public PermissionType getPermission();
+
+    /**
+     * 
+     * PermissionType modes: <br>
+     * <li>NONE: no access. <li>READ: principal defined can access and read content. <li>COMMENTS: principal defined can access,
+     * read content and add comments. <li>WRITE: principal defined can modify content. <li>ALL: principal defined can delete
+     * content.<br>
+     * <br>
+     * 
+     * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
+     * 
+     */
+    public enum PermissionType {
+        NONE, READ, COMMENTS, WRITE, ALL
+    }
+
 }

@@ -30,20 +30,20 @@ package org.gatein.wcm.api.model.metadata;
  * Examples use cases: set up custom priorities, or specific status. <br />
  * 
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
- *
+ * 
  */
 public interface Property {
 
-	/**
-	 * 
-	 * @return This method returns name of the property.
-	 */
-	public String getName();
+    /**
+     * 
+     * @return This method returns name of the property.
+     */
+    public String getName();
 
-	/**
-	 * 
-	 * @return This method returns value of the property.
-	 */
-	public String getValue();
-	
+    /**
+     * 
+     * @return This method returns value of the property.
+     */
+    public String getValue();
+
 }

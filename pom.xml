@@ -47,6 +47,7 @@
     <!-- <module>gatein-wcm-portlets</module> -->
     <module>gatein-wcm-impl</module>
     <module>gatein-wcm-impl-sec</module>
+    <module>gatein-wcm-tests</module>
   </modules>
 
   <dependencyManagement>

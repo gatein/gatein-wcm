@@ -35,46 +35,44 @@ import org.gatein.wcm.api.model.security.User;
  * Status class represent state of content inside a publication process. <br />
  * 
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
- *
+ * 
  */
 public interface PublishStatus {
-	
-	public enum Status {
-		DRAFT, PUBLISHED
-	}
-		
-	/**
-	 * 
-	 * @return This method returns Content associated with this Status.
-	 */
-	public Content getContent();
 
-	/**
-	 * 
-	 * @return This method returns status of the content. <br>
-	 * It will be one of this values:
-	 * <li> PublishStatus.Status.DRAFT
-	 * <li> PublishStatus.Status.PUBLISHED
-	 * 
-	 */
-	public Status getStatus();
-	
-	/**
-	 * 
-	 * @return This method returns date created of this status.
-	 */
-	public Date getCreated();
-	
-	/**
-	 * 
-	 * @return This method returns User responsible of last status.
-	 */
-	public User getStatusBy();
-	
-	/**
-	 * 
-	 * @return This method returns a list of publishing tasks representing history of publishing process.
-	 */
-	public List<PublishTask> getHistory();
-	
+    public enum Status {
+        DRAFT, PUBLISHED
+    }
+
+    /**
+     * 
+     * @return This method returns Content associated with this Status.
+     */
+    public Content getContent();
+
+    /**
+     * 
+     * @return This method returns status of the content. <br>
+     *         It will be one of this values: <li>PublishStatus.Status.DRAFT <li>PublishStatus.Status.PUBLISHED
+     * 
+     */
+    public Status getStatus();
+
+    /**
+     * 
+     * @return This method returns date created of this status.
+     */
+    public Date getCreated();
+
+    /**
+     * 
+     * @return This method returns User responsible of last status.
+     */
+    public User getStatusBy();
+
+    /**
+     * 
+     * @return This method returns a list of publishing tasks representing history of publishing process.
+     */
+    public List<PublishTask> getHistory();
+
 }

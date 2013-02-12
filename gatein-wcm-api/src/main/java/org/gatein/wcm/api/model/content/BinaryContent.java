@@ -25,38 +25,38 @@ package org.gatein.wcm.api.model.content;
 import java.io.InputStream;
 
 /**
- * 
+ *
  * File representation. <br />
  * Implementation should define where to storage resource (memory, file, both). <br />
  * This is transparent for end-user that access to the resource via InputStream. <br />
- * 
+ *
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
  *
  */
 public interface BinaryContent extends Content {
 
-	/**
-	 * 
-	 * @return This method returns ContentType of file stored.
-	 */
-	public String getContentType();
-		
-	/**
-	 * 
-	 * @return This method returns size of file stored.
-	 */
-	public Long getSize();
-	
-	/**
-	 * 
-	 * @return This method returns name of file stored.
-	 */
-	public String getFileName();
-	
-	/**
-	 * 
-	 * @return This method will return an InputStream of file stored.
-	 */
-	public InputStream getContent();
-	
+    /**
+     *
+     * @return This method returns ContentType of file stored.
+     */
+    public String getContentType();
+
+    /**
+     *
+     * @return This method returns size of file stored.
+     */
+    public Long getSize();
+
+    /**
+     *
+     * @return This method returns name of file stored.
+     */
+    public String getFileName();
+
+    /**
+     *
+     * @return This method will return an InputStream of file stored.
+     */
+    public InputStream getContent();
+
 }

@@ -24,10 +24,10 @@ package org.gatein.wcm.api.services.exceptions;
 
 public class ContentIOException extends Exception {
 
-	private static final long serialVersionUID = -3302691962449917607L;
+    private static final long serialVersionUID = -3302691962449917607L;
 
-	public ContentIOException(String msg) {
-		super( msg ); 
-	}
-	
+    public ContentIOException(String msg) {
+        super(msg);
+    }
+
 }

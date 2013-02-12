@@ -34,61 +34,59 @@ import org.gatein.wcm.api.model.security.User;
  * Represents a publishing tasks. <br>
  * It's created when a user wants to publish a content and trigger a publishing flow. <br>
  * Defines: <br>
- * <li> what is the publishing state of the content.
- * <li> who are the Principals granted to resolve this task.
- * <li> who are the User from Principals who takes this tasks.
- * <li> lifecycle of the task.
+ * <li>what is the publishing state of the content. <li>who are the Principals granted to resolve this task. <li>who are the
+ * User from Principals who takes this tasks. <li>lifecycle of the task.
  * 
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
- *
+ * 
  */
 public interface PublishTask {
 
-	public enum Status {
-		PENDING, ACCEPTED, REJECTED
-	}
+    public enum Status {
+        PENDING, ACCEPTED, REJECTED
+    }
 
-	/**
-	 * 
-	 * @return This method returns status of task completion
-	 */
-	public Status getStatus();
-	
-	/**
-	 * 
-	 * @return This method returns the content object to publish.
-	 */
-	public Content getContent();
-	
-	/** 
-	 * 
-	 * @return This method returns the list of roles associated to this task. <br>
-	 * It invokes to this.getContent().getPublishingRoles().
-	 */
-	public List<Principal> getPublishingRoles();
+    /**
+     * 
+     * @return This method returns status of task completion
+     */
+    public Status getStatus();
 
-	/**
-	 * 
-	 * @return This method returns the user assigned to resolve this publishing task.
-	 */
-	public User getExecuteBy();
-	
-	/**
-	 * 
-	 * @return This method returns date when this task were created.
-	 */
-	public Date getCreated();
-	
-	/**
-	 * 
-	 * @return This method returns date when this task were finished.
-	 */
-	public Date getFinished();
-	
-	/**
-	 * 
-	 * @return This method returns comments of the task.
-	 */
-	public String getComment();
+    /**
+     * 
+     * @return This method returns the content object to publish.
+     */
+    public Content getContent();
+
+    /**
+     * 
+     * @return This method returns the list of roles associated to this task. <br>
+     *         It invokes to this.getContent().getPublishingRoles().
+     */
+    public List<Principal> getPublishingRoles();
+
+    /**
+     * 
+     * @return This method returns the user assigned to resolve this publishing task.
+     */
+    public User getExecuteBy();
+
+    /**
+     * 
+     * @return This method returns date when this task were created.
+     */
+    public Date getCreated();
+
+    /**
+     * 
+     * @return This method returns date when this task were finished.
+     */
+    public Date getFinished();
+
+    /**
+     * 
+     * @return This method returns comments of the task.
+     */
+    public String getComment();
 
 }

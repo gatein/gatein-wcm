@@ -9,13 +9,19 @@ echo " - Install modeshape 3.1.1.Final into JBossAS 7.1.1 "
 echo "   For example: unzip modeshape-3.1.1.Final-jboss-71-dist.zip -d /opt/Software/servers/jboss-as-7.1.1.Final"
 echo
 
+. $(pwd)/setup.properties
+
+echo "$JBOSS_HOME"
+
 # Check if argument
-if [ -z "$1" ]; then
-	echo "... usage <path_to_jboss-as-7.1.1+modeshape-3.1.1>"
+if [ -z "$JBOSS_HOME" ]; then
+	echo "... JBOSS_HOME has not set in setup.properties"
 	exit 0
 fi
-
-JBOSS_HOME=$1
+if [ ! -d $JBOSS_HOME ]; then
+	echo "... define a valid JBOSS_HOME in setup.properties"
+	exit 0
+fi
 
 # Check if modeshape installed
 if [ ! -d "$JBOSS_HOME/modules/org/modeshape" ]; then
@@ -49,7 +55,7 @@ cp gatein-wcm-impl-sec/target/gatein-wcm-impl-sec-0.0.1-SNAPSHOT.jar $JBOSS_HOME
 # Final message
 echo "Finished GateIn WCM configuration."
 echo
-echo "Test it running: mvn clean install -Denv.JBOSS_HOME=<path_to_jboss-as-7.1.1+modeshape-3.1.1>"
+echo "Test it running: mvn clean install -Denv.JBOSS_HOME=$JBOSS_HOME"
 
 
 

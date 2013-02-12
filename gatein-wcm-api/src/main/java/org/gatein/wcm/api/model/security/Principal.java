@@ -30,32 +30,32 @@ package org.gatein.wcm.api.model.security;
  * Groups can use wildcards for memberships only. <br>
  * <br>
  * Examples of Principal: <br>
- * <li> Principal[id = "user1234", type = PrincipalType.USER] - (Simple user)
- * <li> Principal[id = "group1234", type = PrincipalType.GROUP] - (Simple group)
- * <li> Principal[id = "group1234:roleA", type = PrincipalType.GROUP] - (Members of group1234 with role roleA)
- * <li> Principal[id = "*:roleA", type = PrincipalType.GROUP] - (Members of any group with role roleA) <br>
+ * <li>Principal[id = "user1234", type = PrincipalType.USER] - (Simple user) <li>Principal[id = "group1234", type =
+ * PrincipalType.GROUP] - (Simple group) <li>Principal[id = "group1234:roleA", type = PrincipalType.GROUP] - (Members of
+ * group1234 with role roleA) <li>Principal[id = "*:roleA", type = PrincipalType.GROUP] - (Members of any group with role roleA)
+ * <br>
  * <br>
  * 
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
- *
+ * 
  */
 public interface Principal {
 
-	/**
-	 * 
-	 * @return This method returns ID of the principal. <br>
-	 * A Principal can represent an user or a group, or a group+membership.
-	 */
-	public String getId();
+    /**
+     * 
+     * @return This method returns ID of the principal. <br>
+     *         A Principal can represent an user or a group, or a group+membership.
+     */
+    public String getId();
 
-	/**
-	 * 
-	 * @return This method returns Type of principal (user or group).
-	 */
-	public PrincipalType getType();
-		
-	public enum PrincipalType {
-		USER, GROUP;
-	}
-	
+    /**
+     * 
+     * @return This method returns Type of principal (user or group).
+     */
+    public PrincipalType getType();
+
+    public enum PrincipalType {
+        USER, GROUP;
+    }
+
 }

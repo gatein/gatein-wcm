@@ -27,14 +27,14 @@ package org.gatein.wcm.api.services.exceptions;
  * 
  * 
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
- *
+ * 
  */
 public class ContentSecurityException extends Exception {
 
-	private static final long serialVersionUID = 2113146312414252797L;
-	
-	public ContentSecurityException(String msg) {
-		super( msg );
-	}
+    private static final long serialVersionUID = 2113146312414252797L;
+
+    public ContentSecurityException(String msg) {
+        super(msg);
+    }
 
 }
