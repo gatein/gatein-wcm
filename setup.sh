@@ -4,7 +4,7 @@ echo
 echo "Prerrequisites: "
 echo " - Install JBoss AS 7.1.1 "
 echo "   For example: unzip jboss-as-7.1.1.Final.zip -d /opt/Software/servers "
-echo 
+echo
 echo " - Install modeshape 3.1.1.Final into JBossAS 7.1.1 "
 echo "   For example: unzip modeshape-3.1.1.Final-jboss-71-dist.zip -d /opt/Software/servers/jboss-as-7.1.1.Final"
 echo
@@ -48,9 +48,15 @@ if [ ! -f gatein-wcm-impl-sec/target/gatein-wcm-impl-sec-0.0.1-SNAPSHOT.jar ]; t
 	exit 0
 fi
 
-cp gatein-wcm-api/target/gatein-wcm-api-0.0.1-SNAPSHOT.jar $JBOSS_HOME/modules/org/gatein/wcm/gatein-wcm-api/main
-cp gatein-wcm-impl/target/gatein-wcm-impl-0.0.1-SNAPSHOT.jar $JBOSS_HOME/modules/org/gatein/wcm/gatein-wcm-impl/main
-cp gatein-wcm-impl-sec/target/gatein-wcm-impl-sec-0.0.1-SNAPSHOT.jar $JBOSS_HOME/modules/org/modeshape/main
+function cp_p {
+    echo "Copying $1 into $2"
+    mkdir -p "$2"
+    cp "$1" "$2"
+}
+
+cp_p "gatein-wcm-api/target/gatein-wcm-api-0.0.1-SNAPSHOT.jar" "$JBOSS_HOME/modules/org/gatein/wcm/gatein-wcm-api/main"
+cp_p "gatein-wcm-impl/target/gatein-wcm-impl-0.0.1-SNAPSHOT.jar" "$JBOSS_HOME/modules/org/gatein/wcm/gatein-wcm-impl/main"
+cp_p "gatein-wcm-impl-sec/target/gatein-wcm-impl-sec-0.0.1-SNAPSHOT.jar" "$JBOSS_HOME/modules/org/modeshape/main"
 
 # Final message
 echo "Finished GateIn WCM configuration."
