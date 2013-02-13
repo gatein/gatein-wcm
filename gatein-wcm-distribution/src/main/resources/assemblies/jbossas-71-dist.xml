@@ -1,5 +1,5 @@
 <assembly>
-  <id>jbossas-71-distribution</id>
+  <id>jbossas-71-dist</id>
   <formats>
     <format>zip</format>
   </formats>
