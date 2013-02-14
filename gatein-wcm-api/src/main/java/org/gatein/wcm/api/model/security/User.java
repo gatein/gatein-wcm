@@ -7,7 +7,7 @@ public interface User {
     /**
      * This method should return the username of the user. The username should be unique and the user database should not have 2
      * user record with the same username
-     * 
+     *
      * @return
      */
     public String getUserName();
@@ -19,7 +19,7 @@ public interface User {
 
     /**
      * This method is used to change the user account password.
-     * 
+     *
      * @param s
      */
     public void setPassword(String s);
@@ -77,11 +77,15 @@ public interface User {
     /**
      * @return the id of organization the user belongs to or null if not applicable
      */
-    String getOrganizationId();
+    public String getOrganizationId();
 
     /**
      * sets the prganizationId
      */
-    void setOrganizationId(String organizationId);
+    public void setOrganizationId(String organizationId);
 
+    /**
+     * @return the groups that user belongs to
+     */
+    public String[] getGroups();
 }

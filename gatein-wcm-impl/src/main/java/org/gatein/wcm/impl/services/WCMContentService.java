@@ -15,21 +15,37 @@ import org.gatein.wcm.api.services.exceptions.ContentException;
 import org.gatein.wcm.api.services.exceptions.ContentIOException;
 import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
 import org.gatein.wcm.api.services.exceptions.PublishException;
+import org.gatein.wcm.impl.services.commands.CreateCommand;
+import org.jboss.logging.Logger;
 
 public class WCMContentService implements ContentService {
+
+    private static final Logger log = Logger.getLogger("org.gatein.wcm");
 
     Session jcrSession = null;
     User logged = null;
 
-    public WCMContentService (Session session, User user) {
-
+    public WCMContentService (Session session, User user)
+        throws ContentIOException
+    {
+        jcrSession = session;
+        logged = user;
     }
 
     @Override
     public Content createTextContent(String id, String locale, String location, String html, String encoding)
             throws ContentException, ContentIOException, ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+
+        long start = System.currentTimeMillis();
+
+        CreateCommand command = new CreateCommand(jcrSession, logged);
+        Content output = command.createTextContent(id, locale, location, html, encoding);
+
+        long stop = System.currentTimeMillis();
+
+        log.info("createTextContent() takes " + ((long)(stop-start)) + " ms");
+
+        return output;
     }
 
     @Override

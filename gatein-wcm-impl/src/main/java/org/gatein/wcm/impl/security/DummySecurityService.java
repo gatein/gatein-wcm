@@ -7,15 +7,15 @@ import org.gatein.wcm.api.services.SecurityService;
 import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
 
 /**
- * 
+ *
  * Dummy Service facade to simulate an interaction with the Portal's authentication system. <br>
- * 
+ *
  * In this case the user is hardcoded inside class. <br>
- * 
+ *
  * This class will be replaced for another that connects to
- * 
+ *
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
- * 
+ *
  */
 public class DummySecurityService implements SecurityService {
 
@@ -35,6 +35,9 @@ public class DummySecurityService implements SecurityService {
             user.setEmail(idUser + "@dummy.com");
             user.setCreatedDate(new Date());
             user.setLastLoginTime(new Date());
+
+            String[] groups = {"group1", "group2"};
+            user.setGroups( groups );
 
             return user;
         } else {

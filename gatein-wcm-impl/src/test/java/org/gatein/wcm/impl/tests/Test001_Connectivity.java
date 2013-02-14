@@ -1,4 +1,4 @@
-package org.gatein.wcm.tests;
+package org.gatein.wcm.impl.tests;
 
 import java.io.File;
 
@@ -20,14 +20,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class BasicCDITest {
+public class Test001_Connectivity {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.tests");
+    private static final Logger log = Logger.getLogger("org.gatein.wcm.impl.tests");
 
     @Deployment
     public static Archive<?> createDeployment() {
 
-        return ShrinkWrap.create(WebArchive.class, "gatein-wcm-test.war").addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+        return ShrinkWrap.create(WebArchive.class, "gatein-wcm-impl-test.war").addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .setManifest(new File("src/main/webapp/META-INF/MANIFEST.MF"));
 
     }

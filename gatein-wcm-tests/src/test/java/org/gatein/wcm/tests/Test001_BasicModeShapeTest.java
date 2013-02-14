@@ -20,7 +20,7 @@ import org.modeshape.jcr.api.Repositories;
 import org.jboss.logging.Logger;
 
 @RunWith(Arquillian.class)
-public class BasicModeShapeTest {
+public class Test001_BasicModeShapeTest {
 
     private static final Logger log = Logger.getLogger("org.gatein.wcm.tests");
 

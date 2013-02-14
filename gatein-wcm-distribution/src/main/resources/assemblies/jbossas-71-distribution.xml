@@ -1,0 +1,48 @@
+<assembly>
+  <id>jbossas-71-distribution</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <baseDirectory>/</baseDirectory>
+
+  <fileSets>
+    <fileSet>
+      <directory>src/main/resources/jboss-as71</directory>
+      <outputDirectory>/</outputDirectory>
+      <filtered>true</filtered>
+    </fileSet>
+  </fileSets>
+
+  <dependencySets>
+
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputDirectory>/modules/org/gatein/wcm/gatein-wcm-api/main</outputDirectory>
+      <includes>
+        <include>org.gatein.wcm:gatein-wcm-api</include>
+      </includes>
+      <unpack>false</unpack>
+    </dependencySet>
+
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputDirectory>/modules/org/gatein/wcm/gatein-wcm-impl/main</outputDirectory>
+      <includes>
+        <include>org.gatein.wcm:gatein-wcm-impl</include>
+      </includes>
+      <unpack>false</unpack>
+    </dependencySet>
+
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputDirectory>/modules/org/modeshape/main</outputDirectory>
+      <includes>
+        <include>org.gatein.wcm:gatein-wcm-impl-sec</include>
+      </includes>
+      <unpack>false</unpack>
+    </dependencySet>
+
+  </dependencySets>
+
+</assembly>

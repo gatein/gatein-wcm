@@ -35,7 +35,7 @@
     <profile>
       <id>assembly</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
+        <activeByDefault>false</activeByDefault>
       </activation>
 
       <dependencies>
@@ -63,7 +63,7 @@
             <configuration>
               <finalName>gatein-wcm-${project.version}</finalName>
               <descriptors>
-                <descriptor>${basedir}/src/main/resources/assemblies/jbossas-71-dist.xml</descriptor>
+                <descriptor>${basedir}/src/main/resources/assemblies/jbossas-71-distribution.xml</descriptor>
               </descriptors>
             </configuration>
 

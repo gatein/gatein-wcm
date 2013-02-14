@@ -8,6 +8,8 @@ echo
 echo " - Install modeshape 3.1.1.Final into JBossAS 7.1.1 "
 echo "   For example: unzip modeshape-3.1.1.Final-jboss-71-dist.zip -d /opt/Software/servers/jboss-as-7.1.1.Final"
 echo
+echo "   Note: Installing Modeshape you will prompt about replace existings files (infinispan configuration), say [Yes] as default option. "
+echo
 
 . $(pwd)/setup.properties
 
@@ -31,6 +33,9 @@ fi
 
 # Copying files and structure
 cp -Rf setup/* $JBOSS_HOME
+
+# Create a fresh install without tests
+mvn clean install -DskipTests
 
 # Check packages
 if [ ! -f gatein-wcm-api/target/gatein-wcm-api-0.0.1-SNAPSHOT.jar ]; then

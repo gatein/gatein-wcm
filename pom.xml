@@ -23,11 +23,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-      <groupId>org.jboss</groupId>
-      <artifactId>jboss-parent</artifactId>
-      <version>9</version>
-  </parent>
   <groupId>org.gatein.wcm</groupId>
   <artifactId>gatein-wcm</artifactId>
   <version>0.0.1-SNAPSHOT</version>
@@ -36,11 +31,6 @@
   <scm>
     <url>https://github.com/lucasponce/gatein-wcm</url>
   </scm>
-  <issueManagement>
-    <system>jira</system>
-    <url>http://issues.jboss.org/browse/GTNWCM</url>
-  </issueManagement>
-
   <licenses>
     <license>
       <name>GNU Lesser General Public License</name>
@@ -65,8 +55,6 @@
     <maven.compiler.source>1.6</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <arquillian.version>1.0.3.Final</arquillian.version>
-    <debug.argline />
-
   </properties>
 
   <modules>
@@ -75,8 +63,8 @@
     <!-- <module>gatein-wcm-portlets</module> -->
     <module>gatein-wcm-impl</module>
     <module>gatein-wcm-impl-sec</module>
-    <module>gatein-wcm-distribution</module>
     <module>gatein-wcm-tests</module>
+    <module>gatein-wcm-distribution</module>
   </modules>
 
   <dependencyManagement>
@@ -159,36 +147,8 @@
         <scope>provided</scope>
       </dependency>
     </dependencies>
+
   </dependencyManagement>
-
-
-
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <systemProperties combine.children="append">
-            <property>
-              <name>java.io.tmpdir</name>
-              <value>${basedir}/target</value>
-            </property>
-            <property>
-              <name>java.net.preferIPv4Stack</name>
-              <value>${jgroups.preferIpv4}</value>
-            </property>
-            <property>
-              <name>java.net.preferIPv6Addresses</name>
-              <value>${jgroups.preferIpv6}</value>
-            </property>
-          </systemProperties>
-          <argLine>-Xmx1024M ${debug.argline} -XX:MaxPermSize=256M</argLine>
-          <runOrder>alphabetical</runOrder>
-        </configuration>
-      </plugin>
-    </plugins>
-
-  </build>
 
   <repositories>
     <repository>

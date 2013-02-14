@@ -15,6 +15,7 @@ public class SimpleUser implements User {
     Date lastLoginTime;
     String displayName;
     String organizationId;
+    String[] groups;
 
     protected void setUserName(String userName) {
         this.userName = userName;
@@ -86,6 +87,14 @@ public class SimpleUser implements User {
 
     public void setOrganizationId(String s) {
         organizationId = s;
+    }
+
+    public String[] getGroups() {
+        return groups;
+    }
+
+    public void setGroups(String[] groups) {
+        this.groups = groups;
     }
 
 }
