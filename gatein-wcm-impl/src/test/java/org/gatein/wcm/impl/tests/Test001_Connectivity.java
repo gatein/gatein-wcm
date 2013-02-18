@@ -22,12 +22,12 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class Test001_Connectivity {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.impl.tests");
+    private static final Logger log = Logger.getLogger("org.gatein.wcm.impl.tests.test001");
 
     @Deployment
     public static Archive<?> createDeployment() {
 
-        return ShrinkWrap.create(WebArchive.class, "gatein-wcm-impl-test.war").addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+        return ShrinkWrap.create(WebArchive.class, "gatein-wcm-impl-test001.war").addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .setManifest(new File("src/main/webapp/META-INF/MANIFEST.MF"));
 
     }

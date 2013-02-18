@@ -1,9 +1,10 @@
 package org.gatein.wcm.impl.model;
 
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
-import org.gatein.wcm.api.model.content.TextContent;
+import org.gatein.wcm.api.model.content.BinaryContent;
 import org.gatein.wcm.api.model.metadata.Category;
 import org.gatein.wcm.api.model.metadata.Comment;
 import org.gatein.wcm.api.model.metadata.Property;
@@ -12,7 +13,7 @@ import org.gatein.wcm.api.model.security.ACL;
 import org.gatein.wcm.api.model.security.Principal;
 import org.gatein.wcm.api.model.security.User;
 
-public class WCMTextContent implements TextContent {
+public class WCMBinaryContent implements BinaryContent {
 
     Integer version;
     String id;
@@ -30,8 +31,12 @@ public class WCMTextContent implements TextContent {
     List<Property> properties;
     boolean locked;
     User lockOwner;
-    String content;
-    String encoding;
+
+    String contentType;
+    Long size;
+    String fileName;
+    byte[] _content;
+    InputStream content;
 
     @Override
     public Integer getVersion() {
@@ -114,18 +119,28 @@ public class WCMTextContent implements TextContent {
     }
 
     @Override
-    public String getContent() {
-        return content;
+    public String getContentType() {
+        return contentType;
     }
 
     @Override
-    public String getEncoding() {
-        return encoding;
+    public Long getSize() {
+        return size;
+    }
+
+    @Override
+    public String getFileName() {
+        return fileName;
+    }
+
+    @Override
+    public InputStream getContent() {
+        return content;
     }
 
     // Protected methods
 
-    protected WCMTextContent() {
+    protected WCMBinaryContent() {
 
     }
 
@@ -193,21 +208,28 @@ public class WCMTextContent implements TextContent {
         this.lockOwner = lockOwner;
     }
 
-    protected void setContent(String content) {
+    protected void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    protected void setSize(Long size) {
+        this.size = size;
+    }
+
+    protected void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    protected void setContent(InputStream content) {
         this.content = content;
     }
 
-    protected void setEncoding(String encoding) {
-        this.encoding = encoding;
+    protected byte[] get_content() {
+        return _content;
     }
 
-    @Override
-    public String toString() {
-        return "WCMTextContent [version=" + version + ", id=" + id + ", locale=" + locale + ", location=" + location + ", acl="
-                + acl + ", created=" + created + ", lastModified=" + lastModified + ", publishStatus=" + publishStatus
-                + ", publishingRoles=" + publishingRoles + ", createdBy=" + createdBy + ", lastModifiedBy=" + lastModifiedBy
-                + ", comments=" + comments + ", categories=" + categories + ", properties=" + properties + ", locked=" + locked
-                + ", lockOwner=" + lockOwner + ", content=" + content + ", encoding=" + encoding + "]";
+    protected void set_content(byte[] _content) {
+        this._content = _content;
     }
 
 }

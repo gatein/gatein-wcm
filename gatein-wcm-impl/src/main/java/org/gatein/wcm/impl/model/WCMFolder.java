@@ -3,7 +3,8 @@ package org.gatein.wcm.impl.model;
 import java.util.Date;
 import java.util.List;
 
-import org.gatein.wcm.api.model.content.TextContent;
+import org.gatein.wcm.api.model.content.Content;
+import org.gatein.wcm.api.model.content.Folder;
 import org.gatein.wcm.api.model.metadata.Category;
 import org.gatein.wcm.api.model.metadata.Comment;
 import org.gatein.wcm.api.model.metadata.Property;
@@ -12,7 +13,7 @@ import org.gatein.wcm.api.model.security.ACL;
 import org.gatein.wcm.api.model.security.Principal;
 import org.gatein.wcm.api.model.security.User;
 
-public class WCMTextContent implements TextContent {
+public class WCMFolder implements Folder {
 
     Integer version;
     String id;
@@ -30,8 +31,7 @@ public class WCMTextContent implements TextContent {
     List<Property> properties;
     boolean locked;
     User lockOwner;
-    String content;
-    String encoding;
+    List<Content> children;
 
     @Override
     public Integer getVersion() {
@@ -114,18 +114,14 @@ public class WCMTextContent implements TextContent {
     }
 
     @Override
-    public String getContent() {
-        return content;
-    }
-
-    @Override
-    public String getEncoding() {
-        return encoding;
+    public List<Content> getChildren() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     // Protected methods
 
-    protected WCMTextContent() {
+    protected WCMFolder() {
 
     }
 
@@ -193,21 +189,17 @@ public class WCMTextContent implements TextContent {
         this.lockOwner = lockOwner;
     }
 
-    protected void setContent(String content) {
-        this.content = content;
-    }
-
-    protected void setEncoding(String encoding) {
-        this.encoding = encoding;
+    public void setChildren(List<Content> children) {
+        this.children = children;
     }
 
     @Override
     public String toString() {
-        return "WCMTextContent [version=" + version + ", id=" + id + ", locale=" + locale + ", location=" + location + ", acl="
+        return "WCMFolder [version=" + version + ", id=" + id + ", locale=" + locale + ", location=" + location + ", acl="
                 + acl + ", created=" + created + ", lastModified=" + lastModified + ", publishStatus=" + publishStatus
                 + ", publishingRoles=" + publishingRoles + ", createdBy=" + createdBy + ", lastModifiedBy=" + lastModifiedBy
                 + ", comments=" + comments + ", categories=" + categories + ", properties=" + properties + ", locked=" + locked
-                + ", lockOwner=" + lockOwner + ", content=" + content + ", encoding=" + encoding + "]";
+                + ", lockOwner=" + lockOwner + ", children=" + children + "]";
     }
 
 }

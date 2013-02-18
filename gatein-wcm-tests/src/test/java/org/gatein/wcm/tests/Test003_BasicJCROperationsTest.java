@@ -39,7 +39,7 @@ public class Test003_BasicJCROperationsTest {
     @Deployment
     public static Archive<?> createDeployment() {
 
-        return ShrinkWrap.create(WebArchive.class, "gatein-wcm-jcr.war")
+        return ShrinkWrap.create(WebArchive.class, "gatein-wcm-tests-003.war")
                 .addAsResource(new File("src/main/resources/cmis-spec-v1.0.pdf"))
                 .addAsResource(new File("src/main/resources/wcm-whiteboard.jpg"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
@@ -452,7 +452,8 @@ public class Test003_BasicJCROperationsTest {
 
         long global_start = System.currentTimeMillis();
 
-        int MAX = 1000;
+        // Change this to increase the loop
+        int MAX = 1;
 
         try {
 
@@ -558,6 +559,59 @@ public class Test003_BasicJCROperationsTest {
             Assert.fail(e.toString());
 
         }
+    }
+
+    @Test
+    public void url_syntax() {
+
+        clean_tests_folder();
+
+        try {
+
+            log.info( "[[ START TEST url_syntax ]]" );
+
+            SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
+
+            javax.jcr.Session session = repository.login(credentials, "default");
+
+            Value content1 = session.getValueFactory().createValue("<html>This is a test word1</html>");
+            Value content2 = session.getValueFactory().createValue("<html>This is a test word2</html>");
+
+            Node root = session.getNode("/");
+
+            root.addNode("content1", JcrConstants.NT_FOLDER).getName();
+            session.getNode("/content1").addNode("__es", JcrConstants.NT_FOLDER);
+            session.getNode("/content1/__es").addNode("__content1", JcrConstants.NT_FILE);
+            session.getNode("/content1/__es/__content1").addNode("jcr:content", "nt:resource").addMixin("mix:title");
+            session.getNode("/content1/__es/__content1/jcr:content").setProperty("jcr:data", content1);
+            session.getNode("/content1/__es/__content1/jcr:content").setProperty("jcr:description", "<html>This is a test word1</html>");
+
+            root.addNode("content2", JcrConstants.NT_FOLDER).getName();
+            session.getNode("/content2").addNode("__es", JcrConstants.NT_FOLDER);
+            session.getNode("/content2/__es").addNode("__content2", JcrConstants.NT_FILE);
+            session.getNode("/content2/__es/__content2").addNode("jcr:content", "nt:resource").addMixin("mix:title");
+            session.getNode("/content2/__es/__content2/jcr:content").setProperty("jcr:data", content2);
+            session.getNode("/content2/__es/__content2/jcr:content").setProperty("jcr:description", "<html>This is a test word2</html>");
+
+            session.save();
+
+            // Query parts...
+            log.info( "/ . Url test: " + session.nodeExists("/") );
+            log.info( "/content1 . Url test: " + session.nodeExists("/content1") );
+            log.info( "/content1/ . Url test: " + session.nodeExists("/content1/") );
+            log.info( "/content1//__es . Url test: " + session.nodeExists("/content1//__es") );
+
+            Assert.assertTrue( true );
+
+            log.info("[[ END TEST url_syntax ]]");
+
+        } catch (Exception e) {
+
+            Assert.fail(e.toString());
+
+        }
+
+        clean_tests_folder();
     }
 
 

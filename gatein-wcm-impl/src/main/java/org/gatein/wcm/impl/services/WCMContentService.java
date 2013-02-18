@@ -16,6 +16,7 @@ import org.gatein.wcm.api.services.exceptions.ContentIOException;
 import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
 import org.gatein.wcm.api.services.exceptions.PublishException;
 import org.gatein.wcm.impl.services.commands.CreateCommand;
+import org.gatein.wcm.impl.services.commands.DeleteCommand;
 import org.jboss.logging.Logger;
 
 public class WCMContentService implements ContentService {
@@ -43,23 +44,43 @@ public class WCMContentService implements ContentService {
 
         long stop = System.currentTimeMillis();
 
+        // TODO move to Debug once is tested
         log.info("createTextContent() takes " + ((long)(stop-start)) + " ms");
 
         return output;
     }
 
     @Override
-    public Content createFolder(String id, String locale, String location) throws ContentException, ContentIOException,
-            ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+    public Content createFolder(String id, String locale, String location)
+            throws ContentException, ContentIOException, ContentSecurityException {
+
+        long start = System.currentTimeMillis();
+
+        CreateCommand command = new CreateCommand(jcrSession, logged);
+        Content output = command.createFolder(id, locale, location);
+
+        long stop = System.currentTimeMillis();
+
+        // TODO move to Debug once is tested
+        log.info("createFolder() takes " + ((long)(stop-start)) + " ms");
+
+        return output;
     }
 
     @Override
     public Content createBinaryContent(String id, String locale, String location, String contentType, Long size,
             String fileName, InputStream content) throws ContentException, ContentIOException, ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+
+        long start = System.currentTimeMillis();
+
+        CreateCommand command = new CreateCommand(jcrSession, logged);
+        Content output = command.createBinaryContent(id, locale, location, contentType, size, fileName, content);
+        long stop = System.currentTimeMillis();
+
+        // TODO move to Debug once is tested
+        log.info("createBinaryContent() takes " + ((long)(stop-start)) + " ms");
+
+        return output;
     }
 
     @Override
@@ -231,8 +252,18 @@ public class WCMContentService implements ContentService {
 
     @Override
     public String deleteContet(String location) throws ContentException, ContentIOException, ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+
+        long start = System.currentTimeMillis();
+
+        DeleteCommand command = new DeleteCommand(jcrSession, logged);
+        String parent = command.deleteContet( location );
+
+        long stop = System.currentTimeMillis();
+
+        // TODO move to Debug once is tested
+        log.info("deleteContet() takes " + ((long)(stop-start)) + " ms");
+
+        return parent;
     }
 
     @Override
@@ -252,5 +283,19 @@ public class WCMContentService implements ContentService {
         // TODO Auto-generated method stub
 
     }
+
+    // Private Methods
+
+    @Override
+    public String toString() {
+        String str = "[[ WCMContentService - User: " + this.logged.getUserName() +
+                     " - Repository: " + this.jcrSession.getRepository().toString() +
+                     " - Workspace: " + this.jcrSession.getWorkspace().getName() + " ]]";
+
+        return str;
+    }
+
+
+
 
 }

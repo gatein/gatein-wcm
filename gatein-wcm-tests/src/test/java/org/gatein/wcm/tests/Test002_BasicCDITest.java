@@ -27,7 +27,7 @@ public class Test002_BasicCDITest {
     @Deployment
     public static Archive<?> createDeployment() {
 
-        return ShrinkWrap.create(WebArchive.class, "gatein-wcm-test.war").addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+        return ShrinkWrap.create(WebArchive.class, "gatein-wcm-tests-002.war").addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .setManifest(new File("src/main/webapp/META-INF/MANIFEST.MF"));
 
     }
