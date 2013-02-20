@@ -35,26 +35,26 @@ import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
 import org.gatein.wcm.api.services.exceptions.PublishException;
 
 /**
- * 
+ *
  * Defines content API services around org.gatein.wcm.api.model. <br>
- * 
+ *
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
- * 
+ *
  */
 public interface ContentService {
 
     /*
      * Basic content manipulation API block.
-     * 
+     *
      * Context:
-     * 
+     *
      * - A user is logged into portal and portlet needs invoke API to create and update content.
      */
 
     /**
-     * 
+     *
      * Creates a new text content in the default repository.
-     * 
+     *
      * @param id - Key under which to store the content.
      * @param locale - Locale under content is stored.
      * @param location - Location where to store the content. <br>
@@ -72,11 +72,10 @@ public interface ContentService {
             throws ContentException, ContentIOException, ContentSecurityException;
 
     /**
-     * 
+     *
      * Creates a new folder in the default repository.
-     * 
+     *
      * @param id - Key under which to store the folder.
-     * @param locale - Locale under content is stored.
      * @param location - Location where to store the content. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
@@ -86,13 +85,13 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create content under specified location.
      */
-    public Content createFolder(String id, String locale, String location) throws ContentException, ContentIOException,
+    public Content createFolder(String id, String location) throws ContentException, ContentIOException,
             ContentSecurityException;
 
     /**
-     * 
+     *
      * Creates new file resource in the default repository.
-     * 
+     *
      * @param id - Key under which to store the resource.
      * @param locale - Locale under content is stored.
      * @param location - Location where to store the content. <br>
@@ -111,9 +110,9 @@ public interface ContentService {
             String fileName, InputStream content) throws ContentException, ContentIOException, ContentSecurityException;
 
     /**
-     * 
+     *
      * Retrieves a list of content from a specified location. <br>
-     * 
+     *
      * @param location - Location where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
@@ -123,13 +122,13 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to access content under specified location.
      */
-    public List<Content> getContent(String location, String locale) throws ContentException, ContentIOException,
+    public Content getContent(String location, String locale) throws ContentException, ContentIOException,
             ContentSecurityException;
 
     /**
-     * 
+     *
      * Retrieves a list of locales available for a specified content. <br>
-     * 
+     *
      * @param location - Location where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
@@ -142,9 +141,9 @@ public interface ContentService {
             ContentSecurityException;
 
     /**
-     * 
+     *
      * Updates a existing text content in the default repository.
-     * 
+     *
      * @param location - Location where to store the content. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
@@ -160,9 +159,9 @@ public interface ContentService {
             ContentIOException, ContentSecurityException;
 
     /**
-     * 
-     * Moves or renames an existing folder in the default repository.
-     * 
+     *
+     * Moves an existing folder in the default repository.
+     *
      * @param location - Location where to store the content. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
@@ -173,13 +172,31 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create content under specified location.
      */
-    public Content updateFolder(String location, String locale, String newLocation) throws ContentException,
+    public Content updateFolderLocation(String location, String locale, String newLocation) throws ContentException,
             ContentIOException, ContentSecurityException;
 
     /**
-     * 
+    *
+    * Renames an existing folder in the default repository.
+    *
+    * @param location - Location where to store the content. <br>
+    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+    *        where "/" is the root of repository and &lt;id&gt; folders ID
+    * @param locale - Locale under content is stored.
+    * @return Content updated (if ok), null (if error).
+    * @throws ContentException if the id exists in the repository (folder can not be updated, folder gets latest version of
+    *         their most recent item).
+    * @throws ContentIOException if any IO related problem with repository.
+    * @throws ContentSecurityException if user has not been granted to create content under specified location.
+    */
+   public Content updateFolderName(String location, String locale, String newName) throws ContentException,
+           ContentIOException, ContentSecurityException;
+
+
+    /**
+     *
      * Updates new file resource in the default repository.
-     * 
+     *
      * @param id - Key under which to store the resource.
      * @param locale - Locale under content is stored.
      * @param location - Location where to store the content. <br>
@@ -199,7 +216,7 @@ public interface ContentService {
 
     /**
      * Deletes content from a specified location. <br>
-     * 
+     *
      * @param location - Location where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
@@ -214,17 +231,17 @@ public interface ContentService {
 
     /*
      * Basic metadata manipulation API block.
-     * 
+     *
      * Context:
-     * 
+     *
      * - A user admin wants to organize content in categories
      */
 
     /**
-     * 
+     *
      * Creates new Category in the repository. <br>
      * Categories can be organized in a hierarchical tree of categories parents and children.
-     * 
+     *
      * @param id - Category id.
      * @param locale - Locale of category.
      * @param description - Category description.
@@ -240,10 +257,10 @@ public interface ContentService {
             throws ContentException, ContentIOException, ContentSecurityException;
 
     /**
-     * 
+     *
      * Updates existing Category in the repository. <br>
      * Categories can be organized in a hierarchical tree of categories parents and children.
-     * 
+     *
      * @param categoryLocation - Location where the category is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
@@ -258,9 +275,9 @@ public interface ContentService {
             ContentIOException, ContentSecurityException;
 
     /**
-     * 
+     *
      * Updates an existing Category into a new categoryLocation. <br>
-     * 
+     *
      * @param categoryLocation - Location where the category is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
@@ -274,9 +291,9 @@ public interface ContentService {
             ContentSecurityException;
 
     /**
-     * 
+     *
      * Attaches a Category in a Content.
-     * 
+     *
      * @param location - Content location id
      * @param idCategory - Category ID.
      * @return Content updated.
@@ -288,9 +305,9 @@ public interface ContentService {
             ContentSecurityException;
 
     /**
-     * 
+     *
      * Deletes a Category from repository.
-     * 
+     *
      * @param idCategory - Category ID.
      * @return parent Category.
      * @throws ContentException if category has been asigned to Content.
@@ -301,9 +318,9 @@ public interface ContentService {
             ContentSecurityException;
 
     /**
-     * 
+     *
      * Get Content filtered by categories. <br>
-     * 
+     *
      * @param categories - List of Categories to filter Content.
      * @param location - Filter for location. Method will search under specified location. "/" for whole repository. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
@@ -318,9 +335,9 @@ public interface ContentService {
             ContentIOException, ContentSecurityException;
 
     /**
-     * 
+     *
      * Creates a comment under the specified Content location. <br>
-     * 
+     *
      * @param location - Location where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
@@ -335,9 +352,9 @@ public interface ContentService {
             ContentIOException, ContentSecurityException;
 
     /**
-     * 
+     *
      * Removes a comment under the specified Content location. <br>
-     * 
+     *
      * @param location - Location where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
@@ -352,10 +369,10 @@ public interface ContentService {
             ContentIOException, ContentSecurityException;
 
     /**
-     * 
+     *
      * Creates a property in the form KEY/VALUE to a Content. <br>
      * Properties are shared between locales of same Content. <br>
-     * 
+     *
      * @param location - Location where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
@@ -370,10 +387,10 @@ public interface ContentService {
             ContentIOException, ContentSecurityException;
 
     /**
-     * 
+     *
      * Modifies a property in the form KEY/VALUE to a Content. <br>
      * Properties are shared between locales of same Content. <br>
-     * 
+     *
      * @param location - Location where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
@@ -388,10 +405,10 @@ public interface ContentService {
             ContentIOException, ContentSecurityException;
 
     /**
-     * 
+     *
      * Deletes a property in the form KEY/VALUE to a Content. <br>
      * Properties are shared between locales of same Content. <br>
-     * 
+     *
      * @param location - Location where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
@@ -406,16 +423,16 @@ public interface ContentService {
 
     /*
      * Security API.
-     * 
+     *
      * Context:
-     * 
+     *
      * - A user with rights can define new ACE and ACL for content. - Admin user is defined at configuration level.
      */
 
     /**
-     * 
+     *
      * Adds an authorization to a specific content. <br>
-     * 
+     *
      * in org.gatein.wcm a Principal can represent: <br>
      * - A user. <br>
      * - A group. <br>
@@ -431,7 +448,7 @@ public interface ContentService {
      * - ALL: Principal can delete content. <br>
      * <br>
      * All ACL and ACE applies to all locale version of the content. <br>
-     * 
+     *
      * @param location - Location where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
@@ -446,9 +463,9 @@ public interface ContentService {
             throws ContentException, ContentIOException, ContentSecurityException;
 
     /**
-     * 
+     *
      * Remove an authorization to a specific content. <br>
-     * 
+     *
      * in org.gatein.wcm a Principal can represent: <br>
      * - A user. <br>
      * - A group. <br>
@@ -464,7 +481,7 @@ public interface ContentService {
      * - ALL: Principal can delete content. <br>
      * <br>
      * All ACL and ACE applies to all locale version of the content. <br>
-     * 
+     *
      * @param location - Location where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
@@ -488,15 +505,15 @@ public interface ContentService {
 
     /*
      * Versioning API.
-     * 
+     *
      * Context: - CRUD operations over content modified implicitly version of the content. - Also a User can explicitly work
      * with versioning updating
      */
 
     /**
-     * 
+     *
      * Retrieves a list of versions available for a specified content. <br>
-     * 
+     *
      * @param location - Location where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
@@ -510,10 +527,10 @@ public interface ContentService {
             ContentSecurityException;
 
     /**
-     * 
+     *
      * Retrieves a Content version an block it for modify. <br>
      * getContent() is designed mostly for reading and it doesn't block the content. <br>
-     * 
+     *
      * @param location - Location where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
@@ -528,10 +545,10 @@ public interface ContentService {
             ContentSecurityException;
 
     /**
-     * 
+     *
      * Update and release a blocked Content. <br>
      * This method update the version number of the content. <br>
-     * 
+     *
      * Differences between: <br>
      * <p>
      * <b>modifyContent(Content)</b><br>
@@ -544,7 +561,7 @@ public interface ContentService {
      * <li>Only user that make a previous checkIn(Content) can write in the content.
      * <li>Content is blocked until is released by the lock's owner or an administrator.
      * <li>
-     * 
+     *
      * @param content
      * @return Content to be updated.
      * @throws ContentException
@@ -554,10 +571,10 @@ public interface ContentService {
     public Content checkIn(Content content) throws ContentException, ContentIOException, ContentSecurityException;
 
     /**
-     * 
+     *
      * Retrieves a list of content from a specified location. <br>
      * Also specify specific version to retrieve.
-     * 
+     *
      * @param location - Location where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
@@ -572,7 +589,7 @@ public interface ContentService {
             ContentIOException, ContentSecurityException;
 
     /**
-     * 
+     *
      * Removes content from a specified location, locale and version. <br>
      * Differences between: <br>
      * <p>
@@ -583,7 +600,7 @@ public interface ContentService {
      * <b>removeContent(String, String, Integer)</b>
      * <li>Remove just version specified for a given locale.
      * </p>
-     * 
+     *
      * @param location - Location where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
@@ -598,10 +615,10 @@ public interface ContentService {
             ContentSecurityException;
 
     /**
-     * 
+     *
      * Removes content from a specified location. <br>
      * All locales and versions are removed. <br>
-     * 
+     *
      * @param location - Location where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
@@ -614,7 +631,7 @@ public interface ContentService {
 
     /*
      * Workflow API.
-     * 
+     *
      * Context: - Task manager todo_list for basic approvals. - Possibility to include own processes.
      */
     public Content submitPublish(Content content) throws PublishException, ContentIOException, ContentSecurityException;
@@ -623,9 +640,9 @@ public interface ContentService {
 
     /*
      * Session API.
-     * 
+     *
      * Context:
-     * 
+     *
      * - A user has finished and release and flush state info.
      */
 

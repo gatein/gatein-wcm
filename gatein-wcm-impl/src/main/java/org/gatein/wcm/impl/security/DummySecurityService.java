@@ -5,6 +5,7 @@ import java.util.Date;
 import org.gatein.wcm.api.model.security.User;
 import org.gatein.wcm.api.services.SecurityService;
 import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
+import org.jboss.logging.Logger;
 
 /**
  *
@@ -19,7 +20,11 @@ import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
  */
 public class DummySecurityService implements SecurityService {
 
+    private static final Logger log = Logger.getLogger("org.gatein.wcm.security");
+
     public User authenticate(String idUser, String password) throws ContentSecurityException {
+
+        log.debug("Authenticating user... " + idUser);
 
         // Dummy rule for authentication
         if (idUser.equals(password)) {
@@ -46,21 +51,36 @@ public class DummySecurityService implements SecurityService {
 
     }
 
-    public boolean hasRole(User user, String role) throws ContentSecurityException {
+    // Roles:
+    // role
+    // role.repositoryName
+    // role.repositoryName.workspaceName
+    //
+    // Roles: {readonly, readwrite, admin}
 
-        // Dymmy rule for roles
-        // Hard coding for modeshape roles
-        // In the future we need connect to the real system
-        // Now I'm using modeshape mapping roles in
-        //
-        // jboss-as-7.1.1.Final/modules/org/modeshape/main/conf/modehsape-roles.properties
+    public boolean hasRole(User user, String role) throws ContentSecurityException {
 
         if (user == null) {
             throw new ContentSecurityException("Bad user ");
         }
 
-        if (role != null && (role.equals("admin") || role.equals("guess")))
+        log.debug("Authorization of user " + user.getUserName() + " with role " + role + " ...");
+
+        // Dymmy rule for roles
+        // Hard coding for modeshape roles
+        // In the future we need connect to the real system
+
+        if ("guess".equals( user.getUserName() )) {
+            if ("readonly".equals( role ) ) return true;
+            else return false;
+        }
+        if ("admin".equals( user.getUserName() )) {
             return true;
+        }
+
+        if ("lucas".equals( user.getUserName() )) {
+            if ( "readonly".equals( role ) ) return true;
+        }
 
         return false;
     }

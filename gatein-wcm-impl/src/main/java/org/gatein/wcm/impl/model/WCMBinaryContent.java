@@ -35,7 +35,6 @@ public class WCMBinaryContent implements BinaryContent {
     String contentType;
     Long size;
     String fileName;
-    byte[] _content;
     InputStream content;
 
     @Override
@@ -222,14 +221,6 @@ public class WCMBinaryContent implements BinaryContent {
 
     protected void setContent(InputStream content) {
         this.content = content;
-    }
-
-    protected byte[] get_content() {
-        return _content;
-    }
-
-    protected void set_content(byte[] _content) {
-        this._content = _content;
     }
 
 }

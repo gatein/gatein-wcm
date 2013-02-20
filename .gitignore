@@ -3,6 +3,7 @@
 .classpath
 bin
 target
+test-classes
 
 .faces-config.xml.faceside
 .faces-config.xml.jsfdia

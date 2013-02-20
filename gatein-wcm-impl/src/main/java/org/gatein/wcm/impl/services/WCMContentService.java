@@ -17,6 +17,8 @@ import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
 import org.gatein.wcm.api.services.exceptions.PublishException;
 import org.gatein.wcm.impl.services.commands.CreateCommand;
 import org.gatein.wcm.impl.services.commands.DeleteCommand;
+import org.gatein.wcm.impl.services.commands.ReadCommand;
+import org.gatein.wcm.impl.services.commands.UpdateCommand;
 import org.jboss.logging.Logger;
 
 public class WCMContentService implements ContentService {
@@ -44,25 +46,23 @@ public class WCMContentService implements ContentService {
 
         long stop = System.currentTimeMillis();
 
-        // TODO move to Debug once is tested
-        log.info("createTextContent() takes " + ((long)(stop-start)) + " ms");
+        log.debug("createTextContent() takes " + ((long)(stop-start)) + " ms");
 
         return output;
     }
 
     @Override
-    public Content createFolder(String id, String locale, String location)
+    public Content createFolder(String id, String location)
             throws ContentException, ContentIOException, ContentSecurityException {
 
         long start = System.currentTimeMillis();
 
         CreateCommand command = new CreateCommand(jcrSession, logged);
-        Content output = command.createFolder(id, locale, location);
+        Content output = command.createFolder(id, location);
 
         long stop = System.currentTimeMillis();
 
-        // TODO move to Debug once is tested
-        log.info("createFolder() takes " + ((long)(stop-start)) + " ms");
+        log.debug("createFolder() takes " + ((long)(stop-start)) + " ms");
 
         return output;
     }
@@ -77,52 +77,114 @@ public class WCMContentService implements ContentService {
         Content output = command.createBinaryContent(id, locale, location, contentType, size, fileName, content);
         long stop = System.currentTimeMillis();
 
-        // TODO move to Debug once is tested
-        log.info("createBinaryContent() takes " + ((long)(stop-start)) + " ms");
+        log.debug("createBinaryContent() takes " + ((long)(stop-start)) + " ms");
 
         return output;
     }
 
     @Override
-    public List<Content> getContent(String location, String locale) throws ContentException, ContentIOException,
+    public Content getContent(String location, String locale) throws ContentException, ContentIOException,
             ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+        long start = System.currentTimeMillis();
+
+        ReadCommand command = new ReadCommand(jcrSession, logged);
+        Content output = command.getContent(location, locale);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("getContent() takes " + ((long)(stop-start)) + " ms");
+
+        return output;
     }
 
     @Override
     public List<String> getContentLocales(String location) throws ContentException, ContentIOException,
             ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+        long start = System.currentTimeMillis();
+
+        ReadCommand command = new ReadCommand(jcrSession, logged);
+        List<String> output = command.getContentLocales(location);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("getContentLocales() takes " + ((long)(stop-start)) + " ms");
+
+        return output;
     }
 
     @Override
     public Content updateTextContent(String location, String locale, String html, String encoding) throws ContentException,
             ContentIOException, ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+        long start = System.currentTimeMillis();
+
+        UpdateCommand command = new UpdateCommand(jcrSession, logged);
+        Content output = command.updateTextContent(location, locale, html, encoding);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("updateTextContent() takes " + ((long)(stop-start)) + " ms");
+
+        return output;
     }
 
     @Override
-    public Content updateFolder(String location, String locale, String newLocation) throws ContentException,
+    public Content updateFolderLocation(String location, String locale, String newLocation) throws ContentException,
             ContentIOException, ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+        long start = System.currentTimeMillis();
+
+        UpdateCommand command = new UpdateCommand(jcrSession, logged);
+        Content output = command.updateFolderLocation(location, locale, newLocation);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("updateFolder() takes " + ((long)(stop-start)) + " ms");
+
+        return output;
+    }
+
+    @Override
+    public Content updateFolderName(String location, String locale, String newName) throws ContentException,
+            ContentIOException, ContentSecurityException {
+        long start = System.currentTimeMillis();
+
+        UpdateCommand command = new UpdateCommand(jcrSession, logged);
+        Content output = command.updateFolderName(location, locale, newName);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("updateFolder() takes " + ((long)(stop-start)) + " ms");
+
+        return output;
     }
 
     @Override
     public Content updateBinaryContent(String location, String locale, String contentType, Long size, String fileName,
             InputStream content) throws ContentException, ContentIOException, ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+        long start = System.currentTimeMillis();
+
+        UpdateCommand command = new UpdateCommand(jcrSession, logged);
+        Content output = command.updateBinaryContent(location, locale, contentType, size, fileName, content);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("updateTextContent() takes " + ((long)(stop-start)) + " ms");
+
+        return output;
     }
 
     @Override
     public String deleteContent(String location, String locale) throws ContentException, ContentIOException,
             ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+        long start = System.currentTimeMillis();
+
+        DeleteCommand command = new DeleteCommand(jcrSession, logged);
+        String parent = command.deleteContent( location, locale );
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("deleteContet() takes " + ((long)(stop-start)) + " ms");
+
+        return parent;
     }
 
     @Override
@@ -256,7 +318,7 @@ public class WCMContentService implements ContentService {
         long start = System.currentTimeMillis();
 
         DeleteCommand command = new DeleteCommand(jcrSession, logged);
-        String parent = command.deleteContet( location );
+        String parent = command.deleteContent( location );
 
         long stop = System.currentTimeMillis();
 

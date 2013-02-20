@@ -1,23 +1,21 @@
 package org.gatein.wcm.impl.security;
 
-import java.util.Locale;
 import java.util.Map;
 
 import javax.jcr.Credentials;
 import javax.jcr.SimpleCredentials;
 import javax.security.auth.login.LoginException;
 
-import org.gatein.wcm.api.model.security.User;
-import org.gatein.wcm.api.services.SecurityService;
-import org.gatein.wcm.api.services.exceptions.ContentIOException;
-import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
-import org.modeshape.common.i18n.I18nResource;
 import org.modeshape.common.logging.Logger;
 import org.modeshape.jcr.ExecutionContext;
+import org.modeshape.jcr.ModeShapePermissions;
+import org.modeshape.jcr.ModeShapeRoles;
 import org.modeshape.jcr.security.AuthenticationProvider;
+import org.modeshape.jcr.security.AuthorizationProvider;
 import org.modeshape.jcr.security.SecurityContext;
+import org.modeshape.jcr.value.Path;
 
-public class WCMModeShapeProvider implements AuthenticationProvider {
+public class WCMModeShapeProvider implements AuthenticationProvider, AuthorizationProvider {
 
     private static final Logger log = Logger.getLogger(WCMModeShapeProvider.class);
 
@@ -31,79 +29,57 @@ public class WCMModeShapeProvider implements AuthenticationProvider {
             }
 
         } catch (LoginException e) {
-            log.warn(new WCMModeShapeProvider.LogMsg(e.toString()), e.toString());
+            log.warn(new WCMLog(e.toString()), e.toString());
             return null;
         }
         return null;
     }
 
-    protected static class WCMSecurityContext implements SecurityContext {
+    @Override
+    public boolean hasPermission(ExecutionContext context, String repositoryName, String repositorySourceName,
+            String workspaceName, Path path, String... actions) {
 
-        SimpleCredentials sCredentials = null;
-        SecurityService wcmSecurityService = null;
-        User loggedUser = null;
+        // Get the credentials from context
+        SecurityContext sec = context.getSecurityContext();
 
-        protected WCMSecurityContext(Credentials credentials) throws LoginException {
-            // Expecting JCR SimpleCredentials
-            sCredentials = (SimpleCredentials) credentials;
-            log.info(new WCMModeShapeProvider.LogMsg("Getting security credentials "), sCredentials.getUserID());
-
-            try {
-                wcmSecurityService = WCMSecurityFactory.getSecurityService();
-            } catch (ContentIOException e) {
-                throw new LoginException("Unable to connect to SecuritySystem: " + e.getMessage());
+        boolean hasPermission = true;
+        for (String action : actions) {
+            if (ModeShapePermissions.READ.equals(action)) {
+                hasPermission &= hasRole(sec, ModeShapeRoles.READONLY, repositoryName, workspaceName)
+                                 || hasRole(sec, ModeShapeRoles.READWRITE, repositoryName, workspaceName)
+                                 || hasRole(sec, ModeShapeRoles.ADMIN, repositoryName, workspaceName);
+            } else if (ModeShapePermissions.REGISTER_NAMESPACE.equals(action)
+                       || ModeShapePermissions.REGISTER_TYPE.equals(action) || ModeShapePermissions.UNLOCK_ANY.equals(action)
+                       || ModeShapePermissions.CREATE_WORKSPACE.equals(action)
+                       || ModeShapePermissions.DELETE_WORKSPACE.equals(action) || ModeShapePermissions.MONITOR.equals(action)
+                       || ModeShapePermissions.DELETE_WORKSPACE.equals(action)
+                       || ModeShapePermissions.INDEX_WORKSPACE.equals(action)) {
+                hasPermission &= hasRole(sec, ModeShapeRoles.ADMIN, repositoryName, workspaceName);
+            } else {
+                hasPermission &= hasRole(sec, ModeShapeRoles.ADMIN, repositoryName, workspaceName)
+                                 || hasRole(sec, ModeShapeRoles.READWRITE, repositoryName, workspaceName);
             }
-
-            try {
-                loggedUser = wcmSecurityService.authenticate(sCredentials.getUserID(), new String(sCredentials.getPassword()));
-            } catch (ContentSecurityException e) {
-                throw new LoginException(e.getMessage());
-            }
-
         }
 
-        public String getUserName() {
-            return (loggedUser != null ? loggedUser.getUserName() : null);
-        }
-
-        public boolean hasRole(String role) {
-
-            try {
-                return wcmSecurityService.hasRole(loggedUser, role);
-            } catch (ContentSecurityException e) {
-                log.error(new WCMModeShapeProvider.LogMsg("Error getting role: " + e.getMessage()), loggedUser);
-            }
-
-            return false;
-        }
-
-        public boolean isAnonymous() {
-            return false;
-        }
-
-        public void logout() {
-            sCredentials = null;
-            loggedUser = null;
-        }
-
+        return hasPermission;
     }
 
-    public static class LogMsg implements I18nResource {
-
-        String msg;
-
-        public LogMsg(String msg) {
-            this.msg = msg;
-        }
-
-        public String text(Object... arguments) {
-            return msg;
-        }
-
-        public String text(Locale locale, Object... arguments) {
-            return msg;
-        }
-
+    // Roles:
+    // role
+    // role.repositoryName
+    // role.repositoryName.workspaceName
+    //
+    // Roles: {readonly, readwrite, admin}
+    final static boolean hasRole( SecurityContext context,
+                                  String roleName,
+                                  String repositoryName,
+                                  String workspaceName )
+    {
+            if (context.hasRole(roleName)) return true;
+            roleName = roleName + "." + repositoryName;
+            if (context.hasRole(roleName)) return true;
+            roleName = roleName + "." + workspaceName;
+            return context.hasRole(roleName);
     }
 
 }

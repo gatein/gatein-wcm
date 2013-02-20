@@ -3,13 +3,20 @@ package org.gatein.wcm.impl.tests;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
 
 import javax.annotation.Resource;
 
 import junit.framework.Assert;
 
+import org.gatein.wcm.api.model.content.BinaryContent;
 import org.gatein.wcm.api.model.content.Content;
+import org.gatein.wcm.api.model.content.Folder;
+import org.gatein.wcm.api.model.content.TextContent;
 import org.gatein.wcm.api.services.ContentService;
 import org.gatein.wcm.api.services.RepositoryService;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -90,24 +97,73 @@ public class Test002_BasicAPI {
 
             String folder = "folder";
 
-            for (int i=0; i<100; i++) {
+            long start = System.currentTimeMillis();
 
-                cs.createFolder(folder + i, "", "/");
-                cs.createFolder("sea", "", "/" + folder + i);
+            for (int i=0; i<2; i++) {
+
+                cs.createFolder(folder + i, "/");
+                cs.createFolder("sea", "/" + folder + i);
                 cs.createTextContent("test1", "es", "/folder" + i + "/sea", "<h1>Primer test loop " + i + " ...</h1>", "UTF8");
                 cs.createTextContent("test1", "en", "/folder" + i + "/sea", "<h1>First test loop " + i + " ...</h1>", "UTF8");
-                cs.createFolder("land", "", "/" + folder + i);
+                cs.createFolder("land", "/" + folder + i);
                 cs.createBinaryContent("test2", "en", "/folder" + i + "/land", "application/pdf", new Long( _pdf.length ), "cmis-spec-v1.0.pdf", new ByteArrayInputStream( _pdf ) );
-                cs.createFolder("air", "", "/" + folder + i);
+                cs.createFolder("air", "/" + folder + i);
                 cs.createBinaryContent("test3", "en", "/folder" + i + "/air", "image/jpeg", new Long( _jpg.length ), "wcm-whiteboard.jpg", new ByteArrayInputStream( _jpg ) );
 
             }
+
+            long stop = System.currentTimeMillis();
+
+            log.info("Upload content: " + (stop-start) + " ms");
+
+            log.info("[[ READING ... ]]");
+
+            start = System.currentTimeMillis()
+                    ;
+            Content root_es = cs.getContent("/", "es");
+            Content root_en = cs.getContent("/", "en");
+
+            print (root_es);
+            print (root_en);
+
+            stop = System.currentTimeMillis();
+
+            log.info("Reading content: " + (stop-start) + " ms");
 
             log.info("[[ STOP TEST  basic_folders ]]");
 
             Assert.assertTrue( true );
 
         } catch (Exception e) {
+
+            log.error(e.getMessage());
+
+            Assert.assertTrue( false );
+        }
+
+    }
+
+    @Test
+    public void test_locales() {
+
+        try {
+            log.info("[[ START TEST  test_locales ]]");
+
+            ContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
+
+            cs.createTextContent("test1", "es", "/", "<h1>Primer test...</h1>", "UTF8");
+            cs.createTextContent("test1", "en", "/", "<h1>First test...</h1>", "UTF8");
+            cs.createTextContent("test1", "fr", "/", "<h1>Premier test...</h1>", "UTF8");
+
+            List<String> locales = cs.getContentLocales( "/test1" );
+
+            log.info("Locales: " + locales);
+
+            log.info("[[ STOP TEST  test_locales ]]");
+
+            Assert.assertTrue( true );
+
+        }  catch (Exception e) {
 
             log.error(e.getMessage());
 
@@ -132,7 +188,43 @@ public class Test002_BasicAPI {
         return null;
     }
 
+    public void print(Content c) {
 
+        log.info("--> " + c.getLocation() + " - " + c.getId());
+        if (c instanceof Folder) {
+            List<Content> children = ((Folder)c).getChildren();
+            for (Content _c : children)
+                print( _c );
+        }
+        if (c instanceof TextContent) {
+            TextContent t = (TextContent)c;
+            log.info("Text: " + t.getContent());
+        }
+        if (c instanceof BinaryContent) {
+            BinaryContent b = (BinaryContent)c;
+            String filename = b.getFileName();
+            log.info(" Writting " + filename );
+            inputStreamToFile(b.getContent(), filename);
+        }
+        log.info("<-- " + c.getLocation() + " - " + c.getId());
+
+    }
+
+    public void inputStreamToFile(InputStream entrada, String file) {
+        try{
+          File f=new File("/tmp/tests/" + file);
+          OutputStream salida=new FileOutputStream(f);
+          byte[] buf =new byte[1024];
+          int len;
+          while((len=entrada.read(buf))>0) {
+             salida.write(buf,0,len);
+          }
+          salida.close();
+          entrada.close();
+        } catch(IOException e) {
+          log.error("Error creating file: " + e.getMessage());
+       }
+    }
 
 
 }

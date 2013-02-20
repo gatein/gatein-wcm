@@ -27,13 +27,13 @@ public class CreateCommand {
 
     public CreateCommand (Session session, User user)
             throws ContentIOException
-        {
-            jcrSession = session;
-            logged = user;
-            jcr = new JcrMappings(jcrSession, logged);
-            factory = new WCMContentFactory(jcr, logged);
-            jcr.setFactory( factory );
-        }
+    {
+        jcrSession = session;
+        logged = user;
+        jcr = new JcrMappings(jcrSession, logged);
+        factory = new WCMContentFactory(jcr, logged);
+        jcr.setFactory( factory );
+    }
 
     /**
      *
@@ -72,14 +72,14 @@ public class CreateCommand {
             throw new ContentException("Location: " + location + " Locale: " + locale + " id: " + id + " exists for createTextContent() operation. ");
 
         // Check if user has rights to access
-        if ( ! jcr.checkUserACL( location ))
+        if ( ! jcr.checkUserWriteACL( location ))
             throw new ContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: " + location);
 
         // Creating new Node
         try {
 
             Value content = jcr.jcrValue(html, encoding);
-            jcr.createTextNode(id, locale, location, content);
+            jcr.createTextNode(id, locale, location, content, encoding);
 
             return factory.createTextContent(id, locale, location, html, encoding);
 
@@ -125,12 +125,12 @@ public class CreateCommand {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create content under specified location.
      */
-    public Content createFolder(String id, String locale, String location)
+    public Content createFolder(String id, String location)
             throws ContentException, ContentIOException, ContentSecurityException {
 
         log.debug("createFolder()");
 
-        checkNullParameters(id, locale, location);
+        checkNullParameters(id, location);
 
         // Check if the current JCR Session is valid
         if ( ! jcr.checkSession() )
@@ -142,10 +142,10 @@ public class CreateCommand {
 
         // Check if there is a content with same id in the specified location
         if ( jcr.checkIdExists(location, id) )
-            throw new ContentException("Location: " + location + " Locale: " + locale + " id: " + id + " exists for createFolder() operation. ");
+            throw new ContentException("Location: " + location + " Id: " + id + " exists for createFolder() operation. ");
 
         // Check if user has rights to access
-        if ( ! jcr.checkUserACL( location ))
+        if ( ! jcr.checkUserWriteACL( location ))
             throw new ContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: " + location);
 
         // Creating new folder
@@ -163,13 +163,10 @@ public class CreateCommand {
 
     }
 
-    private void checkNullParameters(String id, String locale, String location) throws ContentException
+    private void checkNullParameters(String id, String location) throws ContentException
     {
         if (id == null || "".equals( id )) {
             new ContentException("Parameter id cannot be null or empty");
-        }
-        if (locale == null || "".equals( locale )) {
-            new ContentException("Parameter locale cannot be null or empty");
         }
         if (location == null || "".equals( location )) {
             new ContentException("Parameter location cannot be null or empty");
@@ -215,13 +212,13 @@ public class CreateCommand {
             throw new ContentException("Location: " + location + " Locale: " + locale + " id: " + id + " exists for createTextContent() operation. ");
 
         // Check if user has rights to access
-        if ( ! jcr.checkUserACL( location ))
+        if ( ! jcr.checkUserWriteACL( location ))
             throw new ContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: " + location);
 
         // Creating new Node
         try {
 
-            byte[] _content = jcr.toByteArray(content, size);
+            byte[] _content = jcr.toByteArray(content);
 
             jcr.createBinaryNode(id, locale, location, contentType, size, fileName, new ByteArrayInputStream( _content ) );
 
@@ -233,7 +230,6 @@ public class CreateCommand {
 
         return null;
     }
-
 
     private void checkNullParameters(String id, String locale, String location, String contentType, Long size,
             String fileName, InputStream content) throws ContentException

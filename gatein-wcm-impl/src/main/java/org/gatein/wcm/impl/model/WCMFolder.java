@@ -115,8 +115,7 @@ public class WCMFolder implements Folder {
 
     @Override
     public List<Content> getChildren() {
-        // TODO Auto-generated method stub
-        return null;
+        return children;
     }
 
     // Protected methods
@@ -189,7 +188,7 @@ public class WCMFolder implements Folder {
         this.lockOwner = lockOwner;
     }
 
-    public void setChildren(List<Content> children) {
+    protected void setChildren(List<Content> children) {
         this.children = children;
     }
 
