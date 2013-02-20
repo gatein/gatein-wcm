@@ -132,8 +132,9 @@ public class UpdateCommand {
           throw new ContentException("Location: " + newLocation + " doesn't exist for updateFolderLocation() operation. ");
 
       try {
-          jcr.updateFolderLocation(location, newLocation);
-          return factory.getContent(newLocation, locale);
+          String id = location.substring( location.lastIndexOf("/") + 1);
+          jcr.updateFolderLocation(location, newLocation + "/" + id);
+          return factory.getContent(newLocation + "/" + id, locale);
       } catch (RepositoryException e) {
           jcr.checkJCRException( e );
       }
@@ -177,7 +178,7 @@ public class UpdateCommand {
          throw new ContentException("Location: " + newLocation + " exists for updateFolderName() operation. ");
 
      try {
-         jcr.updateFolderName(location, newLocation);
+         jcr.updateFolderName(location, newName);
          return factory.getContent(newLocation, locale);
      } catch (RepositoryException e) {
          jcr.checkJCRException( e );

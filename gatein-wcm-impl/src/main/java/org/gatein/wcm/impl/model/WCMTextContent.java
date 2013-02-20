@@ -126,7 +126,6 @@ public class WCMTextContent implements TextContent {
     // Protected methods
 
     protected WCMTextContent() {
-
     }
 
     protected void setVersion(Integer version) {

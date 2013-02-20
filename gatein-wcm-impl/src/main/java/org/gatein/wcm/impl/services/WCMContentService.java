@@ -27,12 +27,12 @@ public class WCMContentService implements ContentService {
 
     Session jcrSession = null;
     User logged = null;
+    String repository = null;
 
-    public WCMContentService (Session session, User user)
-        throws ContentIOException
-    {
+    public WCMContentService(String repository, Session session, User user) throws ContentIOException {
         jcrSession = session;
         logged = user;
+        this.repository = repository;
     }
 
     @Override
@@ -46,14 +46,14 @@ public class WCMContentService implements ContentService {
 
         long stop = System.currentTimeMillis();
 
-        log.debug("createTextContent() takes " + ((long)(stop-start)) + " ms");
+        log.debug("createTextContent() takes " + ((long) (stop - start)) + " ms");
 
         return output;
     }
 
     @Override
-    public Content createFolder(String id, String location)
-            throws ContentException, ContentIOException, ContentSecurityException {
+    public Content createFolder(String id, String location) throws ContentException, ContentIOException,
+            ContentSecurityException {
 
         long start = System.currentTimeMillis();
 
@@ -62,7 +62,7 @@ public class WCMContentService implements ContentService {
 
         long stop = System.currentTimeMillis();
 
-        log.debug("createFolder() takes " + ((long)(stop-start)) + " ms");
+        log.debug("createFolder() takes " + ((long) (stop - start)) + " ms");
 
         return output;
     }
@@ -75,9 +75,10 @@ public class WCMContentService implements ContentService {
 
         CreateCommand command = new CreateCommand(jcrSession, logged);
         Content output = command.createBinaryContent(id, locale, location, contentType, size, fileName, content);
+
         long stop = System.currentTimeMillis();
 
-        log.debug("createBinaryContent() takes " + ((long)(stop-start)) + " ms");
+        log.debug("createBinaryContent() takes " + ((long) (stop - start)) + " ms");
 
         return output;
     }
@@ -85,6 +86,7 @@ public class WCMContentService implements ContentService {
     @Override
     public Content getContent(String location, String locale) throws ContentException, ContentIOException,
             ContentSecurityException {
+
         long start = System.currentTimeMillis();
 
         ReadCommand command = new ReadCommand(jcrSession, logged);
@@ -92,7 +94,7 @@ public class WCMContentService implements ContentService {
 
         long stop = System.currentTimeMillis();
 
-        log.debug("getContent() takes " + ((long)(stop-start)) + " ms");
+        log.debug("getContent() takes " + ((long) (stop - start)) + " ms");
 
         return output;
     }
@@ -107,7 +109,7 @@ public class WCMContentService implements ContentService {
 
         long stop = System.currentTimeMillis();
 
-        log.debug("getContentLocales() takes " + ((long)(stop-start)) + " ms");
+        log.debug("getContentLocales() takes " + ((long) (stop - start)) + " ms");
 
         return output;
     }
@@ -115,6 +117,7 @@ public class WCMContentService implements ContentService {
     @Override
     public Content updateTextContent(String location, String locale, String html, String encoding) throws ContentException,
             ContentIOException, ContentSecurityException {
+
         long start = System.currentTimeMillis();
 
         UpdateCommand command = new UpdateCommand(jcrSession, logged);
@@ -122,7 +125,7 @@ public class WCMContentService implements ContentService {
 
         long stop = System.currentTimeMillis();
 
-        log.debug("updateTextContent() takes " + ((long)(stop-start)) + " ms");
+        log.debug("updateTextContent() takes " + ((long) (stop - start)) + " ms");
 
         return output;
     }
@@ -130,6 +133,7 @@ public class WCMContentService implements ContentService {
     @Override
     public Content updateFolderLocation(String location, String locale, String newLocation) throws ContentException,
             ContentIOException, ContentSecurityException {
+
         long start = System.currentTimeMillis();
 
         UpdateCommand command = new UpdateCommand(jcrSession, logged);
@@ -137,7 +141,7 @@ public class WCMContentService implements ContentService {
 
         long stop = System.currentTimeMillis();
 
-        log.debug("updateFolder() takes " + ((long)(stop-start)) + " ms");
+        log.debug("updateFolderLocation() takes " + ((long) (stop - start)) + " ms");
 
         return output;
     }
@@ -145,6 +149,7 @@ public class WCMContentService implements ContentService {
     @Override
     public Content updateFolderName(String location, String locale, String newName) throws ContentException,
             ContentIOException, ContentSecurityException {
+
         long start = System.currentTimeMillis();
 
         UpdateCommand command = new UpdateCommand(jcrSession, logged);
@@ -152,7 +157,7 @@ public class WCMContentService implements ContentService {
 
         long stop = System.currentTimeMillis();
 
-        log.debug("updateFolder() takes " + ((long)(stop-start)) + " ms");
+        log.debug("updateFolderName() takes " + ((long) (stop - start)) + " ms");
 
         return output;
     }
@@ -160,6 +165,7 @@ public class WCMContentService implements ContentService {
     @Override
     public Content updateBinaryContent(String location, String locale, String contentType, Long size, String fileName,
             InputStream content) throws ContentException, ContentIOException, ContentSecurityException {
+
         long start = System.currentTimeMillis();
 
         UpdateCommand command = new UpdateCommand(jcrSession, logged);
@@ -167,7 +173,7 @@ public class WCMContentService implements ContentService {
 
         long stop = System.currentTimeMillis();
 
-        log.debug("updateTextContent() takes " + ((long)(stop-start)) + " ms");
+        log.debug("updateBinaryContent() takes " + ((long) (stop - start)) + " ms");
 
         return output;
     }
@@ -175,14 +181,15 @@ public class WCMContentService implements ContentService {
     @Override
     public String deleteContent(String location, String locale) throws ContentException, ContentIOException,
             ContentSecurityException {
+
         long start = System.currentTimeMillis();
 
         DeleteCommand command = new DeleteCommand(jcrSession, logged);
-        String parent = command.deleteContent( location, locale );
+        String parent = command.deleteContent(location, locale);
 
         long stop = System.currentTimeMillis();
 
-        log.debug("deleteContet() takes " + ((long)(stop-start)) + " ms");
+        log.debug("deleteContent() takes " + ((long) (stop - start)) + " ms");
 
         return parent;
     }
@@ -318,12 +325,11 @@ public class WCMContentService implements ContentService {
         long start = System.currentTimeMillis();
 
         DeleteCommand command = new DeleteCommand(jcrSession, logged);
-        String parent = command.deleteContent( location );
+        String parent = command.deleteContent(location);
 
         long stop = System.currentTimeMillis();
 
-        // TODO move to Debug once is tested
-        log.info("deleteContet() takes " + ((long)(stop-start)) + " ms");
+        log.debug("deleteContet() takes " + ((long) (stop - start)) + " ms");
 
         return parent;
     }
@@ -343,21 +349,17 @@ public class WCMContentService implements ContentService {
     @Override
     public void closeSession() throws ContentException, ContentIOException {
         // TODO Auto-generated method stub
-
     }
 
     // Private Methods
 
     @Override
     public String toString() {
-        String str = "[[ WCMContentService - User: " + this.logged.getUserName() +
-                     " - Repository: " + this.jcrSession.getRepository().toString() +
-                     " - Workspace: " + this.jcrSession.getWorkspace().getName() + " ]]";
 
+        String str = "[[ WCMContentService - User: " + this.logged.getUserName() + " - Repository: "
+                + repository + " - Workspace: " + this.jcrSession.getWorkspace().getName()
+                + " ]]";
         return str;
     }
-
-
-
 
 }

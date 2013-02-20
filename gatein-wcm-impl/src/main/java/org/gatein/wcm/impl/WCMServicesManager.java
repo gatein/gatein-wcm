@@ -25,7 +25,6 @@ import org.jboss.logging.Logger;
 import org.modeshape.jcr.api.Repositories;
 
 
-
 public class WCMServicesManager implements RepositoryService, ObjectFactory {
 
     private static final Logger log = Logger.getLogger("org.gatein.wcm");
@@ -47,11 +46,8 @@ public class WCMServicesManager implements RepositoryService, ObjectFactory {
             ContentSecurityException {
 
         User u = null;
-
         try {
-
             u = WCMSecurityFactory.getSecurityService().authenticate(user, password);
-
         } catch (ContentIOException e) {
             throw new ContentIOException( "Unable to connect to WCM Security Service: " + e.getMessage() );
         } catch (ContentSecurityException e) {
@@ -59,21 +55,16 @@ public class WCMServicesManager implements RepositoryService, ObjectFactory {
         }
 
         try {
-
            Context ctx = new InitialContext();
-
            repositories = (Repositories)ctx.lookup( "java:/jcr" );
-
            Repository rep = repositories.getRepository(idRepository);
-
            if (rep == null)
                throw new ContentIOException( "Unable to connect to JCR repository: " + idRepository );
 
            SimpleCredentials credentials = new SimpleCredentials(u.getUserName(), u.getPassword().toCharArray());
            Session s = rep.login(credentials, idWorkspace);
 
-           return new WCMContentService( s, u );
-
+           return new WCMContentService( idRepository, s, u );
         } catch (NamingException e) {
             throw new ContentIOException( "Unable to connect to ModeShape JNDI java:/jcr" );
         }  catch (NullPointerException e) {

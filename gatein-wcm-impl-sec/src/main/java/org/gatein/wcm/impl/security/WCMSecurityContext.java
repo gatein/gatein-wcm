@@ -22,7 +22,7 @@ public class WCMSecurityContext implements SecurityContext {
     protected WCMSecurityContext(Credentials credentials) throws LoginException {
         // Expecting JCR SimpleCredentials
         sCredentials = (SimpleCredentials) credentials;
-        log.info(new WCMLog("Getting security credentials "), sCredentials.getUserID());
+        log.info(new WCMLog("Getting security credentials for user " + sCredentials.getUserID()), sCredentials.getUserID());
 
         try {
             wcmSecurityService = WCMSecurityFactory.getSecurityService();

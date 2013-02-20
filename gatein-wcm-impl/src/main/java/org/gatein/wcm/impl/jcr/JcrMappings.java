@@ -453,7 +453,7 @@ public class JcrMappings {
 
         String id = location.substring( location.lastIndexOf("/") + 1);
 
-        Node n = jcrSession.getNode(location + "/" + MARK + id);
+        Node n = jcrSession.getNode(location + "/" + MARK + locale + "/" + MARK + id);
 
         // In TextNodes we store the html also in jcr:description for future search funtionality
         n.setProperty("jcr:description", content);
@@ -468,7 +468,7 @@ public class JcrMappings {
         // Root node is not affected
         if ("/".equals( location )) return;
 
-        jcrSession.move(location, newLocation);
+        jcrSession.move(location, newLocation + "/");
 
         jcrSession.save();
     }
