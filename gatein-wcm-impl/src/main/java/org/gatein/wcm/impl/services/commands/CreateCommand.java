@@ -8,6 +8,7 @@ import javax.jcr.Session;
 import javax.jcr.Value;
 
 import org.gatein.wcm.api.model.content.Content;
+import org.gatein.wcm.api.model.metadata.Category;
 import org.gatein.wcm.api.model.security.User;
 import org.gatein.wcm.api.services.exceptions.ContentException;
 import org.gatein.wcm.api.services.exceptions.ContentIOException;
@@ -256,5 +257,74 @@ public class CreateCommand {
             new ContentException("Parameter content in InputStream cannot be null");
         }
     }
+
+    /**
+    *
+    * Creates new Category in the repository. <br>
+    * Categories can be organized in a hierarchical tree of categories parents and children.
+    *
+    * @param id - Category id.
+    * @param locale - Locale of category.
+    * @param description - Category description.
+    * @param categoryLocation - Location where the category is stored. <br>
+    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+    *        where "/" is the root of repository and &lt;id&gt; folders ID
+    * @return Category created (if ok), null (if error).
+    * @throws ContentException if the id exists (categories are not versionable items).
+    * @throws ContentIOException if any IO related problem with repository.
+    * @throws ContentSecurityException if user has not been granted to create categories.
+    */
+   public Category createCategory(String id, String locale, String description, String categoryLocation)
+       throws ContentException, ContentIOException, ContentSecurityException
+   {
+       log.debug("createCategory()");
+
+       checkNullParameters(id, locale, description, categoryLocation);
+
+       // Check if the current JCR Session is valid
+       if ( ! jcr.checkSession() )
+           throw new ContentIOException("JCR Session is null");
+
+       if ("/".equals( categoryLocation )) categoryLocation = "";
+
+       // Check if the location specified exists in the JCR Repository/Workspace
+       if ( ! jcr.checkLocation("/__categories" + categoryLocation) )
+           throw new ContentException("Location: " + categoryLocation + " doesn't exist for createCategory() operation. ");
+
+       // Check if there is a content with same id in the specified location
+       if ( jcr.checkIdExists("/__categories" + categoryLocation, id, locale) )
+           throw new ContentException("Location: " + categoryLocation + " Locale: " + locale + " id: " + id + " exists for createCategory() operation. ");
+
+       // Check if user has rights to access
+       if ( ! jcr.checkUserAdminACL( "/__categories" ))
+           throw new ContentSecurityException("User: " + logged.getUserName() + " has not ADMIN rights in location: " + "/__categories");
+
+       // Creating new Category
+       try {
+           jcr.createCategory(id, locale, "/__categories" + categoryLocation, description);
+           return factory.getCategory("/__categories" + categoryLocation + "/" + id, locale);
+       } catch (RepositoryException e) {
+           jcr.checkJCRException( e );
+       }
+
+       return null;
+   }
+
+   private void checkNullParameters(String id, String locale, String description, String categoryLocation)
+       throws ContentException
+   {
+       if (id == null || "".equals( id )) {
+           new ContentException("Parameter id cannot be null or empty");
+       }
+       if (locale == null || "".equals( locale ) ) {
+           new ContentException("Parameter locale cannot be null or empty");
+       }
+       if (description == null || "".equals( description ) ) {
+           new ContentException("Parameter description cannot be null or empty");
+       }
+       if (categoryLocation == null || "".endsWith( categoryLocation ) ) {
+           new ContentException("Parameter categoryLocation cannot be null or empty");
+       }
+   }
 
 }

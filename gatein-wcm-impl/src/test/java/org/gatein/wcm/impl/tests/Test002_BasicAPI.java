@@ -373,7 +373,7 @@ public class Test002_BasicAPI {
 
     private void inputStreamToFile(InputStream entrada, String file, String tmpFolder) {
         try{
-          File f=new File(tmpFolder + file);
+          File f=new File(tmpFolder + "/" + file);
           OutputStream salida=new FileOutputStream(f);
           byte[] buf =new byte[16384];
           int len;

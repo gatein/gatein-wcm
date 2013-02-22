@@ -36,4 +36,9 @@ public class WCMACL implements ACL {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return "WCMACL [id=" + id + ", description=" + description + ", aces=" + aces + "]";
+    }
+
 }

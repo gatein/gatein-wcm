@@ -2,6 +2,7 @@ package org.gatein.wcm.impl.model;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -9,6 +10,8 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
 import org.gatein.wcm.api.model.content.Content;
+import org.gatein.wcm.api.model.content.Folder;
+import org.gatein.wcm.api.model.metadata.Category;
 import org.gatein.wcm.api.model.security.ACE.PermissionType;
 import org.gatein.wcm.api.model.security.ACL;
 import org.gatein.wcm.api.model.security.Principal;
@@ -33,62 +36,60 @@ public class WCMContentFactory {
 
     private final String MARK = "__";
 
-    public WCMContentFactory(JcrMappings jcr, User user)
-        throws ContentIOException
-    {
+    public WCMContentFactory(JcrMappings jcr, User user) throws ContentIOException {
         logged = user;
         this.jcr = jcr;
     }
 
-    public Content createTextContent(String id, String locale, String location, String html,
-            String encoding) {
+    public Content createTextContent(String id, String locale, String location, String html, String encoding) {
 
         WCMTextContent c = new WCMTextContent();
 
-        if ("/".equals( location ) ) location = "";
+        if ("/".equals(location))
+            location = "";
 
         String absLocation = location + "/" + id + "/" + MARK + locale + "/" + MARK + id;
 
         // New document, so new version starting at 1
-        c.setVersion( jcr.jcrVersion( absLocation  ) );
-        c.setId( id );
-        c.setLocale( locale );
-        c.setLocation( location );
+        c.setVersion(jcr.jcrVersion(absLocation));
+        c.setId(id);
+        c.setLocale(locale);
+        c.setLocation(location);
 
         // By default a new content will get the ACL of parent parent.
         // A null value means that this content is using ACL of parent folder.
-        c.setAcl( null );
+        c.setAcl(null);
 
-        c.setCreated( jcr.jcrCreated( absLocation ) );
-        c.setLastModified( jcr.jcrLastModified( absLocation ) );
+        c.setCreated(jcr.jcrCreated(absLocation));
+        c.setLastModified(jcr.jcrLastModified(absLocation));
 
         // By default a new content will get the Publishing status of his parent
         // A null value means that this content is using parent's publishing information
-        c.setPublishStatus( null );
-        c.setPublishingRoles( null );
+        c.setPublishStatus(null);
+        c.setPublishingRoles(null);
 
-        c.setCreatedBy( logged );
-        c.setLastModifiedBy( logged );
+        c.setCreatedBy(logged);
+        c.setLastModifiedBy(logged);
 
         // By default a new content will not use attached
 
-        c.setLocked( false );
+        c.setLocked(false);
 
-        c.setLockOwner( null );
+        c.setLockOwner(null);
 
         // Specific fields for TextContent
-        c.setContent( html );
-        c.setEncoding( encoding );
+        c.setContent(html);
+        c.setEncoding(encoding);
 
         return c;
     }
 
     /**
      *
-     * GateIn WCM represents a ACL list a String stored into a file called "__acl" in the content location.
-     * This file is a String with the following structure:
+     * GateIn WCM represents a ACL list a String stored into a file called "__acl" in the content location. This file is a
+     * String with the following structure:
      *
-     *  user:[USER|GROUP]:[NONE|READ|COMMENTS|WRITE|ALL],user:[USER|GROUP]:[NONE|READ|COMMENTS|WRITE|ALL], ...
+     * user:[USER|GROUP]:[NONE|READ|COMMENTS|WRITE|ALL],user:[USER|GROUP]:[NONE|READ|COMMENTS|WRITE|ALL], ...
      *
      * @param str
      * @return
@@ -99,7 +100,7 @@ public class WCMContentFactory {
         for (String ace : aces) {
             String user = ace.split(":")[0];
             String type = ace.split(":")[1];
-            String permission = ace .split(":")[2];
+            String permission = ace.split(":")[2];
 
             WCMPrincipal wcmPrincipal = null;
             WCMACE wcmACE = null;
@@ -123,7 +124,7 @@ public class WCMContentFactory {
             if (permission.equals("ALL")) {
                 wcmACE = new WCMACE(wcmPrincipal, PermissionType.ALL);
             }
-            wcmACL.getAces().add( wcmACE );
+            wcmACL.getAces().add(wcmACE);
         }
         return wcmACL;
     }
@@ -132,41 +133,42 @@ public class WCMContentFactory {
 
         WCMFolder f = new WCMFolder();
 
-        String absLocation = location + "/" + id ;
+        String absLocation = location + "/" + id;
 
-        if ("/".equals( location ) ) location = "";
+        if ("/".equals(location))
+            location = "";
 
         // New document, so new version starting at 1
-        f.setVersion( jcr.jcrVersion( absLocation  ) );
-        f.setId( id );
+        f.setVersion(jcr.jcrVersion(absLocation));
+        f.setId(id);
         // Folders can have multiple locales, so, it will be null.
-        f.setLocale( null );
-        f.setLocation( location );
+        f.setLocale(null);
+        f.setLocation(location);
 
         // By default a new content will get the ACL of parent parent.
         // A null value means that this content is using ACL of parent folder.
-        f.setAcl( null );
+        f.setAcl(null);
 
-        f.setCreated( jcr.jcrCreated( absLocation ) );
-        f.setLastModified( jcr.jcrLastModified( absLocation ) );
+        f.setCreated(jcr.jcrCreated(absLocation));
+        f.setLastModified(jcr.jcrLastModified(absLocation));
 
         // By default a new content will get the Publishing status of his parent
         // A null value means that this content is using parent's publishing information
-        f.setPublishStatus( null );
-        f.setPublishingRoles( null );
+        f.setPublishStatus(null);
+        f.setPublishingRoles(null);
 
-        f.setCreatedBy( logged );
-        f.setLastModifiedBy( logged );
+        f.setCreatedBy(logged);
+        f.setLastModifiedBy(logged);
 
         // By default a new content will not use attached
 
-        f.setLocked( false );
+        f.setLocked(false);
 
-        f.setLockOwner( null );
+        f.setLockOwner(null);
 
         // Specific fields for Folder
         // New node, so no children at this point
-        f.setChildren( null );
+        f.setChildren(null);
 
         return f;
     }
@@ -176,67 +178,67 @@ public class WCMContentFactory {
 
         WCMBinaryContent b = new WCMBinaryContent();
 
-        if ("/".equals( location ) ) location = "";
+        if ("/".equals(location))
+            location = "";
 
         String absLocation = location + "/" + id + "/" + MARK + locale + "/" + MARK + id;
 
         // New document, so new version starting at 1
-        b.setVersion( jcr.jcrVersion( absLocation  ) );
-        b.setId( id );
-        b.setLocale( locale );
-        b.setLocation( location );
+        b.setVersion(jcr.jcrVersion(absLocation));
+        b.setId(id);
+        b.setLocale(locale);
+        b.setLocation(location);
 
         // By default a new content will get the ACL of parent parent.
         // A null value means that this content is using ACL of parent folder.
-        b.setAcl( null );
+        b.setAcl(null);
 
-        b.setCreated( jcr.jcrCreated( absLocation ) );
-        b.setLastModified( jcr.jcrLastModified( absLocation ) );
+        b.setCreated(jcr.jcrCreated(absLocation));
+        b.setLastModified(jcr.jcrLastModified(absLocation));
 
         // By default a new content will get the Publishing status of his parent
         // A null value means that this content is using parent's publishing information
-        b.setPublishStatus( null );
-        b.setPublishingRoles( null );
+        b.setPublishStatus(null);
+        b.setPublishingRoles(null);
 
-        b.setCreatedBy( logged );
-        b.setLastModifiedBy( logged );
+        b.setCreatedBy(logged);
+        b.setLastModifiedBy(logged);
 
         // By default a new content will not use attached
 
-        b.setLocked( false );
+        b.setLocked(false);
 
-        b.setLockOwner( null );
+        b.setLockOwner(null);
 
         // Specific fields for TextContent
-        b.setFileName( fileName );
-        b.setSize( size );
-        b.setContentType( contentType );
+        b.setFileName(fileName);
+        b.setSize(size);
+        b.setContentType(contentType);
 
         // Creating the in memory
         // Point to improve in the future
 
-        b.setContent( content );
+        b.setContent(content);
 
         return b;
     }
 
-    public Content getContent(String location, String locale) throws RepositoryException
-    {
+    public Content getContent(String location, String locale) throws RepositoryException {
         // Get root node of search
-        Node n = jcr.getSession().getNode( location );
+        Node n = jcr.getSession().getNode(location);
 
-        Content c = convertToContent( n, locale );
+        Content c = convertToContent(n, locale);
 
         if (c instanceof WCMFolder) {
-            WCMFolder f = (WCMFolder)c;
+            WCMFolder f = (WCMFolder) c;
             ArrayList<Content> children = new ArrayList<Content>();
-            f.setChildren( children );
+            f.setChildren(children);
             NodeIterator ni = n.getNodes();
             while (ni.hasNext()) {
                 Node child = ni.nextNode();
                 Content cChild = getContent(child.getPath(), locale);
                 if (cChild != null)
-                    children.add( cChild );
+                    children.add(cChild);
             }
         }
 
@@ -246,45 +248,48 @@ public class WCMContentFactory {
     private Content convertToContent(Node n, String locale) throws RepositoryException {
 
         // Check if we are using some reserved entries in the JCR
-        if (n == null || locale == null) return null;
+        if (n == null || locale == null)
+            return null;
 
-        if (WCMConstants.RESERVED_ENTRIES.contains( n.getName() )) {
+        if (WCMConstants.RESERVED_ENTRIES.contains(n.getName())) {
             return null;
         }
 
         // We have a folder if we don't have any "__*" sub-folder representing locale.
         // We discard specials folders:
-        //  __acl -> for __acl
-        //  __wcmstatus -> for Publishing status
-        //  __wcmroles -> for Publishing roles
-        //  __comments -> for Comments
-        //  __categories -> for Categories
-        //  __properties -> for Properties
+        // __acl -> for __acl
+        // __wcmstatus -> for Publishing status
+        // __wcmroles -> for Publishing roles
+        // __comments -> for Comments
+        // __categories -> for Categories
+        // __properties -> for Properties
         boolean root = false;
         boolean folder = false;
         boolean textcontent = false;
         boolean binarycontent = false;
         boolean havelocale = false;
 
-        if ("/".equals( n.getPath() ))
+        if ("/".equals(n.getPath()))
             root = true;
 
         String description = null;
 
         try {
-            if (n.getProperty("jcr:description") != null)
+            if (n.getProperty("jcr:description") != null) {
                 description = n.getProperty("jcr:description").getString();
+                description = description.split(":")[0];
+            }
         } catch (PathNotFoundException e) {
             // This node has not mix:title, so exception ignored
         }
 
-        if (description != null && "folder".equals( description ))
+        if (description != null && "folder".equals(description))
             folder = true;
 
-        if (description != null && "textcontent".contains( description ))
+        if (description != null && "textcontent".contains(description))
             textcontent = true;
 
-        if (description != null && "binarycontent".contains( description ))
+        if (description != null && "binarycontent".contains(description))
             binarycontent = true;
 
         // Check if the content has the proper locale
@@ -302,145 +307,153 @@ public class WCMContentFactory {
         if (root) {
             WCMFolder _folder = new WCMFolder();
 
-            _folder.setVersion( 0 ); // Special for root
-            _folder.setId( "root" );
+            _folder.setVersion(0); // Special for root
+            _folder.setId("root");
             // Folders can have multiple locales, so, it will be null.
-            _folder.setLocale( null );
-            _folder.setLocation( "/" );
+            _folder.setLocale(null);
+            _folder.setLocation("/");
 
             // By default a new content will get the ACL of parent parent.
             // A null value means that this content is using ACL of parent folder.
-            _folder.setAcl( jcr.jcrACL( n ) );
+            _folder.setAcl(jcr.jcrACL(n));
 
-            _folder.setCreated( null );
-            _folder.setLastModified( null );
+            _folder.setCreated(null);
+            _folder.setLastModified(null);
 
             // By default a new content will get the Publishing status of his parent
             // A null value means that this content is using parent's publishing information
-            _folder.setPublishStatus( jcr.jcrPublishStatus( n ) );
-            _folder.setPublishingRoles( jcr.jcrPublishingRoles( n ) );
+            _folder.setPublishStatus(jcr.jcrPublishStatus(n));
+            _folder.setPublishingRoles(jcr.jcrPublishingRoles(n));
 
-            _folder.setCreatedBy( null );
-            _folder.setLastModifiedBy( null );
+            _folder.setCreatedBy(null);
+            _folder.setLastModifiedBy(null);
 
             // By default a folder will not be locked
             // TODO: Set up in future
-            _folder.setLocked( false );
+            _folder.setLocked(false);
 
-            _folder.setLockOwner( null );
+            _folder.setLockOwner(null);
 
             // Specific fields for Folder
             // New node, so no children at this point
-            _folder.setChildren( null );
+            _folder.setChildren(null);
 
             return _folder;
         }
         if (folder) {
             WCMFolder _folder = new WCMFolder();
 
-            _folder.setVersion( jcr.jcrVersion( n ) );
-            _folder.setId( n.getName() );
+            _folder.setVersion(jcr.jcrVersion(n));
+            _folder.setId(n.getName());
             // Folders can have multiple locales, so, it will be null.
-            _folder.setLocale( null );
-            _folder.setLocation( jcr.parent(n.getPath()) );
+            _folder.setLocale(null);
+
+            String location = n.getProperty("jcr:description").getString().split(":")[1];
+            _folder.setLocation(jcr.parent(location));
 
             // By default a new content will get the ACL of parent parent.
             // A null value means that this content is using ACL of parent folder.
-            _folder.setAcl( jcr.jcrACL( n ) );
+            _folder.setAcl(jcr.jcrACL(n));
 
-            _folder.setCreated( jcr.jcrCreated( n ) );
-            _folder.setLastModified( jcr.jcrLastModified( n ) );
+            _folder.setCreated(jcr.jcrCreated(n));
+            _folder.setLastModified(jcr.jcrLastModified(n));
 
             // By default a new content will get the Publishing status of his parent
             // A null value means that this content is using parent's publishing information
-            _folder.setPublishStatus( jcr.jcrPublishStatus( n ) );
-            _folder.setPublishingRoles( jcr.jcrPublishingRoles( n ) );
+            _folder.setPublishStatus(jcr.jcrPublishStatus(n));
+            _folder.setPublishingRoles(jcr.jcrPublishingRoles(n));
 
-            _folder.setCreatedBy( new WCMUser(jcr.jcrCreatedBy( n ) ) );
-            _folder.setLastModifiedBy( new WCMUser(jcr.jcrLastModifiedBy( n )) );
+            _folder.setCreatedBy(new WCMUser(jcr.jcrCreatedBy(n)));
+            _folder.setLastModifiedBy(new WCMUser(jcr.jcrLastModifiedBy(n)));
 
             // By default a folder will not be locked
             // TODO: Set up in future
-            _folder.setLocked( false );
+            _folder.setLocked(false);
 
-            _folder.setLockOwner( null );
+            _folder.setLockOwner(null);
 
             // Specific fields for Folder
             // New node, so no children at this point
-            _folder.setChildren( null );
+            _folder.setChildren(null);
 
             return _folder;
         }
         if (textcontent) {
             WCMTextContent _textcontent = new WCMTextContent();
 
-            _textcontent.setVersion( jcr.jcrVersion( n.getNode(MARK + locale + "/" + MARK + n.getName() ) ) );
-            _textcontent.setId( n.getName() );
+            _textcontent.setVersion(jcr.jcrVersion(n.getNode(MARK + locale + "/" + MARK + n.getName())));
+            _textcontent.setId(n.getName());
             // Folders can have multiple locales, so, it will be null.
-            _textcontent.setLocale( locale );
-            _textcontent.setLocation( jcr.parent(n.getPath()) );
+            _textcontent.setLocale(locale);
+
+            String location = n.getProperty("jcr:description").getString().split(":")[1];
+            _textcontent.setLocation(jcr.parent(location));
 
             // By default a new content will get the ACL of parent parent.
             // A null value means that this content is using ACL of parent folder.
-            _textcontent.setAcl( jcr.jcrACL( n ) );
+            _textcontent.setAcl(jcr.jcrACL(n));
 
-            _textcontent.setCreated( jcr.jcrCreated( n.getNode(MARK + locale + "/" + MARK + n.getName() ) ) );
-            _textcontent.setLastModified( jcr.jcrLastModified( n.getNode(MARK + locale + "/" + MARK + n.getName() ) ) );
+            _textcontent.setCreated(jcr.jcrCreated(n.getNode(MARK + locale + "/" + MARK + n.getName())));
+            _textcontent.setLastModified(jcr.jcrLastModified(n.getNode(MARK + locale + "/" + MARK + n.getName())));
 
             // By default a new content will get the Publishing status of his parent
             // A null value means that this content is using parent's publishing information
-            _textcontent.setPublishStatus( jcr.jcrPublishStatus( n ) );
-            _textcontent.setPublishingRoles( jcr.jcrPublishingRoles( n ) );
+            _textcontent.setPublishStatus(jcr.jcrPublishStatus(n));
+            _textcontent.setPublishingRoles(jcr.jcrPublishingRoles(n));
 
-            _textcontent.setCreatedBy( new WCMUser(jcr.jcrCreatedBy( n.getNode(MARK + locale + "/" + MARK + n.getName() ) ) )  );
-            _textcontent.setLastModifiedBy( new WCMUser(jcr.jcrLastModifiedBy( n.getNode(MARK + locale + "/" + MARK + n.getName() ) ) ) );
+            _textcontent.setCreatedBy(new WCMUser(jcr.jcrCreatedBy(n.getNode(MARK + locale + "/" + MARK + n.getName()))));
+            _textcontent.setLastModifiedBy(new WCMUser(
+                    jcr.jcrLastModifiedBy(n.getNode(MARK + locale + "/" + MARK + n.getName()))));
 
             // By default a folder will not be locked
             // TODO: Set up in future
-            _textcontent.setLocked( false );
+            _textcontent.setLocked(false);
 
-            _textcontent.setLockOwner( null );
+            _textcontent.setLockOwner(null);
 
-            _textcontent.setEncoding( jcr.jcrEncoding( n.getNode(MARK + locale + "/" + MARK + n.getName() ) ) );
+            _textcontent.setEncoding(jcr.jcrEncoding(n.getNode(MARK + locale + "/" + MARK + n.getName())));
 
-            _textcontent.setContent( jcr.jcrTextContent( n.getNode(MARK + locale + "/" + MARK + n.getName() ) ) );
+            _textcontent.setContent(jcr.jcrTextContent(n.getNode(MARK + locale + "/" + MARK + n.getName())));
 
             return _textcontent;
         }
         if (binarycontent) {
             WCMBinaryContent _binarycontent = new WCMBinaryContent();
 
-            _binarycontent.setVersion( jcr.jcrVersion( n.getNode(MARK + locale + "/" + MARK + n.getName() ) ) );
-            _binarycontent.setId( n.getName() );
+            _binarycontent.setVersion(jcr.jcrVersion(n.getNode(MARK + locale + "/" + MARK + n.getName())));
+            _binarycontent.setId(n.getName());
             // Folders can have multiple locales, so, it will be null.
-            _binarycontent.setLocale( locale );
-            _binarycontent.setLocation( jcr.parent(n.getPath()) );
+            _binarycontent.setLocale(locale);
+
+            String location = n.getProperty("jcr:description").getString().split(":")[1];
+            _binarycontent.setLocation(jcr.parent(location));
 
             // By default a new content will get the ACL of parent parent.
             // A null value means that this content is using ACL of parent folder.
-            _binarycontent.setAcl( jcr.jcrACL( n ) );
+            _binarycontent.setAcl(jcr.jcrACL(n));
 
-            _binarycontent.setCreated( jcr.jcrCreated( n.getNode(MARK + locale + "/" + MARK + n.getName() ) ) );
-            _binarycontent.setLastModified( jcr.jcrLastModified( n.getNode(MARK + locale + "/" + MARK + n.getName() ) ) );
+            _binarycontent.setCreated(jcr.jcrCreated(n.getNode(MARK + locale + "/" + MARK + n.getName())));
+            _binarycontent.setLastModified(jcr.jcrLastModified(n.getNode(MARK + locale + "/" + MARK + n.getName())));
 
             // By default a new content will get the Publishing status of his parent
             // A null value means that this content is using parent's publishing information
-            _binarycontent.setPublishStatus( jcr.jcrPublishStatus( n ) );
-            _binarycontent.setPublishingRoles( jcr.jcrPublishingRoles( n ) );
+            _binarycontent.setPublishStatus(jcr.jcrPublishStatus(n));
+            _binarycontent.setPublishingRoles(jcr.jcrPublishingRoles(n));
 
-            _binarycontent.setCreatedBy( new WCMUser(jcr.jcrCreatedBy( n.getNode(MARK + locale + "/" + MARK + n.getName() ) )) );
-            _binarycontent.setLastModifiedBy( new WCMUser(jcr.jcrLastModifiedBy( n.getNode(MARK + locale + "/" + MARK + n.getName() ) )) );
+            _binarycontent.setCreatedBy(new WCMUser(jcr.jcrCreatedBy(n.getNode(MARK + locale + "/" + MARK + n.getName()))));
+            _binarycontent.setLastModifiedBy(new WCMUser(jcr.jcrLastModifiedBy(n.getNode(MARK + locale + "/" + MARK
+                    + n.getName()))));
 
             // By default a folder will not be locked
             // TODO: Set up in future
-            _binarycontent.setLocked( false );
+            _binarycontent.setLocked(false);
 
-            _binarycontent.setLockOwner( null );
+            _binarycontent.setLockOwner(null);
 
-            _binarycontent.setContentType( jcr.jcrContentType( n.getNode(MARK + locale + "/" + MARK + n.getName() ) ) );
+            _binarycontent.setContentType(jcr.jcrContentType(n.getNode(MARK + locale + "/" + MARK + n.getName())));
 
-            _binarycontent.setFileName( jcr.jcrTitle( n.getNode(MARK + locale + "/" + MARK + n.getName() ) ) );
-            _binarycontent.setContent( jcr.jcrContent( n.getNode(MARK + locale + "/" + MARK + n.getName() ) ) );
+            _binarycontent.setFileName(jcr.jcrTitle(n.getNode(MARK + locale + "/" + MARK + n.getName())));
+            _binarycontent.setContent(jcr.jcrContent(n.getNode(MARK + locale + "/" + MARK + n.getName())));
             return _binarycontent;
         }
         if (havelocale) {
@@ -450,5 +463,99 @@ public class WCMContentFactory {
         return null;
     }
 
+    public Category getCategory(String fullLocation, String locale) throws RepositoryException {
+
+        if (fullLocation == null)
+            return null;
+        if ("/".equals(fullLocation))
+            return null;
+        // Root entry for
+        if ("/__categories".equals(fullLocation))
+            return null;
+
+        WCMCategory cat = new WCMCategory();
+
+        cat.setId(fullLocation.substring(fullLocation.lastIndexOf("/") + 1));
+        cat.setLocale(locale);
+        String location = fullLocation.substring("/__categories".length(), fullLocation.lastIndexOf("/"));
+        if ("".equals( location )) location = "/"; // Root of categories
+        cat.setLocation( location );
+        cat.setDescription(jcr.jcrCategoryDescription(fullLocation, locale));
+        String[] childLocations = jcr.jcrChildCategories(fullLocation);
+        if (childLocations != null) {
+            ArrayList<Category> childs = new ArrayList<Category>();
+            for (String childLocation : childLocations) {
+                Category child = getCategory(childLocation, locale);
+                if (child != null)
+                    childs.add(child);
+            }
+            cat.setChildCategories( childs );
+        } else
+            cat.setChildCategories(null);
+
+        return cat;
+    }
+
+    public List<Category> getCategories(String fullLocation, String locale) throws RepositoryException {
+        ArrayList<Category> output = new ArrayList<Category>();
+
+        if ("/__categories".equals(fullLocation)) {
+            String[] children = jcr.jcrChildCategories(fullLocation);
+            for (String child : children)
+                output.add(getCategory(child, locale));
+        } else
+            output.add(getCategory(fullLocation, locale));
+
+        return output;
+    }
+
+    // Query methods
+    public void getCategoryContent(Category c, String filterLocation, String filterLocale, ArrayList<Content> output)
+            throws RepositoryException {
+        String pathRootCategory;
+        if ("/".equals( c.getLocation() ))
+            pathRootCategory = "/__categories" + c.getLocation() + c.getId() + "/__references";
+        else
+            pathRootCategory = "/__categories" + c.getLocation() + "/" + c.getId() + "/__references";
+        Node rootCategory = jcr.getSession().getNode( pathRootCategory );
+        // References that are in the main category
+        // or references that are in the children
+        if (rootCategory.hasNodes()) {
+            NodeIterator ni = rootCategory.getNodes();
+            while (ni.hasNext()) {
+                Node n = ni.nextNode();
+                Content content = getContent(n.getPath(), filterLocale);
+                if (content.getLocation().startsWith(filterLocation)) {
+                    output.add( content );
+                    addChildrenContent(output, content);
+                }
+            }
+        } else {
+            for (Category child : c.getChildCategories()) {
+                getCategoryContent(child, filterLocation, filterLocale, output);
+            }
+        }
+    }
+
+    private void addChildrenContent(ArrayList<Content> output, Content c) {
+        if (c == null) return;
+        if (c instanceof Folder) {
+            List<Content> children = ((Folder) c).getChildren();
+            for (Content cc : children) {
+                output.add( cc );
+                addChildrenContent( output, cc );
+            }
+        }
+    }
+
+    public String parent(String location) {
+        if (location == null)
+            return null;
+        if ("/".equals(location))
+            return null;
+
+        // Return without "/" at the end
+        return location.substring(0, location.lastIndexOf("/"));
+    }
 
 }

@@ -197,43 +197,131 @@ public class WCMContentService implements ContentService {
     @Override
     public Category createCategory(String id, String locale, String description, String categoryLocation)
             throws ContentException, ContentIOException, ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+
+        long start = System.currentTimeMillis();
+
+        CreateCommand command = new CreateCommand(jcrSession, logged);
+        Category category = command.createCategory(id, locale, description, categoryLocation);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("createCategory() takes " + ((long) (stop - start)) + " ms");
+
+        return category;
     }
 
     @Override
-    public Category updateCategory(String categoryLocation, String locale, String description) throws ContentException,
+    public Category updateCategoryDescription(String categoryLocation, String locale, String description)
+            throws ContentException, ContentIOException, ContentSecurityException {
+
+        long start = System.currentTimeMillis();
+
+        UpdateCommand command = new UpdateCommand(jcrSession, logged);
+        Category category = command.updateCategoryDescription(categoryLocation, locale, description);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("updateCategoryDescription() takes " + ((long) (stop - start)) + " ms");
+
+        return category;
+    }
+
+    @Override
+    public Category updateCategoryLocation(String categoryLocation, String locale, String newLocation) throws ContentException,
             ContentIOException, ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+
+        long start = System.currentTimeMillis();
+
+        UpdateCommand command = new UpdateCommand(jcrSession, logged);
+        Category category = command.updateCategoryLocation(categoryLocation, locale, newLocation);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("updateCategoryLocation() takes " + ((long) (stop - start)) + " ms");
+
+        return category;
+    }
+
+    public List<Category> getCategories(String categoryLocation, String locale) throws ContentException, ContentIOException,
+            ContentSecurityException {
+
+        long start = System.currentTimeMillis();
+
+        ReadCommand command = new ReadCommand(jcrSession, logged);
+        List<Category> category = command.getCategories(categoryLocation, locale);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("updateCategory() takes " + ((long) (stop - start)) + " ms");
+
+        return category;
     }
 
     @Override
-    public Category updateCategory(String categoryLocation, String newLocation) throws ContentException, ContentIOException,
+    public void addContentCategory(String location, String categoryLocation) throws ContentException, ContentIOException,
             ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+
+        long start = System.currentTimeMillis();
+
+        UpdateCommand command = new UpdateCommand(jcrSession, logged);
+        command.addContentCategory(location, categoryLocation);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("addContentCategory() takes " + ((long) (stop - start)) + " ms");
     }
 
     @Override
-    public Content addContentCategory(String location, Category category) throws ContentException, ContentIOException,
-            ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+    public void deleteCategory(String categoryLocation) throws ContentException, ContentIOException, ContentSecurityException {
+
+        long start = System.currentTimeMillis();
+
+        DeleteCommand command = new DeleteCommand(jcrSession, logged);
+        command.deleteCategory(categoryLocation);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("deleteCategory() takes " + ((long) (stop - start)) + " ms");
     }
 
-    @Override
-    public Category deleteCategory(String categoryLocation) throws ContentException, ContentIOException,
+    /**
+     *
+     * Deletes a Category from repository.
+     *
+     * @param idCategory - Category ID.
+     * @return parent Category.
+     * @throws ContentException if category has been asigned to Content.
+     * @throws ContentIOException if any IO related problem with repository.
+     * @throws ContentSecurityException if user has not been granted to create categories.
+     */
+    public Category deleteCategory(String categoryLocation, String locale) throws ContentException, ContentIOException,
             ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+
+        long start = System.currentTimeMillis();
+
+        DeleteCommand command = new DeleteCommand(jcrSession, logged);
+        Category c = command.deleteCategory(categoryLocation, locale);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("deleteCategory() takes " + ((long) (stop - start)) + " ms");
+
+        return c;
     }
 
     @Override
     public List<Content> getContent(List<Category> categories, String location, String locale) throws ContentException,
             ContentIOException, ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+        long start = System.currentTimeMillis();
+
+        ReadCommand command = new ReadCommand(jcrSession, logged);
+        List<Content> result = command.getContent(categories, location, locale);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("deleteCategory() takes " + ((long) (stop - start)) + " ms");
+
+        return result;
     }
 
     @Override
@@ -320,7 +408,7 @@ public class WCMContentService implements ContentService {
     }
 
     @Override
-    public String deleteContet(String location) throws ContentException, ContentIOException, ContentSecurityException {
+    public String deleteContent(String location) throws ContentException, ContentIOException, ContentSecurityException {
 
         long start = System.currentTimeMillis();
 
@@ -356,9 +444,8 @@ public class WCMContentService implements ContentService {
     @Override
     public String toString() {
 
-        String str = "[[ WCMContentService - User: " + this.logged.getUserName() + " - Repository: "
-                + repository + " - Workspace: " + this.jcrSession.getWorkspace().getName()
-                + " ]]";
+        String str = "[[ WCMContentService - User: " + this.logged.getUserName() + " - Repository: " + repository
+                + " - Workspace: " + this.jcrSession.getWorkspace().getName() + " ]]";
         return str;
     }
 

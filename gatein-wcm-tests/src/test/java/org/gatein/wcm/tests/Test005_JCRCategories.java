@@ -5,8 +5,6 @@ import java.io.File;
 import javax.annotation.Resource;
 import javax.jcr.Repository;
 import javax.jcr.SimpleCredentials;
-import javax.jcr.query.Query;
-import javax.jcr.query.QueryResult;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -18,19 +16,17 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.modeshape.jcr.api.JcrTools;
 
 @RunWith(Arquillian.class)
-public class Test004_JCRQueries {
+public class Test005_JCRCategories {
 
     private static final Logger log = Logger.getLogger("org.gatein.wcm.tests");
+
 
     @Deployment
     public static Archive<?> createDeployment() {
 
         return ShrinkWrap.create(WebArchive.class, "gatein-wcm-tests-004.war")
-                .addAsResource(new File("src/main/resources/cmis-spec-v1.0.pdf"))
-                .addAsResource(new File("src/main/resources/wcm-whiteboard.jpg"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .setManifest(new File("src/main/webapp/META-INF/MANIFEST.MF"));
 
@@ -40,43 +36,23 @@ public class Test004_JCRQueries {
     Repository repository;
 
     @Test
-    public void query() {
+    public void categories() {
 
-        JcrTools tools = new JcrTools( true );
-
+        log.info( "[[ START TEST categories ]]" );
         try {
-
-            log.info( "[[ START TEST query ]]" );
 
             SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
             javax.jcr.Session session = repository.login(credentials, "default");
 
-            // All nodes
-            // String expression = "select * from [nt:base]";
-
-            // All textcontent nodes
-            //String expression = "select * from [nt:folder] as id " +
-            //		"where id.[jcr:description] IN ('textcontent')";
-
-            // All nodes from one category
-            String expression = "select * from [nt:base] as id " +
-            		"where [jcr:path] LIKE '/__categories/news4/__references%'";
-
-            Query query = session.getWorkspace().getQueryManager().createQuery(expression, Query.JCR_SQL2);
-            QueryResult results = query.execute();
-
-            tools.print(expression);
-            tools.print(results);
-
-            log.info("[[ END TEST query ]]");
-
-            Assert.assertTrue( true );
+            log.info(session);
 
         } catch (Exception e) {
-            log.error( e.getMessage() );
             Assert.assertTrue( false );
         }
+        log.info("[[ END TEST categories ]]");
+        Assert.assertTrue( true );
 
     }
+
 
 }

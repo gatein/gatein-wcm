@@ -176,22 +176,21 @@ public interface ContentService {
             ContentIOException, ContentSecurityException;
 
     /**
-    *
-    * Renames an existing folder in the default repository.
-    *
-    * @param location - Location where to store the content. <br>
-    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
-    *        where "/" is the root of repository and &lt;id&gt; folders ID
-    * @param locale - Locale under content is stored.
-    * @return Content updated (if ok), null (if error).
-    * @throws ContentException if the id exists in the repository (folder can not be updated, folder gets latest version of
-    *         their most recent item).
-    * @throws ContentIOException if any IO related problem with repository.
-    * @throws ContentSecurityException if user has not been granted to create content under specified location.
-    */
-   public Content updateFolderName(String location, String locale, String newName) throws ContentException,
-           ContentIOException, ContentSecurityException;
-
+     *
+     * Renames an existing folder in the default repository.
+     *
+     * @param location - Location where to store the content. <br>
+     *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+     *        where "/" is the root of repository and &lt;id&gt; folders ID
+     * @param locale - Locale under content is stored.
+     * @return Content updated (if ok), null (if error).
+     * @throws ContentException if the id exists in the repository (folder can not be updated, folder gets latest version of
+     *         their most recent item).
+     * @throws ContentIOException if any IO related problem with repository.
+     * @throws ContentSecurityException if user has not been granted to create content under specified location.
+     */
+    public Content updateFolderName(String location, String locale, String newName) throws ContentException,
+            ContentIOException, ContentSecurityException;
 
     /**
      *
@@ -271,8 +270,8 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create categories.
      */
-    public Category updateCategory(String categoryLocation, String locale, String description) throws ContentException,
-            ContentIOException, ContentSecurityException;
+    public Category updateCategoryDescription(String categoryLocation, String locale, String description)
+            throws ContentException, ContentIOException, ContentSecurityException;
 
     /**
      *
@@ -281,13 +280,17 @@ public interface ContentService {
      * @param categoryLocation - Location where the category is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
+     * @param locale - Locale of category
      * @param newLocation - New Location where category will be moved
      * @return Category updated
      * @throws ContentException if the categoryLocation doesn't exist.
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create categories.
      */
-    public Category updateCategory(String categoryLocation, String newLocation) throws ContentException, ContentIOException,
+    public Category updateCategoryLocation(String categoryLocation, String locale, String newLocation) throws ContentException,
+            ContentIOException, ContentSecurityException;
+
+    public List<Category> getCategories(String categoryLocation, String locale) throws ContentException, ContentIOException,
             ContentSecurityException;
 
     /**
@@ -295,13 +298,13 @@ public interface ContentService {
      * Attaches a Category in a Content.
      *
      * @param location - Content location id
-     * @param idCategory - Category ID.
+     * @param categoryLocation - Category location id.
      * @return Content updated.
      * @throws ContentException if content or category don't exist.
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create categories.
      */
-    public Content addContentCategory(String location, Category category) throws ContentException, ContentIOException,
+    public void addContentCategory(String location, String categoryLocation) throws ContentException, ContentIOException,
             ContentSecurityException;
 
     /**
@@ -314,8 +317,21 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create categories.
      */
-    public Category deleteCategory(String categoryLocation) throws ContentException, ContentIOException,
+    public void deleteCategory(String categoryLocation) throws ContentException, ContentIOException,
             ContentSecurityException;
+
+    /**
+    *
+    * Deletes a Category from repository.
+    *
+    * @param idCategory - Category ID.
+    * @return parent Category.
+    * @throws ContentException if category has been asigned to Content.
+    * @throws ContentIOException if any IO related problem with repository.
+    * @throws ContentSecurityException if user has not been granted to create categories.
+    */
+   public Category deleteCategory(String categoryLocation, String locale) throws ContentException, ContentIOException,
+           ContentSecurityException;
 
     /**
      *
@@ -627,7 +643,7 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to modify content under specified location.
      */
-    public String deleteContet(String location) throws ContentException, ContentIOException, ContentSecurityException;
+    public String deleteContent(String location) throws ContentException, ContentIOException, ContentSecurityException;
 
     /*
      * Workflow API.

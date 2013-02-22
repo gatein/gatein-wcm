@@ -26,48 +26,42 @@ package org.gatein.wcm.api.model.metadata;
 import java.util.List;
 
 /**
- * 
+ *
  * Basic category representation. <br />
  * Conten can have one ore more categories. <br />
  * Categories can be represented as a tree of subcategories. <br />
- * 
+ *
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
- * 
+ *
  */
 public interface Category {
 
     /**
-     * 
+     *
      * @return This method returns ID of Category.
      */
     public String getId();
 
     /**
-     * 
+     *
      * @return This method returns locale of Category.
      */
     public String getLocale();
 
     /**
-     * 
+     *
+     * @return This method returns location of Category inside their branch
+     */
+    public String getLocation();
+
+    /**
+     *
      * @return This method returns description of Category
      */
     public String getDescription();
 
     /**
-     * 
-     * @param description New description of Category
-     */
-    public void setDescription(String description);
-
-    /**
-     * 
-     * @return This method returns parent Category for this category.
-     */
-    public Category getParentCategory();
-
-    /**
-     * 
+     *
      * @return This method returns child categories.
      */
     public List<Category> getChildCategories();

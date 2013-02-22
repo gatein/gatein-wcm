@@ -31,4 +31,9 @@ public class WCMACE implements ACE {
         this.permission = permission;
     }
 
+    @Override
+    public String toString() {
+        return "WCMACE [principal=" + principal + ", permission=" + permission + "]";
+    }
+
 }

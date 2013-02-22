@@ -97,4 +97,9 @@ public class SimpleUser implements User {
         this.groups = groups;
     }
 
+    @Override
+    public String toString() {
+        return "SimpleUser [userName=" + userName + "]";
+    }
+
 }

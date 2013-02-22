@@ -64,6 +64,8 @@ public class WCMServicesManager implements RepositoryService, ObjectFactory {
            SimpleCredentials credentials = new SimpleCredentials(u.getUserName(), u.getPassword().toCharArray());
            Session s = rep.login(credentials, idWorkspace);
 
+           initCategories( s );
+
            return new WCMContentService( idRepository, s, u );
         } catch (NamingException e) {
             throw new ContentIOException( "Unable to connect to ModeShape JNDI java:/jcr" );
@@ -85,5 +87,15 @@ public class WCMServicesManager implements RepositoryService, ObjectFactory {
         return null;
     }
 
+    private void initCategories(Session session) {
+        try {
+            if (!session.itemExists("/__categories")) {
+                session.getRootNode().addNode("__categories", "nt:folder");
+                session.save();
+            }
+        } catch (Exception e) {
+            log.error("Unexpected error initCategories in workspace. Msg: " + e.getMessage());
+        }
+    }
 
 }

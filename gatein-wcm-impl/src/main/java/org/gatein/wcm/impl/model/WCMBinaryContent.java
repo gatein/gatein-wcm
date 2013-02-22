@@ -223,4 +223,51 @@ public class WCMBinaryContent implements BinaryContent {
         this.content = content;
     }
 
+    @Override
+    public String toString() {
+        return "WCMBinaryContent [version=" + version + ", id=" + id + ", locale=" + locale + ", location=" + location
+                + ", acl=" + acl + ", created=" + created + ", lastModified=" + lastModified + ", publishStatus="
+                + publishStatus + ", publishingRoles=" + publishingRoles + ", createdBy=" + createdBy + ", lastModifiedBy="
+                + lastModifiedBy + ", comments=" + comments + ", categories=" + categories + ", properties=" + properties
+                + ", locked=" + locked + ", lockOwner=" + lockOwner + ", contentType=" + contentType + ", size=" + size
+                + ", fileName=" + fileName + ", content=" + content + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((locale == null) ? 0 : locale.hashCode());
+        result = prime * result + ((location == null) ? 0 : location.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        WCMBinaryContent other = (WCMBinaryContent) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (locale == null) {
+            if (other.locale != null)
+                return false;
+        } else if (!locale.equals(other.locale))
+            return false;
+        if (location == null) {
+            if (other.location != null)
+                return false;
+        } else if (!location.equals(other.location))
+            return false;
+        return true;
+    }
+
 }

@@ -43,4 +43,11 @@ public class StringTest {
         Assert.assertEquals("/folder1/id1/id2/", test4.substring(0,test4.lastIndexOf("/")+1));
     }
 
+    @Test
+    public void categories_string() {
+        String cat1 = "/__categories/cat1/cat2/cat3";
+
+        Assert.assertEquals("/cat1/cat2", cat1.substring("/__categories".length(), cat1.lastIndexOf("/")));
+    }
+
 }

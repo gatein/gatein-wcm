@@ -3,6 +3,7 @@ package org.gatein.wcm.impl.services.commands;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.gatein.wcm.api.model.metadata.Category;
 import org.gatein.wcm.api.model.security.User;
 import org.gatein.wcm.api.services.exceptions.ContentException;
 import org.gatein.wcm.api.services.exceptions.ContentIOException;
@@ -20,15 +21,13 @@ public class DeleteCommand {
     WCMContentFactory factory = null;
     JcrMappings jcr = null;
 
-    public DeleteCommand (Session session, User user)
-            throws ContentIOException
-        {
-            jcrSession = session;
-            logged = user;
-            jcr = new JcrMappings(jcrSession, logged);
-            factory = new WCMContentFactory(jcr, logged);
-            jcr.setFactory( factory );
-        }
+    public DeleteCommand(Session session, User user) throws ContentIOException {
+        jcrSession = session;
+        logged = user;
+        jcr = new JcrMappings(jcrSession, logged);
+        factory = new WCMContentFactory(jcr, logged);
+        jcr.setFactory(factory);
+    }
 
     /**
      *
@@ -50,29 +49,28 @@ public class DeleteCommand {
         checkNullParameters(location);
 
         // Check if the current JCR Session is valid
-        if ( ! jcr.checkSession() )
+        if (!jcr.checkSession())
             throw new ContentIOException("JCR Session is null");
 
-        if ("/".equals( location ))
+        if ("/".equals(location))
             throw new ContentException("Root location cannot be deteled by API");
 
         // Check if the location specified exists in the JCR Repository/Workspace
-        if ( ! jcr.checkLocation(location) )
+        if (!jcr.checkLocation(location))
             throw new ContentException("Location: " + location + " doesn't exist for deleteContet() operation. ");
 
         // Delete a node
         try {
-            String parent = jcr.deleteNode( location );
+            String parent = jcr.deleteNode(location);
             return parent;
-        } catch(RepositoryException e) {
+        } catch (RepositoryException e) {
             jcr.checkJCRException(e);
         }
         return null;
     }
 
-    private void checkNullParameters(String location) throws ContentException
-    {
-        if (location == null || "".equals( location )) {
+    private void checkNullParameters(String location) throws ContentException {
+        if (location == null || "".equals(location)) {
             new ContentException("Parameter location cannot be null or empty");
         }
     }
@@ -89,47 +87,125 @@ public class DeleteCommand {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to modify content under specified location.
      */
-   public String deleteContent(String location, String locale) throws ContentException, ContentIOException, ContentSecurityException {
+    public String deleteContent(String location, String locale) throws ContentException, ContentIOException,
+            ContentSecurityException {
 
-       log.debug("deleteContent()");
+        log.debug("deleteContent()");
 
-       checkNullParameters(location, locale);
+        checkNullParameters(location, locale);
 
-       // Check if the current JCR Session is valid
-       if ( ! jcr.checkSession() )
-           throw new ContentIOException("JCR Session is null");
+        // Check if the current JCR Session is valid
+        if (!jcr.checkSession())
+            throw new ContentIOException("JCR Session is null");
 
-       if ("/".equals( location ))
-           throw new ContentException("Root location cannot be deteled by API");
+        if ("/".equals(location))
+            throw new ContentException("Root location cannot be deteled by API");
 
-       // Check if the location specified exists in the JCR Repository/Workspace
-       if ( ! jcr.checkLocation(location, locale) )
-           throw new ContentException("Location: " + location + " with locale: " + locale + " doesn't exist for deleteContent() operation. ");
+        // Check if the location specified exists in the JCR Repository/Workspace
+        if (!jcr.checkLocation(location, locale))
+            throw new ContentException("Location: " + location + " with locale: " + locale
+                    + " doesn't exist for deleteContent() operation. ");
 
-       // If we try to delete a folder we invoke the generic deleteContent() method
-       if ( ! jcr.checkLocaleContent( location )) {
-           return deleteContent( location );
-       }
+        // If we try to delete a folder we invoke the generic deleteContent() method
+        if (!jcr.checkLocaleContent(location)) {
+            return deleteContent(location);
+        }
 
-       // Delete a node
-       try {
-           String parent = jcr.deleteNode( location, locale );
-           return parent;
-       } catch(RepositoryException e) {
-           jcr.checkJCRException(e);
-       }
-       return null;
-   }
+        // Delete a node
+        try {
+            String parent = jcr.deleteNode(location, locale);
+            return parent;
+        } catch (RepositoryException e) {
+            jcr.checkJCRException(e);
+        }
+        return null;
+    }
 
-   private void checkNullParameters(String location, String locale) throws ContentException
-   {
-       if (location == null || "".equals( location )) {
-           new ContentException("Parameter location cannot be null or empty");
-       }
-       if (locale == null || "".equals( locale )) {
-           new ContentException("Parameter locale cannot be null or empty");
-       }
-   }
+    private void checkNullParameters(String location, String locale) throws ContentException {
+        if (location == null || "".equals(location)) {
+            new ContentException("Parameter location cannot be null or empty");
+        }
+        if (locale == null || "".equals(locale)) {
+            new ContentException("Parameter locale cannot be null or empty");
+        }
+    }
 
+    /**
+     *
+     * Deletes a Category from repository.
+     *
+     * @param idCategory - Category ID.
+     * @return parent Category.
+     * @throws ContentException if category has been asigned to Content.
+     * @throws ContentIOException if any IO related problem with repository.
+     * @throws ContentSecurityException if user has not been granted to create categories.
+     */
+    public void deleteCategory(String categoryLocation) throws ContentException, ContentIOException, ContentSecurityException {
+        log.debug("deleteCategory()");
+
+        checkNullParameters(categoryLocation);
+
+        // Check if the current JCR Session is valid
+        if (!jcr.checkSession())
+            throw new ContentIOException("JCR Session is null");
+
+        if ("/".equals(categoryLocation))
+            throw new ContentException("Cannot delete root categories");
+
+        // Check if the location specified exists in the JCR Repository/Workspace
+        if (!jcr.checkLocation("/__categories" + categoryLocation))
+            throw new ContentException("Location: " + categoryLocation + " doesn't exist for deleteCategory() operation. ");
+
+        if (jcr.checkCategoryReferences(categoryLocation))
+            throw new ContentException("Category in location: " + categoryLocation + " has references.");
+
+        try {
+            jcr.deleteCategory("/__categories" + categoryLocation);
+        } catch (RepositoryException e) {
+            jcr.checkJCRException(e);
+        }
+    }
+
+    /**
+     *
+     * Deletes a Category from repository.
+     *
+     * @param idCategory - Category ID.
+     * @return parent Category.
+     * @throws ContentException if category has been asigned to Content.
+     * @throws ContentIOException if any IO related problem with repository.
+     * @throws ContentSecurityException if user has not been granted to create categories.
+     */
+    public Category deleteCategory(String categoryLocation, String locale) throws ContentException, ContentIOException,
+            ContentSecurityException {
+        log.debug("deleteCategory()");
+
+        checkNullParameters(categoryLocation, locale);
+
+        // Check if the current JCR Session is valid
+        if (!jcr.checkSession())
+            throw new ContentIOException("JCR Session is null");
+
+        if ("/".equals(categoryLocation))
+            throw new ContentException("Cannot delete root categories");
+
+        // Check if the location specified exists in the JCR Repository/Workspace
+        if (!jcr.checkLocation("/__categories" + categoryLocation, locale))
+            throw new ContentException("Location: " + categoryLocation + " and locale " + locale + " doesn't exist for addContentCategory() operation. ");
+
+        if (jcr.checkCategoryReferences(categoryLocation))
+            throw new ContentException("Category in location: " + categoryLocation + " has references.");
+
+        try {
+            jcr.deleteCategory("/__categories" + categoryLocation, locale);
+            String parent = jcr.parent( categoryLocation );
+            if ("/".contains( parent )) return null;
+            return factory.getCategory( jcr.parent(categoryLocation), locale);
+        } catch (RepositoryException e) {
+            jcr.checkJCRException(e);
+        }
+
+        return null;
+    }
 
 }
