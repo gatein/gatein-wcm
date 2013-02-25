@@ -599,7 +599,7 @@ public class Test003_BasicJCROperationsTest {
             log.info( "/ . Url test: " + session.nodeExists("/") );
             log.info( "/content1 . Url test: " + session.nodeExists("/content1") );
             log.info( "/content1/ . Url test: " + session.nodeExists("/content1/") );
-            log.info( "/content1//__es . Url test: " + session.nodeExists("/content1//__es") );
+            log.info( "/content1/__es . Url test: " + session.nodeExists("/content1/__es") );
 
             Assert.assertTrue( true );
 

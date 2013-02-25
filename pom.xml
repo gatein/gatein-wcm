@@ -63,7 +63,7 @@
     <!-- <module>gatein-wcm-portlets</module> -->
     <module>gatein-wcm-impl</module>
     <module>gatein-wcm-impl-sec</module>
-    <module>gatein-wcm-tests</module>
+    <module>gatein-wcm-integration-tests</module>
     <module>gatein-wcm-distribution</module>
   </modules>
 
