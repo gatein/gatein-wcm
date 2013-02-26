@@ -32,86 +32,86 @@ Maven dependencies
 
 Create file settings.xml in $HOME/.m2  (%HOMEPATH%\.m2 on Windows) with the following content:
 
-<settings>
-  <profiles>
-    <profile>
-      <id>jboss-public-repository</id>
-      <repositories>
-        <repository>
-          <id>jboss-public-repository-group</id>
-          <name>JBoss Public Maven Repository Group</name>
-          <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-          <layout>default</layout>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </releases>
-          <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </snapshots>
-        </repository>
-      </repositories>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>jboss-public-repository-group</id>
-          <name>JBoss Public Maven Repository Group</name>
-          <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-          <layout>default</layout>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </releases>
-          <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </snapshots>
-        </pluginRepository>
-      </pluginRepositories>
-    </profile>
+	<settings>
+	  <profiles>
+	    <profile>
+	      <id>jboss-public-repository</id>
+	      <repositories>
+	        <repository>
+	          <id>jboss-public-repository-group</id>
+	          <name>JBoss Public Maven Repository Group</name>
+	          <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+	          <layout>default</layout>
+	          <releases>
+	            <enabled>true</enabled>
+	            <updatePolicy>never</updatePolicy>
+	          </releases>
+	          <snapshots>
+	            <enabled>true</enabled>
+	            <updatePolicy>never</updatePolicy>
+	          </snapshots>
+	        </repository>
+	      </repositories>
+	      <pluginRepositories>
+	        <pluginRepository>
+	          <id>jboss-public-repository-group</id>
+	          <name>JBoss Public Maven Repository Group</name>
+	          <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+	          <layout>default</layout>
+	          <releases>
+	            <enabled>true</enabled>
+	            <updatePolicy>never</updatePolicy>
+	          </releases>
+	          <snapshots>
+	            <enabled>true</enabled>
+	            <updatePolicy>never</updatePolicy>
+	          </snapshots>
+	        </pluginRepository>
+	      </pluginRepositories>
+	    </profile>
 
-    <profile>
-      <id>exo-public-repository</id>
-      <repositories>
-        <repository>
-          <id>exo-public-repository-group</id>
-          <name>eXo Public Maven Repository Group</name>
-          <url>http://repository.exoplatform.org/content/groups/public</url>
-          <layout>default</layout>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </releases>
-          <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </snapshots>
-        </repository>
-      </repositories>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>exo-public-repository-group</id>
-          <name>eXo Public Maven Repository Group</name>
-          <url>http://repository.exoplatform.org/content/groups/public</url>
-          <layout>default</layout>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </releases>
-          <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </snapshots>
-        </pluginRepository>
-      </pluginRepositories>
-    </profile>
-  </profiles>
+	    <profile>
+	      <id>exo-public-repository</id>
+	      <repositories>
+	        <repository>
+	          <id>exo-public-repository-group</id>
+	          <name>eXo Public Maven Repository Group</name>
+	          <url>http://repository.exoplatform.org/content/groups/public</url>
+	          <layout>default</layout>
+	          <releases>
+	            <enabled>true</enabled>
+	            <updatePolicy>never</updatePolicy>
+	          </releases>
+	          <snapshots>
+	            <enabled>true</enabled>
+	            <updatePolicy>never</updatePolicy>
+	          </snapshots>
+	        </repository>
+	      </repositories>
+	      <pluginRepositories>
+	        <pluginRepository>
+	          <id>exo-public-repository-group</id>
+	          <name>eXo Public Maven Repository Group</name>
+	          <url>http://repository.exoplatform.org/content/groups/public</url>
+	          <layout>default</layout>
+	          <releases>
+	            <enabled>true</enabled>
+	            <updatePolicy>never</updatePolicy>
+	          </releases>
+	          <snapshots>
+	            <enabled>true</enabled>
+	            <updatePolicy>never</updatePolicy>
+	          </snapshots>
+	        </pluginRepository>
+	      </pluginRepositories>
+	    </profile>
+	  </profiles>
 
-  <activeProfiles>
-    <activeProfile>jboss-public-repository</activeProfile>
-    <activeProfile>exo-public-repository</activeProfile>
-  </activeProfiles>
-</settings>
+	  <activeProfiles>
+	    <activeProfile>jboss-public-repository</activeProfile>
+	    <activeProfile>exo-public-repository</activeProfile>
+	  </activeProfiles>
+	</settings>
 
 Installation
 ------------
