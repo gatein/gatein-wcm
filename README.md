@@ -120,4 +120,5 @@ Installation
 - unzip modeshape-3.1.1.Final-jbossas-71-dist.zip -d /opt/Software/servers/jboss-as-7.1.1.Final
 - edit ${basedir}/setup.properties with JBOSS_HOME=/opt/Software/servers/jboss-as-7.1.1.Final
 - run ${basedir}/setup.sh
+- run ${jboss-as-7.1.1.Final}/bin/standalone.sh -c standalone-modeshape.xml
 - run ${basedir}/test.sh
