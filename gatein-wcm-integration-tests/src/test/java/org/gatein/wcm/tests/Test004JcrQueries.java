@@ -21,16 +21,16 @@ import org.junit.runner.RunWith;
 import org.modeshape.jcr.api.JcrTools;
 
 @RunWith(Arquillian.class)
-public class Test004_JCRQueries {
+public class Test004JcrQueries {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.tests");
+    private static final Logger log = Logger.getLogger("org.gatein.wcm.integration.tests.test004");
 
     @Deployment
     public static Archive<?> createDeployment() {
 
-        return ShrinkWrap.create(WebArchive.class, "gatein-wcm-tests-004.war")
-                .addAsResource(new File("src/main/resources/cmis-spec-v1.0.pdf"))
-                .addAsResource(new File("src/main/resources/wcm-whiteboard.jpg"))
+        return ShrinkWrap.create(WebArchive.class, "gatein-wcm-integration-tests-test004.war")
+                .addAsResource(new File("src/test/resources/jbossportletbridge.pdf"))
+                .addAsResource(new File("src/test/resources/wcm-whiteboard.jpg"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .setManifest(new File("src/main/webapp/META-INF/MANIFEST.MF"));
 

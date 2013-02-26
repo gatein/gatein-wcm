@@ -13,7 +13,7 @@ import org.gatein.wcm.api.model.security.ACL;
 import org.gatein.wcm.api.model.security.Principal;
 import org.gatein.wcm.api.model.security.User;
 
-public class WCMBinaryContent implements BinaryContent {
+public class WcmBinaryContent implements BinaryContent {
 
     Integer version;
     String id;
@@ -139,7 +139,7 @@ public class WCMBinaryContent implements BinaryContent {
 
     // Protected methods
 
-    protected WCMBinaryContent() {
+    protected WcmBinaryContent() {
 
     }
 
@@ -251,7 +251,7 @@ public class WCMBinaryContent implements BinaryContent {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        WCMBinaryContent other = (WCMBinaryContent) obj;
+        WcmBinaryContent other = (WcmBinaryContent) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

@@ -20,14 +20,14 @@ import org.modeshape.jcr.api.Repositories;
 import org.jboss.logging.Logger;
 
 @RunWith(Arquillian.class)
-public class Test001_BasicModeShapeTest {
+public class Test001BasicModeShapeTest {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.tests");
+    private static final Logger log = Logger.getLogger("org.gatein.wcm.integration.tests.test001");
 
     @Deployment
     public static Archive<?> createDeployment() {
 
-        return ShrinkWrap.create(WebArchive.class, "gatein-wcm-tests-001.war").addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+        return ShrinkWrap.create(WebArchive.class, "gatein-wcm-integration-tests-test001.war").addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .setManifest(new File("src/main/webapp/META-INF/MANIFEST.MF"));
 
     }
@@ -39,18 +39,15 @@ public class Test001_BasicModeShapeTest {
     Repository repository;
 
     @Test
-    public void accesing_repository() {
+    public void accesingRepository() {
 
         try {
-
-            log.info("[[ START TEST accesing_repository ]]");
-
+            log.info("[[ START TEST accesingRepository ]]");
             if (repositories != null) {
                 for (String repo : repositories.getRepositoryNames()) {
                     log.info("[[ REPO: " + repo + " ]]");
                 }
             }
-
             if (repository != null) {
 
                 javax.jcr.Session session = repository.login("default");
@@ -61,57 +58,40 @@ public class Test001_BasicModeShapeTest {
             } else {
                 Assert.assertTrue(false);
             }
-            log.info("[[ END TEST accesing_repository ]]");
-
+            log.info("[[ END TEST accesingRepository ]]");
         } catch (Exception e) {
-
             Assert.fail(e.toString());
-
         }
     }
 
     @Test
-    public void simple_credentials() {
+    public void simpleCredentials() {
 
         try {
-
-            log.info("[[ START TEST  simple_credentials ]]");
-
+            log.info("[[ START TEST  simpleCredentials ]]");
             if (repositories != null) {
                 for (String repo : repositories.getRepositoryNames()) {
-                    System.out.println("[[ REPO: " + repo + " ]]");
+                    log.info("[[ REPO: " + repo + " ]]");
                 }
             }
-
             if (repository != null) {
-
                 SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
-
                 javax.jcr.Session session = repository.login(credentials, "default");
-                System.out.println("[[ Repo /jcr/sample.... RootNode... ");
-                System.out.println(session.getRootNode().toString());
-
+                log.info("[[ Repo /jcr/sample.... RootNode... ");
+                log.info(session.getRootNode().toString());
                 session.logout();
-
                 credentials = new SimpleCredentials("admin", "bad".toCharArray());
-
                 session = repository.login(credentials, "default");
-
                 Assert.assertTrue(true);
             } else {
                 Assert.assertTrue(false);
             }
-            log.info("[[ END TEST  simple_credentials ]]");
-
+            log.info("[[ END TEST  simpleCredentials ]]");
         } catch (LoginException e) {
-
             log.info(" [[ Expected: " + e.toString() + " ]] ");
-            log.info(" [[ END TEST simple_credentials ]] ");
-
+            log.info(" [[ END TEST simpleCredentials ]] ");
         } catch (Exception e) {
-
             Assert.fail(e.toString());
-
         }
     }
 

@@ -11,21 +11,21 @@ import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
 import org.modeshape.common.logging.Logger;
 import org.modeshape.jcr.security.SecurityContext;
 
-public class WCMSecurityContext implements SecurityContext {
+public class WcmSecurityContext implements SecurityContext {
 
-    private static final Logger log = Logger.getLogger(WCMSecurityContext.class);
+    private static final Logger log = Logger.getLogger(WcmSecurityContext.class);
 
     SimpleCredentials sCredentials = null;
     SecurityService wcmSecurityService = null;
     User loggedUser = null;
 
-    protected WCMSecurityContext(Credentials credentials) throws LoginException {
+    protected WcmSecurityContext(Credentials credentials) throws LoginException {
         // Expecting JCR SimpleCredentials
         sCredentials = (SimpleCredentials) credentials;
-        log.info(new WCMLog("Getting security credentials for user " + sCredentials.getUserID()), sCredentials.getUserID());
+        log.info(new WcmLog("Getting security credentials for user " + sCredentials.getUserID()), sCredentials.getUserID());
 
         try {
-            wcmSecurityService = WCMSecurityFactory.getSecurityService();
+            wcmSecurityService = WcmSecurityFactory.getSecurityService();
         } catch (ContentIOException e) {
             throw new LoginException("Unable to connect to SecuritySystem: " + e.getMessage());
         }
@@ -47,7 +47,7 @@ public class WCMSecurityContext implements SecurityContext {
         try {
             return wcmSecurityService.hasRole(loggedUser, role);
         } catch (ContentSecurityException e) {
-            log.error(new WCMLog("Error getting role: " + e.getMessage()), loggedUser);
+            log.error(new WcmLog("Error getting role: " + e.getMessage()), loggedUser);
         }
 
         return false;

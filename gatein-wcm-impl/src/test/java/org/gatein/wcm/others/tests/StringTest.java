@@ -7,7 +7,7 @@ import org.junit.Test;
 public class StringTest {
 
     @Test
-    public void extract_text() {
+    public void extractText() {
         String name = "__pepe";
         String out = name.substring(2);
 
@@ -18,7 +18,7 @@ public class StringTest {
     }
 
     @Test
-    public void last_id() {
+    public void lastId() {
         String test1 = "/folder1";
         String test2 = "/folder1/id1";
         String test3 = "/folder1/id1/id2";
@@ -31,7 +31,7 @@ public class StringTest {
     }
 
     @Test
-    public void parent_location() {
+    public void parentLocation() {
         String test1 = "/folder1";
         String test2 = "/folder1/id1";
         String test3 = "/folder1/id1/id2";
@@ -44,7 +44,7 @@ public class StringTest {
     }
 
     @Test
-    public void categories_string() {
+    public void categoriesString() {
         String cat1 = "/__categories/cat1/cat2/cat3";
 
         Assert.assertEquals("/cat1/cat2", cat1.substring("/__categories".length(), cat1.lastIndexOf("/")));

@@ -3,7 +3,7 @@ package org.gatein.wcm.impl.security;
 import org.gatein.wcm.api.services.SecurityService;
 import org.gatein.wcm.api.services.exceptions.ContentIOException;
 
-public class WCMSecurityFactory {
+public class WcmSecurityFactory {
 
     private static SecurityService securityInstance = null;
 

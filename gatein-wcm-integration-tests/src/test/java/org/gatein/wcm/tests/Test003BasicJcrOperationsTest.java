@@ -32,16 +32,16 @@ import org.modeshape.jcr.api.JcrConstants;
 
 
 @RunWith(Arquillian.class)
-public class Test003_BasicJCROperationsTest {
+public class Test003BasicJcrOperationsTest {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.tests");
+    private static final Logger log = Logger.getLogger("org.gatein.wcm.integration.tests.test003");
 
     @Deployment
     public static Archive<?> createDeployment() {
 
-        return ShrinkWrap.create(WebArchive.class, "gatein-wcm-tests-003.war")
-                .addAsResource(new File("src/main/resources/cmis-spec-v1.0.pdf"))
-                .addAsResource(new File("src/main/resources/wcm-whiteboard.jpg"))
+        return ShrinkWrap.create(WebArchive.class, "gatein-wcm-integration-tests-test003.war")
+                .addAsResource(new File("src/test/resources/jbossportletbridge.pdf"))
+                .addAsResource(new File("src/test/resources/wcm-whiteboard.jpg"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .setManifest(new File("src/main/webapp/META-INF/MANIFEST.MF"));
 
@@ -52,11 +52,11 @@ public class Test003_BasicJCROperationsTest {
 
     @SuppressWarnings("deprecation")
     @Test
-    public void query_root() {
+    public void queryRoot() {
 
         try {
 
-            log.info( "[[ START TEST query_root ]]" );
+            log.info( "[[ START TEST queryRoot ]]" );
 
             SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
 
@@ -77,69 +77,55 @@ public class Test003_BasicJCROperationsTest {
             }
 
             Assert.assertTrue( true );
-
-            log.info("[[ END TEST query_root ]]");
+            log.info("[[ END TEST queryRoot ]]");
 
         } catch (Exception e) {
-
             Assert.fail(e.toString());
-
         }
     }
 
-    public void clean_tests_folder() {
+    public void cleanTestsFolder() {
 
         try {
 
             log.info( "[[ START CLEANING ]]" );
-
             SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
-
             javax.jcr.Session session = repository.login(credentials, "default");
 
             // Nodes to clean...
-
             if (session.nodeExists("/tests")) {
                 session.removeItem("/tests");
             }
-
             if (session.nodeExists("/content1")) {
                 session.removeItem("/content1");
             }
-
             if (session.nodeExists("/content2")) {
                 session.removeItem("/content2");
             }
-
             if (session.nodeExists("/loadtest")) {
                 session.removeItem("/loadtest");
             }
-
             if (session.nodeExists("/myfolder")) {
                 session.removeItem("/myfolder");
             }
-
             session.save();
 
             log.info("[[ STOP CLEANING ]]");
-
         } catch (Exception e) {
-
             log.error("Cleaning: " + e.getMessage());
-
         }
 
     }
 
     @SuppressWarnings("deprecation")
     @Test
-    public void add_folder() {
+    public void addFolder() {
 
-        clean_tests_folder();
+        cleanTestsFolder();
 
         try {
 
-            log.info( "[[ START TEST add_folder ]]" );
+            log.info( "[[ START TEST addFolder ]]" );
 
             SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
 
@@ -165,7 +151,7 @@ public class Test003_BasicJCROperationsTest {
 
             Assert.assertTrue( true );
 
-            log.info("[[ END TEST add_folder ]]");
+            log.info("[[ END TEST addFolder ]]");
 
         } catch (Exception e) {
 
@@ -173,17 +159,17 @@ public class Test003_BasicJCROperationsTest {
 
         }
 
-        clean_tests_folder();
+        cleanTestsFolder();
     }
 
     @Test
-    public void complex_folders() {
+    public void complexFolders() {
 
-        clean_tests_folder();
+        cleanTestsFolder();
 
         try {
 
-            log.info( "[[ START TEST complex_folders ]]" );
+            log.info( "[[ START TEST complexFolders ]]" );
 
             SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
 
@@ -204,7 +190,7 @@ public class Test003_BasicJCROperationsTest {
 
             Assert.assertTrue( true );
 
-            log.info("[[ END TEST complex_folders ]]");
+            log.info("[[ END TEST complexFolders ]]");
 
         } catch (Exception e) {
 
@@ -212,17 +198,17 @@ public class Test003_BasicJCROperationsTest {
 
         }
 
-        clean_tests_folder();
+        cleanTestsFolder();
     }
 
     @Test
-    public void basic_versioning() {
+    public void basicVersioning() {
 
-        clean_tests_folder();
+        cleanTestsFolder();
 
         try {
 
-            log.info( "[[ START TEST basic_versioning ]]" );
+            log.info( "[[ START TEST basicVersioning ]]" );
 
             SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
 
@@ -255,7 +241,7 @@ public class Test003_BasicJCROperationsTest {
 
             Assert.assertTrue( true );
 
-            log.info("[[ END TEST basic_versioning ]]");
+            log.info("[[ END TEST basicVersioning ]]");
 
         } catch (Exception e) {
 
@@ -263,17 +249,17 @@ public class Test003_BasicJCROperationsTest {
 
         }
 
-        clean_tests_folder();
+        cleanTestsFolder();
     }
 
     @Test
-    public void basic_properties() {
+    public void basicProperties() {
 
-        clean_tests_folder();
+        cleanTestsFolder();
 
         try {
 
-            log.info( "[[ START TEST basic_properties ]]" );
+            log.info( "[[ START TEST basicProperties ]]" );
 
             SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
 
@@ -324,7 +310,7 @@ public class Test003_BasicJCROperationsTest {
                 log.info("V: " + v.getName());
             }
 
-            log.info("[[ END TEST basic_properties ]]");
+            log.info("[[ END TEST basicProperties ]]");
 
         } catch (Exception e) {
 
@@ -332,17 +318,17 @@ public class Test003_BasicJCROperationsTest {
 
         }
 
-        clean_tests_folder();
+        cleanTestsFolder();
     }
 
     @Test
-    public void check_acl() {
+    public void checkAcl() {
 
-        clean_tests_folder();
+        cleanTestsFolder();
 
         try {
 
-            log.info( "[[ START TEST check_acl ]]" );
+            log.info( "[[ START TEST checkAcl ]]" );
 
             SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
 
@@ -374,7 +360,7 @@ public class Test003_BasicJCROperationsTest {
 
             Assert.assertTrue( true );
 
-            log.info("[[ END TEST check_acl ]]");
+            log.info("[[ END TEST checkAcl ]]");
 
         } catch (Exception e) {
 
@@ -382,17 +368,17 @@ public class Test003_BasicJCROperationsTest {
 
         }
 
-        clean_tests_folder();
+        cleanTestsFolder();
     }
 
     @Test
-    public void full_text_data() {
+    public void fullTextData() {
 
-        clean_tests_folder();
+        cleanTestsFolder();
 
         try {
 
-            log.info( "[[ START TEST full_text_data ]]" );
+            log.info( "[[ START TEST fullTextData ]]" );
 
             SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
 
@@ -434,7 +420,7 @@ public class Test003_BasicJCROperationsTest {
 
             Assert.assertTrue( true );
 
-            log.info("[[ END TEST full_text_data ]]");
+            log.info("[[ END TEST fullTextData ]]");
 
         } catch (Exception e) {
 
@@ -442,13 +428,13 @@ public class Test003_BasicJCROperationsTest {
 
         }
 
-        clean_tests_folder();
+        cleanTestsFolder();
     }
 
     @Test
-    public void load_data() {
+    public void loadData() {
 
-        clean_tests_folder();
+        cleanTestsFolder();
 
         long global_start = System.currentTimeMillis();
 
@@ -457,7 +443,7 @@ public class Test003_BasicJCROperationsTest {
 
         try {
 
-            log.info( "[[ START TEST full_text_data ]]" );
+            log.info( "[[ START TEST loadData ]]" );
 
             SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
 
@@ -472,7 +458,7 @@ public class Test003_BasicJCROperationsTest {
 
                 long doc_start = System.currentTimeMillis();
 
-                InputStream pdf = getClass().getClassLoader().getResourceAsStream("/cmis-spec-v1.0.pdf");
+                InputStream pdf = getClass().getClassLoader().getResourceAsStream("/jbossportletbridge.pdf");
                 InputStream jpg = getClass().getClassLoader().getResourceAsStream("/wcm-whiteboard.jpg");
                 Binary _pdf = session.getValueFactory().createBinary(pdf);
                 Binary _jpg = session.getValueFactory().createBinary(jpg);
@@ -534,7 +520,7 @@ public class Test003_BasicJCROperationsTest {
 
             log.info( "Global time: " + ((global_stop - global_start)/1000) + " s" );
 
-            log.info( "[[ END TEST full_text_data ]]" );
+            log.info( "[[ END TEST loadData ]]" );
 
             Assert.assertTrue( true );
 
@@ -546,13 +532,13 @@ public class Test003_BasicJCROperationsTest {
 
         }
 
-        clean_tests_folder();
+        cleanTestsFolder();
     }
 
     @Test
-    public void read_resources() {
+    public void readResources() {
         try {
-            log.info( "File: " + getClass().getClassLoader().getResourceAsStream("/cmis-spec-v1.0.pdf") );
+            log.info( "File: " + getClass().getClassLoader().getResourceAsStream("/jbossportletbridge.pdf") );
 
             Assert.assertTrue( true );
         } catch (Exception e) {
@@ -562,13 +548,13 @@ public class Test003_BasicJCROperationsTest {
     }
 
     @Test
-    public void url_syntax() {
+    public void urlSyntax() {
 
-        clean_tests_folder();
+        cleanTestsFolder();
 
         try {
 
-            log.info( "[[ START TEST url_syntax ]]" );
+            log.info( "[[ START TEST urlSyntax ]]" );
 
             SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
 
@@ -603,7 +589,7 @@ public class Test003_BasicJCROperationsTest {
 
             Assert.assertTrue( true );
 
-            log.info("[[ END TEST url_syntax ]]");
+            log.info("[[ END TEST urlSyntax ]]");
 
         } catch (Exception e) {
 
@@ -611,7 +597,7 @@ public class Test003_BasicJCROperationsTest {
 
         }
 
-        clean_tests_folder();
+        cleanTestsFolder();
     }
 
 

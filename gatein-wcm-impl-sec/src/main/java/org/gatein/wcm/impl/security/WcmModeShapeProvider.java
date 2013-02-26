@@ -15,9 +15,9 @@ import org.modeshape.jcr.security.AuthorizationProvider;
 import org.modeshape.jcr.security.SecurityContext;
 import org.modeshape.jcr.value.Path;
 
-public class WCMModeShapeProvider implements AuthenticationProvider, AuthorizationProvider {
+public class WcmModeShapeProvider implements AuthenticationProvider, AuthorizationProvider {
 
-    private static final Logger log = Logger.getLogger(WCMModeShapeProvider.class);
+    private static final Logger log = Logger.getLogger(WcmModeShapeProvider.class);
 
     public ExecutionContext authenticate(Credentials credentials, String repositoryName, String workspaceName,
             ExecutionContext repositoryContext, Map<String, Object> sessionAttributes) {
@@ -25,11 +25,11 @@ public class WCMModeShapeProvider implements AuthenticationProvider, Authorizati
         try {
             if (credentials instanceof SimpleCredentials) {
                 SimpleCredentials sCredentials = (SimpleCredentials) credentials;
-                return repositoryContext.with(new WCMSecurityContext(sCredentials));
+                return repositoryContext.with(new WcmSecurityContext(sCredentials));
             }
 
         } catch (LoginException e) {
-            log.warn(new WCMLog(e.toString()), e.toString());
+            log.warn(new WcmLog(e.toString()), e.toString());
             return null;
         }
         return null;

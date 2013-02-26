@@ -4,11 +4,11 @@ import java.util.Locale;
 
 import org.modeshape.common.i18n.I18nResource;
 
-public class WCMLog implements I18nResource {
+public class WcmLog implements I18nResource {
 
     String msg;
 
-    public WCMLog(String msg) {
+    public WcmLog(String msg) {
         this.msg = msg;
     }
 

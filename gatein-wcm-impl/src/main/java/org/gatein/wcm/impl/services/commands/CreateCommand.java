@@ -14,7 +14,7 @@ import org.gatein.wcm.api.services.exceptions.ContentException;
 import org.gatein.wcm.api.services.exceptions.ContentIOException;
 import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
 import org.gatein.wcm.impl.jcr.JcrMappings;
-import org.gatein.wcm.impl.model.WCMContentFactory;
+import org.gatein.wcm.impl.model.WcmContentFactory;
 import org.jboss.logging.Logger;
 
 public class CreateCommand {
@@ -23,7 +23,7 @@ public class CreateCommand {
 
     Session jcrSession = null;
     User logged = null;
-    WCMContentFactory factory = null;
+    WcmContentFactory factory = null;
     JcrMappings jcr = null;
 
     public CreateCommand (Session session, User user)
@@ -32,7 +32,7 @@ public class CreateCommand {
         jcrSession = session;
         logged = user;
         jcr = new JcrMappings(jcrSession, logged);
-        factory = new WCMContentFactory(jcr, logged);
+        factory = new WcmContentFactory(jcr, logged);
         jcr.setFactory( factory );
     }
 

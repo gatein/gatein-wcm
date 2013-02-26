@@ -21,7 +21,7 @@ import org.gatein.wcm.impl.services.commands.ReadCommand;
 import org.gatein.wcm.impl.services.commands.UpdateCommand;
 import org.jboss.logging.Logger;
 
-public class WCMContentService implements ContentService {
+public class WcmContentService implements ContentService {
 
     private static final Logger log = Logger.getLogger("org.gatein.wcm");
 
@@ -29,7 +29,7 @@ public class WCMContentService implements ContentService {
     User logged = null;
     String repository = null;
 
-    public WCMContentService(String repository, Session session, User user) throws ContentIOException {
+    public WcmContentService(String repository, Session session, User user) throws ContentIOException {
         jcrSession = session;
         logged = user;
         this.repository = repository;

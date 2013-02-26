@@ -27,7 +27,7 @@ import org.jboss.logging.Logger;
  * @author lucas
  *
  */
-public class WCMContentFactory {
+public class WcmContentFactory {
 
     private static final Logger log = Logger.getLogger("org.gatein.wcm.model");
 
@@ -36,19 +36,20 @@ public class WCMContentFactory {
 
     private final String MARK = "__";
 
-    public WCMContentFactory(JcrMappings jcr, User user) throws ContentIOException {
+    public WcmContentFactory(JcrMappings jcr, User user) throws ContentIOException {
         logged = user;
         this.jcr = jcr;
     }
 
     public Content createTextContent(String id, String locale, String location, String html, String encoding) {
 
-        WCMTextContent c = new WCMTextContent();
+        WcmTextContent c = new WcmTextContent();
 
+        String tmpLocation = location;
         if ("/".equals(location))
-            location = "";
+            tmpLocation = "";
 
-        String absLocation = location + "/" + id + "/" + MARK + locale + "/" + MARK + id;
+        String absLocation = tmpLocation + "/" + id + "/" + MARK + locale + "/" + MARK + id;
 
         // New document, so new version starting at 1
         c.setVersion(jcr.jcrVersion(absLocation));
@@ -95,34 +96,34 @@ public class WCMContentFactory {
      * @return
      */
     public ACL parseACL(String id, String description, String acl) {
-        WCMACL wcmACL = new WCMACL(id, description);
+        WcmACL wcmACL = new WcmACL(id, description);
         String[] aces = acl.split(",");
         for (String ace : aces) {
             String user = ace.split(":")[0];
             String type = ace.split(":")[1];
             String permission = ace.split(":")[2];
 
-            WCMPrincipal wcmPrincipal = null;
-            WCMACE wcmACE = null;
+            WcmPrincipal wcmPrincipal = null;
+            WcmACE wcmACE = null;
             if (type.equals("USER"))
-                wcmPrincipal = new WCMPrincipal(user, Principal.PrincipalType.USER);
+                wcmPrincipal = new WcmPrincipal(user, Principal.PrincipalType.USER);
             else
-                wcmPrincipal = new WCMPrincipal(user, Principal.PrincipalType.GROUP);
+                wcmPrincipal = new WcmPrincipal(user, Principal.PrincipalType.GROUP);
 
             if (permission.equals("NONE")) {
-                wcmACE = new WCMACE(wcmPrincipal, PermissionType.NONE);
+                wcmACE = new WcmACE(wcmPrincipal, PermissionType.NONE);
             }
             if (permission.equals("READ")) {
-                wcmACE = new WCMACE(wcmPrincipal, PermissionType.READ);
+                wcmACE = new WcmACE(wcmPrincipal, PermissionType.READ);
             }
             if (permission.equals("COMMENTS")) {
-                wcmACE = new WCMACE(wcmPrincipal, PermissionType.COMMENTS);
+                wcmACE = new WcmACE(wcmPrincipal, PermissionType.COMMENTS);
             }
             if (permission.equals("WRITE")) {
-                wcmACE = new WCMACE(wcmPrincipal, PermissionType.WRITE);
+                wcmACE = new WcmACE(wcmPrincipal, PermissionType.WRITE);
             }
             if (permission.equals("ALL")) {
-                wcmACE = new WCMACE(wcmPrincipal, PermissionType.ALL);
+                wcmACE = new WcmACE(wcmPrincipal, PermissionType.ALL);
             }
             wcmACL.getAces().add(wcmACE);
         }
@@ -131,12 +132,13 @@ public class WCMContentFactory {
 
     public Content createFolder(String id, String location) {
 
-        WCMFolder f = new WCMFolder();
+        WcmFolder f = new WcmFolder();
 
-        String absLocation = location + "/" + id;
-
+        String tmpLocation = location;
         if ("/".equals(location))
-            location = "";
+            tmpLocation = "";
+
+        String absLocation = tmpLocation + "/" + id;
 
         // New document, so new version starting at 1
         f.setVersion(jcr.jcrVersion(absLocation));
@@ -176,12 +178,13 @@ public class WCMContentFactory {
     public Content createBinaryContent(String id, String locale, String location, String contentType, Long size,
             String fileName, InputStream content) {
 
-        WCMBinaryContent b = new WCMBinaryContent();
+        WcmBinaryContent b = new WcmBinaryContent();
 
+        String tmpLocation = location;
         if ("/".equals(location))
-            location = "";
+            tmpLocation = "";
 
-        String absLocation = location + "/" + id + "/" + MARK + locale + "/" + MARK + id;
+        String absLocation = tmpLocation + "/" + id + "/" + MARK + locale + "/" + MARK + id;
 
         // New document, so new version starting at 1
         b.setVersion(jcr.jcrVersion(absLocation));
@@ -229,8 +232,8 @@ public class WCMContentFactory {
 
         Content c = convertToContent(n, locale);
 
-        if (c instanceof WCMFolder) {
-            WCMFolder f = (WCMFolder) c;
+        if (c instanceof WcmFolder) {
+            WcmFolder f = (WcmFolder) c;
             ArrayList<Content> children = new ArrayList<Content>();
             f.setChildren(children);
             NodeIterator ni = n.getNodes();
@@ -251,7 +254,7 @@ public class WCMContentFactory {
         if (n == null || locale == null)
             return null;
 
-        if (WCMConstants.RESERVED_ENTRIES.contains(n.getName())) {
+        if (WcmConstants.RESERVED_ENTRIES.contains(n.getName())) {
             return null;
         }
 
@@ -305,7 +308,7 @@ public class WCMContentFactory {
         // Look and convert node to content
 
         if (root) {
-            WCMFolder _folder = new WCMFolder();
+            WcmFolder _folder = new WcmFolder();
 
             _folder.setVersion(0); // Special for root
             _folder.setId("root");
@@ -341,7 +344,7 @@ public class WCMContentFactory {
             return _folder;
         }
         if (folder) {
-            WCMFolder _folder = new WCMFolder();
+            WcmFolder _folder = new WcmFolder();
 
             _folder.setVersion(jcr.jcrVersion(n));
             _folder.setId(n.getName());
@@ -363,8 +366,8 @@ public class WCMContentFactory {
             _folder.setPublishStatus(jcr.jcrPublishStatus(n));
             _folder.setPublishingRoles(jcr.jcrPublishingRoles(n));
 
-            _folder.setCreatedBy(new WCMUser(jcr.jcrCreatedBy(n)));
-            _folder.setLastModifiedBy(new WCMUser(jcr.jcrLastModifiedBy(n)));
+            _folder.setCreatedBy(new WcmUser(jcr.jcrCreatedBy(n)));
+            _folder.setLastModifiedBy(new WcmUser(jcr.jcrLastModifiedBy(n)));
 
             // By default a folder will not be locked
             // TODO: Set up in future
@@ -379,7 +382,7 @@ public class WCMContentFactory {
             return _folder;
         }
         if (textcontent) {
-            WCMTextContent _textcontent = new WCMTextContent();
+            WcmTextContent _textcontent = new WcmTextContent();
 
             _textcontent.setVersion(jcr.jcrVersion(n.getNode(MARK + locale + "/" + MARK + n.getName())));
             _textcontent.setId(n.getName());
@@ -401,8 +404,8 @@ public class WCMContentFactory {
             _textcontent.setPublishStatus(jcr.jcrPublishStatus(n));
             _textcontent.setPublishingRoles(jcr.jcrPublishingRoles(n));
 
-            _textcontent.setCreatedBy(new WCMUser(jcr.jcrCreatedBy(n.getNode(MARK + locale + "/" + MARK + n.getName()))));
-            _textcontent.setLastModifiedBy(new WCMUser(
+            _textcontent.setCreatedBy(new WcmUser(jcr.jcrCreatedBy(n.getNode(MARK + locale + "/" + MARK + n.getName()))));
+            _textcontent.setLastModifiedBy(new WcmUser(
                     jcr.jcrLastModifiedBy(n.getNode(MARK + locale + "/" + MARK + n.getName()))));
 
             // By default a folder will not be locked
@@ -418,7 +421,7 @@ public class WCMContentFactory {
             return _textcontent;
         }
         if (binarycontent) {
-            WCMBinaryContent _binarycontent = new WCMBinaryContent();
+            WcmBinaryContent _binarycontent = new WcmBinaryContent();
 
             _binarycontent.setVersion(jcr.jcrVersion(n.getNode(MARK + locale + "/" + MARK + n.getName())));
             _binarycontent.setId(n.getName());
@@ -440,8 +443,8 @@ public class WCMContentFactory {
             _binarycontent.setPublishStatus(jcr.jcrPublishStatus(n));
             _binarycontent.setPublishingRoles(jcr.jcrPublishingRoles(n));
 
-            _binarycontent.setCreatedBy(new WCMUser(jcr.jcrCreatedBy(n.getNode(MARK + locale + "/" + MARK + n.getName()))));
-            _binarycontent.setLastModifiedBy(new WCMUser(jcr.jcrLastModifiedBy(n.getNode(MARK + locale + "/" + MARK
+            _binarycontent.setCreatedBy(new WcmUser(jcr.jcrCreatedBy(n.getNode(MARK + locale + "/" + MARK + n.getName()))));
+            _binarycontent.setLastModifiedBy(new WcmUser(jcr.jcrLastModifiedBy(n.getNode(MARK + locale + "/" + MARK
                     + n.getName()))));
 
             // By default a folder will not be locked
@@ -451,6 +454,9 @@ public class WCMContentFactory {
             _binarycontent.setLockOwner(null);
 
             _binarycontent.setContentType(jcr.jcrContentType(n.getNode(MARK + locale + "/" + MARK + n.getName())));
+
+            Long size = new Long( jcr.jcrDescription( n.getNode(MARK + locale + "/" + MARK + n.getName()) ) );
+            _binarycontent.setSize( size );
 
             _binarycontent.setFileName(jcr.jcrTitle(n.getNode(MARK + locale + "/" + MARK + n.getName())));
             _binarycontent.setContent(jcr.jcrContent(n.getNode(MARK + locale + "/" + MARK + n.getName())));
@@ -473,7 +479,7 @@ public class WCMContentFactory {
         if ("/__categories".equals(fullLocation))
             return null;
 
-        WCMCategory cat = new WCMCategory();
+        WcmCategory cat = new WcmCategory();
 
         cat.setId(fullLocation.substring(fullLocation.lastIndexOf("/") + 1));
         cat.setLocale(locale);

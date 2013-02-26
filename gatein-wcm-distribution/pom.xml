@@ -80,4 +80,6 @@
       </build>
     </profile>
   </profiles>
+  <name>GateIn WCM Distribution</name>
+  <description>Assembly plugins</description>
 </project>

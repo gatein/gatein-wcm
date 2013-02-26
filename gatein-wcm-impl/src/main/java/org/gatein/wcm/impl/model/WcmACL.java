@@ -6,13 +6,13 @@ import java.util.List;
 import org.gatein.wcm.api.model.security.ACE;
 import org.gatein.wcm.api.model.security.ACL;
 
-public class WCMACL implements ACL {
+public class WcmACL implements ACL {
 
     String id;
     String description;
     ArrayList<ACE> aces;
 
-    protected WCMACL(String id, String description) {
+    protected WcmACL(String id, String description) {
         this.id = id;
         this.description = description;
         aces = new ArrayList<ACE>();

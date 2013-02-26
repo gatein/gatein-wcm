@@ -12,7 +12,7 @@ import org.gatein.wcm.api.model.security.ACL;
 import org.gatein.wcm.api.model.security.Principal;
 import org.gatein.wcm.api.model.security.User;
 
-public class WCMTextContent implements TextContent {
+public class WcmTextContent implements TextContent {
 
     Integer version;
     String id;
@@ -125,7 +125,7 @@ public class WCMTextContent implements TextContent {
 
     // Protected methods
 
-    protected WCMTextContent() {
+    protected WcmTextContent() {
     }
 
     protected void setVersion(Integer version) {
@@ -227,7 +227,7 @@ public class WCMTextContent implements TextContent {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        WCMTextContent other = (WCMTextContent) obj;
+        WcmTextContent other = (WcmTextContent) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

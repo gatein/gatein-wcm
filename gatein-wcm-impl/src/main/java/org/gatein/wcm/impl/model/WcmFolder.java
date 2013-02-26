@@ -13,7 +13,7 @@ import org.gatein.wcm.api.model.security.ACL;
 import org.gatein.wcm.api.model.security.Principal;
 import org.gatein.wcm.api.model.security.User;
 
-public class WCMFolder implements Folder {
+public class WcmFolder implements Folder {
 
     Integer version;
     String id;
@@ -120,7 +120,7 @@ public class WCMFolder implements Folder {
 
     // Protected methods
 
-    protected WCMFolder() {
+    protected WcmFolder() {
 
     }
 
@@ -219,7 +219,7 @@ public class WCMFolder implements Folder {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        WCMFolder other = (WCMFolder) obj;
+        WcmFolder other = (WcmFolder) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

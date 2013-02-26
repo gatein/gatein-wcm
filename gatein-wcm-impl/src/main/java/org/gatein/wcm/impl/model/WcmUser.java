@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.gatein.wcm.api.model.security.User;
 
-public class WCMUser implements User {
+public class WcmUser implements User {
 
     String user;
 
@@ -103,7 +103,7 @@ public class WCMUser implements User {
         return null;
     }
 
-    protected WCMUser(String username) {
+    protected WcmUser(String username) {
         this.user = username;
     }
 
@@ -128,7 +128,7 @@ public class WCMUser implements User {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        WCMUser other = (WCMUser) obj;
+        WcmUser other = (WcmUser) obj;
         if (user == null) {
             if (other.user != null)
                 return false;

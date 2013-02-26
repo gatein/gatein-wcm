@@ -3,12 +3,12 @@ package org.gatein.wcm.impl.model;
 import org.gatein.wcm.api.model.security.ACE;
 import org.gatein.wcm.api.model.security.Principal;
 
-public class WCMACE implements ACE {
+public class WcmACE implements ACE {
 
     Principal principal;
     PermissionType permission;
 
-    protected WCMACE(Principal principal, PermissionType permission) {
+    protected WcmACE(Principal principal, PermissionType permission) {
         this.principal = principal;
         this.permission = permission;
     }

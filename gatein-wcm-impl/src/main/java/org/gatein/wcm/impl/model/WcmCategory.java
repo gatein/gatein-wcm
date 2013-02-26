@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.gatein.wcm.api.model.metadata.Category;
 
-public class WCMCategory implements Category {
+public class WcmCategory implements Category {
 
     String id;
     String locale;
@@ -39,7 +39,7 @@ public class WCMCategory implements Category {
 
     // Protected methods
 
-    protected WCMCategory() {
+    protected WcmCategory() {
         super();
     }
 
@@ -87,7 +87,7 @@ public class WCMCategory implements Category {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        WCMCategory other = (WCMCategory) obj;
+        WcmCategory other = (WcmCategory) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

@@ -19,19 +19,19 @@ import org.gatein.wcm.api.services.PublishService;
 import org.gatein.wcm.api.services.RepositoryService;
 import org.gatein.wcm.api.services.exceptions.ContentIOException;
 import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
-import org.gatein.wcm.impl.security.WCMSecurityFactory;
-import org.gatein.wcm.impl.services.WCMContentService;
+import org.gatein.wcm.impl.security.WcmSecurityFactory;
+import org.gatein.wcm.impl.services.WcmContentService;
 import org.jboss.logging.Logger;
 import org.modeshape.jcr.api.Repositories;
 
 
-public class WCMServicesManager implements RepositoryService, ObjectFactory {
+public class WcmServicesManager implements RepositoryService, ObjectFactory {
 
     private static final Logger log = Logger.getLogger("org.gatein.wcm");
 
     Repositories repositories;
 
-    public WCMServicesManager() {
+    public WcmServicesManager() {
 
         log.info( "[[ Init WCMServicesManager Service ]] ");
     }
@@ -47,7 +47,7 @@ public class WCMServicesManager implements RepositoryService, ObjectFactory {
 
         User u = null;
         try {
-            u = WCMSecurityFactory.getSecurityService().authenticate(user, password);
+            u = WcmSecurityFactory.getSecurityService().authenticate(user, password);
         } catch (ContentIOException e) {
             throw new ContentIOException( "Unable to connect to WCM Security Service: " + e.getMessage() );
         } catch (ContentSecurityException e) {
@@ -66,7 +66,7 @@ public class WCMServicesManager implements RepositoryService, ObjectFactory {
 
            initCategories( s );
 
-           return new WCMContentService( idRepository, s, u );
+           return new WcmContentService( idRepository, s, u );
         } catch (NamingException e) {
             throw new ContentIOException( "Unable to connect to ModeShape JNDI java:/jcr" );
         }  catch (NullPointerException e) {

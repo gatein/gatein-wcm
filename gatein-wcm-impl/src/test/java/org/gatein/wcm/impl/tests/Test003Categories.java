@@ -1,6 +1,7 @@
 package org.gatein.wcm.impl.tests;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -22,17 +23,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class Test003_Categories {
+public class Test003Categories {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.impl.tests.test003");
+    private static final Logger log = Logger.getLogger("org.gatein.wcm.impl.test003");
 
     @Deployment
     public static Archive<?> createDeployment() {
 
         return ShrinkWrap.create(WebArchive.class, "gatein-wcm-impl-test003.war")
-                .addAsResource(new File("src/test/resources/cmis-spec-v1.0.pdf"))
+                .addAsResource(new File("src/test/resources/GateIn-UserGuide-v3.5.pdf"))
                 .addAsResource(new File("src/test/resources/wcm-whiteboard.jpg"))
-                .addAsResource(new File("src/test/resources/jcr-2.0_specification.pdf"))
+                .addAsResource(new File("src/test/resources/jbossportletbridge.pdf"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .setManifest(new File("src/main/webapp/META-INF/MANIFEST.MF"));
 
@@ -42,9 +43,9 @@ public class Test003_Categories {
     RepositoryService repos;
 
     @Test
-    public void create_categories() {
+    public void createCategories() {
 
-        log.info("[[ START TEST  create_categories ]]");
+        log.info("[[ START TEST  createCategories ]]");
         try {
             ContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
             Category c1 = cs.createCategory("sports1", "en", "Sports", "/");
@@ -81,22 +82,31 @@ public class Test003_Categories {
             log.info(c13);
             log.info(c14);
             log.info(c15);
+            Assert.assertTrue( c15.getId().equals("national") );
+            Assert.assertTrue( c15.getLocation().equals("/news1") );
+            Assert.assertTrue( c15.getLocale().equals("fr") );
             log.info(c16);
             log.info(c17);
             log.info(c18);
+            Assert.assertTrue( c18.getId().equals("international") );
+            Assert.assertTrue( c18.getLocation().equals("/news1") );
+            Assert.assertTrue( c18.getLocale().equals("fr") );
 
+            // Clean test
+            cs.deleteCategory("/sports1");
+            cs.deleteCategory("/news1");
         }  catch (Exception e) {
             log.error(e.getMessage());
             Assert.assertTrue( false );
         }
-        log.info("[[ STOP TEST  create_categories ]]");
+        log.info("[[ STOP TEST  createCategories ]]");
         Assert.assertTrue( true );
     }
 
     @Test
-    public void update_categories() {
+    public void updateCategories() {
 
-        log.info("[[ START TEST  update_categories ]]");
+        log.info("[[ START TEST  updateCategories ]]");
         try {
             ContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
             cs.createCategory("sports2", "en", "Sports", "/");
@@ -120,21 +130,30 @@ public class Test003_Categories {
 
             Category c1 = cs.updateCategoryDescription("/news2/national2", "es", "Noticias en español");
             log.info(c1);
+            Assert.assertTrue( c1.getId().equals("national2") );
+            Assert.assertTrue( c1.getLocation().equals("/news2") );
+            Assert.assertTrue( c1.getLocale().equals("es") );
 
             Category c2 = cs.updateCategoryLocation("/sports2", "es", "/news2");
             log.info(c2);
+            Assert.assertTrue( c2.getId().equals("sports2") );
+            Assert.assertTrue( c2.getLocation().equals("/news2") );
+            Assert.assertTrue( c2.getLocale().equals("es") );
+
+            // Clean test
+            cs.deleteCategory("/news2");
         }  catch (Exception e) {
             log.error(e.getMessage());
             Assert.assertTrue( false );
         }
-        log.info("[[ STOP TEST  update_categories ]]");
+        log.info("[[ STOP TEST  updateCategories ]]");
         Assert.assertTrue( true );
     }
 
     @Test
-    public void get_categories() {
+    public void getCategories() {
 
-        log.info("[[ START TEST  get_categories ]]");
+        log.info("[[ START TEST  getCategories ]]");
         try {
             ContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
 
@@ -165,30 +184,38 @@ public class Test003_Categories {
             cs.createCategory("international3", "fr", "International", "/news3");
 
             List<Category> categories = cs.getCategories("/", "es");
+            Assert.assertTrue( categories.size() == 2 );
             for (Category cy : categories) {
                 log.info( cy );
             }
             categories = cs.getCategories("/sports3", "en");
+            // I get only a category with sports3 not their childs, I need to browse
+            Assert.assertTrue( categories.size() == 1 );
             for (Category cy : categories) {
                 log.info( cy );
             }
             categories = cs.getCategories("/news3", "en");
+            // I get only a category with news3 not their child, I need to browse
+            Assert.assertTrue( categories.size() == 1 );
             for (Category cy : categories) {
                 log.info( cy );
             }
 
+            // Clean test
+            cs.deleteCategory("/sports3");
+            cs.deleteCategory("/news3");
         }  catch (Exception e) {
             log.error(e.getMessage());
             Assert.assertTrue( false );
         }
-        log.info("[[ STOP TEST  get_categories ]]");
+        log.info("[[ STOP TEST  getCategories ]]");
         Assert.assertTrue( true );
     }
 
     @Test
-    public void add_categories() {
+    public void addCategories() {
 
-        log.info("[[ START TEST  add_categories ]]");
+        log.info("[[ START TEST  addCategories ]]");
         try {
             ContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
             cs.createCategory("sports4", "en", "Sports", "/");
@@ -219,18 +246,21 @@ public class Test003_Categories {
 
             cs.addContentCategory("/my noticia","/news4");
 
+            // Clean test
+            cs.deleteContent("/my noticia");
+            cs.deleteCategory("/news4");
         }  catch (Exception e) {
             log.error(e.getMessage());
             Assert.assertTrue( false );
         }
-        log.info("[[ STOP TEST  add_categories ]]");
+        log.info("[[ STOP TEST  addCategories ]]");
         Assert.assertTrue( true );
     }
 
     @Test
-    public void delete_categories() {
+    public void deleteCategories() {
 
-        log.info("[[ START TEST  delete_categories ]]");
+        log.info("[[ START TEST  deleteCategories ]]");
         try {
             ContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
             cs.createCategory("sports5", "en", "Sports", "/");
@@ -253,31 +283,28 @@ public class Test003_Categories {
             cs.createCategory("international5", "fr", "International", "/news5");
 
             Category c = cs.deleteCategory("/sports5", "fr");
-            log.info(c);
+            Assert.assertTrue( c == null ); // We are in the parent of categories
             cs.deleteCategory("/sports5/basket5");
 
+            List<Category> r = cs.getCategories("/sports5", "es");
+            Assert.assertTrue( r.size() == 1 );
+
+            // Clean test
+            cs.deleteCategory("/sports5");
+            cs.deleteCategory("/news5");
         }  catch (Exception e) {
             log.error(e.getMessage());
             Assert.assertTrue( false );
         }
-        log.info("[[ STOP TEST  delete_categories ]]");
+        log.info("[[ STOP TEST  deleteCategories ]]");
         Assert.assertTrue( true );
     }
 
     @Test
-    public void query_categories() {
-        log.info("[[ START TEST  query_categories ]]");
+    public void queryCategories() {
+        log.info("[[ START TEST  queryCategories ]]");
         try {
             ContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
-
-            try {
-                cs.deleteContent("/site1");
-                cs.deleteContent("/site2");
-                cs.deleteContent("/site3");
-                cs.deleteCategory("/news");
-                cs.deleteCategory("/countries");
-            } catch (Exception ignored) {
-            }
 
             /*
              * Sites
@@ -387,28 +414,76 @@ public class Test003_Categories {
 
             cats = cs.getCategories("/news", "es");
             result = cs.getContent(cats, "/site1", "es");
-            for (Content r : result)
+            ArrayList<String> ids = new ArrayList<String>();
+            for (Content r : result) {
                 log.info(r);
+                ids.add( r.getId() );
+            }
+            Assert.assertTrue( ids.contains( "new1" ) );
+            Assert.assertTrue( ids.contains( "new2" ) );
+            Assert.assertTrue( ! ids.contains( "new5" ) );
+            Assert.assertTrue( ! ids.contains( "new6" ) );
+
 
             result = cs.getContent(cats, "/site2", "es");
-            for (Content r : result)
+            ids = new ArrayList<String>();
+            for (Content r : result) {
                 log.info(r);
+                ids.add( r.getId() );
+            }
+            Assert.assertTrue( ids.contains( "new5" ) );
+            Assert.assertTrue( ids.contains( "new6" ) );
+            Assert.assertTrue( ! ids.contains( "new1" ) );
+            Assert.assertTrue( ! ids.contains( "new2" ) );
+
 
             result = cs.getContent(cats, "/", "es");
-            for (Content r : result)
+            ids = new ArrayList<String>();
+            for (Content r : result) {
                 log.info(r);
+                ids.add( r.getId() );
+            }
+            Assert.assertTrue( ids.contains( "new1" ) );
+            Assert.assertTrue( ids.contains( "new2" ) );
+            Assert.assertTrue( ids.contains( "new5" ) );
+            Assert.assertTrue( ids.contains( "new6" ) );
+            Assert.assertTrue( ! ids.contains( "new3" ) );
+            Assert.assertTrue( ! ids.contains( "new4" ) );
+            Assert.assertTrue( ! ids.contains( "new7" ) );
+            Assert.assertTrue( ! ids.contains( "new8" ) );
+
 
             cats = cs.getCategories("/countries", "es");
             result = cs.getContent(cats, "/", "es");
-            for (Content r : result)
+            ids = new ArrayList<String>();
+            for (Content r : result) {
                 log.info(r);
+                ids.add( r.getId() );
+            }
+            Assert.assertTrue( ids.contains( "new3" ) );
+            Assert.assertTrue( ids.contains( "new4" ) );
+            Assert.assertTrue( ids.contains( "new7" ) );
+            Assert.assertTrue( ids.contains( "new8" ) );
+            Assert.assertTrue( ! ids.contains( "new1" ) );
+            Assert.assertTrue( ! ids.contains( "new2" ) );
+            Assert.assertTrue( ! ids.contains( "new5" ) );
+            Assert.assertTrue( ! ids.contains( "new6" ) );
 
+            // Cleaning test
+            try {
+                cs.deleteContent("/site1");
+                cs.deleteContent("/site2");
+                cs.deleteContent("/site3");
+                cs.deleteCategory("/news");
+                cs.deleteCategory("/countries");
+            } catch (Exception ignored) {
+            }
 
         }  catch (Exception e) {
             log.error(e.getMessage());
             Assert.assertTrue( false );
         }
-        log.info("[[ STOP TEST  query_categories ]]");
+        log.info("[[ STOP TEST  queryCategories ]]");
         Assert.assertTrue( true );
     }
 

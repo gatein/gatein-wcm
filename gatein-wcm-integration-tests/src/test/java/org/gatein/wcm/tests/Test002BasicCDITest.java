@@ -1,4 +1,4 @@
-package org.gatein.wcm.impl.tests;
+package org.gatein.wcm.tests;
 
 import java.io.File;
 
@@ -20,52 +20,53 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class Test001_Connectivity {
+public class Test002BasicCDITest {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.impl.tests.test001");
+    private static final Logger log = Logger.getLogger("org.gatein.wcm.integration.tests.test002");
 
     @Deployment
     public static Archive<?> createDeployment() {
 
-        return ShrinkWrap.create(WebArchive.class, "gatein-wcm-impl-test001.war")
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+        return ShrinkWrap.create(WebArchive.class, "gatein-wcm-integration-tests-test002.war").addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .setManifest(new File("src/main/webapp/META-INF/MANIFEST.MF"));
+
     }
 
     @Resource(mappedName = "java:jboss/gatein-wcm")
     RepositoryService repos;
 
     @Test
-    public void good_password() {
+    public void goodPassword() {
 
-        log.info("[[ START TEST  good_password ]]");
+        log.info("[[ START TEST  goodPassword ]]");
         try {
             ContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
-            log.info(cs);
+            log.info( cs );
+            log.info("[[ END TEST  goodPassword ]]");
+            Assert.assertTrue( true );
         } catch (Exception e) {
             log.error(e.getMessage());
-            Assert.assertTrue(false);
+            Assert.assertTrue( false );
         }
-        Assert.assertTrue(true);
-        log.info("[[ END TEST  good_password ]]");
     }
 
     @Test
-    public void bad_password() {
+    public void badPassword() {
 
-        log.info("[[ START TEST  bad_password ]]");
+        log.info("[[ START TEST  badPassword ]]");
         try {
             ContentService cs = repos.createContentSession("sample", "default", "admin", "badpassword");
-            log.info(cs);
+            log.info( cs );
             log.error("Expecting exception...");
-            Assert.assertTrue(false);
+            Assert.assertTrue( false );
         } catch (ContentSecurityException e) {
             log.info(" [[ Expected: " + e.getMessage());
+            log.info("[[ END TEST  badPassword ]]");
+            Assert.assertTrue( true );
         } catch (Exception e) {
-            Assert.assertTrue(false);
+            Assert.assertTrue( false );
         }
-        Assert.assertTrue(true);
-        log.info("[[ END TEST  bad_password ]]");
     }
+
 
 }

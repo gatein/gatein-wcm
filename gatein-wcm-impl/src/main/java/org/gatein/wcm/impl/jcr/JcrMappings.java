@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.Binary;
@@ -36,8 +37,8 @@ import org.gatein.wcm.api.model.security.User;
 import org.gatein.wcm.api.services.exceptions.ContentException;
 import org.gatein.wcm.api.services.exceptions.ContentIOException;
 import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
-import org.gatein.wcm.impl.model.WCMConstants;
-import org.gatein.wcm.impl.model.WCMContentFactory;
+import org.gatein.wcm.impl.model.WcmConstants;
+import org.gatein.wcm.impl.model.WcmContentFactory;
 import org.jboss.logging.Logger;
 
 /**
@@ -53,7 +54,7 @@ public class JcrMappings {
 
     private final String MARK = "__";
 
-    WCMContentFactory factory = null;
+    WcmContentFactory factory = null;
 
     Session jcrSession = null;
     User logged = null;
@@ -69,11 +70,11 @@ public class JcrMappings {
         }
     }
 
-    public WCMContentFactory getFactory() {
+    public WcmContentFactory getFactory() {
         return factory;
     }
 
-    public void setFactory(WCMContentFactory factory) {
+    public void setFactory(WcmContentFactory factory) {
         this.factory = factory;
     }
 
@@ -342,8 +343,16 @@ public class JcrMappings {
     public boolean checkCategoryReferences(String categoryLocation) {
         try {
             Node n = jcrSession.getNode("/__categories" + categoryLocation + "/__references");
-            boolean hasChilds = n.getNodes().hasNext();
-            return hasChilds;
+            // boolean hasChilds = n.getNodes().hasNext();
+            // Debug code
+            NodeIterator ni = n.getNodes();
+            if (ni.hasNext()) {
+                ni.nextNode();
+                return true;
+            } else
+                return false;
+        } catch (NoSuchElementException e) {
+          return false;
         } catch (Exception e) {
             log.error("Unexpected error loofing for references in Category: " + categoryLocation + ". Msg: " + e.getMessage());
         }
@@ -400,7 +409,7 @@ public class JcrMappings {
         while (ni.hasNext()) {
             Node child = ni.nextNode();
             String name = child.getName();
-            if (!WCMConstants.RESERVED_ENTRIES.contains(name)) {
+            if (!WcmConstants.RESERVED_ENTRIES.contains(name)) {
                 if (name.startsWith("__"))
                     orphan = false;
             }
@@ -481,7 +490,7 @@ public class JcrMappings {
         while (ni.hasNext()) {
             Node child = ni.nextNode();
             String name = child.getName();
-            if (!WCMConstants.RESERVED_ENTRIES.contains(name)) {
+            if (!WcmConstants.RESERVED_ENTRIES.contains(name)) {
                 if (name.startsWith("__"))
                     locales.add(name.substring(2));
             }

@@ -2,12 +2,12 @@ package org.gatein.wcm.impl.model;
 
 import org.gatein.wcm.api.model.security.Principal;
 
-public class WCMPrincipal implements Principal {
+public class WcmPrincipal implements Principal {
 
     String id;
     PrincipalType type;
 
-    protected WCMPrincipal(String id, PrincipalType type) {
+    protected WcmPrincipal(String id, PrincipalType type) {
         this.id = id;
         this.type = type;
     }
@@ -52,7 +52,7 @@ public class WCMPrincipal implements Principal {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        WCMPrincipal other = (WCMPrincipal) obj;
+        WcmPrincipal other = (WcmPrincipal) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
