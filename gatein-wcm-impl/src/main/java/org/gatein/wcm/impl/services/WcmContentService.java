@@ -436,7 +436,8 @@ public class WcmContentService implements ContentService {
 
     @Override
     public void closeSession() throws ContentException, ContentIOException {
-        // TODO Auto-generated method stub
+        // TODO To remove
+        jcrSession.logout();
     }
 
     // Private Methods
