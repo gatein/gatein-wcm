@@ -1,0 +1,46 @@
+ModeShape configurations
+========================
+
+standalone-modeshape.xml
+------------------------
+
+Repository for testing: sample
+
+  - Content:    Infinispan local-cache with file-store in Local filesystem (default)
+  - Indexes:    Local filesystem (default)
+  - Binaries:   Local filesystem (default)
+  
+standalone-modeshape-database.xml
+---------------------------------
+
+Repository for testing: sample
+
+  - Content:    Infinispan local-cache with database (pre-configured MySQL or PostgreSQL)
+		Using string-keyed-jdbc-store	
+		  
+		    Changes for PostgreSQL:
+			POSTGRES dialect in <property name="databaseType">
+			type="BYTEA" in data-column of string-keyed-table
+			
+  - Indexes:    Local filesystem (default)
+  - Binaries:   Local filesystem (default)
+  
+standalone-modeshape-database-binaries.xml
+------------------------------------------
+
+Repository for testing: sample
+
+  - Content:    Infinispan local-cache with database (pre-configured MySQL or PostgreSQL)
+		Using string-keyed-jdbc-store	
+		  
+		    Changes for PostgreSQL:
+			POSTGRES dialect in <property name="databaseType">
+			type="BYTEA" in data-column of string-keyed-table
+			
+  - Indexes:    Local filesystem (default)
+  - Binaries:   Local filesystem (default)
+
+  
+  
+  
+

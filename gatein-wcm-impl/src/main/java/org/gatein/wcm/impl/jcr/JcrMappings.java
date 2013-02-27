@@ -116,7 +116,10 @@ public class JcrMappings {
 
     public boolean checkIdExists(String location, String id, String locale) {
         try {
-            Node root = jcrSession.getNode(location + "/" + id + "/" + MARK + locale);
+            String tmpLocation = location;
+            if ("/".equals( location ))
+                tmpLocation = "";
+            Node root = jcrSession.getNode(tmpLocation + "/" + id + "/" + MARK + locale);
             if (root.getPrimaryNodeType().getName().equals("nt:folder"))
                 return true;
         } catch (PathNotFoundException e) {
@@ -130,7 +133,10 @@ public class JcrMappings {
 
     public boolean checkIdExists(String location, String id) {
         try {
-            Node root = jcrSession.getNode(location + "/" + id);
+            String tmpLocation = location;
+            if ("/".equals( location ))
+                tmpLocation = "";
+            Node root = jcrSession.getNode(tmpLocation + "/" + id);
             if (root.getPrimaryNodeType().getName().equals("nt:folder"))
                 return true;
         } catch (PathNotFoundException e) {
@@ -287,6 +293,7 @@ public class JcrMappings {
 
     public void checkJCRException(RepositoryException e) throws ContentException, ContentIOException, ContentSecurityException {
         if (e instanceof PathNotFoundException) {
+            log.info("Debugging", e);
             throw new ContentException("Location doesn't found. Msg: " + e.getMessage());
         }
         if (e instanceof ItemExistsException) {
@@ -365,23 +372,27 @@ public class JcrMappings {
             jcrSession.getNode(location).addNode(id, "nt:folder");
         }
 
-        jcrSession.getNode(location + "/" + id).addNode(MARK + locale, "nt:folder").addNode(MARK + id, "nt:file")
-                .addNode("jcr:content", "nt:resource");
+        String tmpLocation = location;
+        if ("/".equals( location ))
+            tmpLocation = "";
 
-        Node n = jcrSession.getNode(location + "/" + id);
+        jcrSession.getNode(tmpLocation + "/" + id).addNode(MARK + locale, "nt:folder").addNode(MARK + id, "nt:file")
+                .addNode("jcr:content", "nt:resource").setProperty("jcr:data", content);
+
+        Node n = jcrSession.getNode(tmpLocation + "/" + id);
         n.addMixin("mix:title");
         n.addMixin("mix:lastModified");
         n.addMixin("mix:shareable");
         n.setProperty("jcr:description", "textcontent:" + n.getPath());
 
-        n = jcrSession.getNode(location + "/" + id + "/" + MARK + locale + "/" + MARK + id);
+        n = jcrSession.getNode(tmpLocation + "/" + id + "/" + MARK + locale + "/" + MARK + id);
         n.addMixin("mix:title");
         n.addMixin("mix:versionable");
         n.addMixin("mix:lastModified");
         n.addMixin("mix:mimeType");
 
         // Adding properties
-        n.getNode("jcr:content").setProperty("jcr:data", content);
+        n.getNode("jcr:content");
         n.setProperty("jcr:description", content.getString());
         n.setProperty("jcr:encoding", encoding);
 
@@ -620,7 +631,8 @@ public class JcrMappings {
 
     public Integer jcrVersion(String location) {
         try {
-            VersionHistory h = vm.getVersionHistory(location);
+            // VersionHistory h = vm.getVersionHistory(location);
+            VersionHistory h = jcrSession.getWorkspace().getVersionManager().getVersionHistory(location);
             return new Integer((int) h.getAllLinearFrozenNodes().getSize());
         } catch (Exception e) {
             log.error("Unexpected error getting version history of " + location + ". Msg: " + e.getMessage());
@@ -641,7 +653,7 @@ public class JcrMappings {
         try {
             return jcrSession.getNode(location).getProperty("jcr:created").getDate().getTime();
         } catch (Exception e) {
-            log.error("Unexpected error getting created date for " + location + ". Msg: " + e.getMessage());
+            log.error("Unexpected error getting jcr:created for " + location + ". Msg: " + e.getMessage());
             return null;
         }
     }
@@ -650,7 +662,7 @@ public class JcrMappings {
         try {
             return n.getProperty("jcr:created").getDate().getTime();
         } catch (Exception e) {
-            log.error("Unexpected error getting created date for " + n.toString() + ". Msg: " + e.getMessage());
+            log.error("Unexpected error getting jcr:created for " + n.toString() + ". Msg: " + e.getMessage());
             return null;
         }
     }
@@ -659,7 +671,7 @@ public class JcrMappings {
         try {
             return jcrSession.getNode(location).getProperty("jcr:lastModified").getDate().getTime();
         } catch (Exception e) {
-            log.error("Unexpected error getting created date for " + location + ". Msg: " + e.getMessage());
+            log.error("Unexpected error getting jcr:lastModified for " + location + ". Msg: " + e.getMessage());
             return null;
         }
     }
@@ -668,7 +680,7 @@ public class JcrMappings {
         try {
             return n.getProperty("jcr:lastModified").getDate().getTime();
         } catch (Exception e) {
-            log.error("Unexpected error getting created date for " + n.toString() + ". Msg: " + e.getMessage());
+            log.error("Unexpected error getting jcr:lastModified for " + n.toString() + ". Msg: " + e.getMessage());
             return null;
         }
     }
