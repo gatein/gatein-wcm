@@ -28,10 +28,10 @@
     <artifactId>gatein-wcm</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>gatein-wcm-tests</artifactId>
+  <artifactId>gatein-wcm-integration-tests</artifactId>
   <packaging>jar</packaging>
-  <name>GateIn WCM Tests</name>
-  <description>GateIn WCM tests</description>
+  <name>GateIn WCM Integration Tests</name>
+  <description>GateIn WCM Integration tests</description>
 
   <properties>
     <arquillian.suspend>y</arquillian.suspend>
