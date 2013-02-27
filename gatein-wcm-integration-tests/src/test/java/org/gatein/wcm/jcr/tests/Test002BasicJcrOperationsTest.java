@@ -32,9 +32,9 @@ import org.modeshape.jcr.api.JcrConstants;
 
 
 @RunWith(Arquillian.class)
-public class Test003BasicJcrOperationsTest {
+public class Test002BasicJcrOperationsTest {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.integration.tests.test003");
+    private static final Logger log = Logger.getLogger("org.gatein.wcm.jcr.tests.test002");
 
     @Deployment
     public static Archive<?> createDeployment() {

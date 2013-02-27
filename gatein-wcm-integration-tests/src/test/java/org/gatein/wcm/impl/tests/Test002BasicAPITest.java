@@ -36,7 +36,7 @@ import org.junit.runner.RunWith;
 public class Test002BasicAPITest {
 
 	private static final Logger log = Logger
-			.getLogger("org.gatein.wcm.impl.test002");
+			.getLogger("org.gatein.wcm.impl.tests.test002");
 
 	@Deployment
 	public static Archive<?> createDeployment() {

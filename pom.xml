@@ -56,7 +56,7 @@
 
     <jbossas-version>7.1.1.Final</jbossas-version>
     <jbossas7.assembly.descriptor.version>71</jbossas7.assembly.descriptor.version>
-    <modeshape.version>3.1.1.Final</modeshape.version>
+    <modeshape.version>3.1.3.Final</modeshape.version>
     <chemistry.version>0.7.0</chemistry.version>
 
     <org.exoplatform.kernel.version>2.4.1-GA</org.exoplatform.kernel.version>

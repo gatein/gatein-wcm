@@ -29,7 +29,7 @@ import org.junit.runner.RunWith;
 public class Test003CategoriesTest {
 
 	private static final Logger log = Logger
-			.getLogger("org.gatein.wcm.impl.test003");
+			.getLogger("org.gatein.wcm.impl.tests.test003");
 
 	@Deployment
 	public static Archive<?> createDeployment() {
@@ -335,18 +335,18 @@ public class Test003CategoriesTest {
 
 			/*
 			 * Sites In both locales {es, en}
-			 * 
+			 *
 			 * /site1/new1 /site1/new2 /site1/new3 /site1/new4 /site2/new5
 			 * /site2/new6 /site2/new7 /site2/new8 /site3/new9 /site3/new10
-			 * 
+			 *
 			 * Categories /news/national --> new1, new5 /news/sports --> new2,
 			 * new6 /countries/spain --> new3, new7 /countries/france --> new4,
 			 * new8
-			 * 
+			 *
 			 * Queries: /news --> new1, new2, new5, new6 :: filtered by location
 			 * "/" /countries -> new3, new4, new7, new8 :: filtered by location
 			 * "/"
-			 * 
+			 *
 			 * /news --> new1, new2 :: filtered by location "/site1" /news -->
 			 * new5, new6 :: filtered by location "/site2"
 			 */
@@ -414,11 +414,11 @@ public class Test003CategoriesTest {
 			 * Categories /news/national --> new1, new5 /news/sports --> new2,
 			 * new6 /countries/spain --> new3, new7 /countries/france --> new4,
 			 * new8
-			 * 
+			 *
 			 * Queries: /news --> new1, new2, new5, new6 :: filtered by location
 			 * "/" /countries -> new3, new4, new7, new8 :: filtered by location
 			 * "/"
-			 * 
+			 *
 			 * /news --> new1, new2 :: filtered by location "/site1" /news -->
 			 * new5, new6 :: filtered by location "/site2"
 			 */

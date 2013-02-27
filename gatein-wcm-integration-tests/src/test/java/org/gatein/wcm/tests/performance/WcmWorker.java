@@ -4,7 +4,7 @@ import org.gatein.wcm.api.services.ContentService;
 import org.jboss.logging.Logger;
 
 public class WcmWorker implements Runnable {
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.integration.tests.performance");
+    private static final Logger log = Logger.getLogger("org.gatein.wcm.tests.performance");
     private final int nTest;
 
     ContentService cs;

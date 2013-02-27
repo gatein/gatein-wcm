@@ -21,9 +21,9 @@ import org.junit.runner.RunWith;
 import org.modeshape.jcr.api.JcrTools;
 
 @RunWith(Arquillian.class)
-public class Test004JcrQueriesTest {
+public class Test003JcrQueriesTest {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.integration.tests.test004");
+    private static final Logger log = Logger.getLogger("org.gatein.wcm.jcr.tests.test003");
 
     @Deployment
     public static Archive<?> createDeployment() {
