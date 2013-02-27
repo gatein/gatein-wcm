@@ -19,7 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class ModeShapeLauncher {
+public class ModeShapeLauncherTest {
     private static final Logger log = Logger.getLogger("org.modeshape.tests.performance");
 
     private static final int NTHREDS = 10;

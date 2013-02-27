@@ -1,4 +1,4 @@
-package org.gatein.wcm.tests;
+package org.gatein.wcm.jcr.tests;
 
 import java.io.File;
 
@@ -21,7 +21,7 @@ import org.junit.runner.RunWith;
 import org.modeshape.jcr.api.JcrTools;
 
 @RunWith(Arquillian.class)
-public class Test004JcrQueries {
+public class Test004JcrQueriesTest {
 
     private static final Logger log = Logger.getLogger("org.gatein.wcm.integration.tests.test004");
 

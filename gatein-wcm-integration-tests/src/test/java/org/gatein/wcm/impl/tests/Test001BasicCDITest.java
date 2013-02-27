@@ -1,4 +1,4 @@
-package org.gatein.wcm.tests;
+package org.gatein.wcm.impl.tests;
 
 import java.io.File;
 
@@ -20,14 +20,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class Test002BasicCDITest {
+public class Test001BasicCDITest {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.integration.tests.test002");
+    private static final Logger log = Logger.getLogger("org.gatein.wcm.impl.tests.test001");
 
     @Deployment
     public static Archive<?> createDeployment() {
 
-        return ShrinkWrap.create(WebArchive.class, "gatein-wcm-integration-tests-test002.war")
+        return ShrinkWrap.create(WebArchive.class, "gatein-wcm-impl-tests-test001.war")
         		.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .setManifest(new File("src/main/webapp/META-INF/MANIFEST.MF"));
 
@@ -46,8 +46,7 @@ public class Test002BasicCDITest {
             log.info("[[ END TEST  goodPassword ]]");
             Assert.assertTrue( true );
         } catch (Exception e) {
-            log.error(e.getMessage());
-            Assert.assertTrue( false );
+            Assert.fail(e.getMessage());
         }
     }
 
@@ -58,14 +57,14 @@ public class Test002BasicCDITest {
         try {
             ContentService cs = repos.createContentSession("sample", "default", "admin", "badpassword");
             log.info( cs );
-            log.error("Expecting exception...");
-            Assert.assertTrue( false );
+            Assert.fail("Expecting exception...");
+
         } catch (ContentSecurityException e) {
             log.info(" [[ Expected: " + e.getMessage());
             log.info("[[ END TEST  badPassword ]]");
             Assert.assertTrue( true );
         } catch (Exception e) {
-            Assert.assertTrue( false );
+            Assert.fail(e.getMessage());
         }
     }
 

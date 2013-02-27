@@ -1,7 +1,5 @@
 package org.gatein.wcm.tests.performance;
 
-import java.util.List;
-
 import org.gatein.wcm.api.services.ContentService;
 import org.jboss.logging.Logger;
 

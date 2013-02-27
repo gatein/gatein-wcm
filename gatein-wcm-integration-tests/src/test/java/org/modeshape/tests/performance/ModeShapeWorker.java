@@ -4,7 +4,6 @@ package org.modeshape.tests.performance;
 import javax.jcr.Node;
 import javax.jcr.Session;
 import javax.jcr.Value;
-import javax.jcr.version.VersionManager;
 
 import org.jboss.logging.Logger;
 
@@ -32,7 +31,6 @@ public class ModeShapeWorker implements Runnable {
             String encoding = "UTF8";
 
             Value content = jcrSession.getValueFactory().createValue("This is a text content from " + id);
-            VersionManager vm = jcrSession.getWorkspace().getVersionManager();
 
             jcrSession.getNode(location).addNode(id, "nt:folder");
             jcrSession.getNode(location + "/" + id).addNode(MARK + locale, "nt:folder").addNode(MARK + id, "nt:file")

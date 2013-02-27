@@ -1,4 +1,4 @@
-package org.gatein.wcm.tests;
+package org.gatein.wcm.jcr.tests;
 
 import java.io.File;
 import java.io.InputStream;

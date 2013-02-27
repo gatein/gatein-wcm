@@ -19,7 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class WcmLauncher {
+public class WcmLauncherTest {
     private static final Logger log = Logger.getLogger("org.gatein.wcm.integration.tests.performance");
 
     private static final int NTHREDS = 10;
