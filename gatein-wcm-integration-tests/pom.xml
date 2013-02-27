@@ -28,10 +28,35 @@
     <artifactId>gatein-wcm</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>gatein-wcm-integration-tests</artifactId>
+  <artifactId>gatein-wcm-tests</artifactId>
   <packaging>jar</packaging>
-  <name>GateIn WCM Integration Tests</name>
-  <description>GateIn WCM integration tests</description>
+  <name>GateIn WCM Tests</name>
+  <description>GateIn WCM tests</description>
+
+  <properties>
+    <arquillian.suspend>y</arquillian.suspend>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- Define the version of JBoss' Java EE 6 APIs we want to import.
+        Any dependencies from org.jboss.spec will have their version defined by this
+        BOM -->
+      <!-- JBoss distributes a complete set of Java EE 6 APIs including
+        a Bill of Materials (BOM). A BOM specifies the versions of a "stack" (or
+        a collection) of artifacts. We use this here so that we always get the correct
+        versions of artifacts. Here we use the jboss-javaee-6.0-with-tools stack
+        (you can read this as the JBoss stack of the Java EE 6 APIs, with some extras
+        tools for your project, such as Arquillian for testing) -->
+      <dependency>
+        <groupId>org.jboss.bom</groupId>
+        <artifactId>jboss-javaee-6.0-with-tools</artifactId>
+        <version>1.0.0.M11</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <dependency>
@@ -59,6 +84,145 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.gatein.wcm</groupId>
+      <artifactId>gatein-wcm-distribution</artifactId>
+      <version>${project.version}</version>
+      <classifier>jbossas-${jbossas7.assembly.descriptor.version}</classifier>
+      <type>zip</type>
+    </dependency>
+
   </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <filtering>false</filtering>
+        <directory>src/main/webapp</directory>
+        <includes>
+          <include>*</include>
+          <include>**/*</include>
+        </includes>
+      </resource>
+    </resources>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>*</include>
+        </includes>
+      </testResource>
+      <testResource>
+        <directory>src/test/resources</directory>
+        <filtering>false</filtering>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </testResource>
+    </testResources>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>unpack</id>
+            <phase>process-test-classes</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <!-- Unpack the JBoss AS7 version from the Maven repository into the 'target' directory -->
+                <artifactItem>
+                  <groupId>org.jboss.as</groupId>
+                  <artifactId>jboss-as-dist</artifactId>
+                  <version>${jbossas-version}</version>
+                  <type>zip</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.directory}</outputDirectory>
+                </artifactItem>
+
+                <!-- Unpack the ModeShape distribution from the Maven repository into the 'target' directory -->
+                <artifactItem>
+                  <groupId>org.modeshape</groupId>
+                  <artifactId>modeshape-distribution</artifactId>
+                  <version>${modeshape.version}</version>
+                  <classifier>jbossas-${jbossas7.assembly.descriptor.version}-dist</classifier>
+                  <type>zip</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.directory}/jboss-as-${jbossas-version}</outputDirectory>
+                </artifactItem>
+
+                <!--
+                  And finally unpack the GateIn WCM distribution which should already be installed in the local repo
+                  as we declare it as a dependency above.
+                -->
+                <artifactItem>
+                  <groupId>org.gatein.wcm</groupId>
+                  <artifactId>gatein-wcm-distribution</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>jbossas-${jbossas7.assembly.descriptor.version}</classifier>
+                  <type>zip</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.directory}/jboss-as-${jbossas-version}</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>download-test-resources</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <get skipexisting="true" src="https://www.dropbox.com/sh/n933phi74s37oy6/0HDvWDf0G_/pdf/wcm-whiteboard.jpg" dest="src/test/resources" />
+                <get skipexisting="true" src="https://www.dropbox.com/sh/n933phi74s37oy6/b25pmaTIl6/pdf/GateIn-UserGuide-v3.5.pdf" dest="src/test/resources" />
+                <get skipexisting="true" src="https://www.dropbox.com/sh/n933phi74s37oy6/3I4Tmk4Pxg/pdf/jbossportletbridge.pdf" dest="src/test/resources" />
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    <pluginManagement>
+      <plugins>
+        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <versionRange>[2.1,)</versionRange>
+                    <goals>
+                      <goal>unpack</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 
 </project>

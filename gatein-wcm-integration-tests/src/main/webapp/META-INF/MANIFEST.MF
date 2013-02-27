@@ -1,3 +1,8 @@
 Manifest-Version: 1.0
-Dependencies: org.jboss.logging, org.gatein.wcm.gatein-wcm-api, org.gatein.wcm.gatein-wcm-impl, javax.jcr, org.modeshape.jcr.api, org.modeshape export services
+Dependencies: org.jboss.logging, 
+ org.gatein.wcm.gatein-wcm-api, 
+ org.gatein.wcm.gatein-wcm-impl, 
+ javax.jcr, 
+ org.modeshape.jcr.api, 
+ org.modeshape export services
 Java-Bean: True

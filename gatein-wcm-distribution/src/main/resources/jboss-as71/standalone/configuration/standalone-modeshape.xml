@@ -199,7 +199,7 @@
         <subsystem xmlns="urn:jboss:domain:modeshape:1.0">
             <repository name="sample">
                 <authenticators>
-                    <authenticator name="gatein-wcm-security" classname="org.gatein.wcm.impl.security.WCMModeShapeProvider"/>
+                    <authenticator name="gatein-wcm-security" classname="org.gatein.wcm.impl.security.WcmModeShapeProvider"/>
                 </authenticators>
             </repository>
             <repository name="artifacts">
@@ -268,7 +268,7 @@
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:naming:1.1">
 	  <bindings>
-	    <object-factory name="java:jboss/gatein-wcm" module="org.gatein.wcm.gatein-wcm-impl" class="org.gatein.wcm.impl.WCMServicesManager" />
+	    <object-factory name="java:jboss/gatein-wcm" module="org.gatein.wcm.gatein-wcm-impl" class="org.gatein.wcm.impl.WcmServicesManager" />
 	  </bindings>
 	</subsystem>
         <subsystem xmlns="urn:jboss:domain:osgi:1.2" activation="lazy">
