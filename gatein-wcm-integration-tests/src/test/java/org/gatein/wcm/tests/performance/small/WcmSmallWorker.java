@@ -41,7 +41,7 @@ public class WcmSmallWorker implements Runnable {
             cs.deleteContent("/test" + nTest);
             cs.closeSession();
         } catch (Exception e) {
-            log.error("Test #" + nTest + " Failed " + e.getMessage());
+            log.error("WCM Small Test #" + nTest + " Failed " + e.getMessage());
             Assert.fail(e.getMessage());
         }
    }

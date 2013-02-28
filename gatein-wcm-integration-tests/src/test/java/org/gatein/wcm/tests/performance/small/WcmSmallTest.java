@@ -6,6 +6,8 @@ import java.util.concurrent.Executors;
 
 import javax.annotation.Resource;
 
+import junit.framework.Assert;
+
 import org.gatein.wcm.api.services.ContentService;
 import org.gatein.wcm.api.services.RepositoryService;
 import org.gatein.wcm.tests.performance.WcmThreadFactory;
@@ -56,6 +58,7 @@ public class WcmSmallTest {
             }
         } catch(Exception e) {
             log.error(e.getMessage());
+            Assert.fail(e.getMessage());
         }
         log.info( "[[ STOP TEST performance ]]" );
     }

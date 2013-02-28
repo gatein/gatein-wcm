@@ -187,7 +187,7 @@
             </cache-container>
             <cache-container name="modeshape" default-cache="sample">
                 <local-cache name="sample">
-                    <transaction mode="NON_XA"locking="PESSIMISTIC" />
+                    <transaction mode="NON_XA" locking="PESSIMISTIC" />
                     <!--  Uncomment to set up file-store
                     <file-store relative-to="jboss.server.data.dir" path="modeshape/store/sample" passivation="false" purge="false"/>
                     -->
