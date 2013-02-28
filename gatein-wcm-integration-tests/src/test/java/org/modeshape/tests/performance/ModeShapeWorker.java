@@ -2,7 +2,10 @@ package org.modeshape.tests.performance;
 
 
 import javax.jcr.Node;
+import javax.jcr.Repository;
+import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.SimpleCredentials;
 import javax.jcr.Value;
 
 import org.jboss.logging.Logger;
@@ -13,15 +16,16 @@ public class ModeShapeWorker implements Runnable {
 
     Session jcrSession;
 
-    ModeShapeWorker(int nTest, Session jcrSession) {
+    ModeShapeWorker(int nTest, Repository repository, SimpleCredentials credentials) throws RepositoryException {
         this.nTest = nTest;
-        this.jcrSession = jcrSession;
+        jcrSession = repository.login(credentials, "default");
     }
 
     @Override
     public void run() {
 
         try {
+
             log.info( "Test #" + nTest );
 
             String location = "/";

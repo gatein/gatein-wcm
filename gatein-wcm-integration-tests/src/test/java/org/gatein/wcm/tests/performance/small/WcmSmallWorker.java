@@ -1,15 +1,19 @@
-package org.gatein.wcm.tests.performance;
+package org.gatein.wcm.tests.performance.small;
+
+import java.util.List;
+
+import junit.framework.Assert;
 
 import org.gatein.wcm.api.services.ContentService;
 import org.jboss.logging.Logger;
 
-public class WcmWorker implements Runnable {
+public class WcmSmallWorker implements Runnable {
     private static final Logger log = Logger.getLogger("org.gatein.wcm.tests.performance");
     private final int nTest;
 
     ContentService cs;
 
-    WcmWorker(int nTest, ContentService cs) {
+    WcmSmallWorker(int nTest, ContentService cs) {
         this.nTest = nTest;
         this.cs = cs;
     }
@@ -18,12 +22,12 @@ public class WcmWorker implements Runnable {
     public void run() {
 
         try {
-            log.info( "Test #" + nTest );
+            log.info( "WCM Small Test #" + nTest );
             cs.createTextContent("test" + nTest, "es", "/", "<h1>Primer test...</h1><p>Este es un párrafo.</p>", "UTF8");
-            // cs.createTextContent("test" + nTest, "en", "/", "<h1>First test...</h1><p>This is a paragraph</p>", "UTF8");
-            // cs.createTextContent("test" + nTest, "fr", "/", "<h1>First test...</h1><p>Ceci est un paragraphe</p>", "UTF8");
-            // cs.createTextContent("test" + nTest, "de", "/", "<h1>Erster Test...</h1><p>Dies ist ein Absatz</p>", "UTF8");
-/*
+            cs.createTextContent("test" + nTest, "en", "/", "<h1>First test...</h1><p>This is a paragraph</p>", "UTF8");
+            cs.createTextContent("test" + nTest, "fr", "/", "<h1>First test...</h1><p>Ceci est un paragraphe</p>", "UTF8");
+            cs.createTextContent("test" + nTest, "de", "/", "<h1>Erster Test...</h1><p>Dies ist ein Absatz</p>", "UTF8");
+
             List<String> locales = cs.getContentLocales("/test" + nTest);
             if ( (!locales.contains("es")) ||
                  (!locales.contains("en")) ||
@@ -32,12 +36,13 @@ public class WcmWorker implements Runnable {
                ) {
                 throw new Exception("Not locales in content");
             }
-*/
+
             // Cleaning test
-            // cs.deleteContent("/test" + nTest);
+            cs.deleteContent("/test" + nTest);
             cs.closeSession();
         } catch (Exception e) {
             log.error("Test #" + nTest + " Failed " + e.getMessage());
+            Assert.fail(e.getMessage());
         }
    }
 

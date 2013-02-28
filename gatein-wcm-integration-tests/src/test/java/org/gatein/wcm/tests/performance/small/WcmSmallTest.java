@@ -1,4 +1,4 @@
-package org.gatein.wcm.tests.performance;
+package org.gatein.wcm.tests.performance.small;
 
 import java.io.File;
 import java.util.concurrent.ExecutorService;
@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 
 import org.gatein.wcm.api.services.ContentService;
 import org.gatein.wcm.api.services.RepositoryService;
+import org.gatein.wcm.tests.performance.WcmThreadFactory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.logging.Logger;
@@ -19,7 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class WcmLauncherTest {
+public class WcmSmallTest {
     private static final Logger log = Logger.getLogger("org.gatein.wcm.tests.performance");
 
     private static final int NTHREDS = 10;
@@ -29,7 +30,7 @@ public class WcmLauncherTest {
     public static Archive<?> createDeployment() {
 
         return ShrinkWrap.create(WebArchive.class, "gatein-wcm-integration-tests-performance.war")
-                .addClasses(WcmWorker.class, WcmThreadFactory.class)
+                .addClasses(WcmSmallWorker.class, WcmThreadFactory.class)
                 .addAsResource(new File("src/test/resources/jbossportletbridge.pdf"))
                 .addAsResource(new File("src/test/resources/wcm-whiteboard.jpg"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
@@ -47,7 +48,7 @@ public class WcmLauncherTest {
             ExecutorService executor = Executors.newFixedThreadPool(NTHREDS, new WcmThreadFactory());
             for (int i = 0; i < NTESTS; i++) {
                 ContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
-                Runnable worker = new WcmWorker(i, cs);
+                Runnable worker = new WcmSmallWorker(i, cs);
                 executor.execute(worker);
             }
             executor.shutdown();
