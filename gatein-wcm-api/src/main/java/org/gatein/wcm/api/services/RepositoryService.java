@@ -45,10 +45,10 @@ public interface RepositoryService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create Session on given repository.
      */
-    public ContentService createContentSession(String idRepository, String idWorkspace, String user, String password) throws ContentIOException,
-            ContentSecurityException;
+    ContentService createContentSession(String idRepository, String idWorkspace, String user, String password)
+            throws ContentIOException, ContentSecurityException;
 
-    public PublishService createPublishSession(String idRepository, String idWorkspace, String user, String password) throws ContentIOException,
-            ContentSecurityException;
+    PublishService createPublishSession(String idRepository, String idWorkspace, String user, String password)
+            throws ContentIOException, ContentSecurityException;
 
 }

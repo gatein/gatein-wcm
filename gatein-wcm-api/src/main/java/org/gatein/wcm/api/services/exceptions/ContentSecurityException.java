@@ -23,11 +23,7 @@
 package org.gatein.wcm.api.services.exceptions;
 
 /**
- * 
- * 
- * 
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
- * 
  */
 public class ContentSecurityException extends Exception {
 

@@ -26,27 +26,27 @@ package org.gatein.wcm.api.model.security;
 import java.util.List;
 
 /**
- * 
+ *
  * A Content can have several Access Control Entries grouped in an Access Control List . <br>
  * ACL objects linked to a Folder object apply by default to all their children. <br>
  * A children of a Folder can have their own ACL. <br>
  * Priorities of ACL: <li>self content (if defined). <li>parent folder (if defined). <li>default ACL for root folder (if
  * defined). <br>
  * <br>
- * 
+ *
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
- * 
+ *
  */
 public interface ACL {
 
     /**
-     * 
+     *
      * @return This method return
      */
-    public String getId();
+    String getId();
 
-    public String getDescription();
+    String getDescription();
 
-    public List<ACE> getAces();
+    List<ACE> getAces();
 
 }

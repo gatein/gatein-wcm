@@ -5,6 +5,6 @@ import java.util.List;
 
 public class WcmConstants {
 
-    public final static List<String> RESERVED_ENTRIES = Arrays.asList("jcr:system", "__acl", "__wcmstatus", "__wcmroles", "__comments", "__categories", "__properties");
+    public static final List<String> RESERVED_ENTRIES = Arrays.asList("jcr:system", "__acl", "__wcmstatus", "__wcmroles", "__comments", "__categories", "__properties");
 
 }

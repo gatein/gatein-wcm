@@ -16,7 +16,7 @@ import org.gatein.wcm.api.content.ContentFactory;
  */
 public class ContentCMS extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -31,36 +31,36 @@ public class ContentCMS extends HttpServlet {
 
 		// Get key parameter of the object
 		String key = request.getParameter("key");
-		
+
 		// Access to Content repository
-		
+
 		ContentAPI contents = ContentFactory.getContent();
 
 		String keystr = key.split("_")[0];
 		String localestr = key.split("_")[1];
 
 		String content = contents.getContent(keystr, localestr);
-		
+
 		if (content != null) {
-			
+
 			System.out.println("Content: " + content);
-									
+
 			response.setContentType("text/html;charset=utf-8");
 			response.getWriter().print(header());
 			response.getWriter().print(content);
 			response.getWriter().flush();
 			response.getWriter().print(footer());
-			
+
 		}
-		
+
 	}
 
-	private String header() {		 
+	private String header() {
 		return "<html><head></head><body><div>";
 	}
-	
+
 	private String footer() {
 		return "</div></body></html>";
 	}
-	
+
 }

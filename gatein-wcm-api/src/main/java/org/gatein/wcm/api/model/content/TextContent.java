@@ -23,26 +23,26 @@
 package org.gatein.wcm.api.model.content;
 
 /**
- * 
+ *
  * HTML document representation. <br />
  * In this first approach we represent whole document as a simple string. <br />
  * Multiples encoding are possible. <br />
- * 
+ *
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
- * 
+ *
  */
 public interface TextContent extends Content {
 
     /**
-     * 
+     *
      * @return This method returns text of the content.
      */
-    public String getContent();
+    String getContent();
 
     /**
-     * 
+     *
      * @return This method returns encoding of the content stored.
      */
-    public String getEncoding();
+    String getEncoding();
 
 }

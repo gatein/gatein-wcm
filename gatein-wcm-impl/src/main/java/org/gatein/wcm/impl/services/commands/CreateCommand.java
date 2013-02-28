@@ -27,8 +27,7 @@ public class CreateCommand {
     JcrMappings jcr = null;
 
     public CreateCommand (Session session, User user)
-            throws ContentIOException
-    {
+            throws ContentIOException {
         jcrSession = session;
         logged = user;
         jcr = new JcrMappings(jcrSession, logged);
@@ -233,8 +232,7 @@ public class CreateCommand {
     }
 
     private void checkNullParameters(String id, String locale, String location, String contentType, Long size,
-            String fileName, InputStream content) throws ContentException
-    {
+            String fileName, InputStream content) throws ContentException {
         if (id == null || "".equals( id )) {
             new ContentException("Parameter id cannot be null or empty");
         }
@@ -275,8 +273,7 @@ public class CreateCommand {
     * @throws ContentSecurityException if user has not been granted to create categories.
     */
    public Category createCategory(String id, String locale, String description, String categoryLocation)
-       throws ContentException, ContentIOException, ContentSecurityException
-   {
+       throws ContentException, ContentIOException, ContentSecurityException {
        log.debug("createCategory()");
 
        checkNullParameters(id, locale, description, categoryLocation);
@@ -311,8 +308,7 @@ public class CreateCommand {
    }
 
    private void checkNullParameters(String id, String locale, String description, String categoryLocation)
-       throws ContentException
-   {
+       throws ContentException {
        if (id == null || "".equals( id )) {
            new ContentException("Parameter id cannot be null or empty");
        }

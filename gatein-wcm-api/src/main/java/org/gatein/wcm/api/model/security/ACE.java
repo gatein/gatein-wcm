@@ -24,40 +24,40 @@
 package org.gatein.wcm.api.model.security;
 
 /**
- * 
+ *
  * Access Control Entry for a Content. <br>
  * Defines permission type associated to a Principal. <br>
  * <br>
- * 
+ *
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
- * 
+ *
  */
 public interface ACE {
 
     /**
-     * 
+     *
      * @return This method returns principal associated to this permission.
      */
-    public Principal getPrincipal();
+    Principal getPrincipal();
 
     /**
-     * 
+     *
      * @return This method returns permission associated to this principal.
      */
-    public PermissionType getPermission();
+    PermissionType getPermission();
 
     /**
-     * 
+     *
      * PermissionType modes: <br>
      * <li>NONE: no access. <li>READ: principal defined can access and read content. <li>COMMENTS: principal defined can access,
      * read content and add comments. <li>WRITE: principal defined can modify content. <li>ALL: principal defined can delete
      * content.<br>
      * <br>
-     * 
+     *
      * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
-     * 
+     *
      */
-    public enum PermissionType {
+    enum PermissionType {
         NONE, READ, COMMENTS, WRITE, ALL
     }
 

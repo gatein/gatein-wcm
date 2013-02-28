@@ -31,17 +31,16 @@ import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
 import org.gatein.wcm.api.services.exceptions.PublishException;
 
 /**
- * 
- * Defines administration API for publishing services. <br>
- * 
+ * Defines administration API for publishing services.<br>
+ *
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
- * 
+ *
  */
 public interface PublishService {
 
-    public List<PublishTask> getTodoList() throws ContentIOException, ContentSecurityException;
+    List<PublishTask> getTodoList() throws ContentIOException, ContentSecurityException;
 
-    public PublishTask resolveTask(PublishTask task, PublishTask.Status status, String comments) throws PublishException,
+    PublishTask resolveTask(PublishTask task, PublishTask.Status status, String comments) throws PublishException,
             ContentIOException, ContentSecurityException;
 
 }

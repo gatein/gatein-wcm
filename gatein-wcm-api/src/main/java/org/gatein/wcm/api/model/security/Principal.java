@@ -24,7 +24,7 @@
 package org.gatein.wcm.api.model.security;
 
 /**
- * 
+ *
  * Principal represents a user or group. <br>
  * Groups can define memberships. <br>
  * Groups can use wildcards for memberships only. <br>
@@ -35,26 +35,26 @@ package org.gatein.wcm.api.model.security;
  * group1234 with role roleA) <li>Principal[id = "*:roleA", type = PrincipalType.GROUP] - (Members of any group with role roleA)
  * <br>
  * <br>
- * 
+ *
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
- * 
+ *
  */
 public interface Principal {
 
     /**
-     * 
+     *
      * @return This method returns ID of the principal. <br>
      *         A Principal can represent an user or a group, or a group+membership.
      */
-    public String getId();
+    String getId();
 
     /**
-     * 
+     *
      * @return This method returns Type of principal (user or group).
      */
-    public PrincipalType getType();
+    PrincipalType getType();
 
-    public enum PrincipalType {
+    enum PrincipalType {
         USER, GROUP;
     }
 

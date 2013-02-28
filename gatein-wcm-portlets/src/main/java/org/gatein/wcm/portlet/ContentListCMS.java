@@ -26,20 +26,20 @@ public class ContentListCMS extends GenericPortlet {
 			throws PortletException, IOException {
 
 		_log.debug("VIEW");
-		
+
 		// Access Content repository
-		
+
 		ContentAPI content = ContentFactory.getContent();
 		List<Content> list = content.getContent();
-		
+
 		request.setAttribute("listcontent", list);
 
 		// Accessing to Portlet session
-		
-		request.setAttribute("validation", request.getPortletSession().getAttribute("validation"));		
-		
+
+		request.setAttribute("validation", request.getPortletSession().getAttribute("validation"));
+
 		// Controlling the view
-		
+
 		String view = "/jsp/content.jsp";
 
 		PortletRequestDispatcher prd = getPortletContext()
@@ -47,28 +47,28 @@ public class ContentListCMS extends GenericPortlet {
 		prd.include(request, response);
 
 	}
-	
-	
+
+
 	@Override
 	public void processAction(ActionRequest request, ActionResponse response)
 			throws PortletException, IOException {
 
-		_log.debug("ACTION");	
-		
+		_log.debug("ACTION");
+
 		// Validation messages
 		String validation = "";
-		
+
 		String deletecontent = request.getParameter("deletecontent");
 		String deletelocale = request.getParameter("deletelocale");
-		
+
 		if (deletecontent != null) {
 			ContentAPI content = ContentFactory.getContent();
-			content.removeContent(deletecontent, deletelocale);			
+			content.removeContent(deletecontent, deletelocale);
 			return;
 		}
-		
-			
-		request.getPortletSession().setAttribute("validation", validation);					
+
+
+		request.getPortletSession().setAttribute("validation", validation);
 	}
 
 }

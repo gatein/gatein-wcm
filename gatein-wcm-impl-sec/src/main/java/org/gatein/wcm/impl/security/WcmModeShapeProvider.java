@@ -70,11 +70,10 @@ public class WcmModeShapeProvider implements AuthenticationProvider, Authorizati
     // role.repositoryName.workspaceName
     //
     // Roles: {readonly, readwrite, admin}
-    final static boolean hasRole( SecurityContext context,
+    static final boolean hasRole( SecurityContext context,
                                   String roleName,
                                   String repositoryName,
-                                  String workspaceName )
-    {
+                                  String workspaceName ) {
             if (context.hasRole(roleName)) return true;
             roleName = roleName + "." + repositoryName;
             if (context.hasRole(roleName)) return true;

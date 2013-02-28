@@ -39,24 +39,24 @@ public interface BinaryContent extends Content {
      *
      * @return This method returns ContentType of file stored.
      */
-    public String getContentType();
+    String getContentType();
 
     /**
      *
      * @return This method returns size of file stored.
      */
-    public Long getSize();
+    Long getSize();
 
     /**
      *
      * @return This method returns name of file stored.
      */
-    public String getFileName();
+    String getFileName();
 
     /**
      *
      * @return This method will return an InputStream of file stored.
      */
-    public InputStream getContent();
+    InputStream getContent();
 
 }

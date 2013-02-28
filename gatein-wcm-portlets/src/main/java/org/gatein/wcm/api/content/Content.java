@@ -5,7 +5,7 @@ public class Content {
 	String key;
 	String locale;
 	String content;
-	
+
 	public String getKey() {
 		return key;
 	}
@@ -24,6 +24,6 @@ public class Content {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
-	
+
+
 }

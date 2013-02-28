@@ -43,7 +43,7 @@ public class JcrRepository {
 			throw new RepositoryException("Could not lookup '"+ name +"' using JNDI.", e);
 		}
 	}
-	
-	
-	
+
+
+
 }

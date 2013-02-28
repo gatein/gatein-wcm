@@ -25,22 +25,22 @@ package org.gatein.wcm.api.model.content;
 import java.util.List;
 
 /**
- * 
+ *
  * Folder representation <br />
  * In this first version we only have a simple parent -> childs structure. <br />
  * Future versions should include also a child -> parent relation ship. <br />
  * Future versions should include id of content instead reference of object (this can help simplify implementation). <br />
- * 
+ *
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
- * 
+ *
  */
 public interface Folder extends Content {
 
     /**
-     * 
+     *
      * @return List of the content under this folder. <br>
      *         Can be also recursive.
      */
-    public List<Content> getChildren();
+    List<Content> getChildren();
 
 }

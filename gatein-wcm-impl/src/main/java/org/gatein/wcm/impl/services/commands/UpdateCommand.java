@@ -341,8 +341,7 @@ public class UpdateCommand {
     * @throws ContentSecurityException if user has not been granted to create categories.
     */
    public Category updateCategoryLocation(String categoryLocation, String locale, String newLocation) throws ContentException, ContentIOException,
-           ContentSecurityException
-   {
+           ContentSecurityException {
 
        log.debug("updateCategoryLocation()");
 
@@ -389,8 +388,7 @@ public class UpdateCommand {
    * @throws ContentSecurityException if user has not been granted to create categories.
    */
   public void addContentCategory(String location, String categoryLocation) throws ContentException, ContentIOException,
-      ContentSecurityException
-  {
+      ContentSecurityException {
       log.debug("updateCategoryLocation()");
 
       checkNullParametersForCategory(location, categoryLocation);

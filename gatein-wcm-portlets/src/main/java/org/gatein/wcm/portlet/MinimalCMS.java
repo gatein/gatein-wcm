@@ -26,78 +26,78 @@ public class MinimalCMS extends GenericPortlet {
 
 	final String REPO = "repo:";
 	final String INTERNAL_URL = "/minicmsportlet/image?key=";
-	
+
 	@Override
 	protected void doView(RenderRequest request, RenderResponse response)
 			throws PortletException, IOException {
-		
+
 		_log.debug("VIEW");
 
 		// Accessing to Portlet preferences
-		
+
 		PortletPreferences prefs = request.getPreferences();
-		String edit = prefs.getValue("edit_role", "none"); 
+		String edit = prefs.getValue("edit_role", "none");
 		String key = prefs.getValue("content_key", "default");
 		String locale = request.getLocale().getLanguage();
 
 		request.setAttribute("content_key", key);
-		
+
 		_log.debug("edit: " + edit + " key: " + key + " locale: " + locale);
-				
+
 		// Accessing to Content repository
-		
+
 		ContentAPI content = ContentFactory.getContent();
 		String content_view = content.getContent(key, locale);
-		
-		if (content_view == null) content_view = "";		
-		request.setAttribute("content_view", content_view);		
-		
+
+		if (content_view == null) content_view = "";
+		request.setAttribute("content_view", content_view);
+
 		// Controlling the view
-		
+
 		// Default view: simple read user
-		
+
 		String view = "/jsp/view.jsp";
 
 		// Checking admin user: view with edit link
-		
+
 		OrganizationService os = (OrganizationService)PortalContainer
 					.getInstance()
-					.getComponentInstanceOfType(OrganizationService.class);	
+					.getComponentInstanceOfType(OrganizationService.class);
 
 		if (request.getUserPrincipal() != null &&
 		    request.getUserPrincipal().getName() != null) {
-		
+
 		    try {
-			    for (Object o : os.getGroupHandler().findGroupsOfUser(request.getRemoteUser())){						
-				Group g = (Group)o;						
+			    for (Object o : os.getGroupHandler().findGroupsOfUser(request.getRemoteUser())){
+				Group g = (Group)o;
 				if (g.getGroupName().equals(edit)) {
 					view = "/jsp/viewadmin.jsp";
-					break;		        
+					break;
 				}
-			    }	
+			    }
 		    } catch (Exception e) {
-			_log.error("Error accesing to Organization API");			
-		    }		
+			_log.error("Error accesing to Organization API");
+		    }
 		}
 
 		// Forward to edit view
-		
+
 		String editurl = (String)request.getParameter("editurl");
 		if (editurl != null &&
 			editurl.equals("edit")) {
 			view = "/jsp/edit.jsp";
 		}
-		
+
 		// Return to view admin view
-		
+
 		if (editurl != null &&
 			editurl.equals("viewadmin")) {
 			view = "/jsp/viewadmin.jsp";
-		}		
-		
-			
+		}
+
+
 		PortletRequestDispatcher prd = getPortletContext()
-				.getRequestDispatcher(view);				
+				.getRequestDispatcher(view);
 		prd.include(request, response);
 
 	}
@@ -105,14 +105,14 @@ public class MinimalCMS extends GenericPortlet {
 	@Override
 	public void processAction(ActionRequest request, ActionResponse response)
 			throws PortletException, IOException {
-	
+
 		_log.debug("ACTION");
-		
+
 		// Accesing form params
-		
-		String edit_view = request.getParameter("edit_view");		
+
+		String edit_view = request.getParameter("edit_view");
 		if (edit_view == null) edit_view = "";
-				
+
 		// Encoding parameters
 
 		String IN_ENCODING = "UTF8";
@@ -124,24 +124,24 @@ public class MinimalCMS extends GenericPortlet {
 		if (System.getProperty("minicms.out.encoding") != null)
 			OUT_ENCODING = System.getProperty("minicms.out.encoding");
 
-		edit_view = new String(edit_view.getBytes(IN_ENCODING),OUT_ENCODING);		
+		edit_view = new String(edit_view.getBytes(IN_ENCODING),OUT_ENCODING);
 
 		_log.debug("edit_view: " + edit_view);
-		
+
 		// Replacing repo: shorcuts for internal images
 		edit_view = edit_view.replaceAll(REPO, INTERNAL_URL);
-		
+
 		// Accessing to Portlet preferences
-		
+
 		PortletPreferences prefs = request.getPreferences();
 		String key = prefs.getValue("content_key", "default");
-		String locale = request.getLocale().getLanguage();		
-				
+		String locale = request.getLocale().getLanguage();
+
 		// Accessing to Content repository
-		
+
 		ContentAPI content = ContentFactory.getContent();
-		content.setContent(key, locale, edit_view);		
-				
+		content.setContent(key, locale, edit_view);
+
 	}
 
 }

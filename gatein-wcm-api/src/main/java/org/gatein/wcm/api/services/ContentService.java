@@ -68,8 +68,8 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create content under specified location.
      */
-    public Content createTextContent(String id, String locale, String location, String html, String encoding)
-            throws ContentException, ContentIOException, ContentSecurityException;
+    Content createTextContent(String id, String locale, String location, String html, String encoding) throws ContentException,
+            ContentIOException, ContentSecurityException;
 
     /**
      *
@@ -85,8 +85,7 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create content under specified location.
      */
-    public Content createFolder(String id, String location) throws ContentException, ContentIOException,
-            ContentSecurityException;
+    Content createFolder(String id, String location) throws ContentException, ContentIOException, ContentSecurityException;
 
     /**
      *
@@ -106,8 +105,8 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create content under specified location.
      */
-    public Content createBinaryContent(String id, String locale, String location, String contentType, Long size,
-            String fileName, InputStream content) throws ContentException, ContentIOException, ContentSecurityException;
+    Content createBinaryContent(String id, String locale, String location, String contentType, Long size, String fileName,
+            InputStream content) throws ContentException, ContentIOException, ContentSecurityException;
 
     /**
      *
@@ -122,8 +121,7 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to access content under specified location.
      */
-    public Content getContent(String location, String locale) throws ContentException, ContentIOException,
-            ContentSecurityException;
+    Content getContent(String location, String locale) throws ContentException, ContentIOException, ContentSecurityException;
 
     /**
      *
@@ -137,8 +135,7 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to access content under specified location.
      */
-    public List<String> getContentLocales(String location) throws ContentException, ContentIOException,
-            ContentSecurityException;
+    List<String> getContentLocales(String location) throws ContentException, ContentIOException, ContentSecurityException;
 
     /**
      *
@@ -155,7 +152,7 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create content under specified location.
      */
-    public Content updateTextContent(String location, String locale, String html, String encoding) throws ContentException,
+    Content updateTextContent(String location, String locale, String html, String encoding) throws ContentException,
             ContentIOException, ContentSecurityException;
 
     /**
@@ -172,7 +169,7 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create content under specified location.
      */
-    public Content updateFolderLocation(String location, String locale, String newLocation) throws ContentException,
+    Content updateFolderLocation(String location, String locale, String newLocation) throws ContentException,
             ContentIOException, ContentSecurityException;
 
     /**
@@ -189,8 +186,8 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create content under specified location.
      */
-    public Content updateFolderName(String location, String locale, String newName) throws ContentException,
-            ContentIOException, ContentSecurityException;
+    Content updateFolderName(String location, String locale, String newName) throws ContentException, ContentIOException,
+            ContentSecurityException;
 
     /**
      *
@@ -210,7 +207,7 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create content under specified location.
      */
-    public Content updateBinaryContent(String location, String locale, String contentType, Long size, String fileName,
+    Content updateBinaryContent(String location, String locale, String contentType, Long size, String fileName,
             InputStream content) throws ContentException, ContentIOException, ContentSecurityException;
 
     /**
@@ -225,8 +222,7 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to modify content under specified location.
      */
-    public String deleteContent(String location, String locale) throws ContentException, ContentIOException,
-            ContentSecurityException;
+    String deleteContent(String location, String locale) throws ContentException, ContentIOException, ContentSecurityException;
 
     /*
      * Basic metadata manipulation API block.
@@ -252,8 +248,8 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create categories.
      */
-    public Category createCategory(String id, String locale, String description, String categoryLocation)
-            throws ContentException, ContentIOException, ContentSecurityException;
+    Category createCategory(String id, String locale, String description, String categoryLocation) throws ContentException,
+            ContentIOException, ContentSecurityException;
 
     /**
      *
@@ -270,8 +266,8 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create categories.
      */
-    public Category updateCategoryDescription(String categoryLocation, String locale, String description)
-            throws ContentException, ContentIOException, ContentSecurityException;
+    Category updateCategoryDescription(String categoryLocation, String locale, String description) throws ContentException,
+            ContentIOException, ContentSecurityException;
 
     /**
      *
@@ -287,10 +283,10 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create categories.
      */
-    public Category updateCategoryLocation(String categoryLocation, String locale, String newLocation) throws ContentException,
+    Category updateCategoryLocation(String categoryLocation, String locale, String newLocation) throws ContentException,
             ContentIOException, ContentSecurityException;
 
-    public List<Category> getCategories(String categoryLocation, String locale) throws ContentException, ContentIOException,
+    List<Category> getCategories(String categoryLocation, String locale) throws ContentException, ContentIOException,
             ContentSecurityException;
 
     /**
@@ -304,7 +300,7 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create categories.
      */
-    public void addContentCategory(String location, String categoryLocation) throws ContentException, ContentIOException,
+    void addContentCategory(String location, String categoryLocation) throws ContentException, ContentIOException,
             ContentSecurityException;
 
     /**
@@ -317,21 +313,20 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create categories.
      */
-    public void deleteCategory(String categoryLocation) throws ContentException, ContentIOException,
-            ContentSecurityException;
+    void deleteCategory(String categoryLocation) throws ContentException, ContentIOException, ContentSecurityException;
 
     /**
-    *
-    * Deletes a Category from repository.
-    *
-    * @param idCategory - Category ID.
-    * @return parent Category.
-    * @throws ContentException if category has been asigned to Content.
-    * @throws ContentIOException if any IO related problem with repository.
-    * @throws ContentSecurityException if user has not been granted to create categories.
-    */
-   public Category deleteCategory(String categoryLocation, String locale) throws ContentException, ContentIOException,
-           ContentSecurityException;
+     *
+     * Deletes a Category from repository.
+     *
+     * @param idCategory - Category ID.
+     * @return parent Category.
+     * @throws ContentException if category has been asigned to Content.
+     * @throws ContentIOException if any IO related problem with repository.
+     * @throws ContentSecurityException if user has not been granted to create categories.
+     */
+    Category deleteCategory(String categoryLocation, String locale) throws ContentException, ContentIOException,
+            ContentSecurityException;
 
     /**
      *
@@ -347,7 +342,7 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create categories.
      */
-    public List<Content> getContent(List<Category> categories, String location, String locale) throws ContentException,
+    List<Content> getContent(List<Category> categories, String location, String locale) throws ContentException,
             ContentIOException, ContentSecurityException;
 
     /**
@@ -364,8 +359,8 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create comments.
      */
-    public Content createContentComment(String location, String locale, String comment) throws ContentException,
-            ContentIOException, ContentSecurityException;
+    Content createContentComment(String location, String locale, String comment) throws ContentException, ContentIOException,
+            ContentSecurityException;
 
     /**
      *
@@ -381,8 +376,8 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create comments.
      */
-    public Content deleteContentComment(String location, String locale, String idComment) throws ContentException,
-            ContentIOException, ContentSecurityException;
+    Content deleteContentComment(String location, String locale, String idComment) throws ContentException, ContentIOException,
+            ContentSecurityException;
 
     /**
      *
@@ -399,8 +394,8 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create properties.
      */
-    public Content createContentProperty(String location, String name, String value) throws ContentException,
-            ContentIOException, ContentSecurityException;
+    Content createContentProperty(String location, String name, String value) throws ContentException, ContentIOException,
+            ContentSecurityException;
 
     /**
      *
@@ -417,8 +412,8 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create properties.
      */
-    public Content updateContentProperty(String location, String name, String value) throws ContentException,
-            ContentIOException, ContentSecurityException;
+    Content updateContentProperty(String location, String name, String value) throws ContentException, ContentIOException,
+            ContentSecurityException;
 
     /**
      *
@@ -434,7 +429,7 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create properties.
      */
-    public Content deleteContentProperty(String location, String name) throws ContentException, ContentIOException,
+    Content deleteContentProperty(String location, String name) throws ContentException, ContentIOException,
             ContentSecurityException;
 
     /*
@@ -475,8 +470,8 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to add ACLs.
      */
-    public Content createContentACE(String location, Principal principal, ACE.PermissionType permission)
-            throws ContentException, ContentIOException, ContentSecurityException;
+    Content createContentACE(String location, Principal principal, ACE.PermissionType permission) throws ContentException,
+            ContentIOException, ContentSecurityException;
 
     /**
      *
@@ -508,7 +503,7 @@ public interface ContentService {
      * @throws ContentSecurityException if user has not been granted to add ACLs.
      */
 
-    public Content deleteContentACE(String location, Principal principal) throws ContentException, ContentIOException,
+    Content deleteContentACE(String location, Principal principal) throws ContentException, ContentIOException,
             ContentSecurityException;
 
     /*
@@ -539,7 +534,7 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to access content under specified location.
      */
-    public List<Integer> getContentVersions(String location, String locale) throws ContentException, ContentIOException,
+    List<Integer> getContentVersions(String location, String locale) throws ContentException, ContentIOException,
             ContentSecurityException;
 
     /**
@@ -557,7 +552,7 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to write in the content.
      */
-    public List<Content> checkOut(String location, String locale, Integer version) throws ContentException, ContentIOException,
+    List<Content> checkOut(String location, String locale, Integer version) throws ContentException, ContentIOException,
             ContentSecurityException;
 
     /**
@@ -584,7 +579,7 @@ public interface ContentService {
      * @throws ContentIOException
      * @throws ContentSecurityException
      */
-    public Content checkIn(Content content) throws ContentException, ContentIOException, ContentSecurityException;
+    Content checkIn(Content content) throws ContentException, ContentIOException, ContentSecurityException;
 
     /**
      *
@@ -601,8 +596,8 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to access content under specified location.
      */
-    public List<Content> getContent(String location, String locale, Integer version) throws ContentException,
-            ContentIOException, ContentSecurityException;
+    List<Content> getContent(String location, String locale, Integer version) throws ContentException, ContentIOException,
+            ContentSecurityException;
 
     /**
      *
@@ -627,7 +622,7 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to modify content under specified location.
      */
-    public String deleteContent(String location, String locale, Integer version) throws ContentException, ContentIOException,
+    String deleteContent(String location, String locale, Integer version) throws ContentException, ContentIOException,
             ContentSecurityException;
 
     /**
@@ -643,16 +638,16 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to modify content under specified location.
      */
-    public String deleteContent(String location) throws ContentException, ContentIOException, ContentSecurityException;
+    String deleteContent(String location) throws ContentException, ContentIOException, ContentSecurityException;
 
     /*
      * Workflow API.
      *
      * Context: - Task manager todo_list for basic approvals. - Possibility to include own processes.
      */
-    public Content submitPublish(Content content) throws PublishException, ContentIOException, ContentSecurityException;
+    Content submitPublish(Content content) throws PublishException, ContentIOException, ContentSecurityException;
 
-    public Content submitDraft(Content content) throws PublishException, ContentIOException, ContentSecurityException;
+    Content submitDraft(Content content) throws PublishException, ContentIOException, ContentSecurityException;
 
     /*
      * Session API.
@@ -662,5 +657,5 @@ public interface ContentService {
      * - A user has finished and release and flush state info.
      */
 
-    public void closeSession() throws ContentException, ContentIOException;
+    void closeSession() throws ContentException, ContentIOException;
 }

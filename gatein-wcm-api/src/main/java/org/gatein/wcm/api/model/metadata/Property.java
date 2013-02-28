@@ -24,26 +24,26 @@
 package org.gatein.wcm.api.model.metadata;
 
 /**
- * 
+ *
  * Content can extend their metadata with custom properties. <br />
  * Properties are basic key/value based on string values. <br />
  * Examples use cases: set up custom priorities, or specific status. <br />
- * 
+ *
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
- * 
+ *
  */
 public interface Property {
 
     /**
-     * 
+     *
      * @return This method returns name of the property.
      */
-    public String getName();
+    String getName();
 
     /**
-     * 
+     *
      * @return This method returns value of the property.
      */
-    public String getValue();
+    String getValue();
 
 }

@@ -10,82 +10,82 @@ public interface User {
      *
      * @return
      */
-    public String getUserName();
+    String getUserName();
 
     /**
      * @return This method return the password of the user account
      */
-    public String getPassword();
+    String getPassword();
 
     /**
      * This method is used to change the user account password.
      *
      * @param s
      */
-    public void setPassword(String s);
+    void setPassword(String s);
 
     /**
      * @return This method return the first name of the user
      */
-    public String getFirstName();
+    String getFirstName();
 
     /**
      * @param s the new first name
      */
-    public void setFirstName(String s);
+    void setFirstName(String s);
 
     /**
      * @return The last name of the user
      */
-    public String getLastName();
+    String getLastName();
 
     /**
      * @param s The new last name of the user
      */
-    public void setLastName(String s);
+    void setLastName(String s);
 
     /**
      * @return The email address of the user
      */
-    public String getEmail();
+    String getEmail();
 
     /**
      * @param s The new user email address
      */
-    public void setEmail(String s);
+    void setEmail(String s);
 
     /**
      * @return The date that the user register or create the account
      */
-    public Date getCreatedDate();
+    Date getCreatedDate();
 
     /**
      * @return Return the last time that the user access the account
      */
-    public Date getLastLoginTime();
+    Date getLastLoginTime();
 
     /**
      * @return return the display name
      */
-    public String getDisplayName();
+    String getDisplayName();
 
     /**
      * @param displayName The name that should show in the display name
      */
-    public void setDisplayName(String displayName);
+    void setDisplayName(String displayName);
 
     /**
      * @return the id of organization the user belongs to or null if not applicable
      */
-    public String getOrganizationId();
+    String getOrganizationId();
 
     /**
      * sets the prganizationId
      */
-    public void setOrganizationId(String organizationId);
+    void setOrganizationId(String organizationId);
 
     /**
      * @return the groups that user belongs to
      */
-    public String[] getGroups();
+    String[] getGroups();
 }

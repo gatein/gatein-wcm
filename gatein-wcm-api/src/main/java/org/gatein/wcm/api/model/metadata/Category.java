@@ -40,30 +40,30 @@ public interface Category {
      *
      * @return This method returns ID of Category.
      */
-    public String getId();
+    String getId();
 
     /**
      *
      * @return This method returns locale of Category.
      */
-    public String getLocale();
+    String getLocale();
 
     /**
      *
      * @return This method returns location of Category inside their branch
      */
-    public String getLocation();
+    String getLocation();
 
     /**
      *
      * @return This method returns description of Category
      */
-    public String getDescription();
+    String getDescription();
 
     /**
      *
      * @return This method returns child categories.
      */
-    public List<Category> getChildCategories();
+    List<Category> getChildCategories();
 
 }

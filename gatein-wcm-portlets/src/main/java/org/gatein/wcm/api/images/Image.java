@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Image implements Serializable {
 
 	private static final long serialVersionUID = -7000725040481769342L;
-	
+
 	private String contentType;
 	private long size;
 	private String name;
@@ -43,5 +43,5 @@ public class Image implements Serializable {
 	public void setContent(byte[] content) {
 		this.content = content;
 	}
-	
+
 }
