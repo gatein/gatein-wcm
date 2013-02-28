@@ -24,6 +24,9 @@ Requeriments
 
 - JDK 1.6 or JDK 1.7
 - Maven 3.0.x
+
+Downloaded via Maven dependencies (so you don't need to install it):
+
 - JBoss AS 7.1.1 Final
 - Modeshape 3.1.1.Final for JBoss AS.
 
