@@ -18,6 +18,8 @@ Components
 - gatein-wcm-impl ( Implementation draft based on Modeshape deployed in JBoss AS 7.1.1 )
 - gatein-wcm-impl-sec ( AuthenticationProvider for ModeShape )
 - gatein-wcm-portlet ( Examples of portlets using ModeShape as Storage )
+- gatein-wcm-distribution ( Configuration of modeshape component for GateIn WCM)
+- gatein-wcm-integration-tests ( Set of tests for GateIn WCM )
 
 Requeriments
 ------------
