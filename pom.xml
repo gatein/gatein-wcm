@@ -61,12 +61,15 @@
 
     <org.exoplatform.kernel.version>2.4.1-GA</org.exoplatform.kernel.version>
     <org.exoplatform.core.version>2.5.1-CP01</org.exoplatform.core.version>
+    <gatein.version>3.5.0.Final</gatein.version>
 
     <maven.compiler.target>1.6</maven.compiler.target>
     <maven.compiler.source>1.6</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <arquillian.version>1.0.3.Final</arquillian.version>
     <debug.argline />
+
+    <checkstyle.version>2.9.1</checkstyle.version>
 
   </properties>
 
@@ -192,7 +195,7 @@
             <runOrder>alphabetical</runOrder>
           </configuration>
         </plugin>
-        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
         <plugin>
           <groupId>org.eclipse.m2e</groupId>
           <artifactId>lifecycle-mapping</artifactId>
@@ -217,8 +220,43 @@
             </lifecycleMappingMetadata>
           </configuration>
         </plugin>
+
+        <!-- Checkstyle -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>${checkstyle.version}</version>
+          <configuration>
+            <configLocation>gatein-portal-checkstyle/checkstyle.xml</configLocation>
+            <consoleOutput>true</consoleOutput>
+            <failsOnError>true</failsOnError>
+            <useFile />
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.gatein</groupId>
+              <artifactId>gatein-portal-build-config</artifactId>
+              <version>${gatein.version}</version>
+            </dependency>
+          </dependencies>
+          <executions>
+            <execution>
+              <id>check-style</id>
+              <phase>compile</phase>
+              <goals>
+                <goal>checkstyle</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+      </plugin>
+    </plugins>
   </build>
 
   <repositories>
@@ -237,6 +275,22 @@
       </snapshots>
     </repository>
   </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>jboss-public-repository-group-plugins</id>
+      <name>JBoss Public Maven Repository Group</name>
+      <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+      <layout>default</layout>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
 
   <profiles>
     <profile>
