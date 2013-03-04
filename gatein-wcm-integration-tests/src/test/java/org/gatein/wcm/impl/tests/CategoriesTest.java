@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class Test003CategoriesTest {
+public class CategoriesTest {
 
 	private static final Logger log = Logger
 			.getLogger("org.gatein.wcm.impl.tests.test003");

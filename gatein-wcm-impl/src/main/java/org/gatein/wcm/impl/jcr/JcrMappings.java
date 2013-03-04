@@ -401,6 +401,7 @@ public class JcrMappings {
     }
 
     public String deleteNode(String location) throws RepositoryException {
+
         jcrSession.removeItem(location);
 
         // Saving changes into JCR

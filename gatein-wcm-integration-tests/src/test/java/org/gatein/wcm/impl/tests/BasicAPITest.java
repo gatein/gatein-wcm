@@ -33,7 +33,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class Test002BasicAPITest {
+public class BasicAPITest {
 
 	private static final Logger log = Logger
 			.getLogger("org.gatein.wcm.impl.tests.test002");
