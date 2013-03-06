@@ -582,7 +582,8 @@ public class WcmMediumSiteTest {
                 cs.createBinaryContent(tablet + " 2 picture", "es", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
 
                 // Cleaning test
-                cs.deleteContent("/mobileshop" + nTest);
+                // Not cleaning at the moment
+                // cs.deleteContent("/mobileshop" + nTest);
                 cs.closeSession();
 
             } catch (Exception e) {

@@ -45,6 +45,8 @@ public class WcmServicesManager implements RepositoryService, ObjectFactory {
     public ContentService createContentSession(String idRepository, String idWorkspace, String user, String password) throws ContentIOException,
             ContentSecurityException {
 
+        checkParameters(idRepository, idWorkspace, user, password);
+
         User u = null;
         try {
             u = WcmSecurityFactory.getSecurityService().authenticate(user, password);
@@ -96,6 +98,17 @@ public class WcmServicesManager implements RepositoryService, ObjectFactory {
         } catch (Exception e) {
             log.error("Unexpected error initCategories in workspace. Msg: " + e.getMessage());
         }
+    }
+
+    private void checkParameters(String idRepository, String idWorkspace, String user, String password) throws ContentSecurityException {
+        if (idRepository == null || "".equals(idRepository))
+            throw new ContentSecurityException("Repository name cannot be null or empty");
+        if (idWorkspace == null || "".equals(idWorkspace))
+            throw new ContentSecurityException("Workspace name cannot be null or empty");
+        if (user == null || "".equals(user))
+            throw new ContentSecurityException("User cannot be null or empty");
+        if (password == null || "".equals(password))
+            throw new ContentSecurityException("Password cannot be null or empty");
     }
 
 }

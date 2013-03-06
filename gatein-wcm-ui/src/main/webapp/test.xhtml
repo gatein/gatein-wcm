@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core">
+<f:view contentType="text/html">
+    <h:head>
+        <title>Test</title>
+    </h:head>
+    <h:body>
+      <h:form id="myForm">
+        <h:inputText id="user" value="#{testBean.user}" required="true" />
+        <h:inputText id="password" value="#{testBean.password}" required="true" />
+        <h:commandLink actionListener="#{testBean.test}" value="Submit" />
+      </h:form>
+
+  <!-- Connect Popup -->
+  <h:form id="connectForm">
+      <fieldset class="c-fieldset">
+        <p><label for="connect-repository" class="c-label">Repository</label>
+           <h:inputText id="connect-repository" value="#{connect.repository}" styleClass="c-input" /></p>
+        <p><label for="connect-workspace" class="c-label">Workspace</label>
+            <h:inputText id="connect-workspace" value="#{connect.workspace}" styleClass="c-input" /></p>
+        <p><label for="connect-user" class="c-label">User</label>
+           <h:inputText id="connect-user" value="#{connect.user}" styleClass="c-input" /></p>
+        <p><label for="connect-password" class="c-label">Password</label>
+           <h:inputSecret id="connect-password" value="#{connect.password}" styleClass="c-input" /></p>
+        <p class="c-marker"></p>
+        <p><h:message for="connect-button" /><h:commandLink id="connect-button" type="submit" styleClass="c-button" actionListener="#{connect.connect}">
+            <h:graphicImage value="/images/icons/brick_add.png" styleClass="c-b-pic" />
+            <h:outputText value="Connect" />
+           </h:commandLink></p>
+      </fieldset>
+  </h:form>
+    </h:body>
+</f:view>
+</html>

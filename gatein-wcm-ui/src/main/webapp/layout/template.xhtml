@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core">
+<f:view contentType="text/html">
+    <h:head>
+        <title>GateIn WCM UI</title>
+        <ui:insert name="head" />
+        <h:outputStylesheet library="css" name="wcm.css"  />
+    </h:head>
+    <h:body>
+      <div class="h"><div class="h-logo"></div><span class="h-title">GateIn WCM</span>
+      </div>
+
+      <div class="menu-c">
+          <ui:include name="menu.xhtml" />
+      </div>
+      <div class="main-c">
+        <div class="t-c">Content Tree</div>
+        <div class="r-c">
+          <div>List Content</div>
+          <div>Content Editor</div>
+          <div>Status bar</div>
+        </div>
+      </div>
+    </h:body>
+</f:view>
+</html>

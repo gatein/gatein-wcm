@@ -1,0 +1,92 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:csv="http://richfaces.org/csv" xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:rich="http://richfaces.org/rich" xmlns:a4j="http://richfaces.org/a4j">
+<ui:composition>
+
+  <!-- Main toolbar menu -->
+  <h:form id="menuForm">
+    <a4j:outputPanel id="a4jmenu">
+      <rich:toolbar>
+        <rich:toolbarGroup>
+          <rich:dropDownMenu>
+            <f:facet name="label">
+              <h:panelGroup>
+                <h:graphicImage value="/images/icons/database_connect.png" styleClass="m-pic" />
+                <h:outputText value="Connect" />
+              </h:panelGroup>
+            </f:facet>
+            <rich:menuItem label="Connect to Repository" icon="/images/icons/brick_add.png" mode="ajax"
+              onclick="#{rich:component('connectRepository')}.show()" />
+            <rich:menuItem label="Disconnect" icon="/images/icons/brick_delete.png" action="#{connect.disconnect}" />
+          </rich:dropDownMenu>
+          <rich:dropDownMenu mode="ajax">
+            <f:facet name="label">
+              <h:panelGroup>
+                <h:graphicImage value="/images/icons/billiard_marker.png" styleClass="m-pic" />
+                <h:outputText value="Create" />
+              </h:panelGroup>
+            </f:facet>
+            <rich:menuItem label="New Folder" icon="/images/icons/folder_add.png" />
+            <rich:menuItem label="New HTHML Content" icon="/images/icons/html_add.png" />
+            <rich:menuItem label="New Resource" icon="/images/icons/resources.png" />
+          </rich:dropDownMenu>
+        </rich:toolbarGroup>
+        <rich:toolbarGroup location="right">
+          <h:graphicImage value="/images/icons/database_#{connect.connected ? 'green' : 'red' }.png" />
+          <h:outputText
+            value="Repository: #{connect.connected ? connect.repository : ''} / Workspace: #{connect.connected ? connect.workspace : ''}" />
+        </rich:toolbarGroup>
+        <rich:toolbarGroup location="right">
+          <h:graphicImage value="/images/icons/user#{connect.connected ? '' : '_delete'}.png" />
+          <h:outputText value="User: #{connect.connected ? connect.user : ''}" />
+        </rich:toolbarGroup>
+      </rich:toolbar>
+    </a4j:outputPanel>
+  </h:form>
+
+  <!-- Connect Popup -->
+  <h:form id="connectForm">
+    <rich:popupPanel id="connectRepository" autosized="true" resizeable="false" domElementAttachment="form">
+      <f:facet name="header">Connect to Repository</f:facet>
+      <f:facet name="controls">
+        <h:commandLink>
+          <h:graphicImage value="/images/icons/cancel.png" styleClass="c-pic" />
+          <rich:componentControl target="connectRepository" operation="hide" />
+        </h:commandLink>
+      </f:facet>
+      <fieldset class="c-fieldset">
+        <p>
+          <label for="connect-repository" class="c-label">Repository</label>
+          <h:inputText id="connect-repository" value="#{connect.repository}" styleClass="c-input" />
+        </p>
+        <p>
+          <label for="connect-workspace" class="c-label">Workspace</label>
+          <h:inputText id="connect-workspace" value="#{connect.workspace}" styleClass="c-input" />
+        </p>
+        <p>
+          <label for="connect-user" class="c-label">User</label>
+          <h:inputText id="connect-user" value="#{connect.user}" styleClass="c-input" />
+        </p>
+        <p>
+          <label for="connect-password" class="c-label">Password</label>
+          <h:inputSecret id="connect-password" value="#{connect.password}" styleClass="c-input" />
+        </p>
+        <p class="c-marker"></p>
+        <p>
+          <a4j:status name="connect-status">
+            <f:facet name="start">
+              <h:graphicImage value="/images/ai.gif" styleClass="c-status" alt="Status" />
+            </f:facet>
+          </a4j:status>
+          <a4j:commandLink id="connect-button" styleClass="c-button" actionListener="#{connect.connect}" render="a4jmenu,a4jtree"
+            execute="@form" status="connect-status" oncomplete="#{rich:component('connectRepository')}.hide(); return false;">
+            <h:graphicImage value="/images/icons/brick_add.png" styleClass="c-b-pic" />
+            <h:outputText value="Connect" />
+          </a4j:commandLink>
+        </p>
+      </fieldset>
+    </rich:popupPanel>
+  </h:form>
+
+</ui:composition>
+</html>
