@@ -49,7 +49,7 @@
     <rich:popupPanel id="connectRepository" autosized="true" resizeable="false" domElementAttachment="form">
       <f:facet name="header">Connect to Repository</f:facet>
       <f:facet name="controls">
-        <h:commandLink>
+        <h:commandLink id="connect-hide">
           <h:graphicImage value="/images/icons/cancel.png" styleClass="c-pic" />
           <rich:componentControl target="connectRepository" operation="hide" />
         </h:commandLink>
@@ -83,6 +83,7 @@
             <h:graphicImage value="/images/icons/brick_add.png" styleClass="c-b-pic" />
             <h:outputText value="Connect" />
           </a4j:commandLink>
+          <rich:hotKey key="return" selector="#connect-button" enabledInInput="true" preventDefault="false" onkeydown="#{rich:component('connect-button')}.onclick();" />
         </p>
       </fieldset>
     </rich:popupPanel>

@@ -85,16 +85,16 @@ public class UpdateCommand {
 
     private void checkNullParameters(String locale, String location, String html, String encoding) throws ContentException {
         if (locale == null || "".equals(locale)) {
-            new ContentException("Parameter locale cannot be null or empty");
+            throw new ContentException("Parameter locale cannot be null or empty");
         }
         if (location == null || "".equals(location)) {
-            new ContentException("Parameter location cannot be null or empty");
+            throw new ContentException("Parameter location cannot be null or empty");
         }
         if (html == null || "".equals(html)) {
-            new ContentException("Parameter html cannot be null or empty");
+            throw new ContentException("Parameter html cannot be null or empty");
         }
         if (encoding == null || "".equals(encoding)) {
-            new ContentException("Parameter encoding cannot be null or empty");
+            throw new ContentException("Parameter encoding cannot be null or empty");
         }
     }
 
@@ -186,22 +186,22 @@ public class UpdateCommand {
 
     private void checkNullParameters(String location, String locale, String newLocation) throws ContentException {
         if (location == null || "".equals(location)) {
-            new ContentException("Parameter location cannot be null or empty");
+            throw new ContentException("Parameter location cannot be null or empty");
         }
         if (locale == null || "".equals(locale)) {
-            new ContentException("Parameter locale cannot be null or empty");
+            throw new ContentException("Parameter locale cannot be null or empty");
         }
         if (newLocation == null || "".equals(newLocation)) {
-            new ContentException("Parameter newLocation cannot be null or empty");
+            throw new ContentException("Parameter newLocation cannot be null or empty");
         }
     }
 
     private void checkNullParameters(String location, String newName) throws ContentException {
         if (location == null || "".equals(location)) {
-            new ContentException("Parameter location cannot be null or empty");
+            throw new ContentException("Parameter location cannot be null or empty");
         }
         if (newName == null || "".equals(newName)) {
-            new ContentException("Parameter newName cannot be null or empty");
+            throw new ContentException("Parameter newName cannot be null or empty");
         }
     }
 
@@ -261,22 +261,22 @@ public class UpdateCommand {
     private void checkNullParameters(String location, String locale, String contentType, Long size, String fileName,
             InputStream content) throws ContentException {
         if (locale == null || "".equals(locale)) {
-            new ContentException("Parameter locale cannot be null or empty");
+            throw new ContentException("Parameter locale cannot be null or empty");
         }
         if (location == null || "".equals(location)) {
-            new ContentException("Parameter location cannot be null or empty");
+            throw new ContentException("Parameter location cannot be null or empty");
         }
         if (contentType == null || "".endsWith(contentType)) {
-            new ContentException("Parameter contentType cannot be null or empty");
+            throw new ContentException("Parameter contentType cannot be null or empty");
         }
         if (size == null || size == 0) {
-            new ContentException("Parameter size cannot be null or 0");
+            throw new ContentException("Parameter size cannot be null or 0");
         }
         if (fileName == null || "".endsWith(fileName)) {
-            new ContentException("Parameter fileName cannot be null or empty");
+            throw new ContentException("Parameter fileName cannot be null or empty");
         }
         if (content == null) {
-            new ContentException("Parameter content in InputStream cannot be null");
+            throw new ContentException("Parameter content in InputStream cannot be null");
         }
     }
 
@@ -413,10 +413,10 @@ public class UpdateCommand {
 
   private void checkNullParametersForCategory(String location, String categoryLocation) throws ContentException {
       if (location == null || "".equals(location)) {
-          new ContentException("Parameter location cannot be null or empty");
+          throw new ContentException("Parameter location cannot be null or empty");
       }
       if (categoryLocation == null || "".equals(categoryLocation)) {
-          new ContentException("Parameter categoryLocation cannot be null or empty");
+          throw new ContentException("Parameter categoryLocation cannot be null or empty");
       }
   }
 

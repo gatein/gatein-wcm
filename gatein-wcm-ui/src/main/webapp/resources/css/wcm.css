@@ -7,9 +7,11 @@ body {
   font-size: 16px;
 
 }
+/*
 div {
   display: block;
 }
+*/
 /* Header */
 .h {
   width: 100%;
@@ -48,10 +50,13 @@ div {
   margin: 0 auto;
   width: 100%;
 }
-.main-c {
-  margin: 0 auto;
-  width: 100%;
-  min-height: 100%;
+#main-c {/* Main splitter element */
+  height:90%;
+  width:100%;
+  margin:0 auto;
+  position: fixed;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 .m-pic {  /* Menú picture */
   margin-bottom: -8px;
@@ -107,15 +112,30 @@ input.c-input { /* Connect input */
   height:16px;
 }
 /* Tree */
-.t-c {  /* Tree Container */
+#t-c {
   width: 300px;
-  border-right: 1px solid #0093D9;
   height: 100%;
   float: left;
-  position: fixed;
+  overflow: auto;
 }
-.r-c { /* Right Container*/
-  margin-left: 300px;
+#t-c::-webkit-scrollbar {
+  width: 10px;
+  background: -webkit-gradient(linear,left top,right top,color-stop(0%,rgba(202,202,202,0.07)),color-stop(100%,rgba(229,229,229,0.07)));
+  background: -webkit-linear-gradient(left,rgba(202,202,202,0.07) 0%,rgba(229,229,229,0.07) 100%);
+  -webkit-box-shadow: 0 0 1px 0 rgba(0,0,0,.15) inset,0 1px 0 0 #fff;
+  -moz-box-shadow: 0 0 1px 0 rgba(0,0,0,.15) inset,0 1px 0 0 #fff;
+  box-shadow: 0 0 1px 0 rgba(0,0,0,.15) inset,0 1px 0 0 #fff;
+  background-color: #e5e5e5;
+}
+#t-c::-webkit-scrollbar-thumb {
+  overflow: visible;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  border: solid 1px #a6a6a6;
+}
+#r-c {	/*Contains toolbar and horizontal splitter*/
+  /* float: left; */
   height: 100%;
 }
 /* Content List */

@@ -77,10 +77,10 @@ public class ReadCommand {
 
     private void checkNullParameters(String location, String locale) throws ContentException {
         if (locale == null || "".equals(locale)) {
-            new ContentException("Parameter locale cannot be null or empty");
+            throw new ContentException("Parameter locale cannot be null or empty");
         }
         if (location == null || "".equals(location)) {
-            new ContentException("Parameter location cannot be null or empty");
+            throw new ContentException("Parameter location cannot be null or empty");
         }
     }
 
@@ -129,7 +129,7 @@ public class ReadCommand {
 
     private void checkNullParameters(String location) throws ContentException {
         if (location == null || "".equals(location)) {
-            new ContentException("Parameter location cannot be null or empty");
+            throw new ContentException("Parameter location cannot be null or empty");
         }
     }
 
@@ -196,13 +196,13 @@ public class ReadCommand {
 
     private void checkNullParameters(List<Category> categories, String location, String locale) throws ContentException {
         if (categories == null || categories.size() == 0) {
-            new ContentException("Parameter categories cannot be null or empty");
+            throw new ContentException("Parameter categories cannot be null or empty");
         }
         if (locale == null || "".equals(locale)) {
-            new ContentException("Parameter locale cannot be null or empty");
+            throw new ContentException("Parameter locale cannot be null or empty");
         }
         if (location == null || "".equals(location)) {
-            new ContentException("Parameter location cannot be null or empty");
+            throw new ContentException("Parameter location cannot be null or empty");
         }
     }
 

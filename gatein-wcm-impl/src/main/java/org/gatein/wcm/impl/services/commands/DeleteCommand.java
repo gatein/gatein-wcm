@@ -71,7 +71,7 @@ public class DeleteCommand {
 
     private void checkNullParameters(String location) throws ContentException {
         if (location == null || "".equals(location)) {
-            new ContentException("Parameter location cannot be null or empty");
+            throw new ContentException("Parameter location cannot be null or empty");
         }
     }
 
@@ -123,10 +123,10 @@ public class DeleteCommand {
 
     private void checkNullParameters(String location, String locale) throws ContentException {
         if (location == null || "".equals(location)) {
-            new ContentException("Parameter location cannot be null or empty");
+            throw new ContentException("Parameter location cannot be null or empty");
         }
         if (locale == null || "".equals(locale)) {
-            new ContentException("Parameter locale cannot be null or empty");
+            throw new ContentException("Parameter locale cannot be null or empty");
         }
     }
 

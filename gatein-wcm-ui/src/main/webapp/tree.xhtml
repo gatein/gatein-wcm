@@ -5,9 +5,17 @@
 
   <!-- Tree browsing -->
   <a4j:outputPanel id="a4jtree">    
-    
-    <h:outputText value="#{tree.description}" />   
-    
+    <h:form id="treeForm">
+      <h:outputText value="#{tree.description}" />
+      <rich:tree id="maintree" selectionType="ajax" toggleType="ajax" var="item">
+        <rich:treeModelRecursiveAdaptor roots="#{tree.root}" nodes="#{item.nodes}" leaf="#{item.nodes == null}" >
+          <rich:treeNode iconCollapsed="/images/icons/folder_blue.png" iconExpanded="/images/icons/folder_green.png" iconLeaf="/images/icons/#{item.iconLeaf}">
+              #{item.content.id}
+          </rich:treeNode>
+        </rich:treeModelRecursiveAdaptor>
+      </rich:tree>         
+    </h:form>
   </a4j:outputPanel>  
+  
 </ui:composition>
 </html>
