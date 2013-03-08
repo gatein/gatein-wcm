@@ -3,36 +3,32 @@
   xmlns:rich="http://richfaces.org/rich" xmlns:a4j="http://richfaces.org/a4j">
 <ui:composition>
 
-  <!-- Main editor -->
-  <h:form>
-    <rich:tabPanel switchType="ajax" rendered="#{panel.view == 'text'}" styleClass="r-tab-panel" >
-      <rich:tab styleClass="e-t-tab">
-        <f:facet name="header">
-          #{panel.selected.textContent.id}
-          <a4j:status name="panelUpdateStatus">
-              <f:facet name="start">
-                  (Updating)
-              </f:facet>
-          </a4j:status>          
-        </f:facet>
-        <a4j:outputPanel name="previewStatus">
-          <h:outputText escape="false" value="#{panel.selected.text}" />
-        </a4j:outputPanel>
-      </rich:tab>
-      <rich:tab header="Edit" styleClass="e-t-tab">
-        <rich:editor id="editor" toolbar="full" value="#{panel.selected.text}" styleClass="e-t-editor" >         
-          <f:facet name="config">
-            height: '600px',
-            contentsCss: '#{request.contextPath}/javax.faces.resource/wcm_ckeditor_content.css.jsf?ln=css' 
-          </f:facet>           
-          <a4j:ajax event="change" render="panel" status="panelUpdateStatus" />
-          <a4j:ajax event="dirty" render="panel" status="panelUpdateStatus">
-              <a4j:attachQueue requestDelay="1000" />
-          </a4j:ajax>
-        </rich:editor>               
-      </rich:tab>      
-    </rich:tabPanel>            
-  </h:form>
+  <!-- Text node -->
+  <rich:tab styleClass="e-t-tab" rendered="#{panel.view == 'text'}">
+    <f:facet name="header">
+      #{panel.selected.textContent.id}
+      <a4j:status name="panelUpdateStatus">
+          <f:facet name="start">
+              (Updating)
+          </f:facet>
+      </a4j:status>          
+    </f:facet>
+    <a4j:outputPanel name="previewStatus">
+      <h:outputText escape="false" value="#{panel.selected.text}" />
+    </a4j:outputPanel>
+  </rich:tab>
+  <rich:tab header="Edit" styleClass="e-t-tab" rendered="#{panel.view == 'text'}">
+    <rich:editor id="editor" toolbar="full" value="#{panel.selected.text}" styleClass="e-t-editor" >         
+      <f:facet name="config">
+        height: '600px',
+        contentsCss: '#{request.contextPath}/javax.faces.resource/wcm_ckeditor_content.css.jsf?ln=css' 
+      </f:facet>           
+      <a4j:ajax event="change" render="panel" status="panelUpdateStatus" />
+      <a4j:ajax event="dirty" render="panel" status="panelUpdateStatus">
+          <a4j:attachQueue requestDelay="1000" />
+      </a4j:ajax>
+    </rich:editor>               
+  </rich:tab>   
   
 </ui:composition>
 </html>

@@ -14,7 +14,7 @@
         </h:outputText>     
       </div>
       <div class="t-tree"> 
-        <rich:tree id="maintree" selectionType="ajax" toggleType="ajax" var="item" selectionChangeListener="#{tree.selectionChanged}" render="t-ping,test-debug,main-panel">
+        <rich:tree id="maintree" selectionType="ajax" toggleType="ajax" var="item" selectionChangeListener="#{tree.selectionChanged}" render="t-ping,main-panel">
           <rich:treeModelRecursiveAdaptor roots="#{tree.root}" nodes="#{item.nodes}" leaf="#{item.nodes == null}" >
             <rich:treeNode iconCollapsed="/images/icons/folder_blue.png" iconExpanded="/images/icons/folder_green.png" iconLeaf="/images/icons/#{item.iconLeaf}">
                 #{item.content.id}

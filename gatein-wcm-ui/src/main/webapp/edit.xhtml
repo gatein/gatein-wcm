@@ -4,14 +4,16 @@
 <ui:composition>
 
   <!-- Main editor -->
-  <h:form styleClass="r-main-panel">    
-    <a4j:outputPanel id="main-panel">
-      <h:form styleClass="r-main-panel">
-        <h:outputText value="Folder" rendered="#{panel.view == 'folder'}" />
-        <h:outputText value="Binary" rendered="#{panel.view == 'binary'}"  />
-        <ui:include src="/text.xhtml" rendered="#{panel.view == 'text'}" />
-      </h:form>
-    </a4j:outputPanel>    
+  <h:form styleClass="r-main-panel" id="main-panel">    
+                  
+      <rich:tabPanel switchType="ajax" styleClass="r-tab-panel" >
+      
+        <ui:include src="/text.xhtml" />         
+        <ui:include src="/folder.xhtml" />        
+        <ui:include src="/binary.xhtml" />
+                        
+      </rich:tabPanel>             
+                
   </h:form>
   
 </ui:composition>
