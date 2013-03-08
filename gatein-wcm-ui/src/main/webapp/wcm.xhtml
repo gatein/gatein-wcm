@@ -1,13 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:f="http://java.sun.com/jsf/core">
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j">
 <f:view contentType="text/html">
     <h:head>
         <title>GateIn WCM UI</title>
-        <h:outputStylesheet library="css" name="wcm.css"  />
-        <h:outputStylesheet library="css" name="splitter.css"  />
     </h:head>
     <h:body>
+      <h:outputStylesheet library="css" name="wcm.css"  />
+      <h:outputStylesheet library="css" name="splitter.css"  />
       <h:outputScript library="js" name="splitter.js"  />
       <script type="text/javascript">
         $(document).ready(function() {
@@ -16,6 +16,8 @@
                     B:$('#r-c'),
                     closeableto:0});
         });
+		// Script for path rich:editor component
+        window.CKEDITOR_BASEPATH = '#{request.contextPath}/org.richfaces.resources/javax.faces.resource/org.richfaces.ckeditor/';
 	   </script>
       <div class="h"><div class="h-logo"></div><span class="h-title">GateIn WCM</span>
       </div>
@@ -27,8 +29,7 @@
           <ui:include src="/tree.xhtml" />
         </div>
         <div id="r-c">
-          <div>List Content</div>
-          <div>Content Editor</div>
+          <ui:include src="/edit.xhtml" />
         </div>
       </div>
       <ui:include src="/messages.xhtml" />

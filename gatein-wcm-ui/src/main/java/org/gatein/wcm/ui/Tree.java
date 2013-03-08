@@ -1,6 +1,7 @@
 package org.gatein.wcm.ui;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -9,6 +10,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 
 import org.gatein.wcm.api.model.content.Content;
+import org.gatein.wcm.api.model.content.Folder;
 import org.gatein.wcm.api.services.ContentService;
 import org.gatein.wcm.api.services.RepositoryService;
 import org.gatein.wcm.api.services.exceptions.ContentException;
@@ -16,42 +18,51 @@ import org.gatein.wcm.api.services.exceptions.ContentIOException;
 import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
 import org.gatein.wcm.ui.model.TreeContent;
 import org.jboss.logging.Logger;
+import org.richfaces.component.UITree;
+import org.richfaces.event.TreeSelectionChangeEvent;
 
 @ManagedBean
 @RequestScoped
 public class Tree extends BaseBean {
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.ui");
+    private static final Logger log = Logger.getLogger("org.gatein.wcm.ui.tree");
 
     @ManagedProperty(value="#{connect}")
     private Connect connect;
 
+    @ManagedProperty(value="#{panel}")
+    private Panel panel;
+
     private List<TreeContent> root;
 
-    private String description;
+    private Date ping;
 
     public Tree() {
-        log.info("Tree: creating new class");
-        description = new java.util.Date().toString();
+        ping = new java.util.Date();
     }
 
     public void setConnect(Connect connect) {
         this.connect = connect;
     }
 
-    public String getDescription() {
-        if (connect != null) {
-            log.info("Connected: " + connect.isConnected());
-        }
-        return description;
+    public Date getPing() {
+        return ping;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setPing(Date ping) {
+        this.ping = ping;
     }
 
     public List<TreeContent> getRoot() {
         if (root == null) queryRoot();
         return root;
+    }
+
+    public Panel getPanel() {
+        return panel;
+    }
+
+    public void setPanel(Panel panel) {
+        this.panel = panel;
     }
 
     // Logic
@@ -65,9 +76,14 @@ public class Tree extends BaseBean {
         try {
             ContentService cs = repos.createContentSession(connect.getRepository(), connect.getWorkspace(), connect.getUser(), connect.getPassword());
             Content rootContent = cs.getContent("/", getLocale());
-            TreeContent r = new TreeContent(rootContent);
             root = new ArrayList<TreeContent>();
-            root.add(r);
+            // We don't show root node in the UI, only children
+            if (rootContent instanceof Folder) {
+                Folder f = (Folder)rootContent;
+                for (Content c : f.getChildren()) {
+                    root.add(new TreeContent(c));
+                }
+            }
         } catch (ContentException e) {
             msg("Cannot get root content from " + connect.getRepository() + "/" + connect.getWorkspace());
             log.info("Cannot get root content from " + connect.getRepository() + "/" + connect.getWorkspace());
@@ -82,5 +98,14 @@ public class Tree extends BaseBean {
         }
     }
 
+    public void selectionChanged(TreeSelectionChangeEvent selectionChangeEvent) {
+        List<Object> selection = new ArrayList<Object>(selectionChangeEvent.getNewSelection());
+        Object currentSelectionKey = selection.get(0);
+        UITree tree = (UITree) selectionChangeEvent.getSource();
+        tree.setRowKey(currentSelectionKey);
+
+        TreeContent currentSelection = (TreeContent)tree.getRowData();
+        panel.setSelected(currentSelection);
+    }
 
 }

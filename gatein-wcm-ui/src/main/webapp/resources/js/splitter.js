@@ -64,11 +64,11 @@
 			var A = args.A;	// left/top frame
 			var B = args.B;// right/bottom frame
 			var slave=args.slave;//optional, elemt forced to receive resize event
-//Create splitbar 
-var C=$('<div><span></span></div>');
-A.after(C);
-C.attr({"class": opts.splitbarClass,unselectable:"on"}).css({"cursor":opts.cursor,"user-select": "none", "-webkit-user-select": "none","-khtml-user-select": "none", "-moz-user-select": "none"})
-.bind("mousedown", startDrag);
+			//Create splitbar 
+			var C=$('<div><span></span></div>');
+			A.after(C);
+			C.attr({"class": opts.splitbarClass,unselectable:"on"}).css({"cursor":opts.cursor,"user-select": "none", "-webkit-user-select": "none","-khtml-user-select": "none", "-moz-user-select": "none"})
+			.bind("mousedown", startDrag);
  		
 if(opts.closeableto!=undefined){
 var Bt=$('<div></div>').css("cursor",'pointer');

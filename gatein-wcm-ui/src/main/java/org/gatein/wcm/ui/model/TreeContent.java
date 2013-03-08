@@ -10,11 +10,18 @@ import org.gatein.wcm.api.model.content.TextContent;
 
 public class TreeContent {
 
-    public final String ICONLEAF_FOLDER = "folder_green.png";
-    public final String ICONLEAF_TEXT = "html.png";
-    public final String ICONLEAF_BINARY = "images.png";
+    public static final String ICONLEAF_FOLDER = "folder_green.png";
+    public static final String ICONLEAF_TEXT = "html.png";
+    public static final String ICONLEAF_BINARY = "images.png";
+
+    public enum Type {
+        TYPE_TEXT, TYPE_FOLDER, TYPE_BINARY, NO_TYPE
+    };
 
     private Content content;
+
+    // TextContent temp properties
+    private String text;
 
     public TreeContent(Content content) {
         this.content = content;
@@ -41,17 +48,58 @@ public class TreeContent {
         return null;
     }
 
+    public Type getType() {
+        if (content instanceof Folder)
+            return Type.TYPE_FOLDER;
+        if (content instanceof TextContent)
+            return Type.TYPE_TEXT;
+        if (content instanceof BinaryContent)
+            return Type.TYPE_BINARY;
+        return Type.NO_TYPE;
+    }
+
     public String getIconLeaf() {
-        if (content instanceof Folder) {
-            return ICONLEAF_FOLDER;
-        }
-        if (content instanceof TextContent) {
-            return ICONLEAF_TEXT;
-        }
-        if (content instanceof BinaryContent) {
-            return ICONLEAF_BINARY;
+
+        switch (getType()) {
+            case TYPE_FOLDER:
+                return ICONLEAF_FOLDER;
+            case TYPE_TEXT:
+                return ICONLEAF_TEXT;
+            case TYPE_BINARY:
+                return ICONLEAF_BINARY;
+            default:
+                break;
         }
         return "user_delete.png";
+    }
+
+    public Folder getFolder() {
+        if (getType() == Type.TYPE_FOLDER)
+            return (Folder)content;
+        return null;
+    }
+
+    public TextContent getTextContent() {
+        if (getType() == Type.TYPE_TEXT)
+            return (TextContent)content;
+        return null;
+    }
+
+    public BinaryContent getBinaryContent() {
+        if (getType() == Type.TYPE_BINARY)
+            return (BinaryContent)content;
+        return null;
+    }
+
+    public String getText() {
+        if (text == null && getTextContent() != null) {
+            text = getTextContent().getContent();
+        }
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
 }

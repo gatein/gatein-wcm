@@ -7,27 +7,16 @@ body {
   font-size: 16px;
 
 }
-/*
-div {
-  display: block;
-}
-*/
 /* Header */
 .h {
   width: 100%;
   height: 70px;
-  /* IE10 Consumer Preview */
-  background-image: -ms-linear-gradient(bottom, #83CAFF 0%, #0093D9 100%);
-  /* Mozilla Firefox */
-  background-image: -moz-linear-gradient(bottom, #83CAFF 0%, #0093D9 100%);
-  /* Opera */
-  background-image: -o-linear-gradient(bottom, #83CAFF 0%, #0093D9 100%);
-  /* Webkit (Safari/Chrome 10) */
-  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #83CAFF), color-stop(1, #0093D9));
-  /* Webkit (Chrome 11+) */
-  background-image: -webkit-linear-gradient(bottom, #83CAFF 0%, #0093D9 100%);
-  /* W3C Markup, IE10 Release Preview */
-  background-image: linear-gradient(to top, #83CAFF 0%, #0093D9 100%);
+  background-image: -ms-linear-gradient(bottom, #83CAFF 0%, #0093D9 100%); /* IE10 Consumer Preview */
+  background-image: -moz-linear-gradient(bottom, #83CAFF 0%, #0093D9 100%); /* Mozilla Firefox */
+  background-image: -o-linear-gradient(bottom, #83CAFF 0%, #0093D9 100%); /* Opera */
+  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #83CAFF), color-stop(1, #0093D9)); /* Webkit (Safari/Chrome 10) */
+  background-image: -webkit-linear-gradient(bottom, #83CAFF 0%, #0093D9 100%); /* Webkit (Chrome 11+) */
+  background-image: linear-gradient(to top, #83CAFF 0%, #0093D9 100%); /* W3C Markup, IE10 Release Preview */
 }
 .h-logo {
   background: url(../images/gatein-wcm.png);
@@ -45,19 +34,12 @@ div {
   padding-left: 10px;
   color: #fff;
 }
-/* Menu */
+/* Menu and connect popup */
 .menu-c {
   margin: 0 auto;
   width: 100%;
 }
-#main-c {/* Main splitter element */
-  height:90%;
-  width:100%;
-  margin:0 auto;
-  position: fixed;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
+
 .m-pic {  /* Menú picture */
   margin-bottom: -8px;
   margin-right: 10px;
@@ -111,6 +93,19 @@ input.c-input { /* Connect input */
   width:16px;
   height:16px;
 }
+.c-status-c {
+  position: relative;
+  top: -32px;
+}
+/* Main container */
+#main-c {
+  height:90%;
+  width:100%;
+  margin:0 auto;
+  position: fixed;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
 /* Tree */
 #t-c {
   width: 300px;
@@ -134,17 +129,46 @@ input.c-input { /* Connect input */
   border-radius: 4px;
   border: solid 1px #a6a6a6;
 }
-#r-c {	/*Contains toolbar and horizontal splitter*/
-  /* float: left; */
+*.rt-trn-sel {
+  background: #c7d6fc;
+}
+.t-ping {
+  margin-left: auto;
+  margin-right: auto;
+  font-family: "Droid Sans", Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.t-ping-pic {
+  margin-bottom: -8px;
+  margin-right: 10px;
+}
+.t-ping-label {
+  font-weight: bold;
+}
+.t-tree {
+  margin-top: 3px;
+  margin-left: 5px;
+}
+/* Content div */
+#r-c {
+  height: 100%;
+  float: right;
+  overflow: auto;
+}
+.r-main-panel {
   height: 100%;
 }
-/* Content List */
-.l {
-
+.r-tab-panel {
+  height: 100%;
+}
+div.rf-tab-cnt { /* To extend the content of the tab */
+  height: 100%;
 }
 /* Editor */
-.e {
-
+.e-t-tab {
+  height: 100%;
 }
 /* Messages */
 .messages-c {

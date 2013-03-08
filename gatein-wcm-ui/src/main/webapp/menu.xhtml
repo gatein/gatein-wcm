@@ -53,6 +53,7 @@
           <h:graphicImage value="/images/icons/cancel.png" styleClass="c-pic" />
           <rich:componentControl target="connectRepository" operation="hide" />
         </h:commandLink>
+        <rich:hotKey key="esc" enabledInInput="true" onkeydown="#{rich:element('connect-hide')}.onclick(); return false;" />
       </f:facet>
       <fieldset class="c-fieldset">
         <p>
@@ -73,18 +74,20 @@
         </p>
         <p class="c-marker"></p>
         <p>
-          <a4j:status name="connect-status">
-            <f:facet name="start">
-              <h:graphicImage value="/images/ai.gif" styleClass="c-status" alt="Status" />
-            </f:facet>
-          </a4j:status>
           <a4j:commandLink id="connect-button" styleClass="c-button" actionListener="#{connect.connect}" render="a4jmenu,a4jtree"
             execute="@form" status="connect-status" oncomplete="#{rich:component('connectRepository')}.hide(); return false;">
             <h:graphicImage value="/images/icons/brick_add.png" styleClass="c-b-pic" />
             <h:outputText value="Connect" />
           </a4j:commandLink>
-          <rich:hotKey key="return" selector="#connect-button" enabledInInput="true" preventDefault="false" onkeydown="#{rich:component('connect-button')}.onclick();" />
+          <rich:hotKey key="return" enabledInInput="true" onkeydown="#{rich:element('connect-button')}.onclick(); return false;" />
         </p>
+        <div class="c-status-c">
+          <a4j:status name="connect-status">
+            <f:facet name="start">
+              <h:graphicImage value="/images/ai.gif" styleClass="c-status" alt="Status" />
+            </f:facet>
+          </a4j:status>
+        </div>
       </fieldset>
     </rich:popupPanel>
   </h:form>
