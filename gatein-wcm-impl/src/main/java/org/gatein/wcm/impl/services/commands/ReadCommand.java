@@ -58,7 +58,7 @@ public class ReadCommand {
 
         // Check if the location specified exists in the JCR Repository/Workspace
         if (!jcr.checkLocation(location))
-            throw new ContentException("Location: " + location + " doesn't exist for createFolder() operation. ");
+            throw new ContentException("Location: " + location + " doesn't exist for getContent() operation. ");
 
         // Check if user has rights to access
         if (!jcr.checkUserReadACL(location))
@@ -108,7 +108,7 @@ public class ReadCommand {
 
         // Check if the location specified exists in the JCR Repository/Workspace
         if (!jcr.checkLocation(location))
-            throw new ContentException("Location: " + location + " doesn't exist for createFolder() operation. ");
+            throw new ContentException("Location: " + location + " doesn't exist for getContentLocales() operation. ");
 
         // Check if user has rights to access
         if (!jcr.checkUserReadACL(location))
@@ -150,7 +150,7 @@ public class ReadCommand {
         // Check if the location specified exists in the JCR Repository/Workspace
         if (!jcr.checkLocation("/__categories" + categoryLocation))
             throw new ContentException("Location: " + categoryLocation
-                    + " doesn't exist for updateCategoryLocation() operation. ");
+                    + " doesn't exist for getCategories() operation. ");
 
         try {
             return factory.getCategories("/__categories" + categoryLocation, locale);
