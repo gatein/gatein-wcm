@@ -74,6 +74,9 @@
 
     <richfaces.version>4.3.1.Final</richfaces.version>
 
+    <version.resteasy>2.0.1.GA</version.resteasy>
+
+    <version.jboss-javaee-6.0>1.0.0.Final</version.jboss-javaee-6.0>
   </properties>
 
   <modules>
@@ -334,26 +337,26 @@
         <!--
           Managed container.
           Uncomment to launch JBossAS in the mvn test phase.
-
+        -->
         <dependency>
           <groupId>org.jboss.as</groupId>
           <artifactId>jboss-as-arquillian-container-managed</artifactId>
           <scope>test</scope>
         </dependency>
-        -->
+
         <!--
           Remote container.
           Uncomment for remote container.
           JBossAS must be up and running.
           Useful for remote debugging.
 
-        -->
+
          <dependency>
           <groupId>org.jboss.as</groupId>
           <artifactId>jboss-as-arquillian-container-remote</artifactId>
           <scope>test</scope>
          </dependency>
-
+        -->
         <dependency>
           <groupId>org.jboss.arquillian.protocol</groupId>
           <artifactId>arquillian-protocol-servlet</artifactId>

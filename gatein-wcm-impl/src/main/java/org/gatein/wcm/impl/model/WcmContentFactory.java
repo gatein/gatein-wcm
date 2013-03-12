@@ -12,6 +12,7 @@ import javax.jcr.RepositoryException;
 import org.gatein.wcm.api.model.content.Content;
 import org.gatein.wcm.api.model.content.Folder;
 import org.gatein.wcm.api.model.metadata.Category;
+import org.gatein.wcm.api.model.metadata.Comment;
 import org.gatein.wcm.api.model.security.ACE.PermissionType;
 import org.gatein.wcm.api.model.security.ACL;
 import org.gatein.wcm.api.model.security.Principal;
@@ -341,6 +342,8 @@ public class WcmContentFactory {
             // New node, so no children at this point
             _folder.setChildren(null);
 
+            readComments(_folder);
+
             return _folder;
         }
         if (folder) {
@@ -376,8 +379,10 @@ public class WcmContentFactory {
             _folder.setLockOwner(null);
 
             // Specific fields for Folder
-            // New node, so no children at this point
+            // Children are calculated outside
             _folder.setChildren(null);
+
+            readComments(_folder);
 
             return _folder;
         }
@@ -417,6 +422,8 @@ public class WcmContentFactory {
             _textcontent.setEncoding(jcr.jcrEncoding(n.getNode(MARK + locale + "/" + MARK + n.getName())));
 
             _textcontent.setContent(jcr.jcrTextContent(n.getNode(MARK + locale + "/" + MARK + n.getName())));
+
+            readComments(_textcontent);
 
             return _textcontent;
         }
@@ -460,6 +467,9 @@ public class WcmContentFactory {
 
             _binarycontent.setFileName(jcr.jcrTitle(n.getNode(MARK + locale + "/" + MARK + n.getName())));
             _binarycontent.setContent(jcr.jcrContent(n.getNode(MARK + locale + "/" + MARK + n.getName())));
+
+            readComments(_binarycontent);
+
             return _binarycontent;
         }
         if (havelocale) {
@@ -467,6 +477,37 @@ public class WcmContentFactory {
         }
 
         return null;
+    }
+
+    private void readComments(Content c) {
+        String location = c.getLocation() + "/" + c.getId() + "/__comments";
+        List<Comment> comments = null;
+
+        try {
+            NodeIterator ni = jcr.getSession().getNode(location).getNodes();
+            while (ni.hasNext()) {
+                if (comments == null) comments = new ArrayList<Comment>();
+                Node child = ni.nextNode();
+                if (child != null) {
+                    WcmComment comment = new WcmComment();
+                    comment.setId(child.getName());
+                    comment.setCreatedBy(new WcmUser(child.getProperty("jcr:createdBy").toString()));
+                    comment.setCreated(child.getProperty("jcr:created").getDate().getTime());
+                    comment.setComment(child.getProperty("jcr:description").getString());
+                    comments.add(comment);
+                }
+            }
+        } catch (RepositoryException ignored) {
+        }
+
+        if (comments != null) {
+            if (c instanceof WcmFolder)
+                ((WcmFolder)c).setComments(comments);
+            if (c instanceof WcmTextContent)
+                ((WcmTextContent)c).setComments(comments);
+            if (c instanceof WcmBinaryContent)
+                ((WcmBinaryContent)c).setComments(comments);
+        }
     }
 
     public Category getCategory(String fullLocation, String locale) throws RepositoryException {

@@ -583,7 +583,7 @@ public class WcmMediumSiteTest {
 
                 // Cleaning test
                 // Not cleaning at the moment
-                // cs.deleteContent("/mobileshop" + nTest);
+                cs.deleteContent("/mobileshop" + nTest);
                 cs.closeSession();
 
             } catch (Exception e) {

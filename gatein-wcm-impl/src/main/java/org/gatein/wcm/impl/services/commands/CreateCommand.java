@@ -323,4 +323,59 @@ public class CreateCommand {
        }
    }
 
+   /**
+   *
+   * Creates a comment under the specified Content location. <br>
+   *
+   * @param location - Location where the content is stored. <br>
+   *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+   *        where "/" is the root of repository and &lt;id&gt; folders ID
+   * @param locale - Locale to add comment
+   * @param comment - Comment to add
+   * @return Content with comment updated.
+   * @throws ContentException if content doesn't exist.
+   * @throws ContentIOException if any IO related problem with repository.
+   * @throws ContentSecurityException if user has not been granted to create comments.
+   */
+  public Content createContentComment(String location, String locale, String comment) throws ContentException, ContentIOException,
+          ContentSecurityException {
+      log.debug("createContentComment()");
+
+      checkNullParameters(location, locale, comment);
+
+      // Check if the current JCR Session is valid
+      if ( ! jcr.checkSession() )
+          throw new ContentIOException("JCR Session is null");
+
+      // Check if the location specified exists in the JCR Repository/Workspace
+      if ( ! jcr.checkLocation(location) )
+          throw new ContentException("Location: " + location + " doesn't exist for createContentComment() operation. ");
+
+      // Check if user has rights to access
+      if ( ! jcr.checkUserCommentsACL( location ))
+          throw new ContentSecurityException("User: " + logged.getUserName() + " has not COMMENTS rights in location: " + location);
+
+      try {
+          jcr.createContentComment(location, locale, comment);
+          return factory.getContent(location, locale);
+      } catch (RepositoryException e) {
+          jcr.checkJCRException( e );
+      }
+
+      return null;
+  }
+
+  private void checkNullParameters(String location, String locale, String comment)
+          throws ContentException {
+          if (location == null || "".equals( location )) {
+              throw new ContentException("Parameter location cannot be null or empty");
+          }
+          if (locale == null || "".equals( locale ) ) {
+              throw new ContentException("Parameter locale cannot be null or empty");
+          }
+          if (comment == null || "".equals( comment ) ) {
+              throw new ContentException("Parameter comment cannot be null or empty");
+          }
+      }
+
 }

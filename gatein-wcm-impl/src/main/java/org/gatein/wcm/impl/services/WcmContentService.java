@@ -327,15 +327,31 @@ public class WcmContentService implements ContentService {
     @Override
     public Content createContentComment(String location, String locale, String comment) throws ContentException,
             ContentIOException, ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+        long start = System.currentTimeMillis();
+
+        CreateCommand command = new CreateCommand(jcrSession, logged);
+        Content result = command.createContentComment(location, locale, comment);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("createContentComment() takes " + ((long) (stop - start)) + " ms");
+
+        return result;
     }
 
     @Override
     public Content deleteContentComment(String location, String locale, String idComment) throws ContentException,
             ContentIOException, ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+        long start = System.currentTimeMillis();
+
+        DeleteCommand command = new DeleteCommand(jcrSession, logged);
+        Content result = command.deleteContentComment(location, locale, idComment);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("createContentComment() takes " + ((long) (stop - start)) + " ms");
+
+        return result;
     }
 
     @Override

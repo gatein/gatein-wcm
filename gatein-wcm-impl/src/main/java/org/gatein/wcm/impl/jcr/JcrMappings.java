@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.Binary;
@@ -290,6 +291,57 @@ public class JcrMappings {
 
         return false;
     }
+
+    public boolean checkUserCommentsACL(String location) {
+
+        // Create ACL from location
+        ACL acl = null;
+        try {
+            // Check if we are in the root node or child node
+            Node n = null;
+            if (location.equals("/")) {
+                n = jcrSession.getNode("/__acl");
+            } else {
+                n = jcrSession.getNode(location + "/" + MARK + "acl");
+            }
+
+            String __acl = n.getNode("jcr:content").getProperty("jcr:data").getString();
+            acl = factory.parseACL(location, "ACL for " + location, __acl);
+
+        } catch (PathNotFoundException e) {
+            // If there are not __acl folder in the location, we will check to the parent node
+            if (!location.equals("/")) {
+                return checkUserReadACL(parent(location));
+            } else {
+                // If root node has not __acl folder means that there are not security in this repository
+                return true;
+            }
+        } catch (RepositoryException e) {
+            log.error("Unexpected error looking for acl in location " + location + ". Msg: " + e.getMessage());
+            return false;
+        }
+
+        // Validate ACL with logged user
+        for (ACE ace : acl.getAces()) {
+            // Check if we have a GROUP ACE
+            if (ace.getPrincipal().getType() == PrincipalType.GROUP
+                    && Arrays.asList(PermissionType.COMMENTS, PermissionType.WRITE, PermissionType.ALL)
+                            .contains(ace.getPermission())) {
+                for (String group : logged.getGroups())
+                    if (group.equals(ace.getPrincipal().getId()))
+                        return true;
+            }
+            // Check if we have a USER ACE
+            if (ace.getPrincipal().getType() == PrincipalType.USER
+                    && ace.getPrincipal().getId().equals(logged.getUserName())
+                    && Arrays.asList(PermissionType.COMMENTS, PermissionType.WRITE, PermissionType.ALL)
+                            .contains(ace.getPermission()))
+                return true;
+        }
+
+        return false;
+    }
+
 
     public void checkJCRException(RepositoryException e) throws ContentException, ContentIOException, ContentSecurityException {
         if (e instanceof PathNotFoundException) {
@@ -620,6 +672,29 @@ public class JcrMappings {
 
         jcrSession.save();
     }
+
+    public void createContentComment(String location, String locale, String comment) throws RepositoryException {
+        if (! checkIdExists(location, "__comments") ) {
+            jcrSession.getNode(location).addNode("__comments", "nt:folder")
+            .addMixin("mix:title");
+        }
+
+        String idComment = "" + new Date().getTime() + "_" + UUID.randomUUID().toString();
+        Node n = jcrSession.getNode(location + "/__comments");
+        n.addNode(idComment, "nt:folder").addMixin("mix:title");
+        n.getNode(idComment).setProperty("jcr:description", comment);
+
+        jcrSession.save();
+    }
+
+    public void deleteContentComment(String location, String locale, String idComment) throws RepositoryException {
+        if (checkIdExists(location, "__comments/" + idComment) ) {
+            jcrSession.removeItem(location + "/__comments/" + idComment);
+        }
+
+        jcrSession.save();
+    }
+
 
     // JCR Aux methods
     public Value jcrValue(String content, String encoding) throws RepositoryException {

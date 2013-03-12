@@ -25,7 +25,6 @@ package org.gatein.wcm.api.model.metadata;
 
 import java.util.Date;
 
-import org.gatein.wcm.api.model.content.Content;
 import org.gatein.wcm.api.model.security.User;
 
 /**
@@ -60,17 +59,5 @@ public interface Comment {
      * @return This method returns text of the comment.
      */
     String getComment();
-
-    /**
-     *
-     * @param comment This method update text of the comment.
-     */
-    void setComment(String comment);
-
-    /**
-     *
-     * @return This method returns content where comment is attached
-     */
-    Content getContent();
 
 }
