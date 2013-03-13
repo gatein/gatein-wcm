@@ -58,7 +58,14 @@
     <jbossas-version>7.1.1.Final</jbossas-version>
     <jbossas7.assembly.descriptor.version>71</jbossas7.assembly.descriptor.version>
     <modeshape.version>3.1.3.Final</modeshape.version>
+
+    <!-- chemistry and its deps -->
     <chemistry.version>0.7.0</chemistry.version>
+    <chemistry.activation.version>1.1</chemistry.activation.version>
+    <antlr.runtime.version>3.2</antlr.runtime.version>
+    <antlr.stringtemplate.version>3.2</antlr.stringtemplate.version>
+    <antlr.version>2.7.7</antlr.version>
+    <commons.fileupload.version>1.2.1</commons.fileupload.version>
 
     <org.exoplatform.kernel.version>2.4.1-GA</org.exoplatform.kernel.version>
     <org.exoplatform.core.version>2.5.1-CP01</org.exoplatform.core.version>
@@ -85,9 +92,9 @@
     <!-- <module>gatein-wcm-portlets</module> -->
     <module>gatein-wcm-impl</module>
     <module>gatein-wcm-impl-sec</module>
+    <module>gatein-wcm-cmis</module>
     <module>gatein-wcm-distribution</module>
     <module>gatein-wcm-integration-tests</module>
-    <module>gatein-wcm-ui</module>
   </modules>
 
   <dependencyManagement>
@@ -124,6 +131,74 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+
+      <!-- CMIS -->
+      <dependency>
+        <groupId>org.modeshape</groupId>
+        <artifactId>modeshape-web-cmis</artifactId>
+        <version>${modeshape.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.modeshape</groupId>
+        <artifactId>modeshape-web-jcr</artifactId>
+        <version>${modeshape.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.chemistry.opencmis</groupId>
+        <artifactId>chemistry-opencmis-commons-api</artifactId>
+        <version>${chemistry.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.chemistry.opencmis</groupId>
+        <artifactId>chemistry-opencmis-commons-impl</artifactId>
+        <version>${chemistry.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.chemistry.opencmis</groupId>
+        <artifactId>chemistry-opencmis-server-bindings</artifactId>
+        <version>${chemistry.version}</version>
+        <classifier>classes</classifier>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.chemistry.opencmis</groupId>
+        <artifactId>chemistry-opencmis-server-jcr</artifactId>
+        <version>${chemistry.version}</version>
+        <classifier>classes</classifier>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.chemistry.opencmis</groupId>
+        <artifactId>chemistry-opencmis-server-support</artifactId>
+        <version>${chemistry.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.chemistry.opencmis</groupId>
+        <artifactId>chemistry-opencmis-client-impl</artifactId>
+        <version>${chemistry.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>antlr</groupId>
+        <artifactId>antlr</artifactId>
+        <version>${antlr.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.antlr</groupId>
+        <artifactId>antlr-runtime</artifactId>
+        <version>${antlr.runtime.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.antlr</groupId>
+        <artifactId>stringtemplate</artifactId>
+        <version>${antlr.stringtemplate.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-fileupload</groupId>
+        <artifactId>commons-fileupload</artifactId>
+        <version>${commons.fileupload.version}</version>
+      </dependency>
+
 
       <dependency>
         <groupId>org.jboss.arquillian</groupId>
@@ -238,6 +313,19 @@
                     <versionRange>[2.9.1,)</versionRange>
                     <goals>
                       <goal>checkstyle</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.jboss.jandex</groupId>
+                    <artifactId>jandex-maven-plugin</artifactId>
+                    <versionRange>[1.0.1,)</versionRange>
+                    <goals>
+                      <goal>jandex</goal>
                     </goals>
                   </pluginExecutionFilter>
                   <action>
