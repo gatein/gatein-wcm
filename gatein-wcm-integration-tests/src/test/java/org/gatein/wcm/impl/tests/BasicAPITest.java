@@ -36,13 +36,13 @@ import org.junit.runner.RunWith;
 public class BasicAPITest {
 
 	private static final Logger log = Logger
-			.getLogger("org.gatein.wcm.impl.tests.test002");
+			.getLogger("org.gatein.wcm.impl.tests");
 
 	@Deployment
 	public static Archive<?> createDeployment() {
 
 		return ShrinkWrap
-				.create(WebArchive.class, "gatein-wcm-impl-test002.war")
+				.create(WebArchive.class, "gatein-wcm-impl-test.war")
 				.addAsResource(
 						new File("src/test/resources/GateIn-UserGuide-v3.5.pdf"))
 				.addAsResource(

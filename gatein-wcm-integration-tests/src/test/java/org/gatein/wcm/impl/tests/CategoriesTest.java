@@ -29,13 +29,13 @@ import org.junit.runner.RunWith;
 public class CategoriesTest {
 
 	private static final Logger log = Logger
-			.getLogger("org.gatein.wcm.impl.tests.test003");
+			.getLogger("org.gatein.wcm.impl.tests");
 
 	@Deployment
 	public static Archive<?> createDeployment() {
 
 		return ShrinkWrap
-				.create(WebArchive.class, "gatein-wcm-impl-test003.war")
+				.create(WebArchive.class, "gatein-wcm-impl-tests.war")
 				.addAsResource(
 						new File("src/test/resources/GateIn-UserGuide-v3.5.pdf"))
 				.addAsResource(

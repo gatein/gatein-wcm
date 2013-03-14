@@ -41,6 +41,7 @@ public class WcmDefaultExceptionHandler extends ExceptionHandlerWrapper {
     }
 
     protected String handleUnexpected(FacesContext facesContext, final Throwable t) {
+        log.debug("Phase error: " + facesContext.getCurrentPhaseId().toString());
         log.error("Unexpected error: " + t, t);
         return "org.gatein.wcm.ui.exception.UnexpectedException";
     }

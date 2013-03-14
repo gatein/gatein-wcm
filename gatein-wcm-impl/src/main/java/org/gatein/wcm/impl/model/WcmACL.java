@@ -20,20 +20,17 @@ public class WcmACL implements ACL {
 
     @Override
     public String getId() {
-        // TODO Auto-generated method stub
-        return null;
+        return id;
     }
 
     @Override
     public String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return description;
     }
 
     @Override
     public List<ACE> getAces() {
-        // TODO Auto-generated method stub
-        return null;
+        return aces;
     }
 
     @Override

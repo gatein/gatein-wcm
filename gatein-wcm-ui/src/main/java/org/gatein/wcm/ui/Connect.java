@@ -73,6 +73,7 @@ public class Connect extends BaseBean implements Serializable {
 
     // Connect to repository
     public void connect(ActionEvent event) {
+        log.debug(event);
         log.info("Connecting to repository/workspace: " + repository + "/" + workspace + " with user/password: " + user + "/" + password);
         try {
             repos.createContentSession(repository, workspace, user, password);

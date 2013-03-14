@@ -192,16 +192,18 @@ public class DeleteCommand {
 
         // Check if the location specified exists in the JCR Repository/Workspace
         if (!jcr.checkLocation("/__categories" + categoryLocation, locale))
-            throw new ContentException("Location: " + categoryLocation + " and locale " + locale + " doesn't exist for addContentCategory() operation. ");
+            throw new ContentException("Location: " + categoryLocation + " and locale " + locale
+                    + " doesn't exist for addContentCategory() operation. ");
 
         if (jcr.checkCategoryReferences(categoryLocation))
             throw new ContentException("Category in location: " + categoryLocation + " has references.");
 
         try {
             jcr.deleteCategory("/__categories" + categoryLocation, locale);
-            String parent = jcr.parent( categoryLocation );
-            if ("/".contains( parent )) return null;
-            return factory.getCategory( jcr.parent(categoryLocation), locale);
+            String parent = jcr.parent(categoryLocation);
+            if ("/".contains(parent))
+                return null;
+            return factory.getCategory(jcr.parent(categoryLocation), locale);
         } catch (RepositoryException e) {
             jcr.checkJCRException(e);
         }
@@ -210,58 +212,134 @@ public class DeleteCommand {
     }
 
     /**
-    *
-    * Removes a comment under the specified Content location. <br>
-    *
-    * @param location - Location where the content is stored. <br>
-    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
-    *        where "/" is the root of repository and &lt;id&gt; folders ID
-    * @param locale - Locale to add comment
-    * @param comment - Comment to add
-    * @return Content with comment updated.
-    * @throws ContentException if content doesn't exist.
-    * @throws ContentIOException if any IO related problem with repository.
-    * @throws ContentSecurityException if user has not been granted to create comments.
-    */
-   public Content deleteContentComment(String location, String locale, String idComment) throws ContentException, ContentIOException,
-           ContentSecurityException {
-       log.debug("deleteContentComment()");
+     *
+     * Removes a comment under the specified Content location. <br>
+     *
+     * @param location - Location where the content is stored. <br>
+     *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+     *        where "/" is the root of repository and &lt;id&gt; folders ID
+     * @param locale - Locale to add comment
+     * @param comment - Comment to add
+     * @return Content with comment updated.
+     * @throws ContentException if content doesn't exist.
+     * @throws ContentIOException if any IO related problem with repository.
+     * @throws ContentSecurityException if user has not been granted to create comments.
+     */
+    public Content deleteContentComment(String location, String locale, String idComment) throws ContentException,
+            ContentIOException, ContentSecurityException {
+        log.debug("deleteContentComment()");
 
-       checkNullParameters(location, locale, idComment);
+        checkNullParameters(location, locale, idComment);
 
-       // Check if the current JCR Session is valid
-       if ( ! jcr.checkSession() )
-           throw new ContentIOException("JCR Session is null");
+        // Check if the current JCR Session is valid
+        if (!jcr.checkSession())
+            throw new ContentIOException("JCR Session is null");
 
-       // Check if the location specified exists in the JCR Repository/Workspace
-       if ( ! jcr.checkLocation(location) )
-           throw new ContentException("Location: " + location + " doesn't exist for deleteContentComment() operation. ");
+        // Check if the location specified exists in the JCR Repository/Workspace
+        if (!jcr.checkLocation(location))
+            throw new ContentException("Location: " + location + " doesn't exist for deleteContentComment() operation. ");
 
-       // Check if user has rights to access - delete operations must be performed by an admin
-       if ( ! jcr.checkUserAdminACL(location))
-           throw new ContentSecurityException("User: " + logged.getUserName() + " has not COMMENTS rights in location: " + location);
+        // Check if user has rights to access - delete operations must be performed by an admin
+        if (!jcr.checkUserAdminACL(location))
+            throw new ContentSecurityException("User: " + logged.getUserName() + " has not COMMENTS rights in location: "
+                    + location);
 
-       try {
-           jcr.deleteContentComment(location, locale, idComment);
-           return factory.getContent(location, locale);
-       } catch (RepositoryException e) {
-           jcr.checkJCRException( e );
-       }
+        try {
+            jcr.deleteContentComment(location, locale, idComment);
+            return factory.getContent(location, locale);
+        } catch (RepositoryException e) {
+            jcr.checkJCRException(e);
+        }
 
-       return null;
-   }
+        return null;
+    }
 
-   private void checkNullParameters(String location, String locale, String comment)
-           throws ContentException {
-           if (location == null || "".equals( location )) {
-               throw new ContentException("Parameter location cannot be null or empty");
-           }
-           if (locale == null || "".equals( locale ) ) {
-               throw new ContentException("Parameter locale cannot be null or empty");
-           }
-           if (comment == null || "".equals( comment ) ) {
-               throw new ContentException("Parameter comment cannot be null or empty");
-           }
-       }
+    private void checkNullParameters(String location, String locale, String comment) throws ContentException {
+        if (location == null || "".equals(location)) {
+            throw new ContentException("Parameter location cannot be null or empty");
+        }
+        if (locale == null || "".equals(locale)) {
+            throw new ContentException("Parameter locale cannot be null or empty");
+        }
+        if (comment == null || "".equals(comment)) {
+            throw new ContentException("Parameter comment cannot be null or empty");
+        }
+    }
+
+    /**
+     *
+     * Deletes a property in the form KEY/VALUE to a Content. <br>
+     * Properties are shared between locales of same Content. <br>
+     *
+     * @param location - Location where the content is stored. <br>
+     *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+     *        where "/" is the root of repository and &lt;id&gt; folders ID
+     * @param name - Name of property
+     * @return Content (default locale) with properties updated.
+     * @throws ContentException if content doesn't exist or property doesn't exist.
+     * @throws ContentIOException if any IO related problem with repository.
+     * @throws ContentSecurityException if user has not been granted to create properties.
+     */
+    public Content deleteContentProperty(String location, String locale, String name) throws ContentException,
+            ContentIOException, ContentSecurityException {
+        log.debug("deleteContentProperty()");
+
+        checkNullPropertyParameters(location, locale, name);
+
+        // Check if the current JCR Session is valid
+        if (!jcr.checkSession())
+            throw new ContentIOException("JCR Session is null");
+
+        // Check if the location specified exists in the JCR Repository/Workspace
+        if (!jcr.checkLocation(location))
+            throw new ContentException("Location: " + location + " doesn't exist for deleteContentComment() operation. ");
+
+        // Check if user has rights to access - delete operations must be performed by an admin
+        if (!jcr.checkUserAdminACL(location))
+            throw new ContentSecurityException("User: " + logged.getUserName() + " has not COMMENTS rights in location: "
+                    + location);
+
+        try {
+            jcr.deleteContentProperty(location, locale, name);
+            return factory.getContent(location, locale);
+        } catch (RepositoryException e) {
+            jcr.checkJCRException(e);
+        }
+
+        return null;
+    }
+
+    private void checkNullPropertyParameters(String location, String locale, String name) throws ContentException {
+        if (location == null || "".equals(location)) {
+            throw new ContentException("Parameter location cannot be null or empty");
+        }
+        if (locale == null || "".equals(locale)) {
+            throw new ContentException("Parameter locale cannot be null or empty");
+        }
+        if (name == null || "".equals(name)) {
+            throw new ContentException("Parameter name cannot be null or empty");
+        }
+    }
+
+    public Content deleteContentACE(String location, String locale, String name) throws ContentException, ContentIOException,
+            ContentSecurityException {
+
+        checkNullPropertyParameters(location, locale, name);
+
+        // Check if the current JCR Session is valid
+        if (!jcr.checkSession())
+            throw new ContentIOException("JCR Session is null");
+
+        // Check if the location specified exists in the JCR Repository/Workspace
+        if (!jcr.checkLocation(location))
+            throw new ContentException("Location: " + location + " doesn't exist for deleteContentComment() operation. ");
+
+        // Check if user has rights to access - delete operations must be performed by an admin
+        if (!jcr.checkUserWriteACL(location))
+            throw new ContentSecurityException("User: " + logged.getUserName() + " has not COMMENTS rights in location: "
+                    + location);
+
+        return null;
+    }
 
 }

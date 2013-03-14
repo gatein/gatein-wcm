@@ -355,38 +355,78 @@ public class WcmContentService implements ContentService {
     }
 
     @Override
-    public Content createContentProperty(String location, String name, String value) throws ContentException,
+    public Content createContentProperty(String location, String locale, String name, String value) throws ContentException,
             ContentIOException, ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+        long start = System.currentTimeMillis();
+
+        CreateCommand command = new CreateCommand(jcrSession, logged);
+        Content result = command.createContentProperty(location, locale, name, value);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("createContentProperty() takes " + ((long) (stop - start)) + " ms");
+
+        return result;
     }
 
     @Override
-    public Content updateContentProperty(String location, String name, String value) throws ContentException,
+    public Content updateContentProperty(String location, String locale, String name, String value) throws ContentException,
             ContentIOException, ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+        long start = System.currentTimeMillis();
+
+        UpdateCommand command = new UpdateCommand(jcrSession, logged);
+        Content result = command.updateContentProperty(location, locale, name, value);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("updateContentProperty() takes " + ((long) (stop - start)) + " ms");
+
+        return result;
     }
 
     @Override
-    public Content deleteContentProperty(String location, String name) throws ContentException, ContentIOException,
+    public Content deleteContentProperty(String location, String locale, String name) throws ContentException, ContentIOException,
             ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+        long start = System.currentTimeMillis();
+
+        DeleteCommand command = new DeleteCommand(jcrSession, logged);
+        Content result = command.deleteContentProperty(location, locale, name);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("deleteContentProperty() takes " + ((long) (stop - start)) + " ms");
+
+        return result;
     }
 
     @Override
-    public Content createContentACE(String location, Principal principal, PermissionType permission) throws ContentException,
+    public Content createContentACE(String location, String locale, String name, Principal.PrincipalType principal, PermissionType permission) throws ContentException,
             ContentIOException, ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+        long start = System.currentTimeMillis();
+
+        CreateCommand command = new CreateCommand(jcrSession, logged);
+        Content result = command.createContentACE(location, locale, name, principal, permission);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("createContentACE() takes " + ((long) (stop - start)) + " ms");
+
+        return result;
     }
 
     @Override
-    public Content deleteContentACE(String location, Principal principal) throws ContentException, ContentIOException,
+    public Content deleteContentACE(String location, String locale, String name) throws ContentException, ContentIOException,
             ContentSecurityException {
-        // TODO Auto-generated method stub
-        return null;
+        long start = System.currentTimeMillis();
+
+        DeleteCommand command = new DeleteCommand(jcrSession, logged);
+        Content result = command.deleteContentACE(location, locale, name);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("deleteContentACE() takes " + ((long) (stop - start)) + " ms");
+
+        return result;
     }
 
     @Override

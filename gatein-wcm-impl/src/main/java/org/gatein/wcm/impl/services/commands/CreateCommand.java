@@ -9,6 +9,8 @@ import javax.jcr.Value;
 
 import org.gatein.wcm.api.model.content.Content;
 import org.gatein.wcm.api.model.metadata.Category;
+import org.gatein.wcm.api.model.security.ACE;
+import org.gatein.wcm.api.model.security.Principal;
 import org.gatein.wcm.api.model.security.User;
 import org.gatein.wcm.api.services.exceptions.ContentException;
 import org.gatein.wcm.api.services.exceptions.ContentIOException;
@@ -26,13 +28,12 @@ public class CreateCommand {
     WcmContentFactory factory = null;
     JcrMappings jcr = null;
 
-    public CreateCommand (Session session, User user)
-            throws ContentIOException {
+    public CreateCommand(Session session, User user) throws ContentIOException {
         jcrSession = session;
         logged = user;
         jcr = new JcrMappings(jcrSession, logged);
         factory = new WcmContentFactory(jcr, logged);
-        jcr.setFactory( factory );
+        jcr.setFactory(factory);
     }
 
     /**
@@ -60,20 +61,22 @@ public class CreateCommand {
         checkNullParameters(id, locale, location, html, encoding);
 
         // Check if the current JCR Session is valid
-        if ( ! jcr.checkSession() )
+        if (!jcr.checkSession())
             throw new ContentIOException("JCR Session is null");
 
         // Check if the location specified exists in the JCR Repository/Workspace
-        if ( ! jcr.checkLocation(location) )
+        if (!jcr.checkLocation(location))
             throw new ContentException("Location: " + location + " doesn't exist for createTextContent() operation. ");
 
         // Check if there is a content with same id in the specified location
-        if ( jcr.checkIdExists(location, id, locale) )
-            throw new ContentException("Location: " + location + " Locale: " + locale + " id: " + id + " exists for createTextContent() operation. ");
+        if (jcr.checkIdExists(location, id, locale))
+            throw new ContentException("Location: " + location + " Locale: " + locale + " id: " + id
+                    + " exists for createTextContent() operation. ");
 
         // Check if user has rights to access
-        if ( ! jcr.checkUserWriteACL( location ))
-            throw new ContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: " + location);
+        if (!jcr.checkUserWriteACL(location))
+            throw new ContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: "
+                    + location);
 
         // Creating new Node
         try {
@@ -84,27 +87,27 @@ public class CreateCommand {
             return factory.createTextContent(id, locale, location, html, encoding);
 
         } catch (RepositoryException e) {
-            jcr.checkJCRException( e );
+            jcr.checkJCRException(e);
         }
 
         return null;
     }
 
-    private void checkNullParameters(String id, String locale, String location, String html, String encoding) throws ContentException
-    {
-        if (id == null || "".equals( id )) {
+    private void checkNullParameters(String id, String locale, String location, String html, String encoding)
+            throws ContentException {
+        if (id == null || "".equals(id)) {
             throw new ContentException("Parameter id cannot be null or empty");
         }
-        if (locale == null || "".equals( locale )) {
+        if (locale == null || "".equals(locale)) {
             throw new ContentException("Parameter locale cannot be null or empty");
         }
-        if (location == null || "".equals( location )) {
+        if (location == null || "".equals(location)) {
             throw new ContentException("Parameter location cannot be null or empty");
         }
-        if (html == null || "".equals( html )) {
+        if (html == null || "".equals(html)) {
             throw new ContentException("Parameter html cannot be null or empty");
         }
-        if (encoding == null || "".equals( encoding )) {
+        if (encoding == null || "".equals(encoding)) {
             throw new ContentException("Parameter encoding cannot be null or empty");
         }
     }
@@ -117,58 +120,54 @@ public class CreateCommand {
      * @param locale - Locale under content is stored.
      * @param location - Location where to store the content. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
-     *        where "/" is the root of repository and &lt;id&gt; folders ID
-     *        UPDATE: in folder we don't use locale in the implementation.
+     *        where "/" is the root of repository and &lt;id&gt; folders ID UPDATE: in folder we don't use locale in the
+     *        implementation.
      * @return Content updated (if ok), null (if error).
      * @throws ContentException if the id exists in the repository (folder can not be updated, folder gets latest version of
      *         their most recent item).
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create content under specified location.
      */
-    public Content createFolder(String id, String location)
-            throws ContentException, ContentIOException, ContentSecurityException {
+    public Content createFolder(String id, String location) throws ContentException, ContentIOException,
+            ContentSecurityException {
 
         log.debug("createFolder()");
 
         checkNullParameters(id, location);
 
         // Check if the current JCR Session is valid
-        if ( ! jcr.checkSession() )
+        if (!jcr.checkSession())
             throw new ContentIOException("JCR Session is null");
 
         // Check if the location specified exists in the JCR Repository/Workspace
-        if ( ! jcr.checkLocation(location) )
+        if (!jcr.checkLocation(location))
             throw new ContentException("Location: " + location + " doesn't exist for createFolder() operation. ");
 
         // Check if there is a content with same id in the specified location
-        if ( jcr.checkIdExists(location, id) )
+        if (jcr.checkIdExists(location, id))
             throw new ContentException("Location: " + location + " Id: " + id + " exists for createFolder() operation. ");
 
         // Check if user has rights to access
-        if ( ! jcr.checkUserWriteACL( location ))
-            throw new ContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: " + location);
+        if (!jcr.checkUserWriteACL(location))
+            throw new ContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: "
+                    + location);
 
         // Creating new folder
         try {
-
             jcr.createFolder(id, location);
-
             return factory.createFolder(id, location);
-
         } catch (RepositoryException e) {
-            jcr.checkJCRException( e );
+            jcr.checkJCRException(e);
         }
 
         return null;
-
     }
 
-    private void checkNullParameters(String id, String location) throws ContentException
-    {
-        if (id == null || "".equals( id )) {
+    private void checkNullParameters(String id, String location) throws ContentException {
+        if (id == null || "".equals(id)) {
             throw new ContentException("Parameter id cannot be null or empty");
         }
-        if (location == null || "".equals( location )) {
+        if (location == null || "".equals(location)) {
             throw new ContentException("Parameter location cannot be null or empty");
         }
     }
@@ -192,63 +191,65 @@ public class CreateCommand {
      * @throws ContentSecurityException if user has not been granted to create content under specified location.
      */
     public Content createBinaryContent(String id, String locale, String location, String contentType, Long size,
-            String fileName, InputStream content) throws ContentException, ContentIOException, ContentSecurityException
-    {
+            String fileName, InputStream content) throws ContentException, ContentIOException, ContentSecurityException {
 
         log.debug("createBinaryContent()");
 
         checkNullParameters(id, locale, location, contentType, size, fileName, content);
 
         // Check if the current JCR Session is valid
-        if ( ! jcr.checkSession() )
+        if (!jcr.checkSession())
             throw new ContentIOException("JCR Session is null");
 
         // Check if the location specified exists in the JCR Repository/Workspace
-        if ( ! jcr.checkLocation(location) )
+        if (!jcr.checkLocation(location))
             throw new ContentException("Location: " + location + " doesn't exist for createBinaryContent() operation. ");
 
         // Check if there is a content with same id in the specified location
-        if ( jcr.checkIdExists(location, id, locale) )
-            throw new ContentException("Location: " + location + " Locale: " + locale + " id: " + id + " exists for createTextContent() operation. ");
+        if (jcr.checkIdExists(location, id, locale))
+            throw new ContentException("Location: " + location + " Locale: " + locale + " id: " + id
+                    + " exists for createTextContent() operation. ");
 
         // Check if user has rights to access
-        if ( ! jcr.checkUserWriteACL( location ))
-            throw new ContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: " + location);
+        if (!jcr.checkUserWriteACL(location))
+            throw new ContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: "
+                    + location);
 
         // Creating new Node
         try {
 
             byte[] _content = jcr.toByteArray(content);
 
-            jcr.createBinaryNode(id, locale, location, contentType, size, fileName, new ByteArrayInputStream( _content ) );
+            jcr.createBinaryNode(id, locale, location, contentType, size, fileName, new ByteArrayInputStream(_content));
 
-            return factory.createBinaryContent(id, locale, location, contentType, size, fileName, new ByteArrayInputStream( _content ) );
+            return factory.createBinaryContent(id, locale, location, contentType, size, fileName, new ByteArrayInputStream(
+                    _content));
 
         } catch (RepositoryException e) {
-            jcr.checkJCRException( e );
+            jcr.checkJCRException(e);
         }
 
         return null;
     }
 
-    private void checkNullParameters(String id, String locale, String location, String contentType, Long size,
-            String fileName, InputStream content) throws ContentException {
-        if (id == null || "".equals( id )) {
+    private void checkNullParameters(String id, String locale, String location, String contentType, Long size, String fileName,
+            InputStream content) throws ContentException {
+        if (id == null || "".equals(id)) {
             throw new ContentException("Parameter id cannot be null or empty");
         }
-        if (locale == null || "".equals( locale ) ) {
+        if (locale == null || "".equals(locale)) {
             throw new ContentException("Parameter locale cannot be null or empty");
         }
-        if (location == null || "".equals( location ) ) {
+        if (location == null || "".equals(location)) {
             throw new ContentException("Parameter location cannot be null or empty");
         }
-        if (contentType == null || "".endsWith( contentType ) ) {
+        if (contentType == null || "".endsWith(contentType)) {
             throw new ContentException("Parameter contentType cannot be null or empty");
         }
         if (size == null || size == 0) {
             throw new ContentException("Parameter size cannot be null or 0");
         }
-        if (fileName == null || "".endsWith( fileName )) {
+        if (fileName == null || "".endsWith(fileName)) {
             throw new ContentException("Parameter fileName cannot be null or empty");
         }
         if (content == null) {
@@ -257,125 +258,238 @@ public class CreateCommand {
     }
 
     /**
-    *
-    * Creates new Category in the repository. <br>
-    * Categories can be organized in a hierarchical tree of categories parents and children.
-    *
-    * @param id - Category id.
-    * @param locale - Locale of category.
-    * @param description - Category description.
-    * @param categoryLocation - Location where the category is stored. <br>
-    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
-    *        where "/" is the root of repository and &lt;id&gt; folders ID
-    * @return Category created (if ok), null (if error).
-    * @throws ContentException if the id exists (categories are not versionable items).
-    * @throws ContentIOException if any IO related problem with repository.
-    * @throws ContentSecurityException if user has not been granted to create categories.
-    */
-   public Category createCategory(String id, String locale, String description, String categoryLocation)
-       throws ContentException, ContentIOException, ContentSecurityException {
-       log.debug("createCategory()");
+     *
+     * Creates new Category in the repository. <br>
+     * Categories can be organized in a hierarchical tree of categories parents and children.
+     *
+     * @param id - Category id.
+     * @param locale - Locale of category.
+     * @param description - Category description.
+     * @param categoryLocation - Location where the category is stored. <br>
+     *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+     *        where "/" is the root of repository and &lt;id&gt; folders ID
+     * @return Category created (if ok), null (if error).
+     * @throws ContentException if the id exists (categories are not versionable items).
+     * @throws ContentIOException if any IO related problem with repository.
+     * @throws ContentSecurityException if user has not been granted to create categories.
+     */
+    public Category createCategory(String id, String locale, String description, String categoryLocation)
+            throws ContentException, ContentIOException, ContentSecurityException {
+        log.debug("createCategory()");
 
-       checkNullParameters(id, locale, description, categoryLocation);
+        checkNullParameters(id, locale, description, categoryLocation);
 
-       // Check if the current JCR Session is valid
-       if ( ! jcr.checkSession() )
-           throw new ContentIOException("JCR Session is null");
+        // Check if the current JCR Session is valid
+        if (!jcr.checkSession())
+            throw new ContentIOException("JCR Session is null");
 
-       if ("/".equals( categoryLocation )) categoryLocation = "";
+        if ("/".equals(categoryLocation))
+            categoryLocation = "";
 
-       // Check if the location specified exists in the JCR Repository/Workspace
-       if ( ! jcr.checkLocation("/__categories" + categoryLocation) )
-           throw new ContentException("Location: " + categoryLocation + " doesn't exist for createCategory() operation. ");
+        // Check if the location specified exists in the JCR Repository/Workspace
+        if (!jcr.checkLocation("/__categories" + categoryLocation))
+            throw new ContentException("Location: " + categoryLocation + " doesn't exist for createCategory() operation. ");
 
-       // Check if there is a content with same id in the specified location
-       if ( jcr.checkIdExists("/__categories" + categoryLocation, id, locale) )
-           throw new ContentException("Location: " + categoryLocation + " Locale: " + locale + " id: " + id + " exists for createCategory() operation. ");
+        // Check if there is a content with same id in the specified location
+        if (jcr.checkIdExists("/__categories" + categoryLocation, id, locale))
+            throw new ContentException("Location: " + categoryLocation + " Locale: " + locale + " id: " + id
+                    + " exists for createCategory() operation. ");
 
-       // Check if user has rights to access
-       if ( ! jcr.checkUserAdminACL( "/__categories" ))
-           throw new ContentSecurityException("User: " + logged.getUserName() + " has not ADMIN rights in location: " + "/__categories");
+        // Check if user has rights to access
+        if (!jcr.checkUserAdminACL("/__categories"))
+            throw new ContentSecurityException("User: " + logged.getUserName() + " has not ADMIN rights in location: "
+                    + "/__categories");
 
-       // Creating new Category
-       try {
-           jcr.createCategory(id, locale, "/__categories" + categoryLocation, description);
-           return factory.getCategory("/__categories" + categoryLocation + "/" + id, locale);
-       } catch (RepositoryException e) {
-           jcr.checkJCRException( e );
-       }
+        // Creating new Category
+        try {
+            jcr.createCategory(id, locale, "/__categories" + categoryLocation, description);
+            return factory.getCategory("/__categories" + categoryLocation + "/" + id, locale);
+        } catch (RepositoryException e) {
+            jcr.checkJCRException(e);
+        }
 
-       return null;
-   }
+        return null;
+    }
 
-   private void checkNullParameters(String id, String locale, String description, String categoryLocation)
-       throws ContentException {
-       if (id == null || "".equals( id )) {
-           throw new ContentException("Parameter id cannot be null or empty");
-       }
-       if (locale == null || "".equals( locale ) ) {
-           throw new ContentException("Parameter locale cannot be null or empty");
-       }
-       if (description == null || "".equals( description ) ) {
-           throw new ContentException("Parameter description cannot be null or empty");
-       }
-       if (categoryLocation == null || "".endsWith( categoryLocation ) ) {
-           throw new ContentException("Parameter categoryLocation cannot be null or empty");
-       }
-   }
+    private void checkNullParameters(String id, String locale, String description, String categoryLocation)
+            throws ContentException {
+        if (id == null || "".equals(id)) {
+            throw new ContentException("Parameter id cannot be null or empty");
+        }
+        if (locale == null || "".equals(locale)) {
+            throw new ContentException("Parameter locale cannot be null or empty");
+        }
+        if (description == null || "".equals(description)) {
+            throw new ContentException("Parameter description cannot be null or empty");
+        }
+        if (categoryLocation == null || "".endsWith(categoryLocation)) {
+            throw new ContentException("Parameter categoryLocation cannot be null or empty");
+        }
+    }
 
-   /**
-   *
-   * Creates a comment under the specified Content location. <br>
-   *
-   * @param location - Location where the content is stored. <br>
-   *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
-   *        where "/" is the root of repository and &lt;id&gt; folders ID
-   * @param locale - Locale to add comment
-   * @param comment - Comment to add
-   * @return Content with comment updated.
-   * @throws ContentException if content doesn't exist.
-   * @throws ContentIOException if any IO related problem with repository.
-   * @throws ContentSecurityException if user has not been granted to create comments.
-   */
-  public Content createContentComment(String location, String locale, String comment) throws ContentException, ContentIOException,
-          ContentSecurityException {
-      log.debug("createContentComment()");
+    /**
+     *
+     * Creates a comment under the specified Content location. <br>
+     *
+     * @param location - Location where the content is stored. <br>
+     *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+     *        where "/" is the root of repository and &lt;id&gt; folders ID
+     * @param locale - Locale to add comment
+     * @param comment - Comment to add
+     * @return Content with comment updated.
+     * @throws ContentException if content doesn't exist.
+     * @throws ContentIOException if any IO related problem with repository.
+     * @throws ContentSecurityException if user has not been granted to create comments.
+     */
+    public Content createContentComment(String location, String locale, String comment) throws ContentException,
+            ContentIOException, ContentSecurityException {
+        log.debug("createContentComment()");
 
-      checkNullParameters(location, locale, comment);
+        checkNullParameters(location, locale, comment);
 
-      // Check if the current JCR Session is valid
-      if ( ! jcr.checkSession() )
-          throw new ContentIOException("JCR Session is null");
+        // Check if the current JCR Session is valid
+        if (!jcr.checkSession())
+            throw new ContentIOException("JCR Session is null");
 
-      // Check if the location specified exists in the JCR Repository/Workspace
-      if ( ! jcr.checkLocation(location) )
-          throw new ContentException("Location: " + location + " doesn't exist for createContentComment() operation. ");
+        // Check if the location specified exists in the JCR Repository/Workspace
+        if (!jcr.checkLocation(location))
+            throw new ContentException("Location: " + location + " doesn't exist for createContentComment() operation. ");
 
-      // Check if user has rights to access
-      if ( ! jcr.checkUserCommentsACL( location ))
-          throw new ContentSecurityException("User: " + logged.getUserName() + " has not COMMENTS rights in location: " + location);
+        // Check if user has rights to access
+        if (!jcr.checkUserCommentsACL(location))
+            throw new ContentSecurityException("User: " + logged.getUserName() + " has not COMMENTS rights in location: "
+                    + location);
 
-      try {
-          jcr.createContentComment(location, locale, comment);
-          return factory.getContent(location, locale);
-      } catch (RepositoryException e) {
-          jcr.checkJCRException( e );
-      }
+        try {
+            jcr.createContentComment(location, locale, comment);
+            return factory.getContent(location, locale);
+        } catch (RepositoryException e) {
+            jcr.checkJCRException(e);
+        }
 
-      return null;
-  }
+        return null;
+    }
 
-  private void checkNullParameters(String location, String locale, String comment)
-          throws ContentException {
-          if (location == null || "".equals( location )) {
-              throw new ContentException("Parameter location cannot be null or empty");
-          }
-          if (locale == null || "".equals( locale ) ) {
-              throw new ContentException("Parameter locale cannot be null or empty");
-          }
-          if (comment == null || "".equals( comment ) ) {
-              throw new ContentException("Parameter comment cannot be null or empty");
-          }
-      }
+    private void checkNullParameters(String location, String locale, String comment) throws ContentException {
+        if (location == null || "".equals(location)) {
+            throw new ContentException("Parameter location cannot be null or empty");
+        }
+        if (locale == null || "".equals(locale)) {
+            throw new ContentException("Parameter locale cannot be null or empty");
+        }
+        if (comment == null || "".equals(comment)) {
+            throw new ContentException("Parameter comment cannot be null or empty");
+        }
+    }
+
+    /**
+     *
+     * Creates a property in the form KEY/VALUE to a Content. <br>
+     * Properties are shared between locales of same Content. <br>
+     *
+     * @param location - Location where the content is stored. <br>
+     *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+     *        where "/" is the root of repository and &lt;id&gt; folders ID
+     * @param name - Name of property
+     * @param value - Value
+     * @return Content (default locale) with properties updated.
+     * @throws ContentException if content doesn't exist.
+     * @throws ContentIOException if any IO related problem with repository.
+     * @throws ContentSecurityException if user has not been granted to create properties.
+     */
+    public Content createContentProperty(String location, String locale, String name, String value) throws ContentException,
+            ContentIOException, ContentSecurityException {
+
+        log.debug("createContentComment()");
+
+        checkNullPropertyParameters(location, locale, name, value);
+
+        // Check if the current JCR Session is valid
+        if (!jcr.checkSession())
+            throw new ContentIOException("JCR Session is null");
+
+        // Check if the location specified exists in the JCR Repository/Workspace
+        if (!jcr.checkLocation(location))
+            throw new ContentException("Location: " + location + " doesn't exist for createContentProperty() operation. ");
+
+        // Check if user has rights to access
+        if (!jcr.checkUserWriteACL(location))
+            throw new ContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: "
+                    + location);
+
+        try {
+            jcr.createContentProperty(location, locale, name, value);
+            return factory.getContent(location, locale);
+        } catch (RepositoryException e) {
+            jcr.checkJCRException(e);
+        }
+
+        return null;
+    }
+
+    private void checkNullPropertyParameters(String location, String locale, String name, String value) throws ContentException {
+        if (location == null || "".equals(location)) {
+            throw new ContentException("Parameter location cannot be null or empty");
+        }
+        if (locale == null || "".equals(locale)) {
+            throw new ContentException("Parameter location cannot be null or empty");
+        }
+        if (name == null || "".equals(name)) {
+            throw new ContentException("Parameter name cannot be null or empty");
+        }
+        if (value == null || "".equals(value)) {
+            throw new ContentException("Parameter value cannot be null or empty");
+        }
+    }
+
+    public Content createContentACE(String location, String locale, String name, Principal.PrincipalType principal, ACE.PermissionType permission)
+            throws ContentException, ContentIOException, ContentSecurityException {
+
+        log.debug("createContentACE()");
+
+        checkNullACEParameters(location, locale, name, principal, permission);
+
+        // Check if the current JCR Session is valid
+        if (!jcr.checkSession())
+            throw new ContentIOException("JCR Session is null");
+
+        // Check if the location specified exists in the JCR Repository/Workspace
+        if (!jcr.checkLocation(location))
+            throw new ContentException("Location: " + location + " doesn't exist for createContentProperty() operation. ");
+
+        // Check if user has rights to access
+        if (!jcr.checkUserWriteACL(location))
+            throw new ContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: "
+                    + location);
+
+        try {
+            jcr.createContentACE(location, name, principal, permission);
+            return factory.getContent(location, locale);
+        } catch (RepositoryException e) {
+            jcr.checkJCRException(e);
+        }
+
+        return null;
+    }
+
+    private void checkNullACEParameters(String location, String locale, String name, Principal.PrincipalType principal, ACE.PermissionType permission) throws ContentException {
+        if (location == null || "".equals(location)) {
+            throw new ContentException("Parameter location cannot be null or empty");
+        }
+        if (locale == null || "".equals(locale)) {
+            throw new ContentException("Parameter location cannot be null or empty");
+        }
+        if (name == null || "".equals(name)) {
+            throw new ContentException("Parameter name cannot be null or empty");
+        }
+        if (principal == null || "".equals(principal)) {
+            throw new ContentException("Parameter principal cannot be null or empty");
+        }
+        if (permission == null || "".equals(permission)) {
+            throw new ContentException("Parameter permission cannot be null or empty");
+        }
+
+    }
+
 
 }

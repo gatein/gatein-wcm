@@ -420,5 +420,64 @@ public class UpdateCommand {
       }
   }
 
+  /**
+  *
+  * Modifies a property in the form KEY/VALUE to a Content. <br>
+  * Properties are shared between locales of same Content. <br>
+  *
+  * @param location - Location where the content is stored. <br>
+  *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+  *        where "/" is the root of repository and &lt;id&gt; folders ID
+  * @param name - Name of property
+  * @param value - Value
+  * @return Content (default locale) with properties updated.
+  * @throws ContentException if content doesn't exist or property doesn't exist.
+  * @throws ContentIOException if any IO related problem with repository.
+  * @throws ContentSecurityException if user has not been granted to create properties.
+  */
+  public Content updateContentProperty(String location, String locale, String name, String value) throws ContentException, ContentIOException,
+         ContentSecurityException {
+      log.debug("updateContentProperty()");
+
+      checkNullPropertyParameters(location, locale, name, value);
+
+      // Check if the current JCR Session is valid
+      if ( ! jcr.checkSession() )
+          throw new ContentIOException("JCR Session is null");
+
+      // Check if the location specified exists in the JCR Repository/Workspace
+      if ( ! jcr.checkLocation(location) )
+          throw new ContentException("Location: " + location + " doesn't exist for updateContentProperty() operation. ");
+
+      // Check if user has rights to access
+      if ( ! jcr.checkUserWriteACL( location ))
+          throw new ContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: " + location);
+
+      try {
+          // Creates or update property
+          jcr.createContentProperty(location, locale, name, value);
+          return factory.getContent(location, locale);
+      } catch (RepositoryException e) {
+          jcr.checkJCRException( e );
+      }
+
+      return null;
+  }
+
+  private void checkNullPropertyParameters(String location, String locale, String name, String value)
+          throws ContentException {
+          if (location == null || "".equals( location )) {
+              throw new ContentException("Parameter location cannot be null or empty");
+          }
+          if (location == null || "".equals( location )) {
+              throw new ContentException("Parameter location cannot be null or empty");
+          }
+          if (name == null || "".equals( name ) ) {
+              throw new ContentException("Parameter name cannot be null or empty");
+          }
+          if (value == null || "".equals( value ) ) {
+              throw new ContentException("Parameter value cannot be null or empty");
+          }
+      }
 
 }

@@ -34,12 +34,12 @@ import org.modeshape.jcr.api.JcrConstants;
 @RunWith(Arquillian.class)
 public class BasicJcrOperationsTest {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.jcr.tests.test002");
+    private static final Logger log = Logger.getLogger("org.gatein.wcm.jcr.tests");
 
     @Deployment
     public static Archive<?> createDeployment() {
 
-        return ShrinkWrap.create(WebArchive.class, "gatein-wcm-integration-tests-test003.war")
+        return ShrinkWrap.create(WebArchive.class, "gatein-wcm-jrc-tests.war")
                 .addAsResource(new File("src/test/resources/jbossportletbridge.pdf"))
                 .addAsResource(new File("src/test/resources/wcm-whiteboard.jpg"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")

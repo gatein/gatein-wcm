@@ -28,13 +28,13 @@ import org.junit.runner.RunWith;
 public class CommentsTest {
 
 	private static final Logger log = Logger
-			.getLogger("org.gatein.wcm.impl.tests.test003");
+			.getLogger("org.gatein.wcm.impl.tests");
 
 	@Deployment
 	public static Archive<?> createDeployment() {
 
 		return ShrinkWrap
-				.create(WebArchive.class, "gatein-wcm-impl-test004.war")
+				.create(WebArchive.class, "gatein-wcm-impl-tests.war")
 				.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
 				.setManifest(new File("src/main/webapp/META-INF/MANIFEST.MF"));
 
@@ -67,9 +67,51 @@ public class CommentsTest {
 		    log.info(comment.getCreatedBy().getUserName() + " date: " + comment.getCreated().toString() + ": " + comment.getComment());
 		}
 
+		cs.deleteContent("/testcomments");
+
 		log.info("[[ STOP TEST  createComments ]]");
 		Assert.assertTrue(true);
 	}
+
+    @Test
+    public void deleteComments() throws ContentIOException,
+            ContentSecurityException, ContentException {
+
+        log.info("[[ START TEST  deleteComments ]]");
+        ContentService cs = repos.createContentSession("sample", "default",
+                "admin", "admin");
+
+        cs.createFolder("deletecomments", "/");
+        cs.createTextContent("test1", "en", "/deletecomments", "This is a test1", "UTF8");
+        cs.createTextContent("test2", "en", "/deletecomments", "This is a test2", "UTF8");
+        cs.createTextContent("test3", "en", "/deletecomments", "This is a test3", "UTF8");
+
+        cs.createContentComment("/deletecomments", "en", "This is a comment A");
+        cs.createContentComment("/deletecomments", "en", "This is a comment B");
+        cs.createContentComment("/deletecomments", "en", "This is a comment C");
+        cs.createContentComment("/deletecomments", "en", "This is a comment D");
+        Content c = cs.createContentComment("/deletecomments", "en", "This is a comment D");
+
+        Assert.assertEquals(5, c.getComments().size());
+
+        List<Comment> comments = c.getComments();
+        for (Comment comment : comments) {
+            log.info(comment.getCreatedBy().getUserName() + " date: " + comment.getCreated().toString() + ": " + comment.getComment());
+            cs.deleteContentComment("/deletecomments", "en", comment.getId());
+        }
+
+        Content _c = cs.getContent("/deletecomments", "en");
+        Assert.assertEquals(null, _c.getComments());
+
+        cs.createContentComment("/deletecomments", "en", "This is a comment E");
+        Content __c = cs.createContentComment("/deletecomments", "en", "This is a comment F");
+        Assert.assertEquals(2, __c.getComments().size());
+
+        cs.deleteContent("/deletecomments");
+
+        log.info("[[ STOP TEST  deleteComments ]]");
+        Assert.assertTrue(true);
+    }
 
 
 }

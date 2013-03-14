@@ -394,7 +394,7 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create properties.
      */
-    Content createContentProperty(String location, String name, String value) throws ContentException, ContentIOException,
+    Content createContentProperty(String location, String locale, String name, String value) throws ContentException, ContentIOException,
             ContentSecurityException;
 
     /**
@@ -412,7 +412,7 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create properties.
      */
-    Content updateContentProperty(String location, String name, String value) throws ContentException, ContentIOException,
+    Content updateContentProperty(String location, String locale, String name, String value) throws ContentException, ContentIOException,
             ContentSecurityException;
 
     /**
@@ -429,7 +429,7 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create properties.
      */
-    Content deleteContentProperty(String location, String name) throws ContentException, ContentIOException,
+    Content deleteContentProperty(String location, String locale, String name) throws ContentException, ContentIOException,
             ContentSecurityException;
 
     /*
@@ -470,7 +470,8 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to add ACLs.
      */
-    Content createContentACE(String location, Principal principal, ACE.PermissionType permission) throws ContentException,
+    // TODO update javadoc
+    Content createContentACE(String location, String locale, String name, Principal.PrincipalType principal, ACE.PermissionType permission) throws ContentException,
             ContentIOException, ContentSecurityException;
 
     /**
@@ -502,8 +503,8 @@ public interface ContentService {
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to add ACLs.
      */
-
-    Content deleteContentACE(String location, Principal principal) throws ContentException, ContentIOException,
+    // TODO Update JavaDoc
+    Content deleteContentACE(String location, String locale, String name) throws ContentException, ContentIOException,
             ContentSecurityException;
 
     /*

@@ -22,12 +22,12 @@ import org.jboss.logging.Logger;
 @RunWith(Arquillian.class)
 public class BasicModeShapeTest {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.jcr.tests.test001");
+    private static final Logger log = Logger.getLogger("org.gatein.wcm.jcr.tests");
 
     @Deployment
     public static Archive<?> createDeployment() {
 
-        return ShrinkWrap.create(WebArchive.class, "gatein-wcm-integration-tests-test001.war").addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+        return ShrinkWrap.create(WebArchive.class, "gatein-wcm-jrc-tests.war").addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .setManifest(new File("src/main/webapp/META-INF/MANIFEST.MF"));
 
     }

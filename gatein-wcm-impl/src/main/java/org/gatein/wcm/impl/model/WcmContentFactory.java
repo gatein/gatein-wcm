@@ -13,6 +13,7 @@ import org.gatein.wcm.api.model.content.Content;
 import org.gatein.wcm.api.model.content.Folder;
 import org.gatein.wcm.api.model.metadata.Category;
 import org.gatein.wcm.api.model.metadata.Comment;
+import org.gatein.wcm.api.model.metadata.Property;
 import org.gatein.wcm.api.model.security.ACE.PermissionType;
 import org.gatein.wcm.api.model.security.ACL;
 import org.gatein.wcm.api.model.security.Principal;
@@ -343,6 +344,7 @@ public class WcmContentFactory {
             _folder.setChildren(null);
 
             readComments(_folder);
+            readProperties(_folder);
 
             return _folder;
         }
@@ -383,6 +385,7 @@ public class WcmContentFactory {
             _folder.setChildren(null);
 
             readComments(_folder);
+            readProperties(_folder);
 
             return _folder;
         }
@@ -424,6 +427,7 @@ public class WcmContentFactory {
             _textcontent.setContent(jcr.jcrTextContent(n.getNode(MARK + locale + "/" + MARK + n.getName())));
 
             readComments(_textcontent);
+            readProperties(_textcontent);
 
             return _textcontent;
         }
@@ -469,6 +473,7 @@ public class WcmContentFactory {
             _binarycontent.setContent(jcr.jcrContent(n.getNode(MARK + locale + "/" + MARK + n.getName())));
 
             readComments(_binarycontent);
+            readProperties(_binarycontent);
 
             return _binarycontent;
         }
@@ -507,6 +512,34 @@ public class WcmContentFactory {
                 ((WcmTextContent)c).setComments(comments);
             if (c instanceof WcmBinaryContent)
                 ((WcmBinaryContent)c).setComments(comments);
+        }
+    }
+
+    private void readProperties(Content c) {
+        String location = c.getLocation() + "/" + c.getId() + "/__properties";
+        List<Property> properties = null;
+        try {
+            NodeIterator ni = jcr.getSession().getNode(location).getNodes();
+            while (ni.hasNext()) {
+                if (properties == null) properties = new ArrayList<Property>();
+                Node child = ni.nextNode();
+                if (child != null) {
+                    WcmProperty property = new WcmProperty();
+                    property.setName(child.getName());
+                    property.setValue(child.getProperty("jcr:description").getString());
+                    properties.add(property);
+                }
+            }
+        } catch (RepositoryException ignored) {
+        }
+
+        if (properties != null) {
+            if (c instanceof WcmFolder)
+                ((WcmFolder)c).setProperties(properties);
+            if (c instanceof WcmTextContent)
+                ((WcmTextContent)c).setProperties(properties);
+            if (c instanceof WcmBinaryContent)
+                ((WcmBinaryContent)c).setProperties(properties);
         }
     }
 

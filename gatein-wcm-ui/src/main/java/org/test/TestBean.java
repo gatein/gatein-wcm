@@ -28,11 +28,7 @@ public class TestBean {
     }
 
     public void test(ActionEvent event) {
-
+        log.debug(event.toString());
         log.info("TEST: " + user + " " + password);
-
-
     }
-
-
 }
