@@ -34,7 +34,7 @@
   <description>GateIn WCM Integration tests</description>
 
   <properties>
-    <arquillian.suspend>y</arquillian.suspend>
+    <arquillian.suspend>n</arquillian.suspend>
   </properties>
 
   <dependencyManagement>
@@ -80,6 +80,12 @@
     <dependency>
       <groupId>org.gatein.wcm</groupId>
       <artifactId>gatein-wcm-api</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.gatein.wcm</groupId>
+      <artifactId>gatein-wcm-cmis</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
@@ -153,6 +159,7 @@
                   <type>zip</type>
                   <overWrite>false</overWrite>
                   <outputDirectory>${project.build.directory}/jboss-as-${jbossas-version}</outputDirectory>
+                  <excludes>**/*.war*/**</excludes>
                 </artifactItem>
 
                 <!--
@@ -185,13 +192,25 @@
             </goals>
             <configuration>
               <tasks>
-                <get skipexisting="true" src="https://www.dropbox.com/sh/n933phi74s37oy6/0HDvWDf0G_/pdf/wcm-whiteboard.jpg" dest="src/test/resources" />
-                <get skipexisting="true" src="https://www.dropbox.com/sh/n933phi74s37oy6/b25pmaTIl6/pdf/GateIn-UserGuide-v3.5.pdf" dest="src/test/resources" />
-                <get skipexisting="true" src="https://www.dropbox.com/sh/n933phi74s37oy6/3I4Tmk4Pxg/pdf/jbossportletbridge.pdf" dest="src/test/resources" />
+                <get skipexisting="true" src="https://www.dropbox.com/sh/n933phi74s37oy6/0HDvWDf0G_/pdf/wcm-whiteboard.jpg"
+                  dest="src/test/resources" />
+                <get skipexisting="true" src="https://www.dropbox.com/sh/n933phi74s37oy6/b25pmaTIl6/pdf/GateIn-UserGuide-v3.5.pdf"
+                  dest="src/test/resources" />
+                <get skipexisting="true" src="https://www.dropbox.com/sh/n933phi74s37oy6/3I4Tmk4Pxg/pdf/jbossportletbridge.pdf"
+                  dest="src/test/resources" />
               </tasks>
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/performance/*</exclude>
+          </excludes>
+        </configuration>
       </plugin>
     </plugins>
     <pluginManagement>
