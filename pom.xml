@@ -95,6 +95,7 @@
     <module>gatein-wcm-cmis</module>
     <module>gatein-wcm-distribution</module>
     <module>gatein-wcm-integration-tests</module>
+    <module>gatein-wcm-ui</module>
   </modules>
 
   <dependencyManagement>
@@ -430,8 +431,8 @@
         <!--
           Managed container.
           Uncomment to launch JBossAS in the mvn test phase.
-
         -->
+
         <dependency>
           <groupId>org.jboss.as</groupId>
           <artifactId>jboss-as-arquillian-container-managed</artifactId>
