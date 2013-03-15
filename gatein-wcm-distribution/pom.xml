@@ -56,6 +56,11 @@
         </dependency>
         <dependency>
           <groupId>org.gatein.wcm</groupId>
+          <artifactId>gatein-wcm-subsystem</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.gatein.wcm</groupId>
           <artifactId>gatein-wcm-impl-sec</artifactId>
           <version>${project.version}</version>
         </dependency>

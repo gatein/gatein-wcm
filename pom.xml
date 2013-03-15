@@ -51,7 +51,6 @@
   </licenses>
 
   <properties>
-    <version.javax.servlet>2.5</version.javax.servlet>
     <version.javax.portlet>2.0</version.javax.portlet>
     <version.javaee>6.0</version.javaee>
 
@@ -71,6 +70,12 @@
     <org.exoplatform.core.version>2.5.1-CP01</org.exoplatform.core.version>
     <gatein.version>3.5.0.Final</gatein.version>
 
+    <richfaces.version>4.3.1.Final</richfaces.version>
+    <version.resteasy>2.0.1.GA</version.resteasy>
+    <version.jboss-javaee-6.0>1.0.0.Final</version.jboss-javaee-6.0>
+    <jbossmsc.version>1.0.2.GA</jbossmsc.version>
+
+    <!-- plugins -->
     <maven.compiler.target>1.6</maven.compiler.target>
     <maven.compiler.source>1.6</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -79,11 +84,6 @@
 
     <checkstyle.version>2.9.1</checkstyle.version>
 
-    <richfaces.version>4.3.1.Final</richfaces.version>
-
-    <version.resteasy>2.0.1.GA</version.resteasy>
-
-    <version.jboss-javaee-6.0>1.0.0.Final</version.jboss-javaee-6.0>
   </properties>
 
   <modules>
@@ -93,6 +93,7 @@
     <module>gatein-wcm-impl</module>
     <module>gatein-wcm-impl-sec</module>
     <module>gatein-wcm-cmis</module>
+    <module>gatein-wcm-subsystem</module>
     <module>gatein-wcm-distribution</module>
     <module>gatein-wcm-integration-tests</module>
     <module>gatein-wcm-ui</module>
@@ -131,6 +132,13 @@
         <version>${modeshape.version}</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.as</groupId>
+        <artifactId>jboss-as-controller</artifactId>
+        <version>${jbossas-version}</version>
+        <scope>provided</scope>
       </dependency>
 
       <!-- CMIS -->
@@ -219,12 +227,6 @@
       </dependency>
 
       <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>servlet-api</artifactId>
-        <version>${version.javax.servlet}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
         <groupId>javax.portlet</groupId>
         <artifactId>portlet-api</artifactId>
         <version>${version.javax.portlet}</version>
@@ -236,11 +238,6 @@
         <artifactId>log4j</artifactId>
         <version>1.2.16</version>
         <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>commons-fileupload</groupId>
-        <artifactId>commons-fileupload</artifactId>
-        <version>1.2.2</version>
       </dependency>
       <dependency>
         <groupId>commons-io</groupId>
@@ -446,11 +443,11 @@
           Useful for remote debugging.
 
 
-         <dependency>
+          <dependency>
           <groupId>org.jboss.as</groupId>
           <artifactId>jboss-as-arquillian-container-remote</artifactId>
           <scope>test</scope>
-         </dependency>
+          </dependency>
         -->
         <dependency>
           <groupId>org.jboss.arquillian.protocol</groupId>
