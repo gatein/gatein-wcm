@@ -36,7 +36,8 @@
     <resource-root path="modeshape-web-cmis-${modeshape.version}.jar" />
     <resource-root path="modeshape-web-jcr-${modeshape.version}.jar" />
 
-<!--     <resource-root path="gatein-wcm-cmis-${project.version}.jar" />
+    <resource-root path="gatein-wcm-cmis-${project.version}.jar" />
+<!--
 
     <resource-root path="antlr-${antlr.version}.jar" />
     <resource-root path="antlr-runtime-${antlr.runtime.version}.jar" />

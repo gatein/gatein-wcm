@@ -15,6 +15,14 @@
   </fileSets>
 
   <dependencySets>
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputDirectory>/modules/org/gatein/wcm/main</outputDirectory>
+      <includes>
+        <include>org.gatein.wcm:gatein-wcm-subsystem</include>
+      </includes>
+      <unpack>false</unpack>
+    </dependencySet>
 
     <dependencySet>
       <useProjectArtifact>false</useProjectArtifact>
