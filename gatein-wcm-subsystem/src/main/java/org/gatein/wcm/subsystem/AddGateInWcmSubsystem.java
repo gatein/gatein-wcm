@@ -20,37 +20,38 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.gatein.wcm.cmis;
+package org.gatein.wcm.subsystem;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.Startup;
-import javax.inject.Singleton;
-
+import org.gatein.wcm.cmis.GateInWcmCmisLifeCycle;
+import org.jboss.as.controller.AbstractAddStepHandler;
+import org.jboss.as.controller.OperationFailedException;
+import org.jboss.dmr.ModelNode;
 import org.jboss.logging.Logger;
-import org.modeshape.cmis.JcrServiceFactory;
 
 /**
- * An unsuccessful attempt to do some module initialization.
- *
  * @author <a href="mailto:ppalaga@redhat.com">Peter Palaga</a>
  *
  */
-@Singleton
-@Startup
-public class JcrServiceFactoryWrapper {
-    private static final Logger log = Logger.getLogger(JcrServiceFactoryWrapper.class);
+public class AddGateInWcmSubsystem extends AbstractAddStepHandler {
+    private static final Logger log = Logger.getLogger(AddGateInWcmSubsystem.class);
 
-    static {
-        log.info("static");
+    public static final AddGateInWcmSubsystem INSTANCE = new AddGateInWcmSubsystem();
+
+    private GateInWcmCmisLifeCycle gateInWcmCmisService;
+
+    public AddGateInWcmSubsystem() {
+        log.info("");
+        gateInWcmCmisService = new GateInWcmCmisLifeCycle();
+        gateInWcmCmisService.startup();
     }
 
-    private JcrServiceFactory jcrServiceFactory;
-
-    @PostConstruct
-    public void initialize() {
-        log.info("About to init");
-        jcrServiceFactory = new JcrServiceFactory();
-        jcrServiceFactory.init();
-        log.info("Just initialized");
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.as.controller.AbstractAddStepHandler#populateModel(org.jboss.dmr.ModelNode, org.jboss.dmr.ModelNode)
+     */
+    @Override
+    protected void populateModel(ModelNode operation, ModelNode model) throws OperationFailedException {
     }
+
 }

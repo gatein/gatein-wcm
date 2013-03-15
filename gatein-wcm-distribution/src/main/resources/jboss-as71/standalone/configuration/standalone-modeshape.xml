@@ -27,6 +27,7 @@
     <extension module="org.jboss.as.web" />
     <extension module="org.jboss.as.webservices" />
     <extension module="org.jboss.as.weld" />
+    <extension module="org.gatein.wcm" />
   </extensions>
 
   <management>
@@ -391,6 +392,7 @@
         </text-extractors>
       </repository>
     </subsystem>
+    <subsystem xmlns="urn:jboss:domain:gateinwcm:1.0" />
     <subsystem xmlns="urn:jboss:domain:jaxrs:1.0" />
     <subsystem xmlns="urn:jboss:domain:jca:1.1">
       <archive-validation enabled="true" fail-on-error="true" fail-on-warn="false" />
