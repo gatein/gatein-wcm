@@ -110,7 +110,7 @@ public class CreateBinary extends HttpServlet {
             Content _c = null;
             try {
                 if (id != null && locale != null && location != null && file != null)
-                    _c = cs.createBinaryContent(id, locale, location, file.getContentType(), file.getSize(), file.getFieldName(), file.getInputStream());
+                    _c = cs.createBinaryContent(id, locale, location, file.getContentType(), file.getSize(), file.getName(), file.getInputStream());
             } catch (ContentException e) {
                 log.error(e.getMessage());
                 out.println(e.getMessage());

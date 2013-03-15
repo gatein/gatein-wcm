@@ -431,6 +431,7 @@
         <!--
           Managed container.
           Uncomment to launch JBossAS in the mvn test phase.
+
         -->
 
         <dependency>
