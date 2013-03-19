@@ -18,6 +18,7 @@ public class WcmFolder implements Folder {
     Integer version;
     String id;
     String locale;
+    List<String> locales;
     String location;
     ACL acl;
     Date created;
@@ -46,6 +47,11 @@ public class WcmFolder implements Folder {
     @Override
     public String getLocale() {
         return locale;
+    }
+
+    @Override
+    public List<String> getLocales() {
+        return locales;
     }
 
     @Override
@@ -136,6 +142,10 @@ public class WcmFolder implements Folder {
         this.locale = locale;
     }
 
+    protected void setLocales(List<String> locales) {
+        this.locales = locales;
+    }
+
     protected void setLocation(String location) {
         this.location = location;
     }
@@ -194,11 +204,11 @@ public class WcmFolder implements Folder {
 
     @Override
     public String toString() {
-        return "WCMFolder [version=" + version + ", id=" + id + ", locale=" + locale + ", location=" + location + ", acl="
-                + acl + ", created=" + created + ", lastModified=" + lastModified + ", publishStatus=" + publishStatus
-                + ", publishingRoles=" + publishingRoles + ", createdBy=" + createdBy + ", lastModifiedBy=" + lastModifiedBy
-                + ", comments=" + comments + ", categories=" + categories + ", properties=" + properties + ", locked=" + locked
-                + ", lockOwner=" + lockOwner + ", children=" + children + "]";
+        return "WcmFolder [version=" + version + ", id=" + id + ", locale=" + locale + ", locales=" + locales + ", location="
+                + location + ", acl=" + acl + ", created=" + created + ", lastModified=" + lastModified + ", publishStatus="
+                + publishStatus + ", publishingRoles=" + publishingRoles + ", createdBy=" + createdBy + ", lastModifiedBy="
+                + lastModifiedBy + ", comments=" + comments + ", categories=" + categories + ", properties=" + properties
+                + ", locked=" + locked + ", lockOwner=" + lockOwner + ", children=" + children + "]";
     }
 
     @Override

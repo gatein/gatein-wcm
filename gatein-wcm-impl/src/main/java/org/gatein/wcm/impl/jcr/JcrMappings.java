@@ -403,8 +403,11 @@ public class JcrMappings {
         n.addMixin("mix:mimeType");
 
         // Adding properties
-        n.getNode("jcr:content");
-        n.setProperty("jcr:description", content.getString());
+        n.getNode("jcr:content").setProperty("jcr:data", content);
+        if (content.getString().length() > 1000)
+            n.setProperty("jcr:description", content.getString().substring(0, 1000));
+        else
+            n.setProperty("jcr:description", content.getString());
         n.setProperty("jcr:encoding", encoding);
 
         // Saving changes into JCR
@@ -1026,7 +1029,7 @@ public class JcrMappings {
                 "/__categories" + categoryLocation + "/__references/" + id, false);
     }
 
-    private void jcrUpdateDescriptionPath(Node n) throws RepositoryException {
+    public void jcrUpdateDescriptionPath(Node n) throws RepositoryException {
         if (n == null)
             return;
         if (n.getProperty("jcr:description") != null) {
@@ -1041,6 +1044,24 @@ public class JcrMappings {
                 }
             }
         }
+    }
+
+    public List<String> jcrLocales(Node n) throws RepositoryException {
+        if (n == null)
+            return null;
+        NodeIterator ni = n.getNodes();
+        List<String> locales = new ArrayList<String>();
+        while (ni.hasNext()) {
+            Node node = ni.nextNode();
+            String name = node.getName();
+            if (!WcmConstants.RESERVED_ENTRIES.contains(name) && name.startsWith("__")) {
+                locales.add(name.substring(2));
+            }
+        }
+        if (locales.size() > 0)
+            return locales;
+        else
+            return null;
     }
 
     // Aux methods

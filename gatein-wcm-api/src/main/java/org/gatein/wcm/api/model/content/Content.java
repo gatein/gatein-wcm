@@ -65,6 +65,12 @@ public interface Content {
 
     /**
      *
+     * @return This method returns list of locales available for this content. <br>
+     */
+    List<String> getLocales();
+
+    /**
+     *
      * @return This method returns path to the document. <br>
      *         This method doesn't include the ID of the document. <br>
      *         Example: <br>

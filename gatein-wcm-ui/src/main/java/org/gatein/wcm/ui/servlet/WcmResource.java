@@ -1,7 +1,8 @@
 package org.gatein.wcm.ui.servlet;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.InputStream;
 import java.util.Enumeration;
 
 import javax.annotation.Resource;
@@ -12,8 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.gatein.wcm.api.model.content.BinaryContent;
 import org.gatein.wcm.api.model.content.Content;
-import org.gatein.wcm.api.model.content.TextContent;
 import org.gatein.wcm.api.services.ContentService;
 import org.gatein.wcm.api.services.RepositoryService;
 import org.gatein.wcm.api.services.exceptions.ContentException;
@@ -22,11 +23,11 @@ import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
 import org.gatein.wcm.ui.Connect;
 import org.jboss.logging.Logger;
 
-@WebServlet(value="/wcm")
-public class WcmContent extends HttpServlet {
+@WebServlet(value="/res")
+public class WcmResource extends HttpServlet {
     private static final long serialVersionUID = -6118383950661824863L;
 
-    private static final Logger log = Logger.getLogger(WcmContent.class);
+    private static final Logger log = Logger.getLogger(WcmResource.class);
 
     @Resource(mappedName = "java:jboss/gatein-wcm")
     RepositoryService repos;
@@ -34,12 +35,12 @@ public class WcmContent extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String url = (String)req.getAttribute("url");
-        if (url != null && url.length() > "/wcm".length()) {
+        if (url != null && url.length() > "/res".length()) {
             String locale = req.getLocale().getLanguage();
             String param = req.getParameter("l");
             if (param != null && !"".equals(param))
                 locale = param;
-            String path = url.substring( url.indexOf("/wcm") + "/wcm".length());
+            String path = url.substring( url.indexOf("/res") + "/res".length());
             path = path.replace("%20", " ");
             path = path.replace("+", " ");
             Connect c = checkConnection(req);
@@ -50,7 +51,7 @@ public class WcmContent extends HttpServlet {
             }
             sendContent(c, path, locale, resp);
         } else {
-            log.info("/wcm without arguments");
+            log.info("/res without arguments");
             return;
         }
     }
@@ -75,11 +76,21 @@ public class WcmContent extends HttpServlet {
             }
             ContentService cs = repos.createContentSession(c.getRepository(), c.getWorkspace(), c.getUser(), c.getPassword());
             Content content = cs.getContent(path, locale);
-            if (content instanceof TextContent) {
-                TextContent t = (TextContent)content;
-                resp.setContentType("text/html");
-                PrintWriter out = resp.getWriter();
-                out.print(t.getContent());
+            if (content instanceof BinaryContent) {
+                BinaryContent b = (BinaryContent)content;
+                resp.setHeader("Content-Type", b.getContentType() );
+                resp.setHeader("Content-Length", String.valueOf(b.getSize()));
+                resp.setHeader("Content-Disposition", "inline; filename=\"" + b.getFileName() + "\"");
+                resp.setContentType(b.getContentType());
+                resp.setStatus(HttpServletResponse.SC_OK);
+
+                byte[] buffer = new byte[16384];
+                InputStream in = b.getContent();
+                BufferedOutputStream out = new BufferedOutputStream(resp.getOutputStream());
+                for (int length = 0; (length = in.read(buffer)) > 0;) {
+                    out.write(buffer, 0, length);
+                }
+                in.close();
                 out.flush();
                 out.close();
             } else {

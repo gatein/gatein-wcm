@@ -17,6 +17,7 @@ public class WcmTextContent implements TextContent {
     Integer version;
     String id;
     String locale;
+    List<String> locales;
     String location;
     ACL acl;
     Date created;
@@ -46,6 +47,11 @@ public class WcmTextContent implements TextContent {
     @Override
     public String getLocale() {
         return locale;
+    }
+
+    @Override
+    public List<String> getLocales() {
+        return locales;
     }
 
     @Override
@@ -138,6 +144,10 @@ public class WcmTextContent implements TextContent {
 
     protected void setLocale(String locale) {
         this.locale = locale;
+    }
+
+    protected void setLocales(List<String> locales) {
+        this.locales = locales;
     }
 
     protected void setLocation(String location) {

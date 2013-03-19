@@ -11,13 +11,13 @@
     
     <h:panelGroup layout="block" styleClass="b-c-img" 
                   rendered="#{panel.selected.binaryContent.contentType.contains('image')}"> 
-      <h:graphicImage value="wcm#{panel.selected.binaryContent.location}/#{panel.selected.binaryContent.id}" 
+      <h:graphicImage value="res#{panel.selected.binaryContent.location}/#{panel.selected.binaryContent.id}" 
                       styleClass="b-img"/>
     </h:panelGroup>    
     
     <h:panelGroup layout="block" styleClass="b-c-resource"
                   rendered="#{panel.selected.binaryContent.contentType.contains('pdf')}">
-      <iframe src="wcm#{panel.selected.binaryContent.location}/#{panel.selected.binaryContent.id}" class="b-resource" />    
+      <iframe src="res#{panel.selected.binaryContent.location}/#{panel.selected.binaryContent.id}" class="b-resource" />    
     </h:panelGroup>
         
   </rich:tab>

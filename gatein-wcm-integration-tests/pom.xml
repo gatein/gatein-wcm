@@ -204,6 +204,10 @@
                   dest="src/test/resources" />
                 <get skipexisting="true" src="https://www.dropbox.com/sh/n933phi74s37oy6/3I4Tmk4Pxg/pdf/jbossportletbridge.pdf"
                   dest="src/test/resources" />
+                <get skipexisting="true" src="http://dl.dropbox.com/u/22093229/pdf/testBackground.png"
+                  dest="src/test/resources" />
+                <get skipexisting="true" src="http://dl.dropbox.com/u/22093229/pdf/testMain.jpg"
+                  dest="src/test/resources" />
               </tasks>
             </configuration>
           </execution>

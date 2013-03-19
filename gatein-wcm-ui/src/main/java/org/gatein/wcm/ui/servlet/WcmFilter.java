@@ -16,7 +16,7 @@ import org.jboss.logging.Logger;
 /**
  * Filter to redirect pretty url to /wcm servlet
  */
-@WebFilter("/wcm/*")
+@WebFilter(urlPatterns = {"/wcm/*", "/res/*"})
 public class WcmFilter implements Filter {
 
     private static final Logger log = Logger.getLogger("org.gatein.wcm.ui.filter");
@@ -32,6 +32,10 @@ public class WcmFilter implements Filter {
         if (req instanceof HttpServletRequest) {
             String url = ((HttpServletRequest)req).getRequestURL().toString();
             String context = url.substring(url.indexOf("/gatein-wcm-ui") + "gatein-wcm-ui".length() + 1);
+            if (context.startsWith("/res")) {
+                req.setAttribute("url", context);
+                req.getRequestDispatcher("/res").forward(req, resp);
+            }
             if (context.startsWith("/wcm")) {
                 req.setAttribute("url", context);
                 req.getRequestDispatcher("/wcm").forward(req, resp);

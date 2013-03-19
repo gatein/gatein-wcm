@@ -251,6 +251,9 @@ public class BasicAPITest {
 		log.info("Locales: " + locales);
 		Assert.assertTrue(locales.contains("it"));
 
+		Content c = cs.getContent("/test05", "es");
+		Assert.assertEquals(7, c.getLocales().size());
+
 		// Cleaning test
 		cs.deleteContent("/test05");
 		log.info("[[ STOP TEST  getContentLocales ]]");

@@ -429,8 +429,8 @@
           Managed container.
           Uncomment to launch JBossAS in the mvn test phase.
 
-        -->
 
+        -->
         <dependency>
           <groupId>org.jboss.as</groupId>
           <artifactId>jboss-as-arquillian-container-managed</artifactId>

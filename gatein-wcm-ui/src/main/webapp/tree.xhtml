@@ -4,26 +4,27 @@
 <ui:composition>
 
   <!-- Tree browsing -->
-  <a4j:outputPanel id="a4jtree">    
-    <h:form id="treeForm">
-      <div class="t-ping">
-        <h:graphicImage value="/images/icons/clock_history_frame.png" styleClass="t-ping-pic" />
-        <span class="t-ping-label">Ping: </span>           
-        <h:outputText id="t-ping" value="#{tree.ping}" >
-          <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
-        </h:outputText>     
-      </div>
-      <div class="t-tree"> 
-        <rich:tree id="maintree" selectionType="ajax" toggleType="ajax" var="item" selectionChangeListener="#{tree.selectionChanged}" render="t-ping,main-panel">
-          <rich:treeModelRecursiveAdaptor roots="#{tree.root}" nodes="#{item.nodes}" leaf="#{item.nodes == null}" >
-            <rich:treeNode iconCollapsed="/images/icons/folder_blue.png" iconExpanded="/images/icons/folder_green.png" iconLeaf="/images/icons/#{item.iconLeaf}">
-                #{item.content.id}
-            </rich:treeNode>
-          </rich:treeModelRecursiveAdaptor>
-        </rich:tree>
-      </div>         
-    </h:form>
-  </a4j:outputPanel>  
-  
+  <rich:panel id="wrappertree" styleClass="r-main-panel-wrapper">
+    <a4j:outputPanel id="a4jtree">    
+      <h:form id="treeForm">
+        <div class="t-ping">
+          <h:graphicImage value="/images/icons/clock_history_frame.png" styleClass="t-ping-pic" />
+          <span class="t-ping-label">Ping: </span>           
+          <h:outputText id="t-ping" value="#{tree.ping}" >
+            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+          </h:outputText>     
+        </div>
+        <div class="t-tree"> 
+          <rich:tree id="maintree" selectionType="ajax" toggleType="ajax" var="item" selectionChangeListener="#{tree.selectionChanged}" render="t-ping,main-panel">
+            <rich:treeModelRecursiveAdaptor roots="#{tree.root}" nodes="#{item.nodes}" leaf="#{item.nodes == null}" >
+              <rich:treeNode iconCollapsed="/images/icons/folder_blue.png" iconExpanded="/images/icons/folder_green.png" iconLeaf="/images/icons/#{item.iconLeaf}">
+                  #{item.content.id}
+              </rich:treeNode>
+            </rich:treeModelRecursiveAdaptor>
+          </rich:tree>
+        </div>         
+      </h:form>
+    </a4j:outputPanel>  
+  </rich:panel>
 </ui:composition>
 </html>

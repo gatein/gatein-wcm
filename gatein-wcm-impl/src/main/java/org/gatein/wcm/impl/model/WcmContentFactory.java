@@ -57,6 +57,10 @@ public class WcmContentFactory {
         c.setVersion(jcr.jcrVersion(absLocation));
         c.setId(id);
         c.setLocale(locale);
+        List<String> locales = new ArrayList<String>();
+        locales.add(locale);
+        c.setLocales(locales);
+
         c.setLocation(location);
 
         // By default a new content will get the ACL of parent parent.
@@ -192,6 +196,9 @@ public class WcmContentFactory {
         b.setVersion(jcr.jcrVersion(absLocation));
         b.setId(id);
         b.setLocale(locale);
+        List<String> locales = new ArrayList<String>();
+        locales.add(locale);
+        b.setLocales(locales);
         b.setLocation(location);
 
         // By default a new content will get the ACL of parent parent.
@@ -244,6 +251,7 @@ public class WcmContentFactory {
                 Content cChild = getContent(child.getPath(), locale);
                 if (cChild != null)
                     children.add(cChild);
+                updateLocales(f, cChild);
             }
         }
 
@@ -396,6 +404,7 @@ public class WcmContentFactory {
             _textcontent.setId(n.getName());
             // Folders can have multiple locales, so, it will be null.
             _textcontent.setLocale(locale);
+            _textcontent.setLocales(jcr.jcrLocales(n));
 
             String location = n.getProperty("jcr:description").getString().split(":")[1];
             _textcontent.setLocation(jcr.parent(location));
@@ -438,6 +447,7 @@ public class WcmContentFactory {
             _binarycontent.setId(n.getName());
             // Folders can have multiple locales, so, it will be null.
             _binarycontent.setLocale(locale);
+            _binarycontent.setLocales(jcr.jcrLocales(n));
 
             String location = n.getProperty("jcr:description").getString().split(":")[1];
             _binarycontent.setLocation(jcr.parent(location));
@@ -459,7 +469,6 @@ public class WcmContentFactory {
                     + n.getName()))));
 
             // By default a folder will not be locked
-            // TODO: Set up in future
             _binarycontent.setLocked(false);
 
             _binarycontent.setLockOwner(null);
@@ -482,6 +491,18 @@ public class WcmContentFactory {
         }
 
         return null;
+    }
+
+    private void updateLocales(WcmFolder parent, Content child) {
+        if (child == null) return;
+        if (parent == null) return;
+        if (child.getLocales() == null) return;
+        List<String> childrenLocales = child.getLocales();
+        for (String locale : childrenLocales) {
+            if (parent.getLocales() == null) parent.setLocales(new ArrayList<String>());
+            List<String> locales = parent.getLocales();
+            if (!locales.contains(locale)) locales.add(locale);
+        }
     }
 
     private void readComments(Content c) {
