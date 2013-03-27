@@ -23,25 +23,18 @@
 package org.gatein.wcm.cmis;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.client.api.Session;
-import org.apache.chemistry.opencmis.client.runtime.SessionFactoryImpl;
-import org.apache.chemistry.opencmis.commons.PropertyIds;
-import org.apache.chemistry.opencmis.commons.SessionParameter;
-import org.apache.chemistry.opencmis.commons.enums.BindingType;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Before;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.modeshape.cmis.JcrServiceFactory;
 
 /**
  * @author <a href="mailto:ppalaga@redhat.com">Peter Palaga</a>
@@ -62,35 +55,11 @@ public class CmisServerApiTest {
 
     }
 
-    private Session session;
-
-    @Before
-    public void setUp() {
-
-        SessionFactoryImpl factory = SessionFactoryImpl.newInstance();
-        Map<String, String> parameter = new HashMap<String, String>();
-
-        // user credentials
-        parameter.put(SessionParameter.USER, "admin");
-        parameter.put(SessionParameter.PASSWORD, "admin");
-
-        // connection settings
-        parameter.put(SessionParameter.BINDING_TYPE, BindingType.LOCAL.value());
-        parameter.put(SessionParameter.LOCAL_FACTORY, JcrServiceFactory.class.getName());
-        parameter.put(SessionParameter.REPOSITORY_ID, "artifacts:default");
-        // create session
-        session = factory.createSession(parameter);
-    }
-
     @Test
     public void shouldAccessRootFolder() throws Exception {
+        Session session = CmisSessionFactory.getInstance().createSession("admin", "admin");
         Folder root = session.getRootFolder();
-
-        Map<String, Object> properties = new HashMap<String, Object>();
-        properties.put(PropertyIds.OBJECT_TYPE_ID, "cmis:folder");
-        properties.put(PropertyIds.NAME, "f55");
-        //System.out.println("Root: " + root);
-        root.createFolder(properties);
+        Assert.assertNotNull(root);
     }
 
 }

@@ -54,7 +54,7 @@ import org.modeshape.web.jcr.ModeShapeJcrDeployer;
  * @author <a href="mailto:ppalaga@redhat.com">Peter Palaga</a>
  *
  */
-public class GateInWcmCmisLifeCycle {
+public class CmisLifeCycle {
     /**
      * Necessary to make org.modeshape.web.jcr.RepositoryManager happy.
      *
