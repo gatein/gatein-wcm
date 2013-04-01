@@ -21,7 +21,7 @@ import org.jboss.logging.Logger;
 
 public class CreateCommand {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.commands");
+    private static final Logger log = Logger.getLogger(CreateCommand.class);
 
     Session jcrSession = null;
     User logged = null;
@@ -40,25 +40,25 @@ public class CreateCommand {
      *
      * Creates a new text content in the default repository.
      *
-     * @param id - Key under which to store the content.
-     * @param locale - Locale under content is stored.
-     * @param location - Location where to store the content. <br>
-     *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
-     *        where "/" is the root of repository and &lt;id&gt; folders ID
-     * @param html - HTML content as string.
-     * @param encoding - Specific encoding, by default UTF8.
-     * @return Content updated (if ok), null (if error).
-     * @throws ContentException if the id exists in the repository (then user should use updateSimpleContent to create a new
-     *         version).
-     * @throws ContentIOException if any IO related problem with repository.
-     * @throws ContentSecurityException if user has not been granted to create content under specified location.
      */
-    public Content createTextContent(String id, String locale, String location, String html, String encoding)
+    public Content createTextContent(String id, String locale, String location, String html)
             throws ContentException, ContentIOException, ContentSecurityException {
 
         log.debug("createTextContent()");
 
-        checkNullParameters(id, locale, location, html, encoding);
+        // Check null parameters
+        if (id == null || "".equals(id)) {
+            throw new ContentException("Parameter id cannot be null or empty");
+        }
+        if (locale == null || "".equals(locale)) {
+            throw new ContentException("Parameter locale cannot be null or empty");
+        }
+        if (location == null || "".equals(location)) {
+            throw new ContentException("Parameter location cannot be null or empty");
+        }
+        if (html == null || "".equals(html)) {
+            throw new ContentException("Parameter html cannot be null or empty");
+        }
 
         // Check if the current JCR Session is valid
         if (!jcr.checkSession())
@@ -81,35 +81,17 @@ public class CreateCommand {
         // Creating new Node
         try {
 
-            Value content = jcr.jcrValue(html, encoding);
-            jcr.createTextNode(id, locale, location, content, encoding);
+            Value content = jcr.jcrValue(html);
+            jcr.createTextNode(id, locale, location, content);
 
-            return factory.createTextContent(id, locale, location, html, encoding);
+            // Return the model with the content
+            return factory.createTextContent(id, locale, location, html);
 
         } catch (RepositoryException e) {
             jcr.checkJCRException(e);
         }
 
         return null;
-    }
-
-    private void checkNullParameters(String id, String locale, String location, String html, String encoding)
-            throws ContentException {
-        if (id == null || "".equals(id)) {
-            throw new ContentException("Parameter id cannot be null or empty");
-        }
-        if (locale == null || "".equals(locale)) {
-            throw new ContentException("Parameter locale cannot be null or empty");
-        }
-        if (location == null || "".equals(location)) {
-            throw new ContentException("Parameter location cannot be null or empty");
-        }
-        if (html == null || "".equals(html)) {
-            throw new ContentException("Parameter html cannot be null or empty");
-        }
-        if (encoding == null || "".equals(encoding)) {
-            throw new ContentException("Parameter encoding cannot be null or empty");
-        }
     }
 
     /**
@@ -133,7 +115,13 @@ public class CreateCommand {
 
         log.debug("createFolder()");
 
-        checkNullParameters(id, location);
+        // Check null parameters
+        if (id == null || "".equals(id)) {
+            throw new ContentException("Parameter id cannot be null or empty");
+        }
+        if (location == null || "".equals(location)) {
+            throw new ContentException("Parameter location cannot be null or empty");
+        }
 
         // Check if the current JCR Session is valid
         if (!jcr.checkSession())
@@ -163,15 +151,6 @@ public class CreateCommand {
         return null;
     }
 
-    private void checkNullParameters(String id, String location) throws ContentException {
-        if (id == null || "".equals(id)) {
-            throw new ContentException("Parameter id cannot be null or empty");
-        }
-        if (location == null || "".equals(location)) {
-            throw new ContentException("Parameter location cannot be null or empty");
-        }
-    }
-
     /**
      *
      * Creates new file resource in the default repository.
@@ -195,7 +174,28 @@ public class CreateCommand {
 
         log.debug("createBinaryContent()");
 
-        checkNullParameters(id, locale, location, contentType, size, fileName, content);
+        // Check null parameters
+        if (id == null || "".equals(id)) {
+            throw new ContentException("Parameter id cannot be null or empty");
+        }
+        if (locale == null || "".equals(locale)) {
+            throw new ContentException("Parameter locale cannot be null or empty");
+        }
+        if (location == null || "".equals(location)) {
+            throw new ContentException("Parameter location cannot be null or empty");
+        }
+        if (contentType == null || "".endsWith(contentType)) {
+            throw new ContentException("Parameter contentType cannot be null or empty");
+        }
+        if (size == null || size == 0) {
+            throw new ContentException("Parameter size cannot be null or 0");
+        }
+        if (fileName == null || "".endsWith(fileName)) {
+            throw new ContentException("Parameter fileName cannot be null or empty");
+        }
+        if (content == null) {
+            throw new ContentException("Parameter content in InputStream cannot be null");
+        }
 
         // Check if the current JCR Session is valid
         if (!jcr.checkSession())
@@ -232,31 +232,6 @@ public class CreateCommand {
         return null;
     }
 
-    private void checkNullParameters(String id, String locale, String location, String contentType, Long size, String fileName,
-            InputStream content) throws ContentException {
-        if (id == null || "".equals(id)) {
-            throw new ContentException("Parameter id cannot be null or empty");
-        }
-        if (locale == null || "".equals(locale)) {
-            throw new ContentException("Parameter locale cannot be null or empty");
-        }
-        if (location == null || "".equals(location)) {
-            throw new ContentException("Parameter location cannot be null or empty");
-        }
-        if (contentType == null || "".endsWith(contentType)) {
-            throw new ContentException("Parameter contentType cannot be null or empty");
-        }
-        if (size == null || size == 0) {
-            throw new ContentException("Parameter size cannot be null or 0");
-        }
-        if (fileName == null || "".endsWith(fileName)) {
-            throw new ContentException("Parameter fileName cannot be null or empty");
-        }
-        if (content == null) {
-            throw new ContentException("Parameter content in InputStream cannot be null");
-        }
-    }
-
     /**
      *
      * Creates new Category in the repository. <br>
@@ -277,7 +252,19 @@ public class CreateCommand {
             throws ContentException, ContentIOException, ContentSecurityException {
         log.debug("createCategory()");
 
-        checkNullParameters(id, locale, description, categoryLocation);
+        // Check null parameters
+        if (id == null || "".equals(id)) {
+            throw new ContentException("Parameter id cannot be null or empty");
+        }
+        if (locale == null || "".equals(locale)) {
+            throw new ContentException("Parameter locale cannot be null or empty");
+        }
+        if (description == null || "".equals(description)) {
+            throw new ContentException("Parameter description cannot be null or empty");
+        }
+        if (categoryLocation == null || "".endsWith(categoryLocation)) {
+            throw new ContentException("Parameter categoryLocation cannot be null or empty");
+        }
 
         // Check if the current JCR Session is valid
         if (!jcr.checkSession())
@@ -311,22 +298,6 @@ public class CreateCommand {
         return null;
     }
 
-    private void checkNullParameters(String id, String locale, String description, String categoryLocation)
-            throws ContentException {
-        if (id == null || "".equals(id)) {
-            throw new ContentException("Parameter id cannot be null or empty");
-        }
-        if (locale == null || "".equals(locale)) {
-            throw new ContentException("Parameter locale cannot be null or empty");
-        }
-        if (description == null || "".equals(description)) {
-            throw new ContentException("Parameter description cannot be null or empty");
-        }
-        if (categoryLocation == null || "".endsWith(categoryLocation)) {
-            throw new ContentException("Parameter categoryLocation cannot be null or empty");
-        }
-    }
-
     /**
      *
      * Creates a comment under the specified Content location. <br>
@@ -345,7 +316,16 @@ public class CreateCommand {
             ContentIOException, ContentSecurityException {
         log.debug("createContentComment()");
 
-        checkNullParameters(location, locale, comment);
+        // Check null parameters
+        if (location == null || "".equals(location)) {
+            throw new ContentException("Parameter location cannot be null or empty");
+        }
+        if (locale == null || "".equals(locale)) {
+            throw new ContentException("Parameter locale cannot be null or empty");
+        }
+        if (comment == null || "".equals(comment)) {
+            throw new ContentException("Parameter comment cannot be null or empty");
+        }
 
         // Check if the current JCR Session is valid
         if (!jcr.checkSession())
@@ -361,25 +341,13 @@ public class CreateCommand {
                     + location);
 
         try {
-            jcr.createContentComment(location, locale, comment);
+            jcr.createContentComment(location, comment);
             return factory.getContent(location, locale);
         } catch (RepositoryException e) {
             jcr.checkJCRException(e);
         }
 
         return null;
-    }
-
-    private void checkNullParameters(String location, String locale, String comment) throws ContentException {
-        if (location == null || "".equals(location)) {
-            throw new ContentException("Parameter location cannot be null or empty");
-        }
-        if (locale == null || "".equals(locale)) {
-            throw new ContentException("Parameter locale cannot be null or empty");
-        }
-        if (comment == null || "".equals(comment)) {
-            throw new ContentException("Parameter comment cannot be null or empty");
-        }
     }
 
     /**
@@ -402,7 +370,19 @@ public class CreateCommand {
 
         log.debug("createContentComment()");
 
-        checkNullPropertyParameters(location, locale, name, value);
+        // Check null parameters
+        if (location == null || "".equals(location)) {
+            throw new ContentException("Parameter location cannot be null or empty");
+        }
+        if (locale == null || "".equals(locale)) {
+            throw new ContentException("Parameter location cannot be null or empty");
+        }
+        if (name == null || "".equals(name)) {
+            throw new ContentException("Parameter name cannot be null or empty");
+        }
+        if (value == null || "".equals(value)) {
+            throw new ContentException("Parameter value cannot be null or empty");
+        }
 
         // Check if the current JCR Session is valid
         if (!jcr.checkSession())
@@ -418,7 +398,7 @@ public class CreateCommand {
                     + location);
 
         try {
-            jcr.createContentProperty(location, locale, name, value);
+            jcr.createContentProperty(location, name, value);
             return factory.getContent(location, locale);
         } catch (RepositoryException e) {
             jcr.checkJCRException(e);
@@ -427,7 +407,12 @@ public class CreateCommand {
         return null;
     }
 
-    private void checkNullPropertyParameters(String location, String locale, String name, String value) throws ContentException {
+    public Content createContentACE(String location, String locale, String name, Principal.PrincipalType principal, ACE.PermissionType permission)
+            throws ContentException, ContentIOException, ContentSecurityException {
+
+        log.debug("createContentACE()");
+
+        // Check null parameters
         if (location == null || "".equals(location)) {
             throw new ContentException("Parameter location cannot be null or empty");
         }
@@ -437,17 +422,12 @@ public class CreateCommand {
         if (name == null || "".equals(name)) {
             throw new ContentException("Parameter name cannot be null or empty");
         }
-        if (value == null || "".equals(value)) {
-            throw new ContentException("Parameter value cannot be null or empty");
+        if (principal == null || "".equals(principal)) {
+            throw new ContentException("Parameter principal cannot be null or empty");
         }
-    }
-
-    public Content createContentACE(String location, String locale, String name, Principal.PrincipalType principal, ACE.PermissionType permission)
-            throws ContentException, ContentIOException, ContentSecurityException {
-
-        log.debug("createContentACE()");
-
-        checkNullACEParameters(location, locale, name, principal, permission);
+        if (permission == null || "".equals(permission)) {
+            throw new ContentException("Parameter permission cannot be null or empty");
+        }
 
         // Check if the current JCR Session is valid
         if (!jcr.checkSession())
@@ -470,25 +450,6 @@ public class CreateCommand {
         }
 
         return null;
-    }
-
-    private void checkNullACEParameters(String location, String locale, String name, Principal.PrincipalType principal, ACE.PermissionType permission) throws ContentException {
-        if (location == null || "".equals(location)) {
-            throw new ContentException("Parameter location cannot be null or empty");
-        }
-        if (locale == null || "".equals(locale)) {
-            throw new ContentException("Parameter location cannot be null or empty");
-        }
-        if (name == null || "".equals(name)) {
-            throw new ContentException("Parameter name cannot be null or empty");
-        }
-        if (principal == null || "".equals(principal)) {
-            throw new ContentException("Parameter principal cannot be null or empty");
-        }
-        if (permission == null || "".equals(permission)) {
-            throw new ContentException("Parameter permission cannot be null or empty");
-        }
-
     }
 
 

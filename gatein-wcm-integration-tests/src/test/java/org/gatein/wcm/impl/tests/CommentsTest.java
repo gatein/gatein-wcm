@@ -52,9 +52,9 @@ public class CommentsTest {
 				"admin", "admin");
 
 		cs.createFolder("testcomments", "/");
-		cs.createTextContent("test1", "en", "/testcomments", "This is a test1", "UTF8");
-		cs.createTextContent("test2", "en", "/testcomments", "This is a test2", "UTF8");
-		cs.createTextContent("test3", "en", "/testcomments", "This is a test3", "UTF8");
+		cs.createTextContent("test1", "en", "/testcomments", "This is a test1");
+		cs.createTextContent("test2", "en", "/testcomments", "This is a test2");
+		cs.createTextContent("test3", "en", "/testcomments", "This is a test3");
 
 		cs.createContentComment("/testcomments", "en", "This is a comment A");
 		cs.createContentComment("/testcomments", "en", "This is a comment B");
@@ -82,9 +82,9 @@ public class CommentsTest {
                 "admin", "admin");
 
         cs.createFolder("deletecomments", "/");
-        cs.createTextContent("test1", "en", "/deletecomments", "This is a test1", "UTF8");
-        cs.createTextContent("test2", "en", "/deletecomments", "This is a test2", "UTF8");
-        cs.createTextContent("test3", "en", "/deletecomments", "This is a test3", "UTF8");
+        cs.createTextContent("test1", "en", "/deletecomments", "This is a test1");
+        cs.createTextContent("test2", "en", "/deletecomments", "This is a test2");
+        cs.createTextContent("test3", "en", "/deletecomments", "This is a test3");
 
         cs.createContentComment("/deletecomments", "en", "This is a comment A");
         cs.createContentComment("/deletecomments", "en", "This is a comment B");

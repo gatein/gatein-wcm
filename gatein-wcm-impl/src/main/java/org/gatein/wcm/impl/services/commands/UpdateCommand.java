@@ -38,22 +38,21 @@ public class UpdateCommand {
      *
      * Updates a existing text content in the default repository.
      *
-     * @param location - Location where to store the content. <br>
-     *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
-     *        where "/" is the root of repository and &lt;id&gt; folders ID
-     * @param locale - Locale under content is stored.
-     * @param html - HTML content as string.
-     * @param encoding - Specific encoding, by default UTF8.
-     * @return Content updated (if ok), null (if error).
-     * @throws ContentException if the location doesn't exists in the repository.
-     * @throws ContentIOException if any IO related problem with repository.
-     * @throws ContentSecurityException if user has not been granted to create content under specified location.
      */
-    public Content updateTextContent(String location, String locale, String html, String encoding) throws ContentException,
+    public Content updateTextContent(String location, String locale, String html) throws ContentException,
             ContentIOException, ContentSecurityException {
         log.debug("updateTextContent()");
 
-        checkNullParameters(location, locale, html, encoding);
+        // Check null parameters
+        if (locale == null || "".equals(locale)) {
+            throw new ContentException("Parameter locale cannot be null or empty");
+        }
+        if (location == null || "".equals(location)) {
+            throw new ContentException("Parameter location cannot be null or empty");
+        }
+        if (html == null || "".equals(html)) {
+            throw new ContentException("Parameter html cannot be null or empty");
+        }
 
         // Check if the current JCR Session is valid
         if (!jcr.checkSession())
@@ -71,8 +70,8 @@ public class UpdateCommand {
         // Updating existing Node
         try {
 
-            Value content = jcr.jcrValue(html, encoding);
-            jcr.updateTextNode(location, locale, content, encoding);
+            Value content = jcr.jcrValue(html);
+            jcr.updateTextNode(location, locale, content);
 
             return factory.getContent(location, locale);
 
@@ -81,21 +80,6 @@ public class UpdateCommand {
         }
 
         return null;
-    }
-
-    private void checkNullParameters(String locale, String location, String html, String encoding) throws ContentException {
-        if (locale == null || "".equals(locale)) {
-            throw new ContentException("Parameter locale cannot be null or empty");
-        }
-        if (location == null || "".equals(location)) {
-            throw new ContentException("Parameter location cannot be null or empty");
-        }
-        if (html == null || "".equals(html)) {
-            throw new ContentException("Parameter html cannot be null or empty");
-        }
-        if (encoding == null || "".equals(encoding)) {
-            throw new ContentException("Parameter encoding cannot be null or empty");
-        }
     }
 
     /**
@@ -116,7 +100,16 @@ public class UpdateCommand {
             ContentIOException, ContentSecurityException {
         log.debug("updateFolderLocation()");
 
-        checkNullParameters(location, locale, newLocation);
+        // Check null parameters
+        if (location == null || "".equals(location)) {
+            throw new ContentException("Parameter location cannot be null or empty");
+        }
+        if (locale == null || "".equals(locale)) {
+            throw new ContentException("Parameter locale cannot be null or empty");
+        }
+        if (newLocation == null || "".equals(newLocation)) {
+            throw new ContentException("Parameter newLocation cannot be null or empty");
+        }
 
         // Check if the current JCR Session is valid
         if (!jcr.checkSession())
@@ -144,22 +137,18 @@ public class UpdateCommand {
      *
      * Renames an existing folder in the default repository.
      *
-     * @param location - Location where to store the content. <br>
-     *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
-     *        where "/" is the root of repository and &lt;id&gt; folders ID
-     * @param locale - Locale under content is stored.
-     * @param newName new name of the folder.
-     * @return Content updated (if ok), null (if error).
-     * @throws ContentException if the id exists in the repository (folder can not be updated, folder gets latest version of
-     *         their most recent item).
-     * @throws ContentIOException if any IO related problem with repository.
-     * @throws ContentSecurityException if user has not been granted to create content under specified location.
      */
     public Content updateFolderName(String location, String locale, String newName) throws ContentException,
             ContentIOException, ContentSecurityException {
         log.debug("updateFolderName()");
 
-        checkNullParameters(location, newName);
+        // Check null parameters
+        if (location == null || "".equals(location)) {
+            throw new ContentException("Parameter location cannot be null or empty");
+        }
+        if (newName == null || "".equals(newName)) {
+            throw new ContentException("Parameter newName cannot be null or empty");
+        }
 
         // Check if the current JCR Session is valid
         if (!jcr.checkSession())
@@ -184,50 +173,34 @@ public class UpdateCommand {
         return null;
     }
 
-    private void checkNullParameters(String location, String locale, String newLocation) throws ContentException {
-        if (location == null || "".equals(location)) {
-            throw new ContentException("Parameter location cannot be null or empty");
-        }
-        if (locale == null || "".equals(locale)) {
-            throw new ContentException("Parameter locale cannot be null or empty");
-        }
-        if (newLocation == null || "".equals(newLocation)) {
-            throw new ContentException("Parameter newLocation cannot be null or empty");
-        }
-    }
-
-    private void checkNullParameters(String location, String newName) throws ContentException {
-        if (location == null || "".equals(location)) {
-            throw new ContentException("Parameter location cannot be null or empty");
-        }
-        if (newName == null || "".equals(newName)) {
-            throw new ContentException("Parameter newName cannot be null or empty");
-        }
-    }
-
     /**
      *
      * Updates new binary resource in the default repository.
      *
-     * @param id - Key under which to store the resource.
-     * @param locale - Locale under content is stored.
-     * @param location - Location where to store the content. <br>
-     *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
-     *        where "/" is the root of repository and &lt;id&gt; folders ID
-     * @param contentType - ContentType's file.
-     * @param size - Size's file.
-     * @param fileName - Name's file.
-     * @param content - Source of the file.
-     * @return Content updated (if ok), null (if error).
-     * @throws ContentException if the id doesn't exist in the repository
-     * @throws ContentIOException if any IO related problem with repository.
-     * @throws ContentSecurityException if user has not been granted to create content under specified location.
      */
     public Content updateBinaryContent(String location, String locale, String contentType, Long size, String fileName,
             InputStream content) throws ContentException, ContentIOException, ContentSecurityException {
         log.debug("updateBinaryContent()");
 
-        checkNullParameters(location, locale, contentType, size, fileName, content);
+        // Check null parameters
+        if (locale == null || "".equals(locale)) {
+            throw new ContentException("Parameter locale cannot be null or empty");
+        }
+        if (location == null || "".equals(location)) {
+            throw new ContentException("Parameter location cannot be null or empty");
+        }
+        if (contentType == null || "".endsWith(contentType)) {
+            throw new ContentException("Parameter contentType cannot be null or empty");
+        }
+        if (size == null || size == 0) {
+            throw new ContentException("Parameter size cannot be null or 0");
+        }
+        if (fileName == null || "".endsWith(fileName)) {
+            throw new ContentException("Parameter fileName cannot be null or empty");
+        }
+        if (content == null) {
+            throw new ContentException("Parameter content in InputStream cannot be null");
+        }
 
         // Check if the current JCR Session is valid
         if (!jcr.checkSession())
@@ -258,49 +231,27 @@ public class UpdateCommand {
         return null;
     }
 
-    private void checkNullParameters(String location, String locale, String contentType, Long size, String fileName,
-            InputStream content) throws ContentException {
-        if (locale == null || "".equals(locale)) {
-            throw new ContentException("Parameter locale cannot be null or empty");
-        }
-        if (location == null || "".equals(location)) {
-            throw new ContentException("Parameter location cannot be null or empty");
-        }
-        if (contentType == null || "".endsWith(contentType)) {
-            throw new ContentException("Parameter contentType cannot be null or empty");
-        }
-        if (size == null || size == 0) {
-            throw new ContentException("Parameter size cannot be null or 0");
-        }
-        if (fileName == null || "".endsWith(fileName)) {
-            throw new ContentException("Parameter fileName cannot be null or empty");
-        }
-        if (content == null) {
-            throw new ContentException("Parameter content in InputStream cannot be null");
-        }
-    }
-
     /**
      *
      * Updates existing Category in the repository. <br>
      * Categories can be organized in a hierarchical tree of categories parents and children.
      *
-     * @param categoryLocation - Location where the category is stored. <br>
-     *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
-     *        where "/" is the root of repository and &lt;id&gt; folders ID
-     * @param locale - Locale of category.
-     * @param description - Category description.
-     * @return Category created (if ok), null (if error).
-     * @throws ContentException if the categoryLocation doesn't exist
-     * @throws ContentIOException if any IO related problem with repository.
-     * @throws ContentSecurityException if user has not been granted to create categories.
      */
     public Category updateCategoryDescription(String categoryLocation, String locale, String description) throws ContentException,
             ContentIOException, ContentSecurityException {
 
         log.debug("updateCategoryDescription()");
 
-        checkNullParameters(categoryLocation, locale, description);
+        // Check null parameters
+        if (categoryLocation == null || "".equals(categoryLocation)) {
+            throw new ContentException("Parameter categoryLocation cannot be null or empty");
+        }
+        if (locale == null || "".equals(locale)) {
+            throw new ContentException("Parameter locale cannot be null or empty");
+        }
+        if (description == null || "".equals(description)) {
+            throw new ContentException("Parameter description cannot be null or empty");
+        }
 
         // Check if the current JCR Session is valid
         if ( ! jcr.checkSession() )
@@ -331,21 +282,22 @@ public class UpdateCommand {
     *
     * Updates an existing Category into a new categoryLocation. <br>
     *
-    * @param categoryLocation - Location where the category is stored. <br>
-    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
-    *        where "/" is the root of repository and &lt;id&gt; folders ID
-    * @param newLocation - New Location where category will be moved
-    * @return Category updated
-    * @throws ContentException if the categoryLocation doesn't exist.
-    * @throws ContentIOException if any IO related problem with repository.
-    * @throws ContentSecurityException if user has not been granted to create categories.
     */
    public Category updateCategoryLocation(String categoryLocation, String locale, String newLocation) throws ContentException, ContentIOException,
            ContentSecurityException {
 
        log.debug("updateCategoryLocation()");
 
-       checkNullParameters(categoryLocation, locale, newLocation);
+       // Check null parameters
+       if (categoryLocation == null || "".equals(categoryLocation)) {
+           throw new ContentException("Parameter categoryLocation cannot be null or empty");
+       }
+       if (locale == null || "".equals(locale)) {
+           throw new ContentException("Parameter locale cannot be null or empty");
+       }
+       if (newLocation == null || "".equals(newLocation)) {
+           throw new ContentException("Parameter newLocation cannot be null or empty");
+       }
 
        // Check if the current JCR Session is valid
        if (!jcr.checkSession())
@@ -366,8 +318,8 @@ public class UpdateCommand {
            String fullNewLocation = "/__categories" + newLocation;
 
            String id = fullOldLocation.substring(fullOldLocation.lastIndexOf("/") + 1);
-           // TODO modify with categories
            jcr.updateCategoryLocation(fullOldLocation, fullNewLocation + "/" + id);
+
            return factory.getCategory("/__categories" + newLocation + "/" + id, locale);
        } catch (RepositoryException e) {
            jcr.checkJCRException(e);
@@ -380,18 +332,18 @@ public class UpdateCommand {
    *
    * Attaches a Category in a Content.
    *
-   * @param location - Content location id
-   * @param categoryLocation - Category location id.
-   * @return Content updated.
-   * @throws ContentException if content or category don't exist.
-   * @throws ContentIOException if any IO related problem with repository.
-   * @throws ContentSecurityException if user has not been granted to create categories.
    */
   public void addContentCategory(String location, String categoryLocation) throws ContentException, ContentIOException,
       ContentSecurityException {
       log.debug("updateCategoryLocation()");
 
-      checkNullParametersForCategory(location, categoryLocation);
+      // Check null parameters
+      if (location == null || "".equals(location)) {
+          throw new ContentException("Parameter location cannot be null or empty");
+      }
+      if (categoryLocation == null || "".equals(categoryLocation)) {
+          throw new ContentException("Parameter categoryLocation cannot be null or empty");
+      }
 
       // Check if the current JCR Session is valid
       if (!jcr.checkSession())
@@ -411,35 +363,29 @@ public class UpdateCommand {
       }
   }
 
-  private void checkNullParametersForCategory(String location, String categoryLocation) throws ContentException {
-      if (location == null || "".equals(location)) {
-          throw new ContentException("Parameter location cannot be null or empty");
-      }
-      if (categoryLocation == null || "".equals(categoryLocation)) {
-          throw new ContentException("Parameter categoryLocation cannot be null or empty");
-      }
-  }
-
   /**
   *
   * Modifies a property in the form KEY/VALUE to a Content. <br>
   * Properties are shared between locales of same Content. <br>
   *
-  * @param location - Location where the content is stored. <br>
-  *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
-  *        where "/" is the root of repository and &lt;id&gt; folders ID
-  * @param name - Name of property
-  * @param value - Value
-  * @return Content (default locale) with properties updated.
-  * @throws ContentException if content doesn't exist or property doesn't exist.
-  * @throws ContentIOException if any IO related problem with repository.
-  * @throws ContentSecurityException if user has not been granted to create properties.
   */
   public Content updateContentProperty(String location, String locale, String name, String value) throws ContentException, ContentIOException,
          ContentSecurityException {
       log.debug("updateContentProperty()");
 
-      checkNullPropertyParameters(location, locale, name, value);
+      // Check null parameteres
+      if (location == null || "".equals( location )) {
+          throw new ContentException("Parameter location cannot be null or empty");
+      }
+      if (location == null || "".equals( location )) {
+          throw new ContentException("Parameter location cannot be null or empty");
+      }
+      if (name == null || "".equals( name ) ) {
+          throw new ContentException("Parameter name cannot be null or empty");
+      }
+      if (value == null || "".equals( value ) ) {
+          throw new ContentException("Parameter value cannot be null or empty");
+      }
 
       // Check if the current JCR Session is valid
       if ( ! jcr.checkSession() )
@@ -455,7 +401,7 @@ public class UpdateCommand {
 
       try {
           // Creates or update property
-          jcr.createContentProperty(location, locale, name, value);
+          jcr.createContentProperty(location, name, value);
           return factory.getContent(location, locale);
       } catch (RepositoryException e) {
           jcr.checkJCRException( e );
@@ -463,21 +409,5 @@ public class UpdateCommand {
 
       return null;
   }
-
-  private void checkNullPropertyParameters(String location, String locale, String name, String value)
-          throws ContentException {
-          if (location == null || "".equals( location )) {
-              throw new ContentException("Parameter location cannot be null or empty");
-          }
-          if (location == null || "".equals( location )) {
-              throw new ContentException("Parameter location cannot be null or empty");
-          }
-          if (name == null || "".equals( name ) ) {
-              throw new ContentException("Parameter name cannot be null or empty");
-          }
-          if (value == null || "".equals( value ) ) {
-              throw new ContentException("Parameter value cannot be null or empty");
-          }
-      }
 
 }

@@ -43,7 +43,7 @@ public class WcmContentFactory {
         this.jcr = jcr;
     }
 
-    public Content createTextContent(String id, String locale, String location, String html, String encoding) {
+    public Content createTextContent(String id, String locale, String location, String html) {
 
         WcmTextContent c = new WcmTextContent();
 
@@ -86,7 +86,6 @@ public class WcmContentFactory {
 
         // Specific fields for TextContent
         c.setContent(html);
-        c.setEncoding(encoding);
 
         return c;
     }
@@ -430,8 +429,6 @@ public class WcmContentFactory {
             _textcontent.setLocked(false);
 
             _textcontent.setLockOwner(null);
-
-            _textcontent.setEncoding(jcr.jcrEncoding(n.getNode(MARK + locale + "/" + MARK + n.getName())));
 
             _textcontent.setContent(jcr.jcrTextContent(n.getNode(MARK + locale + "/" + MARK + n.getName())));
 

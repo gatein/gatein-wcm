@@ -52,9 +52,9 @@ public class PropertiesTest {
 				"admin", "admin");
 
 		cs.createFolder("testproperties", "/");
-		cs.createTextContent("test1", "en", "/testproperties", "This is a test1", "UTF8");
-		cs.createTextContent("test2", "en", "/testproperties", "This is a test2", "UTF8");
-		cs.createTextContent("test3", "en", "/testproperties", "This is a test3", "UTF8");
+		cs.createTextContent("test1", "en", "/testproperties", "This is a test1");
+		cs.createTextContent("test2", "en", "/testproperties", "This is a test2");
+		cs.createTextContent("test3", "en", "/testproperties", "This is a test3");
 
 		cs.createContentProperty("/testproperties", "en", "special", "ID123456789 ");
 		cs.createContentProperty("/testproperties", "en", "name", "This is a name property");
@@ -81,9 +81,9 @@ public class PropertiesTest {
                 "admin", "admin");
 
         cs.createFolder("deleteproperties", "/");
-        cs.createTextContent("test1", "en", "/deleteproperties", "This is a test1", "UTF8");
-        cs.createTextContent("test2", "en", "/deleteproperties", "This is a test2", "UTF8");
-        cs.createTextContent("test3", "en", "/deleteproperties", "This is a test3", "UTF8");
+        cs.createTextContent("test1", "en", "/deleteproperties", "This is a test1");
+        cs.createTextContent("test2", "en", "/deleteproperties", "This is a test2");
+        cs.createTextContent("test3", "en", "/deleteproperties", "This is a test3");
 
         cs.createContentProperty("/deleteproperties/test1", "en", "special", "ID123456789-test1");
         cs.createContentProperty("/deleteproperties/test1", "en", "name", "This is a name property test1");

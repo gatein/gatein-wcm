@@ -43,14 +43,6 @@ import org.gatein.wcm.api.services.exceptions.PublishException;
  */
 public interface ContentService {
 
-    /*
-     * Basic content manipulation API block.
-     *
-     * Context:
-     *
-     * - A user is logged into portal and portlet needs invoke API to create and update content.
-     */
-
     /**
      *
      * Creates a new text content in the default repository.
@@ -61,14 +53,13 @@ public interface ContentService {
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
      * @param html - HTML content as string.
-     * @param encoding - Specific encoding, by default UTF8.
      * @return Content updated (if ok), null (if error).
      * @throws ContentException if the id exists in the repository (then user should use updateSimpleContent to create a new
      *         version).
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create content under specified location.
      */
-    Content createTextContent(String id, String locale, String location, String html, String encoding) throws ContentException,
+    Content createTextContent(String id, String locale, String location, String html) throws ContentException,
             ContentIOException, ContentSecurityException;
 
     /**
@@ -96,7 +87,7 @@ public interface ContentService {
      * @param location - Location where to store the content. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
-     * @param contentType - ContentType's file.
+     * @param contentType - MIME Type content type
      * @param size - Size's file.
      * @param fileName - Name's file.
      * @param content - Source of the file.
@@ -110,7 +101,7 @@ public interface ContentService {
 
     /**
      *
-     * Retrieves a list of content from a specified location. <br>
+     * Retrieves a content from a specified location. <br>
      *
      * @param location - Location where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
@@ -146,13 +137,12 @@ public interface ContentService {
      *        where "/" is the root of repository and &lt;id&gt; folders ID
      * @param locale - Locale under content is stored.
      * @param html - HTML content as string.
-     * @param encoding - Specific encoding, by default UTF8.
      * @return Content updated (if ok), null (if error).
      * @throws ContentException if the location doesn't exists in the repository.
      * @throws ContentIOException if any IO related problem with repository.
      * @throws ContentSecurityException if user has not been granted to create content under specified location.
      */
-    Content updateTextContent(String location, String locale, String html, String encoding) throws ContentException,
+    Content updateTextContent(String location, String locale, String html) throws ContentException,
             ContentIOException, ContentSecurityException;
 
     /**

@@ -39,10 +39,4 @@ public interface TextContent extends Content {
      */
     String getContent();
 
-    /**
-     *
-     * @return This method returns encoding of the content stored.
-     */
-    String getEncoding();
-
 }

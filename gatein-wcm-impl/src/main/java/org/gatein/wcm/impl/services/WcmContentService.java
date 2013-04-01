@@ -23,7 +23,7 @@ import org.jboss.logging.Logger;
 
 public class WcmContentService implements ContentService {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm");
+    private static final Logger log = Logger.getLogger(WcmContentService.class);
 
     Session jcrSession = null;
     User logged = null;
@@ -36,13 +36,13 @@ public class WcmContentService implements ContentService {
     }
 
     @Override
-    public Content createTextContent(String id, String locale, String location, String html, String encoding)
+    public Content createTextContent(String id, String locale, String location, String html)
             throws ContentException, ContentIOException, ContentSecurityException {
 
         long start = System.currentTimeMillis();
 
         CreateCommand command = new CreateCommand(jcrSession, logged);
-        Content output = command.createTextContent(id, locale, location, html, encoding);
+        Content output = command.createTextContent(id, locale, location, html);
 
         long stop = System.currentTimeMillis();
 
@@ -115,13 +115,13 @@ public class WcmContentService implements ContentService {
     }
 
     @Override
-    public Content updateTextContent(String location, String locale, String html, String encoding) throws ContentException,
+    public Content updateTextContent(String location, String locale, String html) throws ContentException,
             ContentIOException, ContentSecurityException {
 
         long start = System.currentTimeMillis();
 
         UpdateCommand command = new UpdateCommand(jcrSession, logged);
-        Content output = command.updateTextContent(location, locale, html, encoding);
+        Content output = command.updateTextContent(location, locale, html);
 
         long stop = System.currentTimeMillis();
 

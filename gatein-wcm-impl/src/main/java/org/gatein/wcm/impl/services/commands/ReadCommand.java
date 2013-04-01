@@ -37,20 +37,18 @@ public class ReadCommand {
      *
      * Retrieves a list of content from a specified location. <br>
      *
-     * @param location - Location where the content is stored. <br>
-     *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
-     *        where "/" is the root of repository and &lt;id&gt; folders ID
-     * @param locale - Locale under content is stored.
-     * @return List of content under specified location.
-     * @throws ContentException if content doesn't exist in the location.
-     * @throws ContentIOException if any IO related problem with repository.
-     * @throws ContentSecurityException if user has not been granted to access content under specified location.
      */
     public Content getContent(String location, String locale) throws ContentException, ContentIOException,
             ContentSecurityException {
         log.debug("getContent()");
 
-        checkNullParameters(location, locale);
+        // Check null parameters
+        if (locale == null || "".equals(locale)) {
+            throw new ContentException("Parameter locale cannot be null or empty");
+        }
+        if (location == null || "".equals(location)) {
+            throw new ContentException("Parameter location cannot be null or empty");
+        }
 
         // Check if the current JCR Session is valid
         if (!jcr.checkSession())
@@ -75,15 +73,6 @@ public class ReadCommand {
         return null;
     }
 
-    private void checkNullParameters(String location, String locale) throws ContentException {
-        if (locale == null || "".equals(locale)) {
-            throw new ContentException("Parameter locale cannot be null or empty");
-        }
-        if (location == null || "".equals(location)) {
-            throw new ContentException("Parameter location cannot be null or empty");
-        }
-    }
-
     /**
      *
      * Retrieves a list of locales available for a specified content. <br>
@@ -100,7 +89,10 @@ public class ReadCommand {
             ContentSecurityException {
         log.debug("getContentLocales()");
 
-        checkNullParameters(location);
+        // Check null parameters
+        if (location == null || "".equals(location)) {
+            throw new ContentException("Parameter location cannot be null or empty");
+        }
 
         // Check if the current JCR Session is valid
         if (!jcr.checkSession())
@@ -127,18 +119,18 @@ public class ReadCommand {
         return null;
     }
 
-    private void checkNullParameters(String location) throws ContentException {
-        if (location == null || "".equals(location)) {
-            throw new ContentException("Parameter location cannot be null or empty");
-        }
-    }
-
     public List<Category> getCategories(String categoryLocation, String locale) throws ContentException, ContentIOException,
             ContentSecurityException {
 
         log.debug("getCategories()");
 
-        checkNullParameters(categoryLocation, locale);
+        // Check null parameters
+        if (locale == null || "".equals(locale)) {
+            throw new ContentException("Parameter locale cannot be null or empty");
+        }
+        if (categoryLocation == null || "".equals(categoryLocation)) {
+            throw new ContentException("Parameter categoryLocation cannot be null or empty");
+        }
 
         // Check if the current JCR Session is valid
         if (!jcr.checkSession())
@@ -166,7 +158,16 @@ public class ReadCommand {
 
         log.debug("getContent()");
 
-        checkNullParameters(categories, location, locale);
+        // Check null parameters
+        if (categories == null || categories.size() == 0) {
+            throw new ContentException("Parameter categories cannot be null or empty");
+        }
+        if (locale == null || "".equals(locale)) {
+            throw new ContentException("Parameter locale cannot be null or empty");
+        }
+        if (location == null || "".equals(location)) {
+            throw new ContentException("Parameter location cannot be null or empty");
+        }
 
         // Check if the current JCR Session is valid
         if (!jcr.checkSession())
@@ -192,18 +193,6 @@ public class ReadCommand {
         }
 
         return null;
-    }
-
-    private void checkNullParameters(List<Category> categories, String location, String locale) throws ContentException {
-        if (categories == null || categories.size() == 0) {
-            throw new ContentException("Parameter categories cannot be null or empty");
-        }
-        if (locale == null || "".equals(locale)) {
-            throw new ContentException("Parameter locale cannot be null or empty");
-        }
-        if (location == null || "".equals(location)) {
-            throw new ContentException("Parameter location cannot be null or empty");
-        }
     }
 
 }

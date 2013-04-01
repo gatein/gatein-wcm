@@ -68,8 +68,8 @@ public class CreateText extends HttpServlet {
             out.println("<p>WARNING: it's needed to be connected to use this test</p>");
         } else {
             Content _c = null;
-            try {                                                     // Fixed
-                _c = cs.createTextContent(id, locale, location, text, "UTF8");
+            try {
+                _c = cs.createTextContent(id, locale, location, text);
             } catch (ContentException e) {
                 log.error(e.getMessage());
                 out.println(e.getMessage());

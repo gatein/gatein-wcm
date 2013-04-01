@@ -82,7 +82,7 @@ public class SamplePageTest {
 
         cs.createFolder("testWebSite", "/");
         // Locale "en"
-        cs.createTextContent("test", "en", "/testWebSite", _html, "UTF8");
+        cs.createTextContent("test", "en", "/testWebSite", _html);
         cs.createBinaryContent("testBackground.png", "en",
                 "/testWebSite", "image/png", (long) _png.length,
                 "testBackground.png", new ByteArrayInputStream(_png));
@@ -93,7 +93,7 @@ public class SamplePageTest {
                 "/testWebSite", "text/css", (long) _css.length,
                 "testStyle.css", new ByteArrayInputStream(_css));
         // Locale "es"
-        cs.createTextContent("test", "es", "/testWebSite", _html, "UTF8");
+        cs.createTextContent("test", "es", "/testWebSite", _html);
         cs.createBinaryContent("testBackground.png", "es",
                 "/testWebSite", "image/png", (long) _png.length,
                 "testBackground.png", new ByteArrayInputStream(_png));
@@ -115,18 +115,13 @@ public class SamplePageTest {
         		"Vestibulum dui sem, pulvinar sed, imperdiet nec, iaculis nec, leo. Fusce odio. Etiam arcu dui, faucibus eget, placerat vel, sodales eget, orci. " +
         		"Donec ornare neque ac sem. Mauris aliquet. Aliquam sem leo, vulputate sed, convallis at, ultricies quis, justo. Donec nonummy magna quis risus.";
 
-        cs.createTextContent("c1", "es", "/testWebSite/folder1", test_content, "UTF8");
+        cs.createTextContent("c1", "es", "/testWebSite/folder1", test_content);
         cs.createContentProperty("/testWebSite/folder1/c1", "es", "title", "Maecenas luctus lectus");
         cs.createContentProperty("/testWebSite/folder1/c1", "es", "summary", "Quisque dictum integer nisl risus, sagittis convallis, rutrum id, congue, and nibh.");
 
-        cs.createTextContent("c1", "en", "/testWebSite/folder1", test_content, "UTF8");
+        cs.createTextContent("c1", "en", "/testWebSite/folder1", test_content);
         cs.createContentProperty("/testWebSite/folder1/c1", "en", "title", "Maecenas luctus lectus");
         cs.createContentProperty("/testWebSite/folder1/c1", "en", "summary", "Quisque dictum integer nisl risus, sagittis convallis, rutrum id, congue, and nibh.");
-
-
-
-
-
 
         log.info("[[ STOP TEST  createSimpleWebSite ]]");
         Assert.assertTrue(true);

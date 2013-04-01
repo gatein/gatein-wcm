@@ -32,7 +32,6 @@ public class WcmTextContent implements TextContent {
     boolean locked;
     User lockOwner;
     String content;
-    String encoding;
 
     @Override
     public Integer getVersion() {
@@ -124,11 +123,6 @@ public class WcmTextContent implements TextContent {
         return content;
     }
 
-    @Override
-    public String getEncoding() {
-        return encoding;
-    }
-
     // Protected methods
 
     protected WcmTextContent() {
@@ -206,17 +200,14 @@ public class WcmTextContent implements TextContent {
         this.content = content;
     }
 
-    protected void setEncoding(String encoding) {
-        this.encoding = encoding;
-    }
-
     @Override
     public String toString() {
-        return "WCMTextContent [version=" + version + ", id=" + id + ", locale=" + locale + ", location=" + location + ", acl="
-                + acl + ", created=" + created + ", lastModified=" + lastModified + ", publishStatus=" + publishStatus
-                + ", publishingRoles=" + publishingRoles + ", createdBy=" + createdBy + ", lastModifiedBy=" + lastModifiedBy
-                + ", comments=" + comments + ", categories=" + categories + ", properties=" + properties + ", locked=" + locked
-                + ", lockOwner=" + lockOwner + ", content=" + content + ", encoding=" + encoding + "]";
+        return "WcmTextContent [version=" + version + ", id=" + id + ", locale=" + locale + ", locales=" + locales
+                + ", location=" + location + ", acl=" + acl + ", created=" + created + ", lastModified=" + lastModified
+                + ", publishStatus=" + publishStatus + ", publishingRoles=" + publishingRoles + ", createdBy=" + createdBy
+                + ", lastModifiedBy=" + lastModifiedBy + ", comments=" + comments + ", categories=" + categories
+                + ", properties=" + properties + ", locked=" + locked + ", lockOwner=" + lockOwner + ", content=" + content
+                + "]";
     }
 
     @Override

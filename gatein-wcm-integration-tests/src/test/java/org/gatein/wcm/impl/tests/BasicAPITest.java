@@ -65,13 +65,13 @@ public class BasicAPITest {
 		ContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
 		Content c1 = cs.createTextContent("test01", "es", "/",
-				"<h1>Primer test...</h1><p>Este es un párrafo.</p>", "UTF8");
+				"<h1>Primer test...</h1><p>Este es un párrafo.</p>");
 		Content c2 = cs.createTextContent("test01", "en", "/",
-				"<h1>First test...</h1><p>This is a paragraph</p>", "UTF8");
+				"<h1>First test...</h1><p>This is a paragraph</p>");
 		Content c3 = cs.createTextContent("test01", "fr", "/",
-				"<h1>First test...</h1><p>Ceci est un paragraphe</p>", "UTF8");
+				"<h1>First test...</h1><p>Ceci est un paragraphe</p>");
 		Content c4 = cs.createTextContent("test01", "de", "/",
-				"<h1>Erster Test...</h1><p>Dies ist ein Absatz</p>", "UTF8");
+				"<h1>Erster Test...</h1><p>Dies ist ein Absatz</p>");
 		log.info(c1);
 		Assert.assertTrue(c1.getId().equals("test01"));
 		Assert.assertTrue(c1.getLocale().equals("es"));
@@ -165,14 +165,14 @@ public class BasicAPITest {
 		log.info(b1);
 		Assert.assertTrue(((BinaryContent) b1).getFileName().equals(
 				"GateIn-UserGuide-v3.5.pdf"));
-		Assert.assertTrue(((BinaryContent) b1).getSize() == (long) _pdf.length);
+		Assert.assertTrue(((BinaryContent) b1).getSize() == _pdf.length);
 		Assert.assertTrue(((BinaryContent) b1).getContentType().equals(
 				"application/pdf"));
 		Assert.assertTrue(((BinaryContent) b1).getContent() != null);
 		log.info(b2);
 		Assert.assertTrue(((BinaryContent) b2).getFileName().equals(
 				"wcm-whiteboard.jpg"));
-		Assert.assertTrue(((BinaryContent) b2).getSize() == (long) _jpg.length);
+		Assert.assertTrue(((BinaryContent) b2).getSize() == _jpg.length);
 		Assert.assertTrue(((BinaryContent) b2).getContentType().equals(
 				"image/jpeg"));
 		Assert.assertTrue(((BinaryContent) b2).getContent() != null);
@@ -202,10 +202,10 @@ public class BasicAPITest {
 			cs.createFolder("sea", "/test04/folder" + i);
 			cs.createTextContent("welcome", "es",
 					"/test04/folder" + i + "/sea", "<h1>Bienvenido loop " + i
-							+ " ...</h1>", "UTF8");
+							+ " ...</h1>");
 			cs.createTextContent("welcome", "en",
 					"/test04/folder" + i + "/sea", "<h1>Welcome loop " + i
-							+ " ...</h1>", "UTF8");
+							+ " ...</h1>");
 			cs.createFolder("land", "/test04/folder" + i);
 			cs.createBinaryContent("document_pdf", "en", "/test04/folder" + i
 					+ "/land", "application/pdf", (long) _pdf.length,
@@ -232,20 +232,13 @@ public class BasicAPITest {
 		log.info("[[ START TEST  getContentLocales ]]");
 		ContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
-		cs.createTextContent("test05", "es", "/", "<h1>Primer test...</h1>",
-				"UTF8");
-		cs.createTextContent("test05", "en", "/", "<h1>First test...</h1>",
-				"UTF8");
-		cs.createTextContent("test05", "fr", "/", "<h1>Premier test...</h1>",
-				"UTF8");
-		cs.createTextContent("test05", "de", "/", "<h1>Erster Test...</h1>",
-				"UTF8");
-		cs.createTextContent("test05", "pl", "/", "<h1>Pierwszy test...</h1>",
-				"UTF8");
-		cs.createTextContent("test05", "pt", "/", "<h1>Primeiro teste...</h1>",
-				"UTF8");
-		cs.createTextContent("test05", "it", "/", "<h1>Primo test...</h1>",
-				"UTF8");
+		cs.createTextContent("test05", "es", "/", "<h1>Primer test...</h1>");
+		cs.createTextContent("test05", "en", "/", "<h1>First test...</h1>");
+		cs.createTextContent("test05", "fr", "/", "<h1>Premier test...</h1>");
+		cs.createTextContent("test05", "de", "/", "<h1>Erster Test...</h1>");
+		cs.createTextContent("test05", "pl", "/", "<h1>Pierwszy test...</h1>");
+		cs.createTextContent("test05", "pt", "/", "<h1>Primeiro teste...</h1>");
+		cs.createTextContent("test05", "it", "/", "<h1>Primo test...</h1>");
 
 		List<String> locales = cs.getContentLocales("/test05");
 		log.info("Locales: " + locales);
@@ -268,13 +261,13 @@ public class BasicAPITest {
 		ContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
 		Content c1 = cs.createTextContent("test06", "es", "/",
-				"<h1>Primer test...</h1><p>Este es un párrafo.</p>", "UTF8");
+				"<h1>Primer test...</h1><p>Este es un párrafo.</p>");
 		Content c2 = cs.createTextContent("test06", "en", "/",
-				"<h1>First test...</h1><p>This is a paragraph</p>", "UTF8");
+				"<h1>First test...</h1><p>This is a paragraph</p>");
 		Content c3 = cs.createTextContent("test06", "fr", "/",
-				"<h1>First test...</h1><p>Ceci est un paragraphe</p>", "UTF8");
+				"<h1>First test...</h1><p>Ceci est un paragraphe</p>");
 		Content c4 = cs.createTextContent("test06", "de", "/",
-				"<h1>Erster Test...</h1><p>Dies ist ein Absatz</p>", "UTF8");
+				"<h1>Erster Test...</h1><p>Dies ist ein Absatz</p>");
 		log.info(c1);
 		Assert.assertTrue(((TextContent) c1).getContent().equals(
 				"<h1>Primer test...</h1><p>Este es un párrafo.</p>"));
@@ -284,10 +277,9 @@ public class BasicAPITest {
 		log.info(c3);
 		log.info(c4);
 		c1 = cs.updateTextContent("/test06", "es",
-				"<h1>Segundo test...</h1><p>Este es otro párrafo.</p>", "UTF8");
+				"<h1>Segundo test...</h1><p>Este es otro párrafo.</p>");
 		c2 = cs.updateTextContent("/test06", "en",
-				"<h1>Second test...</h1><p>This is another paragraph.</p>",
-				"UTF8");
+				"<h1>Second test...</h1><p>This is another paragraph.</p>");
 		log.info(c1);
 		Assert.assertTrue(((TextContent) c1).getContent().equals(
 				"<h1>Segundo test...</h1><p>Este es otro párrafo.</p>"));
@@ -380,9 +372,9 @@ public class BasicAPITest {
 		byte[] _pdf = toByteArray(pdf);
 		byte[] _jpg = toByteArray(jpg);
 		byte[] _pdf2 = toByteArray(pdf2);
-		long sizePdf = (long) _pdf.length;
-		long sizeJpg = (long) _jpg.length;
-		long sizePdf2 = (long) _pdf2.length;
+		long sizePdf = _pdf.length;
+		long sizeJpg = _jpg.length;
+		long sizePdf2 = _pdf2.length;
 
 		ContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
@@ -419,13 +411,13 @@ public class BasicAPITest {
 		ContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
 		Content c1 = cs.createTextContent("test10", "es", "/",
-				"<h1>Primer test...</h1><p>Este es un párrafo.</p>", "UTF8");
+				"<h1>Primer test...</h1><p>Este es un párrafo.</p>");
 		Content c2 = cs.createTextContent("test10", "en", "/",
-				"<h1>First test...</h1><p>This is a paragraph</p>", "UTF8");
+				"<h1>First test...</h1><p>This is a paragraph</p>");
 		Content c3 = cs.createTextContent("test10", "fr", "/",
-				"<h1>First test...</h1><p>Ceci est un paragraphe</p>", "UTF8");
+				"<h1>First test...</h1><p>Ceci est un paragraphe</p>");
 		Content c4 = cs.createTextContent("test10", "de", "/",
-				"<h1>Erster Test...</h1><p>Dies ist ein Absatz</p>", "UTF8");
+				"<h1>Erster Test...</h1><p>Dies ist ein Absatz</p>");
 		log.info(c1);
 		log.info(c2);
 		log.info(c3);

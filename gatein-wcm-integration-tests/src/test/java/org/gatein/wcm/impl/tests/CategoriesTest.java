@@ -267,7 +267,7 @@ public class CategoriesTest {
 			log.info(c2);
 
 			cs.createTextContent("my noticia", "es", "/",
-					"Esta es una noticia de ejemplo", "UTF8");
+					"Esta es una noticia de ejemplo");
 
 			cs.addContentCategory("/my noticia", "/news4");
 
@@ -361,11 +361,10 @@ public class CategoriesTest {
 			for (int site = 1; site <= 3; site++) {
 				for (int i = 1; i <= 4; i++) {
 					c = cs.createTextContent("new" + news, "es",
-							"/site" + site, "Esta es la noticia " + news,
-							"UTF8");
+							"/site" + site, "Esta es la noticia " + news);
 					log.info(c);
 					c = cs.createTextContent("new" + news, "en",
-							"/site" + site, "This is the news " + news, "UTF8");
+							"/site" + site, "This is the news " + news);
 					log.info(c);
 					news++;
 				}

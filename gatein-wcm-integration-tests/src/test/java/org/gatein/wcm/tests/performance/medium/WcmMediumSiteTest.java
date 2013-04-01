@@ -130,14 +130,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Android", mobilePhones);
 
                 String mobile = "Android";
-                cs.createTextContent(mobile + " 1", "en", mobilePhones + "/" + mobile, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(mobile + " 1", "es", mobilePhones + "/" + mobile, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(mobile + " 1", "en", mobilePhones + "/" + mobile, WcmResources.HTML_EN);
+                cs.createTextContent(mobile + " 1", "es", mobilePhones + "/" + mobile, WcmResources.HTML_ES);
                 cs.createBinaryContent(mobile + " 1 description", "en", mobilePhones + "/" + mobile, "application/pdf", sizePdf, mobile + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(mobile + " 1 description", "es", mobilePhones + "/" + mobile, "application/pdf", sizePdf, mobile + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(mobile + " 1 picture", "en", mobilePhones + "/" + mobile, "image/jpeg", sizeJpg, mobile + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(mobile + " 1 picture", "es", mobilePhones + "/" + mobile, "image/jpeg", sizeJpg, mobile + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(mobile + " 2", "en", mobilePhones + "/" + mobile, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(mobile + " 2", "es", mobilePhones + "/" + mobile, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(mobile + " 2", "en", mobilePhones + "/" + mobile, WcmResources.HTML_EN);
+                cs.createTextContent(mobile + " 2", "es", mobilePhones + "/" + mobile, WcmResources.HTML_ES);
                 cs.createBinaryContent(mobile + " 2 description", "en", mobilePhones + "/" + mobile, "application/pdf", sizePdf, mobile + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(mobile + " 2 description", "es", mobilePhones + "/" + mobile, "application/pdf", sizePdf, mobile + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(mobile + " 2 picture", "en", mobilePhones + "/" + mobile, "image/jpeg", sizeJpg, mobile + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -146,14 +146,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Apple iOS", mobilePhones);
 
                 mobile = "Apple iOS";
-                cs.createTextContent(mobile + " 1", "en", mobilePhones + "/" + mobile, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(mobile + " 1", "es", mobilePhones + "/" + mobile, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(mobile + " 1", "en", mobilePhones + "/" + mobile, WcmResources.HTML_EN);
+                cs.createTextContent(mobile + " 1", "es", mobilePhones + "/" + mobile, WcmResources.HTML_ES);
                 cs.createBinaryContent(mobile + " 1 description", "en", mobilePhones + "/" + mobile, "application/pdf", sizePdf, mobile + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(mobile + " 1 description", "es", mobilePhones + "/" + mobile, "application/pdf", sizePdf, mobile + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(mobile + " 1 picture", "en", mobilePhones + "/" + mobile, "image/jpeg", sizeJpg, mobile + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(mobile + " 1 picture", "es", mobilePhones + "/" + mobile, "image/jpeg", sizeJpg, mobile + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(mobile + " 2", "en", mobilePhones + "/" + mobile, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(mobile + " 2", "es", mobilePhones + "/" + mobile, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(mobile + " 2", "en", mobilePhones + "/" + mobile, WcmResources.HTML_EN);
+                cs.createTextContent(mobile + " 2", "es", mobilePhones + "/" + mobile, WcmResources.HTML_ES);
                 cs.createBinaryContent(mobile + " 2 description", "en", mobilePhones + "/" + mobile, "application/pdf", sizePdf, mobile + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(mobile + " 2 description", "es", mobilePhones + "/" + mobile, "application/pdf", sizePdf, mobile + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(mobile + " 2 picture", "en", mobilePhones + "/" + mobile, "image/jpeg", sizeJpg, mobile + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -162,14 +162,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("BlackBerry", mobilePhones);
 
                 mobile = "BlackBerry";
-                cs.createTextContent(mobile + " 1", "en", mobilePhones + "/" + mobile, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(mobile + " 1", "es", mobilePhones + "/" + mobile, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(mobile + " 1", "en", mobilePhones + "/" + mobile, WcmResources.HTML_EN);
+                cs.createTextContent(mobile + " 1", "es", mobilePhones + "/" + mobile, WcmResources.HTML_ES);
                 cs.createBinaryContent(mobile + " 1 description", "en", mobilePhones + "/" + mobile, "application/pdf", sizePdf, mobile + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(mobile + " 1 description", "es", mobilePhones + "/" + mobile, "application/pdf", sizePdf, mobile + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(mobile + " 1 picture", "en", mobilePhones + "/" + mobile, "image/jpeg", sizeJpg, mobile + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(mobile + " 1 picture", "es", mobilePhones + "/" + mobile, "image/jpeg", sizeJpg, mobile + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(mobile + " 2", "en", mobilePhones + "/" + mobile, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(mobile + " 2", "es", mobilePhones + "/" + mobile, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(mobile + " 2", "en", mobilePhones + "/" + mobile, WcmResources.HTML_EN);
+                cs.createTextContent(mobile + " 2", "es", mobilePhones + "/" + mobile, WcmResources.HTML_ES);
                 cs.createBinaryContent(mobile + " 2 description", "en", mobilePhones + "/" + mobile, "application/pdf", sizePdf, mobile + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(mobile + " 2 description", "es", mobilePhones + "/" + mobile, "application/pdf", sizePdf, mobile + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(mobile + " 2 picture", "en", mobilePhones + "/" + mobile, "image/jpeg", sizeJpg, mobile + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -178,14 +178,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Symbian", mobilePhones);
 
                 mobile = "Symbian";
-                cs.createTextContent(mobile + " 1", "en", mobilePhones + "/" + mobile, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(mobile + " 1", "es", mobilePhones + "/" + mobile, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(mobile + " 1", "en", mobilePhones + "/" + mobile, WcmResources.HTML_EN);
+                cs.createTextContent(mobile + " 1", "es", mobilePhones + "/" + mobile, WcmResources.HTML_ES);
                 cs.createBinaryContent(mobile + " 1 description", "en", mobilePhones + "/" + mobile, "application/pdf", sizePdf, mobile + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(mobile + " 1 description", "es", mobilePhones + "/" + mobile, "application/pdf", sizePdf, mobile + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(mobile + " 1 picture", "en", mobilePhones + "/" + mobile, "image/jpeg", sizeJpg, mobile + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(mobile + " 1 picture", "es", mobilePhones + "/" + mobile, "image/jpeg", sizeJpg, mobile + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(mobile + " 2", "en", mobilePhones + "/" + mobile, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(mobile + " 2", "es", mobilePhones + "/" + mobile, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(mobile + " 2", "en", mobilePhones + "/" + mobile, WcmResources.HTML_EN);
+                cs.createTextContent(mobile + " 2", "es", mobilePhones + "/" + mobile, WcmResources.HTML_ES);
                 cs.createBinaryContent(mobile + " 2 description", "en", mobilePhones + "/" + mobile, "application/pdf", sizePdf, mobile + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(mobile + " 2 description", "es", mobilePhones + "/" + mobile, "application/pdf", sizePdf, mobile + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(mobile + " 2 picture", "en", mobilePhones + "/" + mobile, "image/jpeg", sizeJpg, mobile + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -195,14 +195,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Windows", mobilePhones);
 
                 mobile = "Windows";
-                cs.createTextContent(mobile + " 1", "en", mobilePhones + "/" + mobile, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(mobile + " 1", "es", mobilePhones + "/" + mobile, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(mobile + " 1", "en", mobilePhones + "/" + mobile, WcmResources.HTML_EN);
+                cs.createTextContent(mobile + " 1", "es", mobilePhones + "/" + mobile, WcmResources.HTML_ES);
                 cs.createBinaryContent(mobile + " 1 description", "en", mobilePhones + "/" + mobile, "application/pdf", sizePdf, mobile + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(mobile + " 1 description", "es", mobilePhones + "/" + mobile, "application/pdf", sizePdf, mobile + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(mobile + " 1 picture", "en", mobilePhones + "/" + mobile, "image/jpeg", sizeJpg, mobile + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(mobile + " 1 picture", "es", mobilePhones + "/" + mobile, "image/jpeg", sizeJpg, mobile + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(mobile + " 2", "en", mobilePhones + "/" + mobile, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(mobile + " 2", "es", mobilePhones + "/" + mobile, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(mobile + " 2", "en", mobilePhones + "/" + mobile, WcmResources.HTML_EN);
+                cs.createTextContent(mobile + " 2", "es", mobilePhones + "/" + mobile, WcmResources.HTML_ES);
                 cs.createBinaryContent(mobile + " 2 description", "en", mobilePhones + "/" + mobile, "application/pdf", sizePdf, mobile + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(mobile + " 2 description", "es", mobilePhones + "/" + mobile, "application/pdf", sizePdf, mobile + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(mobile + " 2 picture", "en", mobilePhones + "/" + mobile, "image/jpeg", sizeJpg, mobile + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -212,14 +212,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("O2", pricePlans);
 
                 String pricePlan = "O2";
-                cs.createTextContent(pricePlan + " 1", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(pricePlan + " 1", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(pricePlan + " 1", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN);
+                cs.createTextContent(pricePlan + " 1", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES);
                 cs.createBinaryContent(pricePlan + " 1 description", "en", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 1 description", "es", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 1 picture", "en", pricePlans + "/" + pricePlan, "image/jpeg", sizeJpg, pricePlan + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(pricePlan + " 1 picture", "es", pricePlans + "/" + pricePlan, "image/jpeg", sizeJpg, pricePlan + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(pricePlan + " 2", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(pricePlan + " 2", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(pricePlan + " 2", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN);
+                cs.createTextContent(pricePlan + " 2", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES);
                 cs.createBinaryContent(pricePlan + " 2 description", "en", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 2 description", "es", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 2 picture", "en", pricePlans + "/" + pricePlan, "image/jpeg", sizeJpg, pricePlan + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -228,14 +228,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Orange", pricePlans);
 
                 pricePlan = "Orange";
-                cs.createTextContent(pricePlan + " 1", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(pricePlan + " 1", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(pricePlan + " 1", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN);
+                cs.createTextContent(pricePlan + " 1", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES);
                 cs.createBinaryContent(pricePlan + " 1 description", "en", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 1 description", "es", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 1 picture", "en", pricePlans + "/" + pricePlan, "image/jpeg", sizeJpg, pricePlan + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(pricePlan + " 1 picture", "es", pricePlans + "/" + pricePlan, "image/jpeg", sizeJpg, pricePlan + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(pricePlan + " 2", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(pricePlan + " 2", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(pricePlan + " 2", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN);
+                cs.createTextContent(pricePlan + " 2", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES);
                 cs.createBinaryContent(pricePlan + " 2 description", "en", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 2 description", "es", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 2 picture", "en", pricePlans + "/" + pricePlan, "image/jpeg", sizeJpg, pricePlan + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -244,14 +244,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Talkmobile", pricePlans);
 
                 pricePlan = "Talkmobile";
-                cs.createTextContent(pricePlan + " 1", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(pricePlan + " 1", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(pricePlan + " 1", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN);
+                cs.createTextContent(pricePlan + " 1", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES);
                 cs.createBinaryContent(pricePlan + " 1 description", "en", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 1 description", "es", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 1 picture", "en", pricePlans + "/" + pricePlan, "image/jpeg", sizeJpg, pricePlan + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(pricePlan + " 1 picture", "es", pricePlans + "/" + pricePlan, "image/jpeg", sizeJpg, pricePlan + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(pricePlan + " 2", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(pricePlan + " 2", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(pricePlan + " 2", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN);
+                cs.createTextContent(pricePlan + " 2", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES);
                 cs.createBinaryContent(pricePlan + " 2 description", "en", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 2 description", "es", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 2 picture", "en", pricePlans + "/" + pricePlan, "image/jpeg", sizeJpg, pricePlan + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -260,14 +260,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Three", pricePlans);
 
                 pricePlan = "Three";
-                cs.createTextContent(pricePlan + " 1", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(pricePlan + " 1", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(pricePlan + " 1", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN);
+                cs.createTextContent(pricePlan + " 1", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES);
                 cs.createBinaryContent(pricePlan + " 1 description", "en", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 1 description", "es", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 1 picture", "en", pricePlans + "/" + pricePlan, "image/jpeg", sizeJpg, pricePlan + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(pricePlan + " 1 picture", "es", pricePlans + "/" + pricePlan, "image/jpeg", sizeJpg, pricePlan + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(pricePlan + " 2", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(pricePlan + " 2", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(pricePlan + " 2", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN);
+                cs.createTextContent(pricePlan + " 2", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES);
                 cs.createBinaryContent(pricePlan + " 2 description", "en", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 2 description", "es", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 2 picture", "en", pricePlans + "/" + pricePlan, "image/jpeg", sizeJpg, pricePlan + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -276,14 +276,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("T-Mobile", pricePlans);
 
                 pricePlan = "T-Mobile";
-                cs.createTextContent(pricePlan + " 1", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(pricePlan + " 1", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(pricePlan + " 1", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN);
+                cs.createTextContent(pricePlan + " 1", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES);
                 cs.createBinaryContent(pricePlan + " 1 description", "en", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 1 description", "es", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 1 picture", "en", pricePlans + "/" + pricePlan, "image/jpeg", sizeJpg, pricePlan + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(pricePlan + " 1 picture", "es", pricePlans + "/" + pricePlan, "image/jpeg", sizeJpg, pricePlan + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(pricePlan + " 2", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(pricePlan + " 2", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(pricePlan + " 2", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN);
+                cs.createTextContent(pricePlan + " 2", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES);
                 cs.createBinaryContent(pricePlan + " 2 description", "en", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 2 description", "es", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 2 picture", "en", pricePlans + "/" + pricePlan, "image/jpeg", sizeJpg, pricePlan + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -292,14 +292,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Virgin Media", pricePlans);
 
                 pricePlan = "Virgin Media";
-                cs.createTextContent(pricePlan + " 1", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(pricePlan + " 1", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(pricePlan + " 1", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN);
+                cs.createTextContent(pricePlan + " 1", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES);
                 cs.createBinaryContent(pricePlan + " 1 description", "en", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 1 description", "es", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 1 picture", "en", pricePlans + "/" + pricePlan, "image/jpeg", sizeJpg, pricePlan + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(pricePlan + " 1 picture", "es", pricePlans + "/" + pricePlan, "image/jpeg", sizeJpg, pricePlan + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(pricePlan + " 2", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(pricePlan + " 2", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(pricePlan + " 2", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN);
+                cs.createTextContent(pricePlan + " 2", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES);
                 cs.createBinaryContent(pricePlan + " 2 description", "en", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 2 description", "es", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 2 picture", "en", pricePlans + "/" + pricePlan, "image/jpeg", sizeJpg, pricePlan + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -308,14 +308,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Vodafone", pricePlans);
 
                 pricePlan = "Vodafone";
-                cs.createTextContent(pricePlan + " 1", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(pricePlan + " 1", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(pricePlan + " 1", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN);
+                cs.createTextContent(pricePlan + " 1", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES);
                 cs.createBinaryContent(pricePlan + " 1 description", "en", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 1 description", "es", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 1 picture", "en", pricePlans + "/" + pricePlan, "image/jpeg", sizeJpg, pricePlan + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(pricePlan + " 1 picture", "es", pricePlans + "/" + pricePlan, "image/jpeg", sizeJpg, pricePlan + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(pricePlan + " 2", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(pricePlan + " 2", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(pricePlan + " 2", "en", pricePlans + "/" + pricePlan, WcmResources.HTML_EN);
+                cs.createTextContent(pricePlan + " 2", "es", pricePlans + "/" + pricePlan, WcmResources.HTML_ES);
                 cs.createBinaryContent(pricePlan + " 2 description", "en", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 2 description", "es", pricePlans + "/" + pricePlan, "application/pdf", sizePdf, pricePlan + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(pricePlan + " 2 picture", "en", pricePlans + "/" + pricePlan, "image/jpeg", sizeJpg, pricePlan + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -326,14 +326,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Pay monthly upgrades", upgrades);
 
                 String upgrade = "Pay monthly upgrades";
-                cs.createTextContent(upgrade + " 1", "en", upgrades + "/" + upgrade, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(upgrade + " 1", "es", upgrades + "/" + upgrade, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(upgrade + " 1", "en", upgrades + "/" + upgrade, WcmResources.HTML_EN);
+                cs.createTextContent(upgrade + " 1", "es", upgrades + "/" + upgrade, WcmResources.HTML_ES);
                 cs.createBinaryContent(upgrade + " 1 description", "en", upgrades + "/" + upgrade, "application/pdf", sizePdf, upgrade + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(upgrade + " 1 description", "es", upgrades + "/" + upgrade, "application/pdf", sizePdf, upgrade + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(upgrade + " 1 picture", "en", upgrades + "/" + upgrade, "image/jpeg", sizeJpg, upgrade + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(upgrade + " 1 picture", "es", upgrades + "/" + upgrade, "image/jpeg", sizeJpg, upgrade + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(upgrade + " 2", "en", upgrades + "/" + upgrade, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(upgrade + " 2", "es", upgrades + "/" + upgrade, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(upgrade + " 2", "en", upgrades + "/" + upgrade, WcmResources.HTML_EN);
+                cs.createTextContent(upgrade + " 2", "es", upgrades + "/" + upgrade, WcmResources.HTML_ES);
                 cs.createBinaryContent(upgrade + " 2 description", "en", upgrades + "/" + upgrade, "application/pdf", sizePdf, upgrade + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(upgrade + " 2 description", "es", upgrades + "/" + upgrade, "application/pdf", sizePdf, upgrade + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(upgrade + " 2 picture", "en", upgrades + "/" + upgrade, "image/jpeg", sizeJpg, upgrade + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -342,14 +342,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Latest phones", upgrades);
 
                 upgrade = "Latest phones";
-                cs.createTextContent(upgrade + " 1", "en", upgrades + "/" + upgrade, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(upgrade + " 1", "es", upgrades + "/" + upgrade, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(upgrade + " 1", "en", upgrades + "/" + upgrade, WcmResources.HTML_EN);
+                cs.createTextContent(upgrade + " 1", "es", upgrades + "/" + upgrade, WcmResources.HTML_ES);
                 cs.createBinaryContent(upgrade + " 1 description", "en", upgrades + "/" + upgrade, "application/pdf", sizePdf, upgrade + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(upgrade + " 1 description", "es", upgrades + "/" + upgrade, "application/pdf", sizePdf, upgrade + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(upgrade + " 1 picture", "en", upgrades + "/" + upgrade, "image/jpeg", sizeJpg, upgrade + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(upgrade + " 1 picture", "es", upgrades + "/" + upgrade, "image/jpeg", sizeJpg, upgrade + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(upgrade + " 2", "en", upgrades + "/" + upgrade, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(upgrade + " 2", "es", upgrades + "/" + upgrade, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(upgrade + " 2", "en", upgrades + "/" + upgrade, WcmResources.HTML_EN);
+                cs.createTextContent(upgrade + " 2", "es", upgrades + "/" + upgrade, WcmResources.HTML_ES);
                 cs.createBinaryContent(upgrade + " 2 description", "en", upgrades + "/" + upgrade, "application/pdf", sizePdf, upgrade + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(upgrade + " 2 description", "es", upgrades + "/" + upgrade, "application/pdf", sizePdf, upgrade + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(upgrade + " 2 picture", "en", upgrades + "/" + upgrade, "image/jpeg", sizeJpg, upgrade + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -358,14 +358,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Coming soon", upgrades);
 
                 upgrade = "Coming soon";
-                cs.createTextContent(upgrade + " 1", "en", upgrades + "/" + upgrade, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(upgrade + " 1", "es", upgrades + "/" + upgrade, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(upgrade + " 1", "en", upgrades + "/" + upgrade, WcmResources.HTML_EN);
+                cs.createTextContent(upgrade + " 1", "es", upgrades + "/" + upgrade, WcmResources.HTML_ES);
                 cs.createBinaryContent(upgrade + " 1 description", "en", upgrades + "/" + upgrade, "application/pdf", sizePdf, upgrade + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(upgrade + " 1 description", "es", upgrades + "/" + upgrade, "application/pdf", sizePdf, upgrade + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(upgrade + " 1 picture", "en", upgrades + "/" + upgrade, "image/jpeg", sizeJpg, upgrade + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(upgrade + " 1 picture", "es", upgrades + "/" + upgrade, "image/jpeg", sizeJpg, upgrade + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(upgrade + " 2", "en", upgrades + "/" + upgrade, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(upgrade + " 2", "es", upgrades + "/" + upgrade, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(upgrade + " 2", "en", upgrades + "/" + upgrade, WcmResources.HTML_EN);
+                cs.createTextContent(upgrade + " 2", "es", upgrades + "/" + upgrade, WcmResources.HTML_ES);
                 cs.createBinaryContent(upgrade + " 2 description", "en", upgrades + "/" + upgrade, "application/pdf", sizePdf, upgrade + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(upgrade + " 2 description", "es", upgrades + "/" + upgrade, "application/pdf", sizePdf, upgrade + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(upgrade + " 2 picture", "en", upgrades + "/" + upgrade, "image/jpeg", sizeJpg, upgrade + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -375,14 +375,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Cases & screen protectors", accessories);
 
                 String accessory = "Cases & screen protectors";
-                cs.createTextContent(accessory + " 1", "en", accessories + "/" + accessory, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(accessory + " 1", "es", accessories + "/" + accessory, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(accessory + " 1", "en", accessories + "/" + accessory, WcmResources.HTML_EN);
+                cs.createTextContent(accessory + " 1", "es", accessories + "/" + accessory, WcmResources.HTML_ES);
                 cs.createBinaryContent(accessory + " 1 description", "en", accessories + "/" + accessory, "application/pdf", sizePdf, accessory + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(accessory + " 1 description", "es", accessories + "/" + accessory, "application/pdf", sizePdf, accessory + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(accessory + " 1 picture", "en", accessories + "/" + accessory, "image/jpeg", sizeJpg, accessory + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(accessory + " 1 picture", "es", accessories + "/" + accessory, "image/jpeg", sizeJpg, accessory + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(accessory + " 2", "en", accessories + "/" + accessory, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(accessory + " 2", "es", accessories + "/" + accessory, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(accessory + " 2", "en", accessories + "/" + accessory, WcmResources.HTML_EN);
+                cs.createTextContent(accessory + " 2", "es", accessories + "/" + accessory, WcmResources.HTML_ES);
                 cs.createBinaryContent(accessory + " 2 description", "en", accessories + "/" + accessory, "application/pdf", sizePdf, accessory + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(accessory + " 2 description", "es", accessories + "/" + accessory, "application/pdf", sizePdf, accessory + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(accessory + " 2 picture", "en", accessories + "/" + accessory, "image/jpeg", sizeJpg, accessory + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -391,14 +391,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Memory cards & USB sticks", accessories);
 
                 accessory = "Memory cards & USB sticks";
-                cs.createTextContent(accessory + " 1", "en", accessories + "/" + accessory, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(accessory + " 1", "es", accessories + "/" + accessory, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(accessory + " 1", "en", accessories + "/" + accessory, WcmResources.HTML_EN);
+                cs.createTextContent(accessory + " 1", "es", accessories + "/" + accessory, WcmResources.HTML_ES);
                 cs.createBinaryContent(accessory + " 1 description", "en", accessories + "/" + accessory, "application/pdf", sizePdf, accessory + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(accessory + " 1 description", "es", accessories + "/" + accessory, "application/pdf", sizePdf, accessory + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(accessory + " 1 picture", "en", accessories + "/" + accessory, "image/jpeg", sizeJpg, accessory + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(accessory + " 1 picture", "es", accessories + "/" + accessory, "image/jpeg", sizeJpg, accessory + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(accessory + " 2", "en", accessories + "/" + accessory, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(accessory + " 2", "es", accessories + "/" + accessory, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(accessory + " 2", "en", accessories + "/" + accessory, WcmResources.HTML_EN);
+                cs.createTextContent(accessory + " 2", "es", accessories + "/" + accessory, WcmResources.HTML_ES);
                 cs.createBinaryContent(accessory + " 2 description", "en", accessories + "/" + accessory, "application/pdf", sizePdf, accessory + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(accessory + " 2 description", "es", accessories + "/" + accessory, "application/pdf", sizePdf, accessory + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(accessory + " 2 picture", "en", accessories + "/" + accessory, "image/jpeg", sizeJpg, accessory + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -407,14 +407,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("In-car & hands-free", accessories);
 
                 accessory = "In-car & hands-free";
-                cs.createTextContent(accessory + " 1", "en", accessories + "/" + accessory, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(accessory + " 1", "es", accessories + "/" + accessory, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(accessory + " 1", "en", accessories + "/" + accessory, WcmResources.HTML_EN);
+                cs.createTextContent(accessory + " 1", "es", accessories + "/" + accessory, WcmResources.HTML_ES);
                 cs.createBinaryContent(accessory + " 1 description", "en", accessories + "/" + accessory, "application/pdf", sizePdf, accessory + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(accessory + " 1 description", "es", accessories + "/" + accessory, "application/pdf", sizePdf, accessory + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(accessory + " 1 picture", "en", accessories + "/" + accessory, "image/jpeg", sizeJpg, accessory + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(accessory + " 1 picture", "es", accessories + "/" + accessory, "image/jpeg", sizeJpg, accessory + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(accessory + " 2", "en", accessories + "/" + accessory, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(accessory + " 2", "es", accessories + "/" + accessory, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(accessory + " 2", "en", accessories + "/" + accessory, WcmResources.HTML_EN);
+                cs.createTextContent(accessory + " 2", "es", accessories + "/" + accessory, WcmResources.HTML_ES);
                 cs.createBinaryContent(accessory + " 2 description", "en", accessories + "/" + accessory, "application/pdf", sizePdf, accessory + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(accessory + " 2 description", "es", accessories + "/" + accessory, "application/pdf", sizePdf, accessory + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(accessory + " 2 picture", "en", accessories + "/" + accessory, "image/jpeg", sizeJpg, accessory + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -423,14 +423,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Chargers & batteries", accessories);
 
                 accessory = "Chargers & batteries";
-                cs.createTextContent(accessory + " 1", "en", accessories + "/" + accessory, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(accessory + " 1", "es", accessories + "/" + accessory, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(accessory + " 1", "en", accessories + "/" + accessory, WcmResources.HTML_EN);
+                cs.createTextContent(accessory + " 1", "es", accessories + "/" + accessory, WcmResources.HTML_ES);
                 cs.createBinaryContent(accessory + " 1 description", "en", accessories + "/" + accessory, "application/pdf", sizePdf, accessory + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(accessory + " 1 description", "es", accessories + "/" + accessory, "application/pdf", sizePdf, accessory + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(accessory + " 1 picture", "en", accessories + "/" + accessory, "image/jpeg", sizeJpg, accessory + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(accessory + " 1 picture", "es", accessories + "/" + accessory, "image/jpeg", sizeJpg, accessory + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(accessory + " 2", "en", accessories + "/" + accessory, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(accessory + " 2", "es", accessories + "/" + accessory, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(accessory + " 2", "en", accessories + "/" + accessory, WcmResources.HTML_EN);
+                cs.createTextContent(accessory + " 2", "es", accessories + "/" + accessory, WcmResources.HTML_ES);
                 cs.createBinaryContent(accessory + " 2 description", "en", accessories + "/" + accessory, "application/pdf", sizePdf, accessory + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(accessory + " 2 description", "es", accessories + "/" + accessory, "application/pdf", sizePdf, accessory + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(accessory + " 2 picture", "en", accessories + "/" + accessory, "image/jpeg", sizeJpg, accessory + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -439,14 +439,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Headphones & music", accessories);
 
                 accessory = "Headphones & music";
-                cs.createTextContent(accessory + " 1", "en", accessories + "/" + accessory, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(accessory + " 1", "es", accessories + "/" + accessory, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(accessory + " 1", "en", accessories + "/" + accessory, WcmResources.HTML_EN);
+                cs.createTextContent(accessory + " 1", "es", accessories + "/" + accessory, WcmResources.HTML_ES);
                 cs.createBinaryContent(accessory + " 1 description", "en", accessories + "/" + accessory, "application/pdf", sizePdf, accessory + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(accessory + " 1 description", "es", accessories + "/" + accessory, "application/pdf", sizePdf, accessory + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(accessory + " 1 picture", "en", accessories + "/" + accessory, "image/jpeg", sizeJpg, accessory + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(accessory + " 1 picture", "es", accessories + "/" + accessory, "image/jpeg", sizeJpg, accessory + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(accessory + " 2", "en", accessories + "/" + accessory, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(accessory + " 2", "es", accessories + "/" + accessory, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(accessory + " 2", "en", accessories + "/" + accessory, WcmResources.HTML_EN);
+                cs.createTextContent(accessory + " 2", "es", accessories + "/" + accessory, WcmResources.HTML_ES);
                 cs.createBinaryContent(accessory + " 2 description", "en", accessories + "/" + accessory, "application/pdf", sizePdf, accessory + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(accessory + " 2 description", "es", accessories + "/" + accessory, "application/pdf", sizePdf, accessory + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(accessory + " 2 picture", "en", accessories + "/" + accessory, "image/jpeg", sizeJpg, accessory + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -456,14 +456,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Amazon", tablets);
 
                 String tablet = "Amazon";
-                cs.createTextContent(tablet + " 1", "en", tablets + "/" + tablet, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(tablet + " 1", "es", tablets + "/" + tablet, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(tablet + " 1", "en", tablets + "/" + tablet, WcmResources.HTML_EN);
+                cs.createTextContent(tablet + " 1", "es", tablets + "/" + tablet, WcmResources.HTML_ES);
                 cs.createBinaryContent(tablet + " 1 description", "en", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 1 description", "es", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 1 picture", "en", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(tablet + " 1 picture", "es", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(tablet + " 2", "en", tablets + "/" + tablet, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(tablet + " 2", "es", tablets + "/" + tablet, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(tablet + " 2", "en", tablets + "/" + tablet, WcmResources.HTML_EN);
+                cs.createTextContent(tablet + " 2", "es", tablets + "/" + tablet, WcmResources.HTML_ES);
                 cs.createBinaryContent(tablet + " 2 description", "en", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 2 description", "es", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 2 picture", "en", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -472,14 +472,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Apple", tablets);
 
                 tablet = "Apple";
-                cs.createTextContent(tablet + " 1", "en", tablets + "/" + tablet, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(tablet + " 1", "es", tablets + "/" + tablet, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(tablet + " 1", "en", tablets + "/" + tablet, WcmResources.HTML_EN);
+                cs.createTextContent(tablet + " 1", "es", tablets + "/" + tablet, WcmResources.HTML_ES);
                 cs.createBinaryContent(tablet + " 1 description", "en", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 1 description", "es", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 1 picture", "en", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(tablet + " 1 picture", "es", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(tablet + " 2", "en", tablets + "/" + tablet, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(tablet + " 2", "es", tablets + "/" + tablet, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(tablet + " 2", "en", tablets + "/" + tablet, WcmResources.HTML_EN);
+                cs.createTextContent(tablet + " 2", "es", tablets + "/" + tablet, WcmResources.HTML_ES);
                 cs.createBinaryContent(tablet + " 2 description", "en", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 2 description", "es", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 2 picture", "en", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -488,14 +488,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Asus", tablets);
 
                 tablet = "Asus";
-                cs.createTextContent(tablet + " 1", "en", tablets + "/" + tablet, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(tablet + " 1", "es", tablets + "/" + tablet, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(tablet + " 1", "en", tablets + "/" + tablet, WcmResources.HTML_EN);
+                cs.createTextContent(tablet + " 1", "es", tablets + "/" + tablet, WcmResources.HTML_ES);
                 cs.createBinaryContent(tablet + " 1 description", "en", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 1 description", "es", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 1 picture", "en", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(tablet + " 1 picture", "es", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(tablet + " 2", "en", tablets + "/" + tablet, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(tablet + " 2", "es", tablets + "/" + tablet, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(tablet + " 2", "en", tablets + "/" + tablet, WcmResources.HTML_EN);
+                cs.createTextContent(tablet + " 2", "es", tablets + "/" + tablet, WcmResources.HTML_ES);
                 cs.createBinaryContent(tablet + " 2 description", "en", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 2 description", "es", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 2 picture", "en", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -504,14 +504,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("BlackBerry", tablets);
 
                 tablet = "BlackBerry";
-                cs.createTextContent(tablet + " 1", "en", tablets + "/" + tablet, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(tablet + " 1", "es", tablets + "/" + tablet, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(tablet + " 1", "en", tablets + "/" + tablet, WcmResources.HTML_EN);
+                cs.createTextContent(tablet + " 1", "es", tablets + "/" + tablet, WcmResources.HTML_ES);
                 cs.createBinaryContent(tablet + " 1 description", "en", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 1 description", "es", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 1 picture", "en", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(tablet + " 1 picture", "es", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(tablet + " 2", "en", tablets + "/" + tablet, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(tablet + " 2", "es", tablets + "/" + tablet, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(tablet + " 2", "en", tablets + "/" + tablet, WcmResources.HTML_EN);
+                cs.createTextContent(tablet + " 2", "es", tablets + "/" + tablet, WcmResources.HTML_ES);
                 cs.createBinaryContent(tablet + " 2 description", "en", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 2 description", "es", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 2 picture", "en", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -520,14 +520,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Motorola", tablets);
 
                 tablet = "Motorola";
-                cs.createTextContent(tablet + " 1", "en", tablets + "/" + tablet, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(tablet + " 1", "es", tablets + "/" + tablet, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(tablet + " 1", "en", tablets + "/" + tablet, WcmResources.HTML_EN);
+                cs.createTextContent(tablet + " 1", "es", tablets + "/" + tablet, WcmResources.HTML_ES);
                 cs.createBinaryContent(tablet + " 1 description", "en", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 1 description", "es", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 1 picture", "en", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(tablet + " 1 picture", "es", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(tablet + " 2", "en", tablets + "/" + tablet, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(tablet + " 2", "es", tablets + "/" + tablet, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(tablet + " 2", "en", tablets + "/" + tablet, WcmResources.HTML_EN);
+                cs.createTextContent(tablet + " 2", "es", tablets + "/" + tablet, WcmResources.HTML_ES);
                 cs.createBinaryContent(tablet + " 2 description", "en", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 2 description", "es", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 2 picture", "en", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -536,14 +536,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Samsung", tablets);
 
                 tablet = "Samsung";
-                cs.createTextContent(tablet + " 1", "en", tablets + "/" + tablet, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(tablet + " 1", "es", tablets + "/" + tablet, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(tablet + " 1", "en", tablets + "/" + tablet, WcmResources.HTML_EN);
+                cs.createTextContent(tablet + " 1", "es", tablets + "/" + tablet, WcmResources.HTML_ES);
                 cs.createBinaryContent(tablet + " 1 description", "en", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 1 description", "es", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 1 picture", "en", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(tablet + " 1 picture", "es", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(tablet + " 2", "en", tablets + "/" + tablet, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(tablet + " 2", "es", tablets + "/" + tablet, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(tablet + " 2", "en", tablets + "/" + tablet, WcmResources.HTML_EN);
+                cs.createTextContent(tablet + " 2", "es", tablets + "/" + tablet, WcmResources.HTML_ES);
                 cs.createBinaryContent(tablet + " 2 description", "en", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 2 description", "es", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 2 picture", "en", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -552,14 +552,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Sony", tablets);
 
                 tablet = "Sony";
-                cs.createTextContent(tablet + " 1", "en", tablets + "/" + tablet, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(tablet + " 1", "es", tablets + "/" + tablet, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(tablet + " 1", "en", tablets + "/" + tablet, WcmResources.HTML_EN);
+                cs.createTextContent(tablet + " 1", "es", tablets + "/" + tablet, WcmResources.HTML_ES);
                 cs.createBinaryContent(tablet + " 1 description", "en", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 1 description", "es", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 1 picture", "en", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(tablet + " 1 picture", "es", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(tablet + " 2", "en", tablets + "/" + tablet, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(tablet + " 2", "es", tablets + "/" + tablet, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(tablet + " 2", "en", tablets + "/" + tablet, WcmResources.HTML_EN);
+                cs.createTextContent(tablet + " 2", "es", tablets + "/" + tablet, WcmResources.HTML_ES);
                 cs.createBinaryContent(tablet + " 2 description", "en", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 2 description", "es", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 2 picture", "en", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
@@ -568,14 +568,14 @@ public class WcmMediumSiteTest {
                 cs.createFolder("Versus", tablets);
 
                 tablet = "Versus";
-                cs.createTextContent(tablet + " 1", "en", tablets + "/" + tablet, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(tablet + " 1", "es", tablets + "/" + tablet, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(tablet + " 1", "en", tablets + "/" + tablet, WcmResources.HTML_EN);
+                cs.createTextContent(tablet + " 1", "es", tablets + "/" + tablet, WcmResources.HTML_ES);
                 cs.createBinaryContent(tablet + " 1 description", "en", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 1 description", "es", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 1 picture", "en", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
                 cs.createBinaryContent(tablet + " 1 picture", "es", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));
-                cs.createTextContent(tablet + " 2", "en", tablets + "/" + tablet, WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent(tablet + " 2", "es", tablets + "/" + tablet, WcmResources.HTML_ES, "UTF8");
+                cs.createTextContent(tablet + " 2", "en", tablets + "/" + tablet, WcmResources.HTML_EN);
+                cs.createTextContent(tablet + " 2", "es", tablets + "/" + tablet, WcmResources.HTML_ES);
                 cs.createBinaryContent(tablet + " 2 description", "en", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 2 description", "es", tablets + "/" + tablet, "application/pdf", sizePdf, tablet + "-description.pdf", new ByteArrayInputStream(_pdf));
                 cs.createBinaryContent(tablet + " 2 picture", "en", tablets + "/" + tablet, "image/jpeg", sizeJpg, tablet + "-picture.jpg", new ByteArrayInputStream(_jpg));

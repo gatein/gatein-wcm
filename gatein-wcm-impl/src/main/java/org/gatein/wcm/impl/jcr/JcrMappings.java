@@ -2,7 +2,6 @@ package org.gatein.wcm.impl.jcr;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -377,7 +376,7 @@ public class JcrMappings {
         return false;
     }
 
-    public void createTextNode(String id, String locale, String location, Value content, String encoding)
+    public void createTextNode(String id, String locale, String location, Value content)
             throws RepositoryException {
         if (!checkIdExists(location, id)) {
             jcrSession.getNode(location).addNode(id, "nt:folder");
@@ -408,7 +407,6 @@ public class JcrMappings {
             n.setProperty("jcr:description", content.getString().substring(0, 1000));
         else
             n.setProperty("jcr:description", content.getString());
-        n.setProperty("jcr:encoding", encoding);
 
         // Saving changes into JCR
         jcrSession.save();
@@ -528,7 +526,7 @@ public class JcrMappings {
         return locales;
     }
 
-    public void updateTextNode(String location, String locale, Value content, String encoding) throws RepositoryException {
+    public void updateTextNode(String location, String locale, Value content) throws RepositoryException {
         if ("/".equals(location))
             return;
 
@@ -633,7 +631,7 @@ public class JcrMappings {
         jcrSession.save();
     }
 
-    public void createContentComment(String location, String locale, String comment) throws RepositoryException {
+    public void createContentComment(String location, String comment) throws RepositoryException {
         if (!checkIdExists(location, "__comments")) {
             jcrSession.getNode(location).addNode("__comments", "nt:folder");
         }
@@ -646,7 +644,7 @@ public class JcrMappings {
         jcrSession.save();
     }
 
-    public void createContentProperty(String location, String locale, String name, String value) throws RepositoryException {
+    public void createContentProperty(String location, String name, String value) throws RepositoryException {
         if (!checkIdExists(location, "__properties")) {
             jcrSession.getNode(location).addNode("__properties", "nt:folder");
         }
@@ -661,7 +659,7 @@ public class JcrMappings {
         jcrSession.save();
     }
 
-    public void deleteContentComment(String location, String locale, String idComment) throws RepositoryException {
+    public void deleteContentComment(String location, String idComment) throws RepositoryException {
         if (checkIdExists(location, "__comments/" + idComment)) {
             jcrSession.removeItem(location + "/__comments/" + idComment);
         }
@@ -669,7 +667,7 @@ public class JcrMappings {
         jcrSession.save();
     }
 
-    public void deleteContentProperty(String location, String locale, String name) throws RepositoryException {
+    public void deleteContentProperty(String location, String name) throws RepositoryException {
         if (checkIdExists(location, "__properties/" + name)) {
             jcrSession.removeItem(location + "/__properties/" + name);
         }
@@ -746,7 +744,7 @@ public class JcrMappings {
         return tempAcl;
     }
 
-    public void deleteContentACE(String location, String locale, String name) throws RepositoryException {
+    public void deleteContentACE(String location, String name) throws RepositoryException {
 
         String acl = null;
         if (!checkIdExists(location, "__acl"))
@@ -769,12 +767,8 @@ public class JcrMappings {
     }
 
     // JCR Aux methods
-    public Value jcrValue(String content, String encoding) throws RepositoryException {
-        try {
-            return jcrSession.getValueFactory().createValue(new String(content.getBytes(encoding), encoding));
-        } catch (UnsupportedEncodingException e) {
-            throw new RepositoryException("Bad encoding : " + encoding);
-        }
+    public Value jcrValue(String content) throws RepositoryException {
+        return jcrSession.getValueFactory().createValue(content);
     }
 
     public Integer jcrVersion(String location) {
@@ -870,21 +864,30 @@ public class JcrMappings {
 
     public PublishStatus jcrPublishStatus(String location) {
         // TODO to complete
+        if (location == null)
+            return null;
+
         return null;
     }
 
     public PublishStatus jcrPublishStatus(Node n) {
         // TODO to complete
+        if (n == null)
+            return null;
         return null;
     }
 
     public List<Principal> jcrPublishingRoles(String location) {
         // TODO to complete
+        if (location == null)
+            return null;
         return null;
     }
 
     public List<Principal> jcrPublishingRoles(Node n) {
         // TODO to complete
+        if (n == null)
+            return null;
         return null;
     }
 

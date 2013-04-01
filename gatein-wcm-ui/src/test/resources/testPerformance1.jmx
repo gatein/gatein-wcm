@@ -383,7 +383,7 @@
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">/gatein-wcm-ui/wcm//test_${__threadNum}_${__counter(TRUE)}/binary1</stringProp>
+            <stringProp name="HTTPSampler.path">/gatein-wcm-ui/res/test_${__threadNum}_${__counter(TRUE)}/binary1</stringProp>
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -451,6 +451,8 @@
           </HTTPSamplerProxy>
           <hashTree/>
         </hashTree>
+        <Summariser guiclass="SummariserGui" testclass="Summariser" testname="Generate Summary Results" enabled="true"/>
+        <hashTree/>
       </hashTree>
     </hashTree>
   </hashTree>

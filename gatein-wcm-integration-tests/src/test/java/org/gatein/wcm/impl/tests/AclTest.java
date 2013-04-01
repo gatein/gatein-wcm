@@ -53,9 +53,9 @@ public class AclTest {
 				"admin", "admin");
 
 		cs.createFolder("createacl", "/");
-		cs.createTextContent("test1", "en", "/createacl", "This is a test1", "UTF8");
-		cs.createTextContent("test2", "en", "/createacl", "This is a test2", "UTF8");
-		cs.createTextContent("test3", "en", "/createacl", "This is a test3", "UTF8");
+		cs.createTextContent("test1", "en", "/createacl", "This is a test1");
+		cs.createTextContent("test2", "en", "/createacl", "This is a test2");
+		cs.createTextContent("test3", "en", "/createacl", "This is a test3");
 
 		// Root ACL
 		cs.createContentACE("/", "en", "admin", Principal.PrincipalType.USER, ACE.PermissionType.ALL);
@@ -85,9 +85,9 @@ public class AclTest {
                 "admin", "admin");
 
         cs.createFolder("deleteacl", "/");
-        cs.createTextContent("test1", "en", "/deleteacl", "This is a test1", "UTF8");
-        cs.createTextContent("test2", "en", "/deleteacl", "This is a test2", "UTF8");
-        cs.createTextContent("test3", "en", "/deleteacl", "This is a test3", "UTF8");
+        cs.createTextContent("test1", "en", "/deleteacl", "This is a test1");
+        cs.createTextContent("test2", "en", "/deleteacl", "This is a test2");
+        cs.createTextContent("test3", "en", "/deleteacl", "This is a test3");
 
         cs.deleteContent("/deleteacl");
 

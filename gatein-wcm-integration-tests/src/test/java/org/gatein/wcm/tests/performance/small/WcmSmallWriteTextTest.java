@@ -90,10 +90,10 @@ public class WcmSmallWriteTextTest {
 
             try {
                 log.info( "WcmSmallWriteTextTest #" + nTest );
-                cs.createTextContent("test" + nTest, "es", "/", WcmResources.HTML_ES, "UTF8");
-                cs.createTextContent("test" + nTest, "en", "/", WcmResources.HTML_EN, "UTF8");
-                cs.createTextContent("test" + nTest, "fr", "/", WcmResources.HTML_FR, "UTF8");
-                cs.createTextContent("test" + nTest, "de", "/", WcmResources.HTML_DE, "UTF8");
+                cs.createTextContent("test" + nTest, "es", "/", WcmResources.HTML_ES);
+                cs.createTextContent("test" + nTest, "en", "/", WcmResources.HTML_EN);
+                cs.createTextContent("test" + nTest, "fr", "/", WcmResources.HTML_FR);
+                cs.createTextContent("test" + nTest, "de", "/", WcmResources.HTML_DE);
 
                 List<String> locales = cs.getContentLocales("/test" + nTest);
                 if ( (!locales.contains("es")) ||
