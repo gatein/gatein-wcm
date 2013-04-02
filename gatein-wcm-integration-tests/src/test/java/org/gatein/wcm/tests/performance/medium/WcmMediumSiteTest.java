@@ -60,7 +60,7 @@ public class WcmMediumSiteTest {
 
     @Test
     public void performanceMediumSiteTest() {
-        log.info( "[[ START TEST performanceMediumSiteTest ]]" );
+        log.debug( "[[ START TEST performanceMediumSiteTest ]]" );
         long start = System.currentTimeMillis();
         try {
             ExecutorService executor = Executors.newFixedThreadPool(NTHREADS, new WcmThreadFactory());
@@ -81,10 +81,10 @@ public class WcmMediumSiteTest {
         double pertest = total / NTESTS;
         DecimalFormat df = new DecimalFormat("0.###");
 
-        log.info( "[[ WcmMediumSiteTest # of operations " + NTESTS + " | # of threads " + NTHREADS +
+        log.debug( "[[ WcmMediumSiteTest # of operations " + NTESTS + " | # of threads " + NTHREADS +
                   " | total time " + df.format(total) + " seconds " +
                   " | time per operation " + df.format(pertest) + " seconds ]]");
-        log.info( "[[ STOP TEST performance ]]" );
+        log.debug( "[[ STOP TEST performance ]]" );
     }
 
     public class WcmSmallWorker implements Runnable {
@@ -101,7 +101,7 @@ public class WcmMediumSiteTest {
         public void run() {
 
             try {
-                log.info( "WcmMediumSiteTest #" + nTest );
+                log.debug( "WcmMediumSiteTest #" + nTest );
 
                 // Loading resources
                 InputStream jpg = getClass().getClassLoader().getResourceAsStream("/wcm-whiteboard.jpg");

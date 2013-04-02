@@ -48,7 +48,7 @@ public class AclTest {
 	public void createAcl() throws ContentIOException,
 			ContentSecurityException, ContentException {
 
-		log.info("[[ START TEST  createAcl ]]");
+		log.debug("[[ START TEST  createAcl ]]");
 		ContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
 
@@ -72,7 +72,7 @@ public class AclTest {
 
 		cs.deleteContent("/createacl");
 
-		log.info("[[ STOP TEST  createAcl ]]");
+		log.debug("[[ STOP TEST  createAcl ]]");
 		Assert.assertTrue(true);
 	}
 
@@ -80,7 +80,7 @@ public class AclTest {
     public void deleteAcl() throws ContentIOException,
             ContentSecurityException, ContentException {
 
-        log.info("[[ START TEST  deleteAcl ]]");
+        log.debug("[[ START TEST  deleteAcl ]]");
         ContentService cs = repos.createContentSession("sample", "default",
                 "admin", "admin");
 
@@ -91,7 +91,7 @@ public class AclTest {
 
         cs.deleteContent("/deleteacl");
 
-        log.info("[[ STOP TEST  deleteAcl ]]");
+        log.debug("[[ STOP TEST  deleteAcl ]]");
         Assert.assertTrue(true);
     }
 

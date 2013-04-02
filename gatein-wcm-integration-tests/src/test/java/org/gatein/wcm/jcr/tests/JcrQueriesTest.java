@@ -46,7 +46,7 @@ public class JcrQueriesTest {
 
         try {
 
-            log.info( "[[ START TEST query ]]" );
+            log.debug( "[[ START TEST query ]]" );
 
             SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
             javax.jcr.Session session = repository.login(credentials, "default");
@@ -68,7 +68,7 @@ public class JcrQueriesTest {
             tools.print(expression);
             tools.print(results);
 
-            log.info("[[ END TEST query ]]");
+            log.debug("[[ END TEST query ]]");
 
             Assert.assertTrue( true );
 

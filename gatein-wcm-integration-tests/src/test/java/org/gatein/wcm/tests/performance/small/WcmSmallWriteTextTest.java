@@ -48,7 +48,7 @@ public class WcmSmallWriteTextTest {
 
     @Test
     public void performanceTextTest() {
-        log.info( "[[ START TEST performanceTextTest ]]" );
+        log.debug( "[[ START TEST performanceTextTest ]]" );
         long start = System.currentTimeMillis();
         try {
             ExecutorService executor = Executors.newFixedThreadPool(NTHREADS, new WcmThreadFactory());
@@ -69,10 +69,10 @@ public class WcmSmallWriteTextTest {
         double pertest = total / NTESTS;
         DecimalFormat df = new DecimalFormat("0.###");
 
-        log.info( "[[ WcmSmallWriteTextTest # of operations " + NTESTS + " | # of threads " + NTHREADS +
+        log.debug( "[[ WcmSmallWriteTextTest # of operations " + NTESTS + " | # of threads " + NTHREADS +
                   " | total time " + df.format(total) + " seconds " +
                   " | time per operation " + df.format(pertest) + " seconds ]]");
-        log.info( "[[ STOP TEST performanceTextTest ]]" );
+        log.debug( "[[ STOP TEST performanceTextTest ]]" );
     }
 
     public class WcmSmallWorker implements Runnable {
@@ -89,7 +89,7 @@ public class WcmSmallWriteTextTest {
         public void run() {
 
             try {
-                log.info( "WcmSmallWriteTextTest #" + nTest );
+                log.debug( "WcmSmallWriteTextTest #" + nTest );
                 cs.createTextContent("test" + nTest, "es", "/", WcmResources.HTML_ES);
                 cs.createTextContent("test" + nTest, "en", "/", WcmResources.HTML_EN);
                 cs.createTextContent("test" + nTest, "fr", "/", WcmResources.HTML_FR);

@@ -76,7 +76,7 @@ public class SamplePageTest {
         byte[] _css = toByteArray(css);
         String _html = toString(html);
 
-        log.info("[[ START TEST  createSimpleWebSite ]]");
+        log.debug("[[ START TEST  createSimpleWebSite ]]");
         ContentService cs = repos.createContentSession("sample", "default",
                 "admin", "admin");
 
@@ -123,7 +123,7 @@ public class SamplePageTest {
         cs.createContentProperty("/testWebSite/folder1/c1", "en", "title", "Maecenas luctus lectus");
         cs.createContentProperty("/testWebSite/folder1/c1", "en", "summary", "Quisque dictum integer nisl risus, sagittis convallis, rutrum id, congue, and nibh.");
 
-        log.info("[[ STOP TEST  createSimpleWebSite ]]");
+        log.debug("[[ STOP TEST  createSimpleWebSite ]]");
         Assert.assertTrue(true);
     }
 

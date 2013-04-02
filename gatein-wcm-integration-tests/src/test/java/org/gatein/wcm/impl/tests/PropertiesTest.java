@@ -47,7 +47,7 @@ public class PropertiesTest {
 	public void createProperties() throws ContentIOException,
 			ContentSecurityException, ContentException {
 
-		log.info("[[ START TEST  createProperties ]]");
+		log.debug("[[ START TEST  createProperties ]]");
 		ContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
 
@@ -63,12 +63,12 @@ public class PropertiesTest {
 
 		List<Property> properties = c.getProperties();
 		for (Property p : properties) {
-		    log.info("Property: " + p.getName() + " Value: " + p.getValue());
+		    log.debug("Property: " + p.getName() + " Value: " + p.getValue());
 		}
 
 		cs.deleteContent("/testproperties");
 
-		log.info("[[ STOP TEST  createProperties ]]");
+		log.debug("[[ STOP TEST  createProperties ]]");
 		Assert.assertTrue(true);
 	}
 
@@ -76,7 +76,7 @@ public class PropertiesTest {
     public void deleteProperties() throws ContentIOException,
             ContentSecurityException, ContentException {
 
-        log.info("[[ START TEST  deleteProperties ]]");
+        log.debug("[[ START TEST  deleteProperties ]]");
         ContentService cs = repos.createContentSession("sample", "default",
                 "admin", "admin");
 
@@ -106,7 +106,7 @@ public class PropertiesTest {
 
         cs.deleteContent("/deleteproperties");
 
-        log.info("[[ STOP TEST  deleteProperties ]]");
+        log.debug("[[ STOP TEST  deleteProperties ]]");
         Assert.assertTrue(true);
     }
 

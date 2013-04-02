@@ -47,7 +47,7 @@ public class CommentsTest {
 	public void createComments() throws ContentIOException,
 			ContentSecurityException, ContentException {
 
-		log.info("[[ START TEST  createComments ]]");
+		log.debug("[[ START TEST  createComments ]]");
 		ContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
 
@@ -64,12 +64,12 @@ public class CommentsTest {
 
 		List<Comment> comments = c.getComments();
 		for (Comment comment : comments) {
-		    log.info(comment.getCreatedBy().getUserName() + " date: " + comment.getCreated().toString() + ": " + comment.getComment());
+		    log.debug(comment.getCreatedBy().getUserName() + " date: " + comment.getCreated().toString() + ": " + comment.getComment());
 		}
 
 		cs.deleteContent("/testcomments");
 
-		log.info("[[ STOP TEST  createComments ]]");
+		log.debug("[[ STOP TEST  createComments ]]");
 		Assert.assertTrue(true);
 	}
 
@@ -77,7 +77,7 @@ public class CommentsTest {
     public void deleteComments() throws ContentIOException,
             ContentSecurityException, ContentException {
 
-        log.info("[[ START TEST  deleteComments ]]");
+        log.debug("[[ START TEST  deleteComments ]]");
         ContentService cs = repos.createContentSession("sample", "default",
                 "admin", "admin");
 
@@ -96,7 +96,7 @@ public class CommentsTest {
 
         List<Comment> comments = c.getComments();
         for (Comment comment : comments) {
-            log.info(comment.getCreatedBy().getUserName() + " date: " + comment.getCreated().toString() + ": " + comment.getComment());
+            log.debug(comment.getCreatedBy().getUserName() + " date: " + comment.getCreated().toString() + ": " + comment.getComment());
             cs.deleteContentComment("/deletecomments", "en", comment.getId());
         }
 
@@ -109,7 +109,7 @@ public class CommentsTest {
 
         cs.deleteContent("/deletecomments");
 
-        log.info("[[ STOP TEST  deleteComments ]]");
+        log.debug("[[ STOP TEST  deleteComments ]]");
         Assert.assertTrue(true);
     }
 

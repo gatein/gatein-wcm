@@ -42,23 +42,23 @@ public class BasicModeShapeTest {
     public void accesingRepository() {
 
         try {
-            log.info("[[ START TEST accesingRepository ]]");
+            log.debug("[[ START TEST accesingRepository ]]");
             if (repositories != null) {
                 for (String repo : repositories.getRepositoryNames()) {
-                    log.info("[[ REPO: " + repo + " ]]");
+                    log.debug("[[ REPO: " + repo + " ]]");
                 }
             }
             if (repository != null) {
 
                 javax.jcr.Session session = repository.login("default");
-                log.info("[[ Repo /jcr/sample.... RootNode... ");
-                log.info(session.getRootNode().toString());
+                log.debug("[[ Repo /jcr/sample.... RootNode... ");
+                log.debug(session.getRootNode().toString());
 
                 Assert.assertTrue(true);
             } else {
                 Assert.assertTrue(false);
             }
-            log.info("[[ END TEST accesingRepository ]]");
+            log.debug("[[ END TEST accesingRepository ]]");
         } catch (Exception e) {
             Assert.fail(e.toString());
         }
@@ -68,17 +68,17 @@ public class BasicModeShapeTest {
     public void simpleCredentials() {
 
         try {
-            log.info("[[ START TEST  simpleCredentials ]]");
+            log.debug("[[ START TEST  simpleCredentials ]]");
             if (repositories != null) {
                 for (String repo : repositories.getRepositoryNames()) {
-                    log.info("[[ REPO: " + repo + " ]]");
+                    log.debug("[[ REPO: " + repo + " ]]");
                 }
             }
             if (repository != null) {
                 SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
                 javax.jcr.Session session = repository.login(credentials, "default");
-                log.info("[[ Repo /jcr/sample.... RootNode... ");
-                log.info(session.getRootNode().toString());
+                log.debug("[[ Repo /jcr/sample.... RootNode... ");
+                log.debug(session.getRootNode().toString());
                 session.logout();
                 credentials = new SimpleCredentials("admin", "bad".toCharArray());
                 session = repository.login(credentials, "default");
@@ -86,10 +86,10 @@ public class BasicModeShapeTest {
             } else {
                 Assert.assertTrue(false);
             }
-            log.info("[[ END TEST  simpleCredentials ]]");
+            log.debug("[[ END TEST  simpleCredentials ]]");
         } catch (LoginException e) {
-            log.info(" [[ Expected: " + e.toString() + " ]] ");
-            log.info(" [[ END TEST simpleCredentials ]] ");
+            log.debug(" [[ Expected: " + e.toString() + " ]] ");
+            log.debug(" [[ END TEST simpleCredentials ]] ");
         } catch (Exception e) {
             Assert.fail(e.toString());
         }

@@ -56,7 +56,7 @@ public class BasicJcrOperationsTest {
 
         try {
 
-            log.info( "[[ START TEST queryRoot ]]" );
+            log.debug( "[[ START TEST queryRoot ]]" );
 
             SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
 
@@ -71,13 +71,13 @@ public class BasicJcrOperationsTest {
 
             if (result.getNodes().getSize() == 1) {
                 Node n = result.getNodes().nextNode();
-                log.info("Path: " + n.getPath() + " Node: " + n.getIdentifier());
+                log.debug("Path: " + n.getPath() + " Node: " + n.getIdentifier());
             } else {
-                log.info( "result.getNodes().getSize(): " + result.getNodes().getSize() );
+                log.debug( "result.getNodes().getSize(): " + result.getNodes().getSize() );
             }
 
             Assert.assertTrue( true );
-            log.info("[[ END TEST queryRoot ]]");
+            log.debug("[[ END TEST queryRoot ]]");
 
         } catch (Exception e) {
             Assert.fail(e.toString());
@@ -88,7 +88,7 @@ public class BasicJcrOperationsTest {
 
         try {
 
-            log.info( "[[ START CLEANING ]]" );
+            log.debug( "[[ START CLEANING ]]" );
             SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
             javax.jcr.Session session = repository.login(credentials, "default");
 
@@ -110,7 +110,7 @@ public class BasicJcrOperationsTest {
             }
             session.save();
 
-            log.info("[[ STOP CLEANING ]]");
+            log.debug("[[ STOP CLEANING ]]");
         } catch (Exception e) {
             log.error("Cleaning: " + e.getMessage());
         }
@@ -125,7 +125,7 @@ public class BasicJcrOperationsTest {
 
         try {
 
-            log.info( "[[ START TEST addFolder ]]" );
+            log.debug( "[[ START TEST addFolder ]]" );
 
             SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
 
@@ -141,17 +141,17 @@ public class BasicJcrOperationsTest {
             if (result.getNodes().getSize() == 1) {
                 Node n = result.getNodes().nextNode();
                 n.addNode("tests", JcrConstants.NT_FOLDER);
-                log.info("Path: " + n.getPath() + " Node: " + n.getIdentifier());
-                log.info("Check: " + session.nodeExists("/tests") );
+                log.debug("Path: " + n.getPath() + " Node: " + n.getIdentifier());
+                log.debug("Check: " + session.nodeExists("/tests") );
                 session.save();
 
             } else {
-                log.info( "result.getNodes().getSize(): " + result.getNodes().getSize() );
+                log.debug( "result.getNodes().getSize(): " + result.getNodes().getSize() );
             }
 
             Assert.assertTrue( true );
 
-            log.info("[[ END TEST addFolder ]]");
+            log.debug("[[ END TEST addFolder ]]");
 
         } catch (Exception e) {
 
@@ -169,13 +169,13 @@ public class BasicJcrOperationsTest {
 
         try {
 
-            log.info( "[[ START TEST complexFolders ]]" );
+            log.debug( "[[ START TEST complexFolders ]]" );
 
             SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
 
             javax.jcr.Session session = repository.login(credentials, "default");
 
-            log.info("Test / " + session.nodeExists("/"));
+            log.debug("Test / " + session.nodeExists("/"));
 
             Value content = session.getValueFactory().createValue("<html>This is a test content</html>");
 
@@ -190,7 +190,7 @@ public class BasicJcrOperationsTest {
 
             Assert.assertTrue( true );
 
-            log.info("[[ END TEST complexFolders ]]");
+            log.debug("[[ END TEST complexFolders ]]");
 
         } catch (Exception e) {
 
@@ -208,13 +208,13 @@ public class BasicJcrOperationsTest {
 
         try {
 
-            log.info( "[[ START TEST basicVersioning ]]" );
+            log.debug( "[[ START TEST basicVersioning ]]" );
 
             SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
 
             javax.jcr.Session session = repository.login(credentials, "default");
 
-            log.info("Test / " + session.nodeExists("/"));
+            log.debug("Test / " + session.nodeExists("/"));
 
             Value content = session.getValueFactory().createValue("<html>This is a test content</html>");
 
@@ -232,16 +232,16 @@ public class BasicJcrOperationsTest {
 
             VersionHistory h = vm.getVersionHistory("/content1/__es/__content1");
 
-            log.info("Number of versions: " + h.getAllLinearVersions().getSize() );
+            log.debug("Number of versions: " + h.getAllLinearVersions().getSize() );
 
             vm.checkout( "/content1/__es/__content1" );
             vm.checkin( "/content1/__es/__content1" );
 
-            log.info("Number of versions: " + h.getAllLinearVersions().getSize() );
+            log.debug("Number of versions: " + h.getAllLinearVersions().getSize() );
 
             Assert.assertTrue( true );
 
-            log.info("[[ END TEST basicVersioning ]]");
+            log.debug("[[ END TEST basicVersioning ]]");
 
         } catch (Exception e) {
 
@@ -259,13 +259,13 @@ public class BasicJcrOperationsTest {
 
         try {
 
-            log.info( "[[ START TEST basicProperties ]]" );
+            log.debug( "[[ START TEST basicProperties ]]" );
 
             SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
 
             javax.jcr.Session session = repository.login(credentials, "default");
 
-            log.info("Test / " + session.nodeExists("/"));
+            log.debug("Test / " + session.nodeExists("/"));
 
             Value content = session.getValueFactory().createValue("<html>This is a test content</html>");
 
@@ -283,12 +283,12 @@ public class BasicJcrOperationsTest {
 
             VersionHistory h = vm.getVersionHistory("/content1/__es/__content1");
 
-            log.info("Number of versions: " + h.getAllLinearVersions().getSize() );
+            log.debug("Number of versions: " + h.getAllLinearVersions().getSize() );
 
             vm.checkout( "/content1/__es/__content1" );
             vm.checkin( "/content1/__es/__content1" );
 
-            log.info("Number of versions: " + h.getAllLinearVersions().getSize() );
+            log.debug("Number of versions: " + h.getAllLinearVersions().getSize() );
 
             Assert.assertTrue( true );
 
@@ -299,18 +299,18 @@ public class BasicJcrOperationsTest {
             session.save();
 
             n = session.getNode("/content1");
-            log.info("Created: " + n.getProperty("jcr:created").getString() );
-            log.info("CreatedBy: " + n.getProperty("jcr:createdBy").getString() );
-            log.info("LastModified: " + n.getProperty("jcr:lastModified").getString() );
-            log.info("LastModifiedBy: " + n.getProperty("jcr:lastModifiedBy").getString() );
+            log.debug("Created: " + n.getProperty("jcr:created").getString() );
+            log.debug("CreatedBy: " + n.getProperty("jcr:createdBy").getString() );
+            log.debug("LastModified: " + n.getProperty("jcr:lastModified").getString() );
+            log.debug("LastModifiedBy: " + n.getProperty("jcr:lastModifiedBy").getString() );
 
             VersionIterator vi = h.getAllLinearVersions();
             while (vi.hasNext()) {
                 Version v = vi.nextVersion();
-                log.info("V: " + v.getName());
+                log.debug("V: " + v.getName());
             }
 
-            log.info("[[ END TEST basicProperties ]]");
+            log.debug("[[ END TEST basicProperties ]]");
 
         } catch (Exception e) {
 
@@ -328,13 +328,13 @@ public class BasicJcrOperationsTest {
 
         try {
 
-            log.info( "[[ START TEST checkAcl ]]" );
+            log.debug( "[[ START TEST checkAcl ]]" );
 
             SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
 
             javax.jcr.Session session = repository.login(credentials, "default");
 
-            log.info("Test / " + session.nodeExists("/"));
+            log.debug("Test / " + session.nodeExists("/"));
 
             Value content = session.getValueFactory().createValue("<html>This is a test content</html>");
 
@@ -355,12 +355,12 @@ public class BasicJcrOperationsTest {
 
             String aces = session.getNode("/content1/__acl/jcr:content").getProperty("jcr:data").getString();
             for (String ace : aces.split(",")) {
-                log.info("ACE: " + ace);
+                log.debug("ACE: " + ace);
             }
 
             Assert.assertTrue( true );
 
-            log.info("[[ END TEST checkAcl ]]");
+            log.debug("[[ END TEST checkAcl ]]");
 
         } catch (Exception e) {
 
@@ -378,7 +378,7 @@ public class BasicJcrOperationsTest {
 
         try {
 
-            log.info( "[[ START TEST fullTextData ]]" );
+            log.debug( "[[ START TEST fullTextData ]]" );
 
             SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
 
@@ -415,12 +415,12 @@ public class BasicJcrOperationsTest {
             NodeIterator ni = result.getNodes();
             while (ni.hasNext()) {
                 Node n = ni.nextNode();
-                log.info("Result: " + n.getName() );
+                log.debug("Result: " + n.getName() );
             }
 
             Assert.assertTrue( true );
 
-            log.info("[[ END TEST fullTextData ]]");
+            log.debug("[[ END TEST fullTextData ]]");
 
         } catch (Exception e) {
 
@@ -443,7 +443,7 @@ public class BasicJcrOperationsTest {
 
         try {
 
-            log.info( "[[ START TEST loadData ]]" );
+            log.debug( "[[ START TEST loadData ]]" );
 
             SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
 
@@ -491,7 +491,7 @@ public class BasicJcrOperationsTest {
 
                 long doc_stop = System.currentTimeMillis();
 
-                log.info( "WRITTING: content" + i + " Time: " + (doc_stop - doc_start) );
+                log.debug( "WRITTING: content" + i + " Time: " + (doc_stop - doc_start) );
 
             }
 
@@ -513,14 +513,14 @@ public class BasicJcrOperationsTest {
 
                 long doc_stop = System.currentTimeMillis();
 
-                log.info( "QUERYING: " + i + ". Results: " + ni.getSize() + " Time: " + (doc_stop - doc_start));
+                log.debug( "QUERYING: " + i + ". Results: " + ni.getSize() + " Time: " + (doc_stop - doc_start));
             }
 
             long global_stop = System.currentTimeMillis();
 
-            log.info( "Global time: " + ((global_stop - global_start)/1000) + " s" );
+            log.debug( "Global time: " + ((global_stop - global_start)/1000) + " s" );
 
-            log.info( "[[ END TEST loadData ]]" );
+            log.debug( "[[ END TEST loadData ]]" );
 
             Assert.assertTrue( true );
 
@@ -538,7 +538,7 @@ public class BasicJcrOperationsTest {
     @Test
     public void readResources() {
         try {
-            log.info( "File: " + getClass().getClassLoader().getResourceAsStream("/jbossportletbridge.pdf") );
+            log.debug( "File: " + getClass().getClassLoader().getResourceAsStream("/jbossportletbridge.pdf") );
 
             Assert.assertTrue( true );
         } catch (Exception e) {
@@ -554,7 +554,7 @@ public class BasicJcrOperationsTest {
 
         try {
 
-            log.info( "[[ START TEST urlSyntax ]]" );
+            log.debug( "[[ START TEST urlSyntax ]]" );
 
             SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
 
@@ -582,14 +582,14 @@ public class BasicJcrOperationsTest {
             session.save();
 
             // Query parts...
-            log.info( "/ . Url test: " + session.nodeExists("/") );
-            log.info( "/content1 . Url test: " + session.nodeExists("/content1") );
-            log.info( "/content1/ . Url test: " + session.nodeExists("/content1/") );
-            log.info( "/content1/__es . Url test: " + session.nodeExists("/content1/__es") );
+            log.debug( "/ . Url test: " + session.nodeExists("/") );
+            log.debug( "/content1 . Url test: " + session.nodeExists("/content1") );
+            log.debug( "/content1/ . Url test: " + session.nodeExists("/content1/") );
+            log.debug( "/content1/__es . Url test: " + session.nodeExists("/content1/__es") );
 
             Assert.assertTrue( true );
 
-            log.info("[[ END TEST urlSyntax ]]");
+            log.debug("[[ END TEST urlSyntax ]]");
 
         } catch (Exception e) {
 

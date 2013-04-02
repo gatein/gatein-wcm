@@ -39,11 +39,11 @@ public class BasicCDITest {
     @Test
     public void goodPassword() {
 
-        log.info("[[ START TEST  goodPassword ]]");
+        log.debug("[[ START TEST  goodPassword ]]");
         try {
             ContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
-            log.info( cs );
-            log.info("[[ END TEST  goodPassword ]]");
+            log.debug( cs );
+            log.debug("[[ END TEST  goodPassword ]]");
             Assert.assertTrue( true );
         } catch (Exception e) {
             Assert.fail(e.getMessage());
@@ -53,15 +53,15 @@ public class BasicCDITest {
     @Test
     public void badPassword() {
 
-        log.info("[[ START TEST  badPassword ]]");
+        log.debug("[[ START TEST  badPassword ]]");
         try {
             ContentService cs = repos.createContentSession("sample", "default", "admin", "badpassword");
-            log.info( cs );
+            log.debug( cs );
             Assert.fail("Expecting exception...");
 
         } catch (ContentSecurityException e) {
-            log.info(" [[ Expected: " + e.getMessage());
-            log.info("[[ END TEST  badPassword ]]");
+            log.debug(" [[ Expected: " + e.getMessage());
+            log.debug("[[ END TEST  badPassword ]]");
             Assert.assertTrue( true );
         } catch (Exception e) {
             Assert.fail(e.getMessage());

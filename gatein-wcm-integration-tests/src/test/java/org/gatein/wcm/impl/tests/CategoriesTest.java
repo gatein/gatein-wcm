@@ -54,7 +54,7 @@ public class CategoriesTest {
 	public void createCategories() throws ContentIOException,
 			ContentSecurityException, ContentException {
 
-		log.info("[[ START TEST  createCategories ]]");
+		log.debug("[[ START TEST  createCategories ]]");
 		ContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
 		Category c1 = cs.createCategory("sports1", "en", "Sports", "/");
@@ -88,27 +88,27 @@ public class CategoriesTest {
 		Category c18 = cs.createCategory("international", "fr",
 				"International", "/news1");
 
-		log.info(c1);
-		log.info(c2);
-		log.info(c3);
-		log.info(c4);
-		log.info(c5);
-		log.info(c6);
-		log.info(c7);
-		log.info(c8);
-		log.info(c9);
-		log.info(c10);
-		log.info(c11);
-		log.info(c12);
-		log.info(c13);
-		log.info(c14);
-		log.info(c15);
+		log.debug(c1);
+		log.debug(c2);
+		log.debug(c3);
+		log.debug(c4);
+		log.debug(c5);
+		log.debug(c6);
+		log.debug(c7);
+		log.debug(c8);
+		log.debug(c9);
+		log.debug(c10);
+		log.debug(c11);
+		log.debug(c12);
+		log.debug(c13);
+		log.debug(c14);
+		log.debug(c15);
 		Assert.assertTrue(c15.getId().equals("national"));
 		Assert.assertTrue(c15.getLocation().equals("/news1"));
 		Assert.assertTrue(c15.getLocale().equals("fr"));
-		log.info(c16);
-		log.info(c17);
-		log.info(c18);
+		log.debug(c16);
+		log.debug(c17);
+		log.debug(c18);
 		Assert.assertTrue(c18.getId().equals("international"));
 		Assert.assertTrue(c18.getLocation().equals("/news1"));
 		Assert.assertTrue(c18.getLocale().equals("fr"));
@@ -116,14 +116,14 @@ public class CategoriesTest {
 		// Clean test
 		cs.deleteCategory("/sports1");
 		cs.deleteCategory("/news1");
-		log.info("[[ STOP TEST  createCategories ]]");
+		log.debug("[[ STOP TEST  createCategories ]]");
 		Assert.assertTrue(true);
 	}
 
 	@Test
 	public void updateCategories() {
 
-		log.info("[[ START TEST  updateCategories ]]");
+		log.debug("[[ START TEST  updateCategories ]]");
 		try {
 			ContentService cs = repos.createContentSession("sample", "default",
 					"admin", "admin");
@@ -148,13 +148,13 @@ public class CategoriesTest {
 
 			Category c1 = cs.updateCategoryDescription("/news2/national2",
 					"es", "Noticias en español");
-			log.info(c1);
+			log.debug(c1);
 			Assert.assertTrue(c1.getId().equals("national2"));
 			Assert.assertTrue(c1.getLocation().equals("/news2"));
 			Assert.assertTrue(c1.getLocale().equals("es"));
 
 			Category c2 = cs.updateCategoryLocation("/sports2", "es", "/news2");
-			log.info(c2);
+			log.debug(c2);
 			Assert.assertTrue(c2.getId().equals("sports2"));
 			Assert.assertTrue(c2.getLocation().equals("/news2"));
 			Assert.assertTrue(c2.getLocale().equals("es"));
@@ -165,14 +165,14 @@ public class CategoriesTest {
 			log.error(e.getMessage());
 			Assert.assertTrue(false);
 		}
-		log.info("[[ STOP TEST  updateCategories ]]");
+		log.debug("[[ STOP TEST  updateCategories ]]");
 		Assert.assertTrue(true);
 	}
 
 	@Test
 	public void getCategories() {
 
-		log.info("[[ START TEST  getCategories ]]");
+		log.debug("[[ START TEST  getCategories ]]");
 		try {
 			ContentService cs = repos.createContentSession("sample", "default",
 					"admin", "admin");
@@ -206,21 +206,21 @@ public class CategoriesTest {
 			List<Category> categories = cs.getCategories("/", "es");
 			Assert.assertTrue(categories.size() == 2);
 			for (Category cy : categories) {
-				log.info(cy);
+				log.debug(cy);
 			}
 			categories = cs.getCategories("/sports3", "en");
 			// I get only a category with sports3 not their childs, I need to
 			// browse
 			Assert.assertTrue(categories.size() == 1);
 			for (Category cy : categories) {
-				log.info(cy);
+				log.debug(cy);
 			}
 			categories = cs.getCategories("/news3", "en");
 			// I get only a category with news3 not their child, I need to
 			// browse
 			Assert.assertTrue(categories.size() == 1);
 			for (Category cy : categories) {
-				log.info(cy);
+				log.debug(cy);
 			}
 
 			// Clean test
@@ -230,14 +230,14 @@ public class CategoriesTest {
 			log.error(e.getMessage());
 			Assert.assertTrue(false);
 		}
-		log.info("[[ STOP TEST  getCategories ]]");
+		log.debug("[[ STOP TEST  getCategories ]]");
 		Assert.assertTrue(true);
 	}
 
 	@Test
 	public void addCategories() {
 
-		log.info("[[ START TEST  addCategories ]]");
+		log.debug("[[ START TEST  addCategories ]]");
 		try {
 			ContentService cs = repos.createContentSession("sample", "default",
 					"admin", "admin");
@@ -262,9 +262,9 @@ public class CategoriesTest {
 
 			Category c1 = cs.updateCategoryDescription("/news4/national4",
 					"es", "Noticias en español");
-			log.info(c1);
+			log.debug(c1);
 			Category c2 = cs.updateCategoryLocation("/sports4", "es", "/news4");
-			log.info(c2);
+			log.debug(c2);
 
 			cs.createTextContent("my noticia", "es", "/",
 					"Esta es una noticia de ejemplo");
@@ -278,14 +278,14 @@ public class CategoriesTest {
 			log.error(e.getMessage());
 			Assert.assertTrue(false);
 		}
-		log.info("[[ STOP TEST  addCategories ]]");
+		log.debug("[[ STOP TEST  addCategories ]]");
 		Assert.assertTrue(true);
 	}
 
 	@Test
 	public void deleteCategories() {
 
-		log.info("[[ START TEST  deleteCategories ]]");
+		log.debug("[[ START TEST  deleteCategories ]]");
 		try {
 			ContentService cs = repos.createContentSession("sample", "default",
 					"admin", "admin");
@@ -322,13 +322,13 @@ public class CategoriesTest {
 			log.error(e.getMessage());
 			Assert.assertTrue(false);
 		}
-		log.info("[[ STOP TEST  deleteCategories ]]");
+		log.debug("[[ STOP TEST  deleteCategories ]]");
 		Assert.assertTrue(true);
 	}
 
 	@Test
 	public void queryCategories() {
-		log.info("[[ START TEST  queryCategories ]]");
+		log.debug("[[ START TEST  queryCategories ]]");
 		try {
 			ContentService cs = repos.createContentSession("sample", "default",
 					"admin", "admin");
@@ -355,17 +355,17 @@ public class CategoriesTest {
 			Content c = null;
 			for (int i = 1; i <= 3; i++) {
 				c = cs.createFolder("site" + i, "/");
-				log.info(c);
+				log.debug(c);
 			}
 			int news = 1;
 			for (int site = 1; site <= 3; site++) {
 				for (int i = 1; i <= 4; i++) {
 					c = cs.createTextContent("new" + news, "es",
 							"/site" + site, "Esta es la noticia " + news);
-					log.info(c);
+					log.debug(c);
 					c = cs.createTextContent("new" + news, "en",
 							"/site" + site, "This is the news " + news);
-					log.info(c);
+					log.debug(c);
 					news++;
 				}
 			}
@@ -373,29 +373,29 @@ public class CategoriesTest {
 			// Creating categories
 			Category cat = null;
 			cat = cs.createCategory("news", "es", "Noticias", "/");
-			log.info(cat);
+			log.debug(cat);
 			cat = cs.createCategory("news", "en", "News", "/");
-			log.info(cat);
+			log.debug(cat);
 			cat = cs.createCategory("countries", "es", "Paises", "/");
-			log.info(cat);
+			log.debug(cat);
 			cat = cs.createCategory("countries", "en", "Countries", "/");
-			log.info(cat);
+			log.debug(cat);
 			cat = cs.createCategory("national", "es", "Nacional", "/news");
-			log.info(cat);
+			log.debug(cat);
 			cat = cs.createCategory("national", "en", "National", "/news");
-			log.info(cat);
+			log.debug(cat);
 			cat = cs.createCategory("sports", "es", "Deportes", "/news");
-			log.info(cat);
+			log.debug(cat);
 			cat = cs.createCategory("sports", "en", "Sports", "/news");
-			log.info(cat);
+			log.debug(cat);
 			cat = cs.createCategory("spain", "es", "España", "/countries");
-			log.info(cat);
+			log.debug(cat);
 			cat = cs.createCategory("spain", "en", "Spain", "/countries");
-			log.info(cat);
+			log.debug(cat);
 			cat = cs.createCategory("france", "es", "Francia", "/countries");
-			log.info(cat);
+			log.debug(cat);
 			cat = cs.createCategory("france", "en", "France", "/countries");
-			log.info(cat);
+			log.debug(cat);
 
 			// Assing categories in content
 
@@ -428,7 +428,7 @@ public class CategoriesTest {
 			result = cs.getContent(cats, "/site1", "es");
 			ArrayList<String> ids = new ArrayList<String>();
 			for (Content r : result) {
-				log.info(r);
+				log.debug(r);
 				ids.add(r.getId());
 			}
 			Assert.assertTrue(ids.contains("new1"));
@@ -439,7 +439,7 @@ public class CategoriesTest {
 			result = cs.getContent(cats, "/site2", "es");
 			ids = new ArrayList<String>();
 			for (Content r : result) {
-				log.info(r);
+				log.debug(r);
 				ids.add(r.getId());
 			}
 			Assert.assertTrue(ids.contains("new5"));
@@ -450,7 +450,7 @@ public class CategoriesTest {
 			result = cs.getContent(cats, "/", "es");
 			ids = new ArrayList<String>();
 			for (Content r : result) {
-				log.info(r);
+				log.debug(r);
 				ids.add(r.getId());
 			}
 			Assert.assertTrue(ids.contains("new1"));
@@ -466,7 +466,7 @@ public class CategoriesTest {
 			result = cs.getContent(cats, "/", "es");
 			ids = new ArrayList<String>();
 			for (Content r : result) {
-				log.info(r);
+				log.debug(r);
 				ids.add(r.getId());
 			}
 			Assert.assertTrue(ids.contains("new3"));
@@ -492,7 +492,7 @@ public class CategoriesTest {
 			log.error(e.getMessage());
 			Assert.assertTrue(false);
 		}
-		log.info("[[ STOP TEST  queryCategories ]]");
+		log.debug("[[ STOP TEST  queryCategories ]]");
 		Assert.assertTrue(true);
 	}
 

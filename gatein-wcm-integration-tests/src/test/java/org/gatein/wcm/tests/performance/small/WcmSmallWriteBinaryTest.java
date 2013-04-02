@@ -52,7 +52,7 @@ public class WcmSmallWriteBinaryTest {
 
     @Test
     public void performanceBinaryTest() {
-        log.info( "[[ START TEST performanceBinaryTest ]]" );
+        log.debug( "[[ START TEST performanceBinaryTest ]]" );
         long start = System.currentTimeMillis();
         try {
             ExecutorService executor = Executors.newFixedThreadPool(NTHREADS, new WcmThreadFactory());
@@ -73,10 +73,10 @@ public class WcmSmallWriteBinaryTest {
         double pertest = total / NTESTS;
         DecimalFormat df = new DecimalFormat("0.###");
 
-        log.info( "[[ WcmSmallWriteBinaryTest # of operations " + NTESTS + " | # of threads " + NTHREADS +
+        log.debug( "[[ WcmSmallWriteBinaryTest # of operations " + NTESTS + " | # of threads " + NTHREADS +
                   " | total time " + df.format(total) + " seconds " +
                   " | time per operation " + df.format(pertest) + " seconds ]]");
-        log.info( "[[ STOP TEST performanceBinaryTest ]]" );
+        log.debug( "[[ STOP TEST performanceBinaryTest ]]" );
     }
 
     public class WcmSmallWorker implements Runnable {
@@ -93,7 +93,7 @@ public class WcmSmallWriteBinaryTest {
         public void run() {
 
             try {
-                log.info( "WcmSmallWriteBinaryTest #" + nTest );
+                log.debug( "WcmSmallWriteBinaryTest #" + nTest );
 
                 InputStream jpg = getClass().getClassLoader().getResourceAsStream(
                         "/wcm-whiteboard.jpg");

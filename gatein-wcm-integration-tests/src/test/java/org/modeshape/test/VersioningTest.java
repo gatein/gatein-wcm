@@ -40,7 +40,7 @@ public class VersioningTest {
 
     @Test
     public void createVersioningNodesAndDelete() throws Exception {
-        log.info("[[ START JCR Versioning Test ]]");
+        log.debug("[[ START JCR Versioning Test ]]");
 
         String nTest = "1";
 
@@ -91,11 +91,11 @@ public class VersioningTest {
         VersionIterator vi = history.getAllVersions();
         while (vi.hasNext()) {
             Version version = vi.nextVersion();
-            log.info(version.getName());
+            log.debug(version.getName());
             if (!"jcr:rootVersion".equals(version.getName()))
                 history.removeVersion(version.getName());
         }
-        log.info("VH: " + history.getVersionableIdentifier());
+        log.debug("VH: " + history.getVersionableIdentifier());
 
         jcrSession.removeItem(location + id);
 
@@ -106,7 +106,7 @@ public class VersioningTest {
 
         jcrSession.save();
 
-        log.info("[[ STOP JCR Versioning Test ]]");
+        log.debug("[[ STOP JCR Versioning Test ]]");
     }
 
 }

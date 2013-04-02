@@ -46,7 +46,7 @@ public class SecurityTest {
     @Test
     public void checkRead() throws ContentIOException, ContentSecurityException, ContentException {
 
-        log.info("[[ START TEST  checkRead ]]");
+        log.debug("[[ START TEST  checkRead ]]");
 
         String LOCALE = Locale.getDefault().getLanguage();
 
@@ -62,7 +62,7 @@ public class SecurityTest {
             Content c = cs.getContent("/test-sec-a", LOCALE);
             Assert.assertEquals(c.getId(), "test-sec-a");
         } catch (ContentSecurityException expected) {
-            log.info(expected.getMessage());
+            log.debug(expected.getMessage());
         } finally {
             cs.closeSession();
         }
@@ -82,14 +82,14 @@ public class SecurityTest {
         cs.deleteContent("/test-sec-a");
         cs.closeSession();
 
-        log.info("[[ STOP TEST  checkRead ]]");
+        log.debug("[[ STOP TEST  checkRead ]]");
 
     }
 
     @Test
     public void checkComments() throws ContentIOException, ContentSecurityException, ContentException {
 
-        log.info("[[ START TEST  checkComments ]]");
+        log.debug("[[ START TEST  checkComments ]]");
 
         String LOCALE = Locale.getDefault().getLanguage();
 
@@ -106,7 +106,7 @@ public class SecurityTest {
             Content c = cs.getContent("/test-sec-a", LOCALE);
             Assert.assertEquals(false, c.getComments().isEmpty());
         } catch (ContentSecurityException expected) {
-            log.info(expected.getMessage());
+            log.debug(expected.getMessage());
         } finally {
             cs.closeSession();
         }
@@ -127,14 +127,14 @@ public class SecurityTest {
         cs.deleteContent("/test-sec-a");
         cs.closeSession();
 
-        log.info("[[ STOP TEST  checkComments ]]");
+        log.debug("[[ STOP TEST  checkComments ]]");
 
     }
 
     @Test
     public void checkWrite() throws ContentIOException, ContentSecurityException, ContentException {
 
-        log.info("[[ START TEST  checkWrite ]]");
+        log.debug("[[ START TEST  checkWrite ]]");
 
         String LOCALE = Locale.getDefault().getLanguage();
 
@@ -150,7 +150,7 @@ public class SecurityTest {
             Content c = cs.createFolder("sub-a", "/test-sec-a");
             Assert.assertEquals("sub-a", c.getId());
         } catch (ContentSecurityException expected) {
-            log.info(expected.getMessage());
+            log.debug(expected.getMessage());
         } finally {
             cs.closeSession();
         }
@@ -170,14 +170,14 @@ public class SecurityTest {
         cs.deleteContent("/test-sec-a");
         cs.closeSession();
 
-        log.info("[[ STOP TEST  checkWrite ]]");
+        log.debug("[[ STOP TEST  checkWrite ]]");
 
     }
 
     @Test
     public void checkAdmin() throws ContentIOException, ContentSecurityException, ContentException {
 
-        log.info("[[ START TEST  checkAdmin ]]");
+        log.debug("[[ START TEST  checkAdmin ]]");
 
         String LOCALE = Locale.getDefault().getLanguage();
         ContentService cs = null;
@@ -188,7 +188,7 @@ public class SecurityTest {
             Category cat = cs.createCategory("test-sec-category", LOCALE, "Test security", "/");
             Assert.assertEquals("test-sec-category", cat.getId());
         } catch (ContentSecurityException expected) {
-            log.info(expected.getMessage());
+            log.debug(expected.getMessage());
         } finally {
             cs.closeSession();
         }
@@ -205,7 +205,7 @@ public class SecurityTest {
         cs.deleteContentACE("/__categories", LOCALE, "user1"); // Auto delete permission
         cs.closeSession();
 
-        log.info("[[ STOP TEST  checkAdmin ]]");
+        log.debug("[[ STOP TEST  checkAdmin ]]");
 
     }
 

@@ -61,7 +61,7 @@ public class BasicAPITest {
 	public void createTextContent() throws ContentIOException,
 			ContentSecurityException, ContentException {
 
-		log.info("[[ START TEST  createTextContent ]]");
+		log.debug("[[ START TEST  createTextContent ]]");
 		ContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
 		Content c1 = cs.createTextContent("test01", "es", "/",
@@ -72,26 +72,26 @@ public class BasicAPITest {
 				"<h1>First test...</h1><p>Ceci est un paragraphe</p>");
 		Content c4 = cs.createTextContent("test01", "de", "/",
 				"<h1>Erster Test...</h1><p>Dies ist ein Absatz</p>");
-		log.info(c1);
+		log.debug(c1);
 		Assert.assertTrue(c1.getId().equals("test01"));
 		Assert.assertTrue(c1.getLocale().equals("es"));
 		Assert.assertTrue(c1.getLocation().equals("/"));
-		log.info(c2);
+		log.debug(c2);
 		Assert.assertTrue(c2.getId().equals("test01"));
 		Assert.assertTrue(c2.getLocale().equals("en"));
 		Assert.assertTrue(c2.getLocation().equals("/"));
-		log.info(c3);
+		log.debug(c3);
 		Assert.assertTrue(c3.getId().equals("test01"));
 		Assert.assertTrue(c3.getLocale().equals("fr"));
 		Assert.assertTrue(c3.getLocation().equals("/"));
-		log.info(c4);
+		log.debug(c4);
 		Assert.assertTrue(c4.getId().equals("test01"));
 		Assert.assertTrue(c4.getLocale().equals("de"));
 		Assert.assertTrue(c4.getLocation().equals("/"));
 
 		// Cleaning test
 		cs.deleteContent("/test01");
-		log.info("[[ STOP TEST  createTextContent ]]");
+		log.debug("[[ STOP TEST  createTextContent ]]");
 		Assert.assertTrue(true);
 	}
 
@@ -99,7 +99,7 @@ public class BasicAPITest {
 	public void createFolders() throws ContentException, ContentIOException,
 			ContentSecurityException {
 
-		log.info("[[ START TEST  createFolders ]]");
+		log.debug("[[ START TEST  createFolders ]]");
 		ContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
 		Content f1 = cs.createFolder("test02", "/");
@@ -110,41 +110,41 @@ public class BasicAPITest {
 		Content f6 = cs.createFolder("e", "/test02/b");
 		Content f7 = cs.createFolder("f", "/test02/b");
 		Content f8 = cs.createFolder("g", "/test02/a/c");
-		log.info(f1);
+		log.debug(f1);
 		Assert.assertTrue(f1.getId().equals("test02"));
 		Assert.assertTrue(f1.getLocation().equals("/"));
-		log.info(f2);
+		log.debug(f2);
 		Assert.assertTrue(f2.getId().equals("a"));
 		Assert.assertTrue(f2.getLocation().equals("/test02"));
-		log.info(f3);
+		log.debug(f3);
 		Assert.assertTrue(f3.getId().equals("b"));
 		Assert.assertTrue(f3.getLocation().equals("/test02"));
-		log.info(f4);
+		log.debug(f4);
 		Assert.assertTrue(f4.getId().equals("c"));
 		Assert.assertTrue(f4.getLocation().equals("/test02/a"));
-		log.info(f5);
+		log.debug(f5);
 		Assert.assertTrue(f5.getId().equals("d"));
 		Assert.assertTrue(f5.getLocation().equals("/test02/a"));
-		log.info(f6);
+		log.debug(f6);
 		Assert.assertTrue(f6.getId().equals("e"));
 		Assert.assertTrue(f6.getLocation().equals("/test02/b"));
-		log.info(f7);
+		log.debug(f7);
 		Assert.assertTrue(f7.getId().equals("f"));
 		Assert.assertTrue(f7.getLocation().equals("/test02/b"));
-		log.info(f8);
+		log.debug(f8);
 		Assert.assertTrue(f8.getId().equals("g"));
 		Assert.assertTrue(f8.getLocation().equals("/test02/a/c"));
 
 		// Cleaning test
 		cs.deleteContent("/test02");
-		log.info("[[ STOP TEST  createFolders ]]");
+		log.debug("[[ STOP TEST  createFolders ]]");
 	}
 
 	@Test
 	public void createBinaryContent() throws ContentException,
 			ContentIOException, ContentSecurityException {
 
-		log.info("[[ START TEST  createBinaryContent ]]");
+		log.debug("[[ START TEST  createBinaryContent ]]");
 		InputStream pdf = getClass().getClassLoader().getResourceAsStream(
 				"/GateIn-UserGuide-v3.5.pdf");
 		InputStream jpg = getClass().getClassLoader().getResourceAsStream(
@@ -161,15 +161,15 @@ public class BasicAPITest {
 		Content b2 = cs.createBinaryContent("wcm-whiteboard", "en", "/test03",
 				"image/jpeg", Long.valueOf(_jpg.length), "wcm-whiteboard.jpg",
 				new ByteArrayInputStream(_jpg));
-		log.info(f1);
-		log.info(b1);
+		log.debug(f1);
+		log.debug(b1);
 		Assert.assertTrue(((BinaryContent) b1).getFileName().equals(
 				"GateIn-UserGuide-v3.5.pdf"));
 		Assert.assertTrue(((BinaryContent) b1).getSize() == _pdf.length);
 		Assert.assertTrue(((BinaryContent) b1).getContentType().equals(
 				"application/pdf"));
 		Assert.assertTrue(((BinaryContent) b1).getContent() != null);
-		log.info(b2);
+		log.debug(b2);
 		Assert.assertTrue(((BinaryContent) b2).getFileName().equals(
 				"wcm-whiteboard.jpg"));
 		Assert.assertTrue(((BinaryContent) b2).getSize() == _jpg.length);
@@ -179,14 +179,14 @@ public class BasicAPITest {
 
 		// Cleaning test
 		cs.deleteContent("/test03");
-		log.info("[[ STOP TEST  createBinaryContent ]]");
+		log.debug("[[ STOP TEST  createBinaryContent ]]");
 	}
 
 	@Test
 	public void getContent() throws ContentIOException,
 			ContentSecurityException, ContentException {
 
-		log.info("[[ START TEST  getContent ]]");
+		log.debug("[[ START TEST  getContent ]]");
 		int MAX_FOLDERS = 10;
 		InputStream pdf = getClass().getClassLoader().getResourceAsStream(
 				"/GateIn-UserGuide-v3.5.pdf");
@@ -222,14 +222,14 @@ public class BasicAPITest {
 
 		// Cleaning test
 		cs.deleteContent("/test04");
-		log.info("[[ STOP TEST  getContent ]]");
+		log.debug("[[ STOP TEST  getContent ]]");
 	}
 
 	@Test
 	public void getContentLocales() throws ContentException,
 			ContentIOException, ContentSecurityException {
 
-		log.info("[[ START TEST  getContentLocales ]]");
+		log.debug("[[ START TEST  getContentLocales ]]");
 		ContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
 		cs.createTextContent("test05", "es", "/", "<h1>Primer test...</h1>");
@@ -241,7 +241,7 @@ public class BasicAPITest {
 		cs.createTextContent("test05", "it", "/", "<h1>Primo test...</h1>");
 
 		List<String> locales = cs.getContentLocales("/test05");
-		log.info("Locales: " + locales);
+		log.debug("Locales: " + locales);
 		Assert.assertTrue(locales.contains("it"));
 
 		Content c = cs.getContent("/test05", "es");
@@ -249,7 +249,7 @@ public class BasicAPITest {
 
 		// Cleaning test
 		cs.deleteContent("/test05");
-		log.info("[[ STOP TEST  getContentLocales ]]");
+		log.debug("[[ STOP TEST  getContentLocales ]]");
 		Assert.assertTrue(true);
 	}
 
@@ -257,7 +257,7 @@ public class BasicAPITest {
 	public void updateTextContent() throws ContentException,
 			ContentIOException, ContentSecurityException {
 
-		log.info("[[ START TEST  updateTextContent ]]");
+		log.debug("[[ START TEST  updateTextContent ]]");
 		ContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
 		Content c1 = cs.createTextContent("test06", "es", "/",
@@ -268,35 +268,35 @@ public class BasicAPITest {
 				"<h1>First test...</h1><p>Ceci est un paragraphe</p>");
 		Content c4 = cs.createTextContent("test06", "de", "/",
 				"<h1>Erster Test...</h1><p>Dies ist ein Absatz</p>");
-		log.info(c1);
+		log.debug(c1);
 		Assert.assertTrue(((TextContent) c1).getContent().equals(
 				"<h1>Primer test...</h1><p>Este es un párrafo.</p>"));
-		log.info(c2);
+		log.debug(c2);
 		Assert.assertTrue(((TextContent) c2).getContent().equals(
 				"<h1>First test...</h1><p>This is a paragraph</p>"));
-		log.info(c3);
-		log.info(c4);
+		log.debug(c3);
+		log.debug(c4);
 		c1 = cs.updateTextContent("/test06", "es",
 				"<h1>Segundo test...</h1><p>Este es otro párrafo.</p>");
 		c2 = cs.updateTextContent("/test06", "en",
 				"<h1>Second test...</h1><p>This is another paragraph.</p>");
-		log.info(c1);
+		log.debug(c1);
 		Assert.assertTrue(((TextContent) c1).getContent().equals(
 				"<h1>Segundo test...</h1><p>Este es otro párrafo.</p>"));
-		log.info(c2);
+		log.debug(c2);
 		Assert.assertTrue(((TextContent) c2).getContent().equals(
 				"<h1>Second test...</h1><p>This is another paragraph.</p>"));
 
 		// Cleaning test
 		cs.deleteContent("/test06");
-		log.info("[[ STOP TEST  updateTextContent ]]");
+		log.debug("[[ STOP TEST  updateTextContent ]]");
 	}
 
 	@Test
 	public void updateFolderLocation() throws ContentException,
 			ContentIOException, ContentSecurityException {
 
-		log.info("[[ START TEST  updateFolderLocation ]]");
+		log.debug("[[ START TEST  updateFolderLocation ]]");
 		ContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
 		Content f1 = cs.createFolder("test07", "/");
@@ -307,21 +307,21 @@ public class BasicAPITest {
 		Content f6 = cs.createFolder("e", "/test07/b");
 		Content f7 = cs.createFolder("f", "/test07/b");
 		Content f8 = cs.createFolder("g", "/test07/a/c");
-		log.info(f1);
-		log.info(f2);
-		log.info(f3);
-		log.info(f4);
-		log.info(f5);
-		log.info(f6);
-		log.info(f7);
-		log.info(f8);
+		log.debug(f1);
+		log.debug(f2);
+		log.debug(f3);
+		log.debug(f4);
+		log.debug(f5);
+		log.debug(f6);
+		log.debug(f7);
+		log.debug(f8);
 		Content f10 = cs.updateFolderLocation("/test07/a", "en", "/test07/b");
-		log.info(f10);
+		log.debug(f10);
 		Assert.assertTrue(((Folder) f10).getLocation().equals("/test07/b"));
 
 		// Cleaning test
 		cs.deleteContent("/test07");
-		log.info("[[ STOP TEST  updateFolderLocation ]]");
+		log.debug("[[ STOP TEST  updateFolderLocation ]]");
 		Assert.assertTrue(true);
 	}
 
@@ -329,7 +329,7 @@ public class BasicAPITest {
 	public void updateFolderName() throws ContentException, ContentIOException,
 			ContentSecurityException {
 
-		log.info("[[ START TEST  updateFolderName ]]");
+		log.debug("[[ START TEST  updateFolderName ]]");
 		ContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
 		Content f1 = cs.createFolder("test08", "/");
@@ -340,21 +340,21 @@ public class BasicAPITest {
 		Content f6 = cs.createFolder("e", "/test08/b");
 		Content f7 = cs.createFolder("f", "/test08/b");
 		Content f8 = cs.createFolder("g", "/test08/a/c");
-		log.info(f1);
-		log.info(f2);
-		log.info(f3);
-		log.info(f4);
-		log.info(f5);
-		log.info(f6);
-		log.info(f7);
-		log.info(f8);
+		log.debug(f1);
+		log.debug(f2);
+		log.debug(f3);
+		log.debug(f4);
+		log.debug(f5);
+		log.debug(f6);
+		log.debug(f7);
+		log.debug(f8);
 		Content f10 = cs.updateFolderName("/test08/a", "en", "new-name");
-		log.info(f10);
+		log.debug(f10);
 		Assert.assertTrue(f10.getId().equals("new-name"));
 
 		// Cleaning test
 		cs.deleteContent("/test08");
-		log.info("[[ STOP TEST  updateFolderName ]]");
+		log.debug("[[ STOP TEST  updateFolderName ]]");
 		Assert.assertTrue(true);
 	}
 
@@ -362,7 +362,7 @@ public class BasicAPITest {
 	public void updateBinaryContent() throws ContentIOException,
 			ContentSecurityException, ContentException {
 
-		log.info("[[ START TEST  updateBinaryContent ]]");
+		log.debug("[[ START TEST  updateBinaryContent ]]");
 		InputStream pdf = getClass().getClassLoader().getResourceAsStream(
 				"/GateIn-UserGuide-v3.5.pdf");
 		InputStream jpg = getClass().getClassLoader().getResourceAsStream(
@@ -385,9 +385,9 @@ public class BasicAPITest {
 		Content b2 = cs.createBinaryContent("wcm-whiteboard", "en", "/test09",
 				"image/jpeg", sizeJpg, "wcm-whiteboard.jpg",
 				new ByteArrayInputStream(_jpg));
-		log.info(f1);
-		log.info(b1);
-		log.info(b2);
+		log.debug(f1);
+		log.debug(b1);
+		log.debug(b2);
 		b1 = cs.updateBinaryContent("/test09/gatein-userguide", "en",
 				"application/pdf", sizePdf2, "jbossportletbridge.pdf",
 				new ByteArrayInputStream(_pdf2));
@@ -399,7 +399,7 @@ public class BasicAPITest {
 
 		// Cleaning test
 		cs.deleteContent("/test09");
-		log.info("[[ STOP TEST  updateBinaryContent ]]");
+		log.debug("[[ STOP TEST  updateBinaryContent ]]");
 		Assert.assertTrue(true);
 	}
 
@@ -407,7 +407,7 @@ public class BasicAPITest {
 	public void deleteContent() throws ContentException, ContentIOException,
 			ContentSecurityException {
 
-		log.info("[[ START TEST  deleteContent ]]");
+		log.debug("[[ START TEST  deleteContent ]]");
 		ContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
 		Content c1 = cs.createTextContent("test10", "es", "/",
@@ -418,21 +418,21 @@ public class BasicAPITest {
 				"<h1>First test...</h1><p>Ceci est un paragraphe</p>");
 		Content c4 = cs.createTextContent("test10", "de", "/",
 				"<h1>Erster Test...</h1><p>Dies ist ein Absatz</p>");
-		log.info(c1);
-		log.info(c2);
-		log.info(c3);
-		log.info(c4);
+		log.debug(c1);
+		log.debug(c2);
+		log.debug(c3);
+		log.debug(c4);
 
-		log.info(cs.deleteContent("/test10", "es"));
-		log.info(cs.deleteContent("/test10", "en"));
-		log.info(cs.deleteContent("/test10", "fr"));
+		log.debug(cs.deleteContent("/test10", "es"));
+		log.debug(cs.deleteContent("/test10", "en"));
+		log.debug(cs.deleteContent("/test10", "fr"));
 
 		List<String> locales = cs.getContentLocales("/test10");
 		Assert.assertTrue(locales.size() == 1);
 
 		// Cleaning test
 		cs.deleteContent("/test10");
-		log.info("[[ STOP TEST  deleteContent ]]");
+		log.debug("[[ STOP TEST  deleteContent ]]");
 		Assert.assertTrue(true);
 	}
 
@@ -461,7 +461,7 @@ public class BasicAPITest {
 
 	private void print(Content c, String tmpFolder) {
 
-		log.info("--> " + c.getLocation() + " - " + c.getId());
+		log.debug("--> " + c.getLocation() + " - " + c.getId());
 		if (c instanceof Folder) {
 			List<Content> children = ((Folder) c).getChildren();
 			for (Content _c : children)
@@ -469,15 +469,15 @@ public class BasicAPITest {
 		}
 		if (c instanceof TextContent) {
 			TextContent t = (TextContent) c;
-			log.info("Text: " + t.getContent());
+			log.debug("Text: " + t.getContent());
 		}
 		if (c instanceof BinaryContent) {
 			BinaryContent b = (BinaryContent) c;
 			String filename = b.getFileName();
-			log.info(" Writting " + filename);
+			log.debug(" Writting " + filename);
 			inputStreamToFile(b.getContent(), filename, tmpFolder);
 		}
-		log.info("<-- " + c.getLocation() + " - " + c.getId());
+		log.debug("<-- " + c.getLocation() + " - " + c.getId());
 
 	}
 

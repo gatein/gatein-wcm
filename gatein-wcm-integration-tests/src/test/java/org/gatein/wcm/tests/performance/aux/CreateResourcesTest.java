@@ -48,7 +48,6 @@ public class CreateResourcesTest {
                 doc.add(new Paragraph("\n"));
             }
             doc.close();
-            System.out.println("Generated " + i + " / " + NDOCUMENTS + ": " + name);
         }
 
     }
