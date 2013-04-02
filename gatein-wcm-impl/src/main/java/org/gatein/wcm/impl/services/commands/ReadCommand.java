@@ -18,7 +18,7 @@ import org.jboss.logging.Logger;
 
 public class ReadCommand {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.commands");
+    private static final Logger log = Logger.getLogger(ReadCommand.class);
 
     Session jcrSession = null;
     User logged = null;

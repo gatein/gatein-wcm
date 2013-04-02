@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  */
 public class WcmContentFactory {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.model");
+    private static final Logger log = Logger.getLogger(WcmContentFactory.class);
 
     User logged = null;
     JcrMappings jcr = null;

@@ -19,7 +19,7 @@ import org.jboss.logging.Logger;
 public class Connect extends BaseBean implements Serializable {
     private static final long serialVersionUID = 3166659291670634657L;
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.ui.connect");
+    private static final Logger log = Logger.getLogger(Connect.class);
 
     private String repository;
     private String workspace;

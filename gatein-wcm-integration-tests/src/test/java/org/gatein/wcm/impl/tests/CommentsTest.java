@@ -28,7 +28,7 @@ import org.junit.runner.RunWith;
 public class CommentsTest {
 
 	private static final Logger log = Logger
-			.getLogger("org.gatein.wcm.impl.tests");
+			.getLogger(CommentsTest.class);
 
 	@Deployment
 	public static Archive<?> createDeployment() {

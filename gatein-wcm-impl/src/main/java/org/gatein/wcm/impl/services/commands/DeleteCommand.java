@@ -15,7 +15,7 @@ import org.jboss.logging.Logger;
 
 public class DeleteCommand {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.commands");
+    private static final Logger log = Logger.getLogger(DeleteCommand.class);
 
     Session jcrSession = null;
     User logged = null;
@@ -55,6 +55,11 @@ public class DeleteCommand {
         // Check if the location specified exists in the JCR Repository/Workspace
         if (!jcr.checkLocation(location))
             throw new ContentException("Location: " + location + " doesn't exist for deleteContet() operation. ");
+
+        // Check if user has rights to access - delete operations must be performed by an admin
+        if (!jcr.checkUserWriteACL(location))
+            throw new ContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: "
+                    + location);
 
         // Delete a node
         try {
@@ -100,6 +105,11 @@ public class DeleteCommand {
             return deleteContent(location);
         }
 
+        // Check if user has rights to access - delete operations must be performed by an admin
+        if (!jcr.checkUserWriteACL(location))
+            throw new ContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: "
+                    + location);
+
         // Delete a node
         try {
             String parent = jcr.deleteNode(location, locale);
@@ -136,6 +146,11 @@ public class DeleteCommand {
 
         if (jcr.checkCategoryReferences(categoryLocation))
             throw new ContentException("Category in location: " + categoryLocation + " has references.");
+
+        // Check if user has rights to access
+        if (!jcr.checkUserAdminACL("/__categories"))
+            throw new ContentSecurityException("User: " + logged.getUserName() + " has not ADMIN rights in location: "
+                    + "/__categories");
 
         try {
             jcr.deleteCategory("/__categories" + categoryLocation);
@@ -175,6 +190,11 @@ public class DeleteCommand {
 
         if (jcr.checkCategoryReferences(categoryLocation))
             throw new ContentException("Category in location: " + categoryLocation + " has references.");
+
+        // Check if user has rights to access
+        if (!jcr.checkUserAdminACL("/__categories"))
+            throw new ContentSecurityException("User: " + logged.getUserName() + " has not ADMIN rights in location: "
+                    + "/__categories");
 
         try {
             jcr.deleteCategory("/__categories" + categoryLocation, locale);
@@ -218,8 +238,8 @@ public class DeleteCommand {
             throw new ContentException("Location: " + location + " doesn't exist for deleteContentComment() operation. ");
 
         // Check if user has rights to access - delete operations must be performed by an admin
-        if (!jcr.checkUserAdminACL(location))
-            throw new ContentSecurityException("User: " + logged.getUserName() + " has not COMMENTS rights in location: "
+        if (!jcr.checkUserWriteACL(location))
+            throw new ContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: "
                     + location);
 
         try {
@@ -262,8 +282,8 @@ public class DeleteCommand {
             throw new ContentException("Location: " + location + " doesn't exist for deleteContentComment() operation. ");
 
         // Check if user has rights to access - delete operations must be performed by an admin
-        if (!jcr.checkUserAdminACL(location))
-            throw new ContentSecurityException("User: " + logged.getUserName() + " has not COMMENTS rights in location: "
+        if (!jcr.checkUserWriteACL(location))
+            throw new ContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: "
                     + location);
 
         try {
@@ -302,6 +322,13 @@ public class DeleteCommand {
         if (!jcr.checkUserWriteACL(location))
             throw new ContentSecurityException("User: " + logged.getUserName() + " has not COMMENTS rights in location: "
                     + location);
+
+        try {
+            jcr.deleteContentACE(location, name);
+            return factory.getContent(location, locale);
+        } catch (RepositoryException e) {
+            jcr.checkJCRException(e);
+        }
 
         return null;
     }

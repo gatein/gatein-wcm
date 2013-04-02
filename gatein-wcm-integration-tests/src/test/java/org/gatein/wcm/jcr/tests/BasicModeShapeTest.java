@@ -22,7 +22,7 @@ import org.jboss.logging.Logger;
 @RunWith(Arquillian.class)
 public class BasicModeShapeTest {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.jcr.tests");
+    private static final Logger log = Logger.getLogger(BasicModeShapeTest.class);
 
     @Deployment
     public static Archive<?> createDeployment() {

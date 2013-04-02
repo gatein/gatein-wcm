@@ -30,7 +30,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
 public class WcmSmallWriteBinaryTest {
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.tests.performance");
+    private static final Logger log = Logger.getLogger(WcmSmallWriteBinaryTest.class);
 
     private static final int NTHREADS = 10;
     private static final int NTESTS = 500;

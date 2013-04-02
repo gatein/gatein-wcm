@@ -13,12 +13,16 @@ import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.spi.ObjectFactory;
 
+import org.gatein.wcm.api.model.security.Principal.PrincipalType;
+import org.gatein.wcm.api.model.security.ACE;
 import org.gatein.wcm.api.model.security.User;
 import org.gatein.wcm.api.services.ContentService;
 import org.gatein.wcm.api.services.PublishService;
 import org.gatein.wcm.api.services.RepositoryService;
+import org.gatein.wcm.api.services.SecurityService;
 import org.gatein.wcm.api.services.exceptions.ContentIOException;
 import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
+import org.gatein.wcm.impl.jcr.JcrMappings;
 import org.gatein.wcm.impl.security.WcmSecurityFactory;
 import org.gatein.wcm.impl.services.WcmContentService;
 import org.jboss.logging.Logger;
@@ -27,9 +31,12 @@ import org.modeshape.jcr.api.Repositories;
 
 public class WcmServicesManager implements RepositoryService, ObjectFactory {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm");
+    private static final Logger log = Logger.getLogger(WcmServicesManager.class);
 
-    Repositories repositories;
+    private Repositories repositories;
+    User u = null;
+    private boolean isAdmin = false;
+    private String ADMIN_ROLE = "admin";
 
     public WcmServicesManager() {
 
@@ -47,9 +54,10 @@ public class WcmServicesManager implements RepositoryService, ObjectFactory {
 
         checkParameters(idRepository, idWorkspace, user, password);
 
-        User u = null;
         try {
-            u = WcmSecurityFactory.getSecurityService().authenticate(user, password);
+            SecurityService service = WcmSecurityFactory.getSecurityService();
+            u = service.authenticate(user, password);
+            isAdmin = service.hasRole(u, ADMIN_ROLE);
         } catch (ContentIOException e) {
             throw new ContentIOException( "Unable to connect to WCM Security Service: " + e.getMessage() );
         } catch (ContentSecurityException e) {
@@ -94,6 +102,11 @@ public class WcmServicesManager implements RepositoryService, ObjectFactory {
             if (!session.itemExists("/__categories")) {
                 session.getRootNode().addNode("__categories", "nt:folder");
                 session.save();
+                // Setting specific ACL for categories for admin users
+                if (isAdmin) {
+                    JcrMappings jcr = new JcrMappings(session, u);
+                    jcr.createContentACE("/__categories", u.getUserName(), PrincipalType.USER, ACE.PermissionType.ALL);
+                }
             }
         } catch (Exception e) {
             log.error("Unexpected error initCategories in workspace. Msg: " + e.getMessage());

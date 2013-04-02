@@ -28,7 +28,7 @@ import org.junit.runner.RunWith;
 public class PropertiesTest {
 
 	private static final Logger log = Logger
-			.getLogger("org.gatein.wcm.impl.tests");
+			.getLogger(PropertiesTest.class);
 
 	@Deployment
 	public static Archive<?> createDeployment() {

@@ -24,7 +24,7 @@ import org.richfaces.event.TreeSelectionChangeEvent;
 @ManagedBean
 @RequestScoped
 public class Tree extends BaseBean {
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.ui.tree");
+    private static final Logger log = Logger.getLogger(Tree.class);
 
     @ManagedProperty(value="#{connect}")
     private Connect connect;

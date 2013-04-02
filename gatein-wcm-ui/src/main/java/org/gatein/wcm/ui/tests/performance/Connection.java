@@ -22,7 +22,7 @@ import org.jboss.logging.Logger;
 @WebServlet("/test/connection")
 public class Connection extends HttpServlet {
     private static final long serialVersionUID = -4504050896299011926L;
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.ui.tests.performance");
+    private static final Logger log = Logger.getLogger(Connection.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

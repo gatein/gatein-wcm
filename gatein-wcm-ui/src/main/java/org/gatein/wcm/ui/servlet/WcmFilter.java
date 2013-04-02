@@ -19,7 +19,7 @@ import org.jboss.logging.Logger;
 @WebFilter(urlPatterns = {"/wcm/*", "/res/*"})
 public class WcmFilter implements Filter {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.ui.filter");
+    private static final Logger log = Logger.getLogger(WcmFilter.class);
 
     @Override
     public void destroy() {

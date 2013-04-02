@@ -20,7 +20,7 @@ import org.jboss.logging.Logger;
  */
 public class DummySecurityService implements SecurityService {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.security");
+    private static final Logger log = Logger.getLogger(DummySecurityService.class);
 
     public User authenticate(String idUser, String password) throws ContentSecurityException {
 
@@ -81,6 +81,19 @@ public class DummySecurityService implements SecurityService {
         if ("lucas".equals( user.getUserName() )) {
             if ( "readonly".equals( role ) ) return true;
         }
+
+        if ("user1".equals( user.getUserName() )) {
+            // testing that this user only has rights on workspace sample
+            if ("readwrite.sample".equals( role ))
+                return true;
+        }
+        if ("user2".equals( user.getUserName() )) {
+            return true;
+        }
+        if ("user3".equals( user.getUserName() )) {
+            return true;
+        }
+
 
         return false;
     }

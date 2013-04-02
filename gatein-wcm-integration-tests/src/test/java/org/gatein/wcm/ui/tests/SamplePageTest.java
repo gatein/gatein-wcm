@@ -34,7 +34,7 @@ import org.junit.runner.RunWith;
 public class SamplePageTest {
 
     private static final Logger log = Logger
-            .getLogger("org.gatein.wcm.ui.tests");
+            .getLogger(SamplePageTest.class);
 
     @Deployment
     public static Archive<?> createDeployment() {

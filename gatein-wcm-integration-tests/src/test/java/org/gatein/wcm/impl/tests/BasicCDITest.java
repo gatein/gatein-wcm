@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class BasicCDITest {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.impl.tests");
+    private static final Logger log = Logger.getLogger(BasicCDITest.class);
 
     @Deployment
     public static Archive<?> createDeployment() {

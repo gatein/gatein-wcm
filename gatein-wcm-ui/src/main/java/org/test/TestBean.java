@@ -9,7 +9,7 @@ import org.jboss.logging.Logger;
 @ManagedBean
 @SessionScoped
 public class TestBean {
-    private static final Logger log = Logger.getLogger("org.test");
+    private static final Logger log = Logger.getLogger(TestBean.class);
 
     String user;
     String password;

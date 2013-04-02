@@ -23,7 +23,7 @@ import org.modeshape.jcr.api.JcrTools;
 @RunWith(Arquillian.class)
 public class JcrQueriesTest {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.jcr.tests");
+    private static final Logger log = Logger.getLogger(JcrQueriesTest.class);
 
     @Deployment
     public static Archive<?> createDeployment() {

@@ -29,7 +29,7 @@ import org.junit.runner.RunWith;
 public class AclTest {
 
 	private static final Logger log = Logger
-			.getLogger("org.gatein.wcm.impl.tests");
+			.getLogger(AclTest.class);
 
 	@Deployment
 	public static Archive<?> createDeployment() {

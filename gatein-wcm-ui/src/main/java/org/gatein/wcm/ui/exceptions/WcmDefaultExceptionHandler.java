@@ -13,7 +13,7 @@ import org.jboss.logging.Logger;
 
 public class WcmDefaultExceptionHandler extends ExceptionHandlerWrapper {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.ui.exceptions");
+    private static final Logger log = Logger.getLogger(WcmDefaultExceptionHandler.class);
 
     private ExceptionHandler wrapped;
 

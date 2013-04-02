@@ -19,7 +19,7 @@ import org.jboss.logging.Logger;
 
 public class UpdateCommand {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.commands");
+    private static final Logger log = Logger.getLogger(UpdateCommand.class);
 
     Session jcrSession = null;
     User logged = null;
@@ -122,6 +122,14 @@ public class UpdateCommand {
         if (!jcr.checkLocation(newLocation))
             throw new ContentException("Location: " + newLocation + " doesn't exist for updateFolderLocation() operation. ");
 
+        if (!jcr.checkUserWriteACL(location))
+            throw new ContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: "
+                    + location);
+
+        if (!jcr.checkUserWriteACL(newLocation))
+            throw new ContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: "
+                    + newLocation);
+
         try {
             String id = location.substring(location.lastIndexOf("/") + 1);
             jcr.updateFolderLocation(location, newLocation + "/" + id);
@@ -162,6 +170,10 @@ public class UpdateCommand {
 
         if (jcr.checkLocation(newLocation))
             throw new ContentException("Location: " + newLocation + " exists for updateFolderName() operation. ");
+
+        if (!jcr.checkUserWriteACL(location))
+            throw new ContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: "
+                    + location);
 
         try {
             jcr.updateFolderName(location, newName);
@@ -313,6 +325,10 @@ public class UpdateCommand {
        if (!jcr.checkLocation("/__categories" + newLocation))
            throw new ContentException("Location: " + newLocation + " doesn't exist for updateCategoryLocation() operation. ");
 
+       // Check if user has rights to access
+       if ( ! jcr.checkUserAdminACL( "/__categories" ))
+           throw new ContentSecurityException("User: " + logged.getUserName() + " has not ADMIN rights in location: " + "/__categories");
+
        try {
            String fullOldLocation = "/__categories" + categoryLocation;
            String fullNewLocation = "/__categories" + newLocation;
@@ -355,6 +371,10 @@ public class UpdateCommand {
 
       if (!jcr.checkLocation("/__categories" + categoryLocation))
           throw new ContentException("Location: " + categoryLocation + " doesn't exist for addContentCategory() operation. ");
+
+      if (!jcr.checkUserWriteACL(location))
+          throw new ContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: "
+                  + location);
 
       try {
           jcr.jcrCategoryReference(location, categoryLocation);

@@ -50,7 +50,7 @@ import org.jboss.logging.Logger;
  */
 public class JcrMappings {
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.jcr");
+    private static final Logger log = Logger.getLogger(JcrMappings.class);
 
     private final String MARK = "__";
 

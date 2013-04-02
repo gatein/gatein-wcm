@@ -13,7 +13,7 @@ import org.jboss.logging.Logger;
 public class Panel extends BaseBean implements Serializable {
     private static final long serialVersionUID = 3385985697794449952L;
 
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.ui.panel");
+    private static final Logger log = Logger.getLogger(Panel.class);
 
     private String view;
     private TreeContent selected;

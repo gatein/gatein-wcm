@@ -37,7 +37,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(Arquillian.class)
 public class WcmMediumSiteTest {
-    private static final Logger log = Logger.getLogger("org.gatein.wcm.tests.performance");
+    private static final Logger log = Logger.getLogger(WcmMediumSiteTest.class);
 
     private static final int NTHREADS = 1;
     private static final int NTESTS = 1;
