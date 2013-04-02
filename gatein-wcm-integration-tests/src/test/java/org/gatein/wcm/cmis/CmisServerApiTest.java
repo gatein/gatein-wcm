@@ -26,22 +26,20 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.client.api.Session;
-import org.apache.chemistry.opencmis.client.runtime.SessionFactoryImpl;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
-import org.apache.chemistry.opencmis.commons.SessionParameter;
-import org.apache.chemistry.opencmis.commons.enums.BindingType;
+import org.apache.chemistry.opencmis.jcr.JcrTypeManager;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Before;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.modeshape.cmis.JcrServiceFactory;
 
 /**
  * @author <a href="mailto:ppalaga@redhat.com">Peter Palaga</a>
@@ -62,35 +60,78 @@ public class CmisServerApiTest {
 
     }
 
-    private Session session;
-
-    @Before
-    public void setUp() {
-
-        SessionFactoryImpl factory = SessionFactoryImpl.newInstance();
-        Map<String, String> parameter = new HashMap<String, String>();
-
-        // user credentials
-        parameter.put(SessionParameter.USER, "admin");
-        parameter.put(SessionParameter.PASSWORD, "admin");
-
-        // connection settings
-        parameter.put(SessionParameter.BINDING_TYPE, BindingType.LOCAL.value());
-        parameter.put(SessionParameter.LOCAL_FACTORY, JcrServiceFactory.class.getName());
-        parameter.put(SessionParameter.REPOSITORY_ID, "artifacts:default");
-        // create session
-        session = factory.createSession(parameter);
+    @Test
+    public void shouldAccessRootFolder() throws Exception {
+        Session session = CmisSessionFactory.getInstance().createSession("admin", "admin");
+        Folder root = session.getRootFolder();
+        Assert.assertNotNull(root);
     }
 
     @Test
-    public void shouldAccessRootFolder() throws Exception {
+    public void createAndDeleteFolder() throws Exception {
+        Session session = CmisSessionFactory.getInstance().createSession("admin", "admin");
         Folder root = session.getRootFolder();
 
-        Map<String, Object> properties = new HashMap<String, Object>();
-        properties.put(PropertyIds.OBJECT_TYPE_ID, "cmis:folder");
-        properties.put(PropertyIds.NAME, "f55");
-        //System.out.println("Root: " + root);
-        root.createFolder(properties);
+        /* ensure a valid initial state */
+        Assert.assertFalse(root.getChildren().getHasMoreItems());
+
+        try {
+            Map<String, Object> properties = new HashMap<String, Object>();
+            properties.put(PropertyIds.OBJECT_TYPE_ID, JcrTypeManager.FOLDER_TYPE_ID);
+            properties.put(PropertyIds.NAME, "f1");
+            Folder f1 = root.createFolder(properties);
+            Assert.assertNotNull(f1);
+
+            CmisObject repoF1 = root.getChildren().iterator().next();
+            if (!(repoF1 instanceof Folder)) {
+                Assert.fail("repoF1 expected to be an instance of "+ Folder.class.getName() + " but was "+ repoF1.getClass().getName());
+            }
+        } finally {
+            /* cleanup */
+            deleteAll(root);
+        }
+
     }
+
+    private static void deleteAll(Folder root) {
+        for (CmisObject i : root.getChildren()) {
+            i.delete(true);
+        }
+        Assert.assertFalse(root.getChildren().getHasMoreItems());
+    }
+
+// Commented our because of https://issues.apache.org/jira/browse/CMIS-618 https://issues.jboss.org/browse/MODE-1749
+//    @Test
+//    public void createAndDeleteDocument() throws Exception {
+//
+//        final String docName = "d1.txt";
+//
+//        Session session = CmisSessionFactory.getInstance().createSession("admin", "admin");
+//        Folder root = session.getRootFolder();
+//
+//        /* ensure a valid initial state */
+//        Assert.assertFalse(root.getChildren().getHasMoreItems());
+//
+//        try {
+//            byte[] content = "Hello World!".getBytes();
+//            InputStream stream = new ByteArrayInputStream(content);
+//            ContentStream contentStream = new ContentStreamImpl(docName, BigInteger.valueOf(content.length), "text/plain", stream);
+//
+//            Map<String, Object> properties = new HashMap<String, Object>();
+//            properties.put(PropertyIds.OBJECT_TYPE_ID, JcrTypeManager.DOCUMENT_TYPE_ID);
+//            properties.put(PropertyIds.NAME, docName);
+//            Document d1 = root.createDocument(properties, contentStream, VersioningState.MAJOR);
+//            Assert.assertNotNull(d1);
+//
+//            CmisObject repoD1 = root.getChildren().iterator().next();
+//            if (!(repoD1 instanceof Document)) {
+//                Assert.fail("repoD1 expected to be an instance of "+ Document.class.getName() + " but was "+ repoD1.getClass().getName());
+//            }
+//        } finally {
+//            /* cleanup */
+//            deleteAll(root);
+//        }
+//
+//    }
 
 }

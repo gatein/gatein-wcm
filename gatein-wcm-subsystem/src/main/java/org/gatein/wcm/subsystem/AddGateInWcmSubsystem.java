@@ -22,26 +22,23 @@
 
 package org.gatein.wcm.subsystem;
 
-import org.gatein.wcm.cmis.GateInWcmCmisLifeCycle;
+import org.gatein.wcm.cmis.CmisLifeCycle;
 import org.jboss.as.controller.AbstractAddStepHandler;
 import org.jboss.as.controller.OperationFailedException;
 import org.jboss.dmr.ModelNode;
-import org.jboss.logging.Logger;
 
 /**
  * @author <a href="mailto:ppalaga@redhat.com">Peter Palaga</a>
  *
  */
 public class AddGateInWcmSubsystem extends AbstractAddStepHandler {
-    private static final Logger log = Logger.getLogger(AddGateInWcmSubsystem.class);
 
     public static final AddGateInWcmSubsystem INSTANCE = new AddGateInWcmSubsystem();
 
-    private GateInWcmCmisLifeCycle gateInWcmCmisService;
+    private CmisLifeCycle gateInWcmCmisService;
 
     public AddGateInWcmSubsystem() {
-        log.info("");
-        gateInWcmCmisService = new GateInWcmCmisLifeCycle();
+        gateInWcmCmisService = new CmisLifeCycle();
         gateInWcmCmisService.startup();
     }
 
