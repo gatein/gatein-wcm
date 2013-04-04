@@ -33,4 +33,19 @@ public class ContentSecurityException extends Exception {
         super(msg);
     }
 
+    /**
+     * @param message
+     * @param cause
+     */
+    public ContentSecurityException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    /**
+     * @param cause
+     */
+    public ContentSecurityException(Throwable cause) {
+        super(cause);
+    }
+
 }

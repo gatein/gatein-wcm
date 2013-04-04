@@ -1,56 +1,56 @@
 package org.gatein.wcm.impl.security;
 
-import javax.jcr.Credentials;
 import javax.jcr.SimpleCredentials;
-import javax.security.auth.login.LoginException;
 
 import org.gatein.wcm.api.model.security.User;
 import org.gatein.wcm.api.services.SecurityService;
 import org.gatein.wcm.api.services.exceptions.ContentIOException;
 import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
-import org.modeshape.common.logging.Logger;
+import org.jboss.logging.Logger;
 import org.modeshape.jcr.security.SecurityContext;
 
 public class WcmSecurityContext implements SecurityContext {
 
     private static final Logger log = Logger.getLogger(WcmSecurityContext.class);
 
-    SimpleCredentials sCredentials = null;
-    SecurityService wcmSecurityService = null;
-    User loggedUser = null;
+    private SimpleCredentials credentials;
+    private final SecurityService wcmSecurityService;
+    private User authenticatedUser;
 
-    protected WcmSecurityContext(Credentials credentials) throws LoginException {
-        // Expecting JCR SimpleCredentials
-        sCredentials = (SimpleCredentials) credentials;
-        log.debug("Getting security credentials for user " + sCredentials.getUserID(), sCredentials.getUserID());
+    protected WcmSecurityContext(SimpleCredentials credentials) throws ContentSecurityException {
+        this.credentials = credentials;
+        log.debugf("About to authenticate user '%s'", this.credentials.getUserID());
 
         try {
             wcmSecurityService = WcmSecurityFactory.getSecurityService();
+            authenticatedUser = wcmSecurityService.authenticate(this.credentials.getUserID(),
+                    new String(this.credentials.getPassword()));
         } catch (ContentIOException e) {
-            throw new LoginException("Unable to connect to SecuritySystem: " + e.getMessage());
-        }
-
-        try {
-            loggedUser = wcmSecurityService.authenticate(sCredentials.getUserID(), new String(sCredentials.getPassword()));
-        } catch (ContentSecurityException e) {
-            throw new LoginException(e.getMessage());
+            throw new ContentSecurityException("Could not connect to " + SecurityService.class.getName(), e);
         }
 
     }
 
     public String getUserName() {
-        return (loggedUser != null ? loggedUser.getUserName() : null);
+        return (authenticatedUser != null ? authenticatedUser.getUserName() : null);
     }
 
     public boolean hasRole(String role) {
-
-        try {
-            return wcmSecurityService.hasRole(loggedUser, role);
-        } catch (ContentSecurityException e) {
-            log.error(new WcmLog("Error getting role: " + e.getMessage()), loggedUser);
+        if (this.authenticatedUser == null) {
+            throw new IllegalStateException("Cannot query role membership after user logout");
+        } else {
+            try {
+                return wcmSecurityService.hasRole(authenticatedUser, role);
+            } catch (ContentSecurityException e) {
+                final String msg = "Could not find out if user '%1s' has role '%2s'";
+                if (log.isDebugEnabled()) {
+                    log.errorf(e, msg, getUserName(), role);
+                } else {
+                    log.errorf(msg, getUserName(), role);
+                }
+            }
+            return false;
         }
-
-        return false;
     }
 
     public boolean isAnonymous() {
@@ -58,9 +58,8 @@ public class WcmSecurityContext implements SecurityContext {
     }
 
     public void logout() {
-        sCredentials = null;
-        loggedUser = null;
+        this.credentials = null;
+        this.authenticatedUser = null;
     }
 
 }
-

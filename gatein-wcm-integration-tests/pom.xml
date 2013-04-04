@@ -94,7 +94,7 @@
       <groupId>org.gatein.wcm</groupId>
       <artifactId>gatein-wcm-distribution</artifactId>
       <version>${project.version}</version>
-      <classifier>jbossas-${jbossas7.assembly.descriptor.version}</classifier>
+      <classifier>${jboss.eap.distribution.id}</classifier>
       <type>zip</type>
     </dependency>
 
@@ -148,9 +148,9 @@
               <artifactItems>
                 <!-- Unpack the JBoss AS7 version from the Maven repository into the 'target' directory -->
                 <artifactItem>
-                  <groupId>org.jboss.as</groupId>
-                  <artifactId>jboss-as-dist</artifactId>
-                  <version>${jbossas-version}</version>
+                  <groupId>${jboss.eap.groupId}</groupId>
+                  <artifactId>${jboss.eap.artifactId}</artifactId>
+                  <version>${jboss.eap.version}</version>
                   <type>zip</type>
                   <overWrite>false</overWrite>
                   <outputDirectory>${project.build.directory}</outputDirectory>
@@ -161,10 +161,10 @@
                   <groupId>org.modeshape</groupId>
                   <artifactId>modeshape-distribution</artifactId>
                   <version>${modeshape.version}</version>
-                  <classifier>jbossas-${jbossas7.assembly.descriptor.version}-dist</classifier>
+                  <classifier>${jboss.eap.distribution.id}</classifier>
                   <type>zip</type>
                   <overWrite>false</overWrite>
-                  <outputDirectory>${project.build.directory}/jboss-as-${jbossas-version}</outputDirectory>
+                  <outputDirectory>${project.build.directory}/${jboss.eap.root.folder}</outputDirectory>
                   <excludes>**/*.war*/**</excludes>
                 </artifactItem>
 
@@ -176,10 +176,10 @@
                   <groupId>org.gatein.wcm</groupId>
                   <artifactId>gatein-wcm-distribution</artifactId>
                   <version>${project.version}</version>
-                  <classifier>jbossas-${jbossas7.assembly.descriptor.version}</classifier>
+                  <classifier>${jboss.eap.distribution.id}</classifier>
                   <type>zip</type>
                   <overWrite>false</overWrite>
-                  <outputDirectory>${project.build.directory}/jboss-as-${jbossas-version}</outputDirectory>
+                  <outputDirectory>${project.build.directory}/${jboss.eap.root.folder}</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>

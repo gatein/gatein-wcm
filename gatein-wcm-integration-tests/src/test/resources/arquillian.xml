@@ -11,7 +11,7 @@
   -->
   <container qualifier="jboss71" default="true">
     <configuration>
-      <property name="jbossHome">${project.build.directory}/jboss-as-${jbossas-version}</property>
+      <property name="jbossHome">${project.build.directory}/${jboss.eap.root.folder}</property>
       <property name="serverConfig">standalone-modeshape.xml</property>
       <property name="javaVmArguments">-Xms512m -Xmx512m -XX:MaxPermSize=256m -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=${arquillian.suspend}</property>
     </configuration>
