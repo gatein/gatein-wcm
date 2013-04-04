@@ -1,0 +1,119 @@
+<assembly>
+  <id>jbosseap-61-dist</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <baseDirectory>/</baseDirectory>
+
+  <fileSets>
+    <fileSet>
+      <directory>src/main/resources/jbosseap-61</directory>
+      <outputDirectory>/</outputDirectory>
+      <filtered>true</filtered>
+    </fileSet>
+  </fileSets>
+
+  <dependencySets>
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputDirectory>/modules/org/gatein/wcm/main</outputDirectory>
+      <includes>
+        <include>org.gatein.wcm:gatein-wcm-subsystem</include>
+      </includes>
+      <unpack>false</unpack>
+    </dependencySet>
+
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputDirectory>/modules/org/gatein/wcm/gatein-wcm-api/main</outputDirectory>
+      <includes>
+        <include>org.gatein.wcm:gatein-wcm-api</include>
+      </includes>
+      <unpack>false</unpack>
+    </dependencySet>
+
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputDirectory>/modules/org/gatein/wcm/gatein-wcm-impl/main</outputDirectory>
+      <includes>
+        <include>org.gatein.wcm:gatein-wcm-impl</include>
+      </includes>
+      <unpack>false</unpack>
+    </dependencySet>
+
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputDirectory>/modules/org/gatein/wcm/gatein-wcm-impl-sec/main</outputDirectory>
+      <includes>
+        <include>org.gatein.wcm:gatein-wcm-impl-sec</include>
+      </includes>
+      <unpack>false</unpack>
+    </dependencySet>
+
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputDirectory>/modules/org/gatein/wcm/gatein-wcm-cmis/main</outputDirectory>
+      <includes>
+        <!--
+            This list is based on jars found in
+            jboss-as-7.1.1.Final/standalone/deployments/modeshape-cmis.war/WEB-INF/lib
+
+            module dependencies:
+            javax.activation
+
+            org.apache.commons.codec
+            org.apache.commons.collections
+            org.apache.commons.io
+            org.apache.commons.lang
+            org.apache.commons.logging
+
+            ignored:
+            jaxb-api-2.1.jar jaxb-impl-2.1.11.jar jaxb-impl-2.1.12.jar axws-api-2.1.jar jaxws-rt-2.1.7.jar
+            mimepull-1.3.jar
+            com.sun.org.apache.xml.internal:resolver:jar:20050927:compile
+            com.sun.xml.messaging.saaj:saaj-impl
+            com.sun.xml.messaging.saaj:saaj-api
+            org.jvnet.staxex:stax-ex
+            stax:stax-api:jar:1.0.1:compile
+            com.sun.xml.stream.buffer:streambuffer
+            org.codehaus.woodstox:wstx-asl:jar:3.2.3:compile
+
+        -->
+        <include>javax.activation:activation</include>
+        <include>org.antlr:antlr-runtime</include>
+        <include>org.antlr:stringtemplate</include>
+        <include>antlr:antlr</include>
+
+        <include>org.apache.chemistry.opencmis:chemistry-opencmis-commons-api</include>
+        <include>org.apache.chemistry.opencmis:chemistry-opencmis-commons-impl</include>
+        <include>org.apache.chemistry.opencmis:chemistry-opencmis-server-bindings:jar:classes</include>
+        <include>org.apache.chemistry.opencmis:chemistry-opencmis-server-jcr</include>
+        <include>org.apache.chemistry.opencmis:chemistry-opencmis-server-support</include>
+
+        <include>org.apache.chemistry.opencmis:chemistry-opencmis-client-api</include>
+        <include>org.apache.chemistry.opencmis:chemistry-opencmis-client-impl</include>
+        <include>org.apache.chemistry.opencmis:chemistry-opencmis-client-bindings</include>
+
+        <include>commons-fileupload:commons-fileupload</include>
+
+        <include>org.modeshape:modeshape-web-cmis</include>
+        <include>org.modeshape:modeshape-web-jcr</include>
+
+        <include>org.gatein.wcm:gatein-wcm-cmis</include>
+      </includes>
+      <unpack>false</unpack>
+    </dependencySet>
+
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputDirectory>/modules/org/modeshape/main</outputDirectory>
+      <includes>
+        <include>org.gatein.wcm:gatein-wcm-impl-sec</include>
+      </includes>
+      <unpack>false</unpack>
+    </dependencySet>
+
+  </dependencySets>
+
+</assembly>

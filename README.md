@@ -9,7 +9,7 @@ It's designed to offer a simple Java API for WCM covering the following features
 - Publishing workflow.
 - Versioning.
 
-This draft version has been tested on JBoss AS 7.1.1.Final.
+This draft version has been tested on JBoss EAP 6.1.0.Alpha1.
 
 Components
 ----------
@@ -26,99 +26,24 @@ Requeriments
 
 - JDK 1.6 or JDK 1.7
 - Maven 3.0.x
+- JBoss EAP 6.1.0.Alpha1 - installed automatically by Maven during build
+- Modeshape 3.2-SNAPSHOT:
 
-Downloaded via Maven dependencies (so you don't need to install it):
+        cd ~/git
+        git clone https://github.com/ModeShape/modeshape.git
+        cd modeshape
+        mvn clean install -Pintegration -DskipTests
 
-- JBoss AS 7.1.1 Final
-- Modeshape 3.1.1.Final for JBoss AS.
 
-Maven dependencies
+Maven repositories
 ------------------
 
-Create file settings.xml in $HOME/.m2  (%HOMEPATH%\.m2 on Windows) with the following content:
+See example `settings.xml` file in this directory. In the most common case you will want to copy this file to `$HOME/.m2`
+(`%HOMEPATH%\.m2` on Windows) with the following content:
 
-	<settings>
-	  <profiles>
-	    <profile>
-	      <id>jboss-public-repository</id>
-	      <repositories>
-	        <repository>
-	          <id>jboss-public-repository-group</id>
-	          <name>JBoss Public Maven Repository Group</name>
-	          <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-	          <layout>default</layout>
-	          <releases>
-	            <enabled>true</enabled>
-	            <updatePolicy>never</updatePolicy>
-	          </releases>
-	          <snapshots>
-	            <enabled>true</enabled>
-	            <updatePolicy>never</updatePolicy>
-	          </snapshots>
-	        </repository>
-	      </repositories>
-	      <pluginRepositories>
-	        <pluginRepository>
-	          <id>jboss-public-repository-group</id>
-	          <name>JBoss Public Maven Repository Group</name>
-	          <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-	          <layout>default</layout>
-	          <releases>
-	            <enabled>true</enabled>
-	            <updatePolicy>never</updatePolicy>
-	          </releases>
-	          <snapshots>
-	            <enabled>true</enabled>
-	            <updatePolicy>never</updatePolicy>
-	          </snapshots>
-	        </pluginRepository>
-	      </pluginRepositories>
-	    </profile>
+Build
+-----
 
-	    <profile>
-	      <id>exo-public-repository</id>
-	      <repositories>
-	        <repository>
-	          <id>exo-public-repository-group</id>
-	          <name>eXo Public Maven Repository Group</name>
-	          <url>http://repository.exoplatform.org/content/groups/public</url>
-	          <layout>default</layout>
-	          <releases>
-	            <enabled>true</enabled>
-	            <updatePolicy>never</updatePolicy>
-	          </releases>
-	          <snapshots>
-	            <enabled>true</enabled>
-	            <updatePolicy>never</updatePolicy>
-	          </snapshots>
-	        </repository>
-	      </repositories>
-	      <pluginRepositories>
-	        <pluginRepository>
-	          <id>exo-public-repository-group</id>
-	          <name>eXo Public Maven Repository Group</name>
-	          <url>http://repository.exoplatform.org/content/groups/public</url>
-	          <layout>default</layout>
-	          <releases>
-	            <enabled>true</enabled>
-	            <updatePolicy>never</updatePolicy>
-	          </releases>
-	          <snapshots>
-	            <enabled>true</enabled>
-	            <updatePolicy>never</updatePolicy>
-	          </snapshots>
-	        </pluginRepository>
-	      </pluginRepositories>
-	    </profile>
-	  </profiles>
+    mvn clean install
 
-	  <activeProfiles>
-	    <activeProfile>jboss-public-repository</activeProfile>
-	    <activeProfile>exo-public-repository</activeProfile>
-	  </activeProfiles>
-	</settings>
-
-Installation
-------------
-
-- mvn clean install
+... and see a ready to run distribution under `gatein-wcm-distribution/target/gatein-wcm-*-dist.zip`

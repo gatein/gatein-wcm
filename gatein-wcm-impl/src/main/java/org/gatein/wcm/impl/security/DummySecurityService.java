@@ -24,7 +24,7 @@ public class DummySecurityService implements SecurityService {
 
     public User authenticate(String idUser, String password) throws ContentSecurityException {
 
-        log.debug("Authenticating user... " + idUser);
+        log.debugf("Authenticating user '%s'", idUser);
 
         // Dummy rule for authentication
         if (idUser.equals(password)) {
@@ -46,7 +46,7 @@ public class DummySecurityService implements SecurityService {
 
             return user;
         } else {
-            throw new ContentSecurityException("Bad password for user " + idUser);
+            throw new ContentSecurityException("Invalid password for user " + idUser);
         }
 
     }
