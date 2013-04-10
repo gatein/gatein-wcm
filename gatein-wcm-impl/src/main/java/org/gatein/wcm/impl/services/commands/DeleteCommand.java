@@ -287,7 +287,7 @@ public class DeleteCommand {
                     + location);
 
         try {
-            jcr.deleteContentProperty(location, name);
+            jcr.deleteContentProperty(location, locale, name);
             return factory.getContent(location, locale);
         } catch (RepositoryException e) {
             jcr.checkJCRException(e);

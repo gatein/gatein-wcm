@@ -421,7 +421,7 @@ public class UpdateCommand {
 
       try {
           // Creates or update property
-          jcr.createContentProperty(location, name, value);
+          jcr.createContentProperty(location, locale, name, value);
           return factory.getContent(location, locale);
       } catch (RepositoryException e) {
           jcr.checkJCRException( e );

@@ -35,6 +35,12 @@ import java.io.InputStream;
  */
 public interface BinaryContent extends Content {
 
+   /**
+    *
+    * @return This method returns the version of the content.
+    */
+   String getVersion();
+
     /**
      *
      * @return This method returns ContentType of file stored.

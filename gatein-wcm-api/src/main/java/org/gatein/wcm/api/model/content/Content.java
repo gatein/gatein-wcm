@@ -46,12 +46,6 @@ public interface Content {
 
     /**
      *
-     * @return This method returns the version of the content.
-     */
-    Integer getVersion();
-
-    /**
-     *
      * @return This method returns ID of the document. <br>
      *         ID will be unique in a folder.
      */

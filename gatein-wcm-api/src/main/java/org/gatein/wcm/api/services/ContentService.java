@@ -371,8 +371,11 @@ public interface ContentService {
 
     /**
      *
-     * Creates a property in the form KEY/VALUE to a Content. <br>
-     * Properties are shared between locales of same Content. <br>
+     * Creates a property in the form KEY,LOCALE/VALUE to a Content. <br>
+     * Properties are specific for each locale. <br>
+     * Example: <br>
+     *      createContentProperty("/mycontent","en","title", "Title in english"); <br>
+     *      createContentProperty("/mycontent","es","title", "Título en español"); <br>
      *
      * @param location - Location where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>

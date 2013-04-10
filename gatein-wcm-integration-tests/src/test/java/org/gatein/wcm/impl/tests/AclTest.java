@@ -17,7 +17,6 @@ import org.gatein.wcm.api.services.exceptions.ContentIOException;
 import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
@@ -27,9 +26,6 @@ import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
 public class AclTest {
-
-	private static final Logger log = Logger
-			.getLogger(AclTest.class);
 
 	@Deployment
 	public static Archive<?> createDeployment() {
@@ -48,8 +44,7 @@ public class AclTest {
 	public void createAcl() throws ContentIOException,
 			ContentSecurityException, ContentException {
 
-		log.debug("[[ START TEST  createAcl ]]");
-		ContentService cs = repos.createContentSession("sample", "default",
+	    ContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
 
 		cs.createFolder("createacl", "/");
@@ -72,7 +67,6 @@ public class AclTest {
 
 		cs.deleteContent("/createacl");
 
-		log.debug("[[ STOP TEST  createAcl ]]");
 		Assert.assertTrue(true);
 	}
 
@@ -80,7 +74,6 @@ public class AclTest {
     public void deleteAcl() throws ContentIOException,
             ContentSecurityException, ContentException {
 
-        log.debug("[[ START TEST  deleteAcl ]]");
         ContentService cs = repos.createContentSession("sample", "default",
                 "admin", "admin");
 
@@ -91,8 +84,6 @@ public class AclTest {
 
         cs.deleteContent("/deleteacl");
 
-        log.debug("[[ STOP TEST  deleteAcl ]]");
-        Assert.assertTrue(true);
     }
 
 

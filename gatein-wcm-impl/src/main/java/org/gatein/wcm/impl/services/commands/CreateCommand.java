@@ -398,7 +398,7 @@ public class CreateCommand {
                     + location);
 
         try {
-            jcr.createContentProperty(location, name, value);
+            jcr.createContentProperty(location, locale, name, value);
             return factory.getContent(location, locale);
         } catch (RepositoryException e) {
             jcr.checkJCRException(e);

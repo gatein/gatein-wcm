@@ -15,6 +15,7 @@ import javax.jcr.ItemExistsException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
 import javax.jcr.ReferentialIntegrityException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -23,8 +24,11 @@ import javax.jcr.ValueFormatException;
 import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.nodetype.NoSuchNodeTypeException;
+import javax.jcr.nodetype.NodeType;
+import javax.jcr.version.Version;
 import javax.jcr.version.VersionException;
 import javax.jcr.version.VersionHistory;
+import javax.jcr.version.VersionIterator;
 import javax.jcr.version.VersionManager;
 
 import org.gatein.wcm.api.model.publishing.PublishStatus;
@@ -53,6 +57,7 @@ public class JcrMappings {
     private static final Logger log = Logger.getLogger(JcrMappings.class);
 
     private final String MARK = "__";
+    private final int TEXT_SUMMARY = 1000;
 
     WcmContentFactory factory = null;
 
@@ -133,9 +138,7 @@ public class JcrMappings {
 
     public boolean checkIdExists(String location, String id) {
         try {
-            String tmpLocation = location;
-            if ("/".equals(location))
-                tmpLocation = "";
+            String tmpLocation = ("/".equals(location)?"":location);
             Node root = jcrSession.getNode(tmpLocation + "/" + id);
             if (root.getPrimaryNodeType().getName().equals("nt:folder"))
                 return true;
@@ -153,14 +156,11 @@ public class JcrMappings {
         ACL acl = null;
         try {
             acl = jcrACL(location);
-        } catch (PathNotFoundException e) {
             // If there are not __acl folder in the location, we will check to the parent node
-            if (!location.equals("/")) {
+            if (acl == null && !"/".equals(location))
                 return checkUserWriteACL(parent(location));
-            } else {
-                // If root node has not __acl folder means that there are not security in this repository
+            if (acl == null && "/".equals("/"))
                 return true;
-            }
         } catch (RepositoryException e) {
             log.error("Unexpected error looking for acl in location " + location + ". Msg: " + e.getMessage());
             return false;
@@ -190,14 +190,11 @@ public class JcrMappings {
         ACL acl = null;
         try {
             acl = jcrACL(location);
-        } catch (PathNotFoundException e) {
             // If there are not __acl folder in the location, we will check to the parent node
-            if (!location.equals("/")) {
+            if (acl == null && !"/".equals(location))
                 return checkUserReadACL(parent(location));
-            } else {
-                // If root node has not __acl folder means that there are not security in this repository
+            if (acl == null && "/".equals("/"))
                 return true;
-            }
         } catch (RepositoryException e) {
             log.error("Unexpected error looking for acl in location " + location + ". Msg: " + e.getMessage());
             return false;
@@ -230,14 +227,11 @@ public class JcrMappings {
         ACL acl = null;
         try {
             acl = jcrACL(location);
-        } catch (PathNotFoundException e) {
             // If there are not __acl folder in the location, we will check to the parent node
-            if (!location.equals("/")) {
-                return checkUserReadACL(parent(location));
-            } else {
-                // If root node has not __acl folder means that there are not security in this repository
+            if (acl == null && !"/".equals(location))
+                return checkUserAdminACL(parent(location));
+            if (acl == null && "/".equals("/"))
                 return true;
-            }
         } catch (RepositoryException e) {
             log.error("Unexpected error looking for acl in location " + location + ". Msg: " + e.getMessage());
             return false;
@@ -267,14 +261,11 @@ public class JcrMappings {
         ACL acl = null;
         try {
             acl = jcrACL(location);
-        } catch (PathNotFoundException e) {
             // If there are not __acl folder in the location, we will check to the parent node
-            if (!location.equals("/")) {
-                return checkUserReadACL(parent(location));
-            } else {
-                // If root node has not __acl folder means that there are not security in this repository
+            if (acl == null && !"/".equals(location))
+                return checkUserCommentsACL(parent(location));
+            if (acl == null && "/".equals("/"))
                 return true;
-            }
         } catch (RepositoryException e) {
             log.error("Unexpected error looking for acl in location " + location + ". Msg: " + e.getMessage());
             return false;
@@ -303,7 +294,6 @@ public class JcrMappings {
 
     public void checkJCRException(RepositoryException e) throws ContentException, ContentIOException, ContentSecurityException {
         if (e instanceof PathNotFoundException) {
-            log.info("Debugging", e);
             throw new ContentException("Location doesn't found. Msg: " + e.getMessage());
         }
         if (e instanceof ItemExistsException) {
@@ -376,53 +366,99 @@ public class JcrMappings {
         return false;
     }
 
-    public void createTextNode(String id, String locale, String location, Value content)
-            throws RepositoryException {
+    public void createTextNode(String id, String locale, String location, Value content) throws RepositoryException {
+
+        String tmpLocation = ("/".equals(location)?"":location);
+        String contentId = tmpLocation + "/" + id;
+        String contentLocaleId = tmpLocation + "/" + id + "/" + MARK + locale + "/" + MARK + id;
+
+        Node n;
+
         if (!checkIdExists(location, id)) {
             jcrSession.getNode(location).addNode(id, "nt:folder");
-        }
 
-        String tmpLocation = location;
-        if ("/".equals(location))
-            tmpLocation = "";
+            n = jcrSession.getNode(tmpLocation + "/" + id);
+            n.addMixin("mix:title");
+            n.addMixin("mix:lastModified");
+            n.addMixin("mix:shareable");
+            n.addMixin("mix:versionable");
+        } else n = jcrSession.getNode(tmpLocation + "/" + id);
 
-        jcrSession.getNode(tmpLocation + "/" + id).addNode(MARK + locale, "nt:folder").addNode(MARK + id, "nt:file")
-                .addNode("jcr:content", "nt:resource").setProperty("jcr:data", content);
+        // Checking out for add new version of content
+        vm.checkout(contentId);
 
-        Node n = jcrSession.getNode(tmpLocation + "/" + id);
-        n.addMixin("mix:title");
-        n.addMixin("mix:lastModified");
-        n.addMixin("mix:shareable");
         n.setProperty("jcr:description", "textcontent:" + n.getPath());
 
-        n = jcrSession.getNode(tmpLocation + "/" + id + "/" + MARK + locale + "/" + MARK + id);
+        jcrSession.getNode(contentId).addNode(MARK + locale, "nt:folder").addNode(MARK + id, "nt:file")
+        .addNode("jcr:content", "nt:resource").setProperty("jcr:data", content);
+
+        n = jcrSession.getNode(contentLocaleId);
         n.addMixin("mix:title");
-        n.addMixin("mix:versionable");
         n.addMixin("mix:lastModified");
         n.addMixin("mix:mimeType");
 
         // Adding properties
         n.getNode("jcr:content").setProperty("jcr:data", content);
-        if (content.getString().length() > 1000)
-            n.setProperty("jcr:description", content.getString().substring(0, 1000));
+
+        // Description is a short summary of the real content
+        if (content.getString().length() > TEXT_SUMMARY)
+            n.setProperty("jcr:description", content.getString().substring(0, TEXT_SUMMARY));
         else
             n.setProperty("jcr:description", content.getString());
 
         // Saving changes into JCR
         jcrSession.save();
+
+        // Checkin version
+        vm.checkin(contentId);
     }
 
     public String deleteNode(String location) throws RepositoryException {
 
-        jcrSession.removeItem(location);
+        // Check wcm node type
+        boolean versionable = false;
+        String description = jcrSession.getNode(location).getProperty("jcr:description").getString();
+        String type = description.split(":")[0];
+        if ("textcontent".equals(type) || "binarycontent".equals(type)) versionable = true;
 
-        // Saving changes into JCR
-        jcrSession.save();
+        if (versionable) vm.checkout(location);
+
+        // Metadata
+        try {
+            // This is a workaround, this method doesn't delete previous versions of the content
+            jcrSession.removeItem(location);
+            jcrSession.removeItem("/__comments" + location);
+            jcrSession.removeItem("/__properties" + location);
+            jcrSession.removeItem("/__acl" + location);
+        } catch (PathNotFoundException expected) {
+            // No comments or properties found - skip
+        } finally {
+            // Saving changes into JCR
+            jcrSession.save();
+            try {
+                if (versionable) vm.checkin(location);
+            } catch (Exception expected) {
+                //  This is a bug in MODESHAPE when only I have a root version
+            }
+        }
+
+        // Main content and versions
+        // TODO We need to remove all versions in this method, right now this method doesn't work in current modeshape version
+        // jcrDeleteVersions(location);
 
         return parent(location);
     }
 
     public String deleteNode(String location, String locale) throws RepositoryException {
+
+        // Check wcm node type
+        boolean versionable = false;
+        String description = jcrSession.getNode(location).getProperty("jcr:description").getString();
+        String type = description.split(":")[0];
+
+        if ("textcontent".equals(type) || "binarycontent".equals(type)) versionable = true;
+        if (versionable) vm.checkout(location);
+
         jcrSession.removeItem(location + "/" + MARK + locale);
 
         // Check if we have a textcontent or binarycontent orphan of locales, then we delete
@@ -441,7 +477,9 @@ public class JcrMappings {
 
         // Saving changes into JCR
         jcrSession.save();
+        if (versionable) vm.checkin(location);
 
+        // If I don't have locales I will delete whole location
         if (orphan) {
             return deleteNode(location);
         } else {
@@ -453,7 +491,6 @@ public class JcrMappings {
     public void createFolder(String id, String location) throws RepositoryException {
         Node n = jcrSession.getNode(location).addNode(id, "nt:folder");
         n.addMixin("mix:title");
-        n.addMixin("mix:versionable");
         n.addMixin("mix:lastModified");
         n.addMixin("mix:shareable");
 
@@ -465,29 +502,38 @@ public class JcrMappings {
 
     public void createBinaryNode(String id, String locale, String location, String contentType, Long size, String fileName,
             InputStream content) throws RepositoryException {
+
+        String tmpLocation = ("/".equals(location)?"":location);
+        String contentId = tmpLocation + "/" + id;
+        String contentLocaleId = tmpLocation + "/" + id + "/" + MARK + locale + "/" + MARK + id;
+
+        Node n;
+
         if (!checkIdExists(location, id)) {
             jcrSession.getNode(location).addNode(id, "nt:folder");
-        }
 
-        jcrSession.getNode(location + "/" + id).addNode(MARK + locale, "nt:folder").addNode(MARK + id, "nt:file")
-                .addNode("jcr:content", "nt:resource");
+            n = jcrSession.getNode(tmpLocation + "/" + id);
+            n.addMixin("mix:title");
+            n.addMixin("mix:lastModified");
+            n.addMixin("mix:shareable");
+            n.addMixin("mix:versionable");
+        } else n = jcrSession.getNode(tmpLocation + "/" + id);
 
-        Node n = jcrSession.getNode(location + "/" + id);
-        n.addMixin("mix:title");
-        n.addMixin("mix:lastModified");
-        n.addMixin("mix:shareable");
+        // Checking out for add new version of content
+        vm.checkout(contentId);
 
         // Adding type of node and abs path in description
         n.setProperty("jcr:description", "binarycontent:" + n.getPath());
 
-        n = jcrSession.getNode(location + "/" + id + "/" + MARK + locale + "/" + MARK + id);
+        jcrSession.getNode(contentId).addNode(MARK + locale, "nt:folder").addNode(MARK + id, "nt:file")
+                .addNode("jcr:content", "nt:resource");
+
+        n = jcrSession.getNode(contentLocaleId);
         n.addMixin("mix:title");
-        n.addMixin("mix:versionable");
         n.addMixin("mix:lastModified");
         n.addMixin("mix:mimeType");
 
         // Adding properties
-
         Binary _content = jcrSession.getValueFactory().createBinary(content);
 
         n.getNode("jcr:content").setProperty("jcr:data", _content);
@@ -497,6 +543,9 @@ public class JcrMappings {
 
         // Saving changes into JCR
         jcrSession.save();
+
+        // Checkin version
+        vm.checkin(contentId);
     }
 
     // Read methods
@@ -530,8 +579,9 @@ public class JcrMappings {
         if ("/".equals(location))
             return;
 
-        String id = location.substring(location.lastIndexOf("/") + 1);
+        vm.checkout(location);
 
+        String id = location.substring(location.lastIndexOf("/") + 1);
         Node n = jcrSession.getNode(location + "/" + MARK + locale + "/" + MARK + id);
 
         // In TextNodes we store the html also in jcr:description for future search funtionality
@@ -539,6 +589,7 @@ public class JcrMappings {
         n.getNode("jcr:content").setProperty("jcr:data", content);
 
         jcrSession.save();
+        vm.checkin(location);
     }
 
     public void updateFolderLocation(String location, String newLocation) throws RepositoryException {
@@ -582,6 +633,12 @@ public class JcrMappings {
 
     public void updateBinaryNode(String location, String locale, String contentType, Long size, String fileName,
             InputStream content) throws RepositoryException {
+        // Root node is not affected
+        if ("/".equals(location))
+            return;
+
+        vm.checkout(location);
+
         String id = location.substring(location.lastIndexOf("/") + 1);
 
         Node n = jcrSession.getNode(location + "/" + MARK + locale + "/" + MARK + id);
@@ -594,6 +651,7 @@ public class JcrMappings {
         n.setProperty("jcr:description", size);
 
         jcrSession.save();
+        vm.checkin(location);
     }
 
     public void createCategory(String id, String locale, String fullLocation, String description) throws RepositoryException {
@@ -632,67 +690,91 @@ public class JcrMappings {
     }
 
     public void createContentComment(String location, String comment) throws RepositoryException {
-        if (!checkIdExists(location, "__comments")) {
-            jcrSession.getNode(location).addNode("__comments", "nt:folder");
+
+        String tmpLocation = ("/".equals(location)?"":location);
+        Node n;
+        try {
+            n = jcrSession.getNode("/__comments" + tmpLocation);
+        } catch (PathNotFoundException e) {
+            n = jcrCreatePath("/__comments" + tmpLocation);
         }
 
         String idComment = "" + new Date().getTime() + "_" + UUID.randomUUID().toString();
-        Node n = jcrSession.getNode(location + "/__comments");
         n.addNode(idComment, "nt:folder").addMixin("mix:title");
         n.getNode(idComment).setProperty("jcr:description", comment);
-
         jcrSession.save();
     }
 
-    public void createContentProperty(String location, String name, String value) throws RepositoryException {
-        if (!checkIdExists(location, "__properties")) {
-            jcrSession.getNode(location).addNode("__properties", "nt:folder");
+    public void createContentProperty(String location, String locale, String name, String value) throws RepositoryException {
+
+        String tmpLocation = ("/".equals(location)?"":location);
+        Node n;
+        try {
+            n = jcrSession.getNode("/__properties" + tmpLocation + "/" + MARK + locale);
+        } catch (PathNotFoundException e) {
+            n = jcrCreatePath("/__properties" + tmpLocation + "/" + MARK + locale);
         }
 
-        if (!checkIdExists(location + "/__properties", name)) {
-            jcrSession.getNode(location + "/__properties").addNode(name, "nt:folder").addMixin("mix:title");
-        }
+        if (!n.hasNode(name)) {
+            n = n.addNode(name, "nt:folder");
+            n.addMixin("mix:title");
 
-        Node n = jcrSession.getNode(location + "/__properties/" + name);
+        }
         n.setProperty("jcr:description", value);
 
         jcrSession.save();
     }
 
     public void deleteContentComment(String location, String idComment) throws RepositoryException {
-        if (checkIdExists(location, "__comments/" + idComment)) {
-            jcrSession.removeItem(location + "/__comments/" + idComment);
+
+        String tmpLocation = ("/".equals(location)?"":location);
+
+        if (jcrSession.itemExists("/__comments" + tmpLocation + "/" + idComment)) {
+            jcrSession.removeItem("/__comments" + tmpLocation + "/" + idComment);
         }
 
         jcrSession.save();
     }
 
-    public void deleteContentProperty(String location, String name) throws RepositoryException {
-        if (checkIdExists(location, "__properties/" + name)) {
-            jcrSession.removeItem(location + "/__properties/" + name);
+    public void deleteContentProperty(String location, String locale, String name) throws RepositoryException {
+
+        String tmpLocation = ("/".equals(location)?"":location);
+
+        if (jcrSession.itemExists("/__properties" + tmpLocation + "/" + MARK + locale + "/" + name)) {
+            jcrSession.removeItem("/__properties" + tmpLocation + "/" + MARK + locale + "/" + name);
         }
 
         jcrSession.save();
     }
 
-    public void createContentACE(String location, String name, Principal.PrincipalType principal,
-            ACE.PermissionType permission) throws RepositoryException {
+    /*
+     * __acl can be part of versionable content and not versionable content.
+     *
+     * Versionable content are text and binary content.
+     * Folders are not versionable in this first version due overhead:
+     *  - We can have an exponential O(n^n) rate if we need to check for a leaf all tree.
+     *  - We can loose target of versioning, that is to have several copies of a specific content.
+     *
+     * So in the implementation, only we will check-out/check-in __acl content where we are in a versionable content.
+     *
+     */
+    public void createContentACE(String location, String name, Principal.PrincipalType principal, ACE.PermissionType permission)
+            throws RepositoryException {
+
+        String tmpLocation = ("/".equals(location)?"":location);
+        String contentId = "/__acl" + tmpLocation;
 
         String acl = null;
-        if (!checkIdExists(location, "__acl")) {
-            Node n = jcrSession.getNode(location);
-            n.addNode("__acl", "nt:folder").addMixin("mix:title");
-        }
-
         Node n;
-        if ("/".equals(location))
-            n = jcrSession.getNode("/__acl");
-        else
-            n = jcrSession.getNode(location + "/__acl");
-
+        if (!jcrSession.itemExists(contentId)) {
+            jcrCreatePath(contentId);
+            n = jcrSession.getNode(contentId);
+            n.addMixin("mix:title");
+        }
+        n = jcrSession.getNode(contentId);
         try {
             acl = n.getProperty("jcr:description").getString();
-        } catch(PathNotFoundException ignored) {
+        } catch (PathNotFoundException ignored) {
         }
 
         acl = addAcl(acl, name, principal, permission);
@@ -700,6 +782,7 @@ public class JcrMappings {
             n.setProperty("jcr:description", acl);
 
         jcrSession.save();
+
     }
 
     private String addAcl(String acl, String name, Principal.PrincipalType principal, ACE.PermissionType permission) {
@@ -720,7 +803,8 @@ public class JcrMappings {
             newAce += "WRITE";
 
         // Check if newAce is in Acl
-        if (acl == null || "".equals(acl)) return newAce;
+        if (acl == null || "".equals(acl))
+            return newAce;
         if (acl.contains(newAce))
             return acl;
         acl += "," + newAce;
@@ -728,16 +812,20 @@ public class JcrMappings {
     }
 
     private String removeAcl(String acl, String name) {
-        if (acl == null) return null;
-        if ("".equals(acl)) return "";
+        if (acl == null)
+            return null;
+        if ("".equals(acl))
+            return "";
 
         String tempAcl = "";
         String[] aces = acl.split(",");
         for (String ace : aces) {
             String _user = ace.split(":")[0];
             if (!_user.equals(name)) {
-                if ("".equals(tempAcl)) tempAcl += ace;
-                else tempAcl += ace + ",";
+                if ("".equals(tempAcl))
+                    tempAcl += ace;
+                else
+                    tempAcl += ace + ",";
             }
         }
 
@@ -747,14 +835,11 @@ public class JcrMappings {
     public void deleteContentACE(String location, String name) throws RepositoryException {
 
         String acl = null;
-        if (!checkIdExists(location, "__acl"))
+        String tmpLocation = ("/".equals(location)?"":location);
+        if (!jcrSession.itemExists("/acl" + tmpLocation))
             return;
 
-        Node n;
-        if ("/".equals(location))
-            n = jcrSession.getNode("/__acl");
-        else
-            n = jcrSession.getNode(location + "/__acl");
+        Node n = jcrSession.getNode("/__acl" + tmpLocation);
 
         if (n.getProperty("jcr:description") != null)
             acl = n.getProperty("jcr:description").getString();
@@ -771,23 +856,22 @@ public class JcrMappings {
         return jcrSession.getValueFactory().createValue(content);
     }
 
-    public Integer jcrVersion(String location) {
+    public String jcrVersion(String location) {
         try {
-            // VersionHistory h = vm.getVersionHistory(location);
-            VersionHistory h = jcrSession.getWorkspace().getVersionManager().getVersionHistory(location);
-            return new Integer((int) h.getAllLinearFrozenNodes().getSize());
+            Version v = jcrSession.getWorkspace().getVersionManager().getBaseVersion(location);
+            return v.getName();
         } catch (Exception e) {
             log.error("Unexpected error getting version history of " + location + ". Msg: " + e.getMessage());
-            return 0;
+            return null;
         }
     }
 
-    public Integer jcrVersion(Node n) {
+    public String jcrVersion(Node n) {
         try {
             return jcrVersion(n.getPath());
         } catch (Exception e) {
             log.error("Unexpected error getting version history of " + n.toString() + ". Msg: " + e.getMessage());
-            return 0;
+            return null;
         }
     }
 
@@ -827,38 +911,105 @@ public class JcrMappings {
         }
     }
 
+    /*
+     * All ACL will be storage under /__acl as a non versionable tree
+     */
     public ACL jcrACL(String location) throws RepositoryException {
         // Create ACL from location
         ACL acl = null;
         // Check if we are in the root node or child node
         Node n = null;
-        if (location.equals("/")) {
-            n = jcrSession.getNode("/__acl");
-        } else {
-            n = jcrSession.getNode(location + "/" + MARK + "acl");
-        }
+        String tmpLocation = ("/".equals(location)?"":location);
+        if (jcrSession.itemExists("/__acl" + tmpLocation))
+            n = jcrSession.getNode("/__acl" + tmpLocation);
+        else
+            return null;
 
-        String __acl = n.getProperty("jcr:description").getString();
+        Property _acl = null;
+        try {
+            _acl = n.getProperty("jcr:description");
+        } catch (PathNotFoundException expected) {
+            // Case where I have a left with ACL and some nodes without ACL
+            // It should look into the parent
+        }
+        if (_acl == null) return null;
+        String __acl = _acl.getString();
         acl = factory.parseACL(location, "ACL for " + location, __acl);
         return acl;
     }
 
-    public ACL jcrACL(Node n) {
+    private Node jcrCreatePath(String absPath) throws RepositoryException {
 
-        // Create ACL from location
-        ACL acl = null;
-        try {
-            // Check if we are in the root node or child node
-            Node nAcl = n.getNode("__acl");
-            String __acl = nAcl.getProperty("jcr:description").getString();
-            acl = factory.parseACL(n.getPath(), "ACL for " + n.getPath(), __acl);
-            return acl;
+        if (absPath == null) return null;
+        if ("".equals(absPath)) return null;
+        Node root = jcrSession.getRootNode();
+        String[] relPath = absPath.split("/");
+        // In a absPath we will start with 1 to about an empty first element
+        for (int i=1; i<relPath.length; i++) {
+            if (!root.hasNode(relPath[i])) {
+                root = root.addNode(relPath[i], "nt:folder");
+            } else
+                root = root.getNode(relPath[i]);
+        }
+        return root;
+    }
 
-        } catch (PathNotFoundException e) {
-            return null;
-        } catch (RepositoryException e) {
-            log.error("Unexpected error looking for acl in location " + n.toString() + ". Msg: " + e.getMessage());
-            return null;
+    /*
+     * Delete all versions under absPath
+     */
+    // TODO Re-write this method in modeshape 3.2 once versioning issue is fixed
+    @SuppressWarnings("unused")
+    private void jcrDeleteVersions(String absPath) throws RepositoryException {
+
+        if (absPath == null) return;
+        if ("".equals(absPath)) return;
+
+        // We delete with a bottom - up strategy
+        Node n = jcrSession.getNode(absPath);
+
+        // Iterating in children
+        NodeIterator nIt = n.getNodes();
+        while (nIt.hasNext()) {
+            Node nC = nIt.nextNode();
+            jcrDeleteVersions(nC.getPath());
+        }
+
+        // Working with node
+        NodeType[] nT = n.getMixinNodeTypes();
+        boolean versionable = false;
+        for (NodeType t : nT) {
+            if (t.getName().equals("mix:versionable")) {
+                versionable = true;
+                break;
+            }
+        }
+
+        if (versionable) {
+            // Checking if it has versions
+            VersionHistory vh = null;
+            try {
+                vh = vm.getVersionHistory(absPath);
+            } catch (Exception expected) {
+
+            }
+
+            // Delete child
+            try {
+                jcrSession.removeItem(absPath);
+                jcrSession.save();
+                jcrSession.refresh(true);
+            } catch (Exception e) {
+               // I can not remove a versionable node
+            }
+
+            if (vh != null) {
+                VersionIterator vIt = vh.getAllLinearVersions();
+                while (vIt.hasNext()) {
+                    Version v = vIt.nextVersion();
+                    if (!"jcr:rootVersion".equals(v.getName())) vh.removeVersion(v.getName());
+                }
+            }
+
         }
     }
 
@@ -1052,6 +1203,28 @@ public class JcrMappings {
     public List<String> jcrLocales(Node n) throws RepositoryException {
         if (n == null)
             return null;
+        NodeIterator ni = n.getNodes();
+        List<String> locales = new ArrayList<String>();
+        while (ni.hasNext()) {
+            Node node = ni.nextNode();
+            String name = node.getName();
+            if (!WcmConstants.RESERVED_ENTRIES.contains(name) && name.startsWith("__")) {
+                locales.add(name.substring(2));
+            }
+        }
+        if (locales.size() > 0)
+            return locales;
+        else
+            return null;
+    }
+
+    public List<String> jcrLocalesProperties(Node n) throws RepositoryException {
+        if (n == null)
+            return null;
+        if (!jcrSession.itemExists("/__properties" + n.getPath()))
+            return null;
+        n = jcrSession.getNode("/__properties" + n.getPath());
+
         NodeIterator ni = n.getNodes();
         List<String> locales = new ArrayList<String>();
         while (ni.hasNext()) {

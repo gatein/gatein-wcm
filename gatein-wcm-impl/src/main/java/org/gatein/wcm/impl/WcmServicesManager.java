@@ -74,7 +74,7 @@ public class WcmServicesManager implements RepositoryService, ObjectFactory {
            SimpleCredentials credentials = new SimpleCredentials(u.getUserName(), u.getPassword().toCharArray());
            Session s = rep.login(credentials, idWorkspace);
 
-           initCategories( s );
+           initMetadata( s );
 
            return new WcmContentService( idRepository, s, u );
         } catch (NamingException e) {
@@ -97,8 +97,18 @@ public class WcmServicesManager implements RepositoryService, ObjectFactory {
         return null;
     }
 
-    private void initCategories(Session session) {
+    private void initMetadata(Session session) {
         try {
+            if (!session.itemExists("/__acl")) {
+                session.getRootNode().addNode("__acl", "nt:folder")
+                .addMixin("mix:title");
+                session.save();
+                // Setting specific ACL for / for admin users
+                if (isAdmin) {
+                    JcrMappings jcr = new JcrMappings(session, u);
+                    jcr.createContentACE("/", u.getUserName(), PrincipalType.USER, ACE.PermissionType.ALL);
+                }
+            }
             if (!session.itemExists("/__categories")) {
                 session.getRootNode().addNode("__categories", "nt:folder");
                 session.save();
@@ -108,8 +118,17 @@ public class WcmServicesManager implements RepositoryService, ObjectFactory {
                     jcr.createContentACE("/__categories", u.getUserName(), PrincipalType.USER, ACE.PermissionType.ALL);
                 }
             }
+            if (!session.itemExists("/__comments")) {
+                session.getRootNode().addNode("__comments", "nt:folder");
+                session.save();
+            }
+            if (!session.itemExists("/__properties")) {
+                session.getRootNode().addNode("__properties", "nt:folder");
+                session.save();
+            }
+
         } catch (Exception e) {
-            log.error("Unexpected error initCategories in workspace. Msg: " + e.getMessage());
+            log.error("Unexpected error initMetadata in workspace. Msg: " + e.getMessage());
         }
     }
 

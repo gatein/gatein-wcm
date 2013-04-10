@@ -46,8 +46,6 @@ public class SecurityTest {
     @Test
     public void checkRead() throws ContentIOException, ContentSecurityException, ContentException {
 
-        log.debug("[[ START TEST  checkRead ]]");
-
         String LOCALE = Locale.getDefault().getLanguage();
 
         // Creates a folder with admin
@@ -81,8 +79,6 @@ public class SecurityTest {
         cs = repos.createContentSession("sample", "default", "admin", "admin");
         cs.deleteContent("/test-sec-a");
         cs.closeSession();
-
-        log.debug("[[ STOP TEST  checkRead ]]");
 
     }
 
