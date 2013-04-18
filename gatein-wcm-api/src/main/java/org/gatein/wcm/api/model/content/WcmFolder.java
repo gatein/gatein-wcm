@@ -41,4 +41,22 @@ public interface WcmFolder extends WcmObject {
      */
     List<WcmObject> getChildren();
 
+    /**
+     *
+     * @return List of Folders in children.
+     */
+    List<WcmFolder> getSubfolders();
+
+    /**
+     *
+     * @return List of TextObjects in children.
+     */
+    List<WcmTextObject> getTextContent();
+
+    /**
+     *
+     * @return List of BinaryObjects in children.
+     */
+    List<WcmBinaryObject> getBinaryContent();
+
 }
