@@ -13,13 +13,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.gatein.wcm.api.model.content.BinaryContent;
-import org.gatein.wcm.api.model.content.Content;
-import org.gatein.wcm.api.services.ContentService;
-import org.gatein.wcm.api.services.RepositoryService;
-import org.gatein.wcm.api.services.exceptions.ContentException;
-import org.gatein.wcm.api.services.exceptions.ContentIOException;
-import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
+import org.gatein.wcm.api.model.content.WcmBinaryObject;
+import org.gatein.wcm.api.model.content.WcmObject;
+import org.gatein.wcm.api.services.WcmContentService;
+import org.gatein.wcm.api.services.WcmRepositoryService;
+import org.gatein.wcm.api.services.exceptions.WcmContentException;
+import org.gatein.wcm.api.services.exceptions.WcmContentIOException;
+import org.gatein.wcm.api.services.exceptions.WcmContentSecurityException;
 import org.gatein.wcm.ui.Connect;
 import org.jboss.logging.Logger;
 
@@ -30,7 +30,7 @@ public class WcmResource extends HttpServlet {
     private static final Logger log = Logger.getLogger(WcmResource.class);
 
     @Resource(mappedName = "java:jboss/gatein-wcm")
-    RepositoryService repos;
+    WcmRepositoryService repos;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -74,14 +74,14 @@ public class WcmResource extends HttpServlet {
                 log.error("Error accesing to repository");
                 return;
             }
-            ContentService cs = repos.createContentSession(c.getRepository(), c.getWorkspace(), c.getUser(), c.getPassword());
-            Content content = cs.getContent(path, locale);
-            if (content instanceof BinaryContent) {
-                BinaryContent b = (BinaryContent)content;
-                resp.setHeader("Content-Type", b.getContentType() );
+            WcmContentService cs = repos.createContentSession(c.getRepository(), c.getWorkspace(), c.getUser(), c.getPassword());
+            WcmObject content = cs.getContent(path, locale);
+            if (content instanceof WcmBinaryObject) {
+                WcmBinaryObject b = (WcmBinaryObject)content;
+                resp.setHeader("Content-Type", b.getMimeType() );
                 resp.setHeader("Content-Length", String.valueOf(b.getSize()));
                 resp.setHeader("Content-Disposition", "inline; filename=\"" + b.getFileName() + "\"");
-                resp.setContentType(b.getContentType());
+                resp.setContentType(b.getMimeType());
                 resp.setStatus(HttpServletResponse.SC_OK);
 
                 byte[] buffer = new byte[16384];
@@ -96,11 +96,11 @@ public class WcmResource extends HttpServlet {
             } else {
                 log.warn("Content in path: " + path + " and locale: " + locale + " is not a resource");
             }
-        } catch(ContentException e) {
+        } catch(WcmContentException e) {
             log.info("Cannot get root content from " + c.getRepository() + "/" + c.getWorkspace() + ", path: " + path + " and locale: " + locale + ". Msg: " + e.getMessage());
-        } catch (ContentIOException e) {
+        } catch (WcmContentIOException e) {
             log.error(e.getMessage(), e);
-        } catch (ContentSecurityException e) {
+        } catch (WcmContentSecurityException e) {
             log.error(e.getMessage(), e);
         } catch (IOException e) {
             log.error(e.getMessage(), e);

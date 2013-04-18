@@ -13,28 +13,28 @@ import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.spi.ObjectFactory;
 
-import org.gatein.wcm.api.model.security.Principal.PrincipalType;
-import org.gatein.wcm.api.model.security.ACE;
-import org.gatein.wcm.api.model.security.User;
-import org.gatein.wcm.api.services.ContentService;
-import org.gatein.wcm.api.services.PublishService;
-import org.gatein.wcm.api.services.RepositoryService;
-import org.gatein.wcm.api.services.SecurityService;
-import org.gatein.wcm.api.services.exceptions.ContentIOException;
-import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
+import org.gatein.wcm.api.model.security.WcmPrincipal.PrincipalType;
+import org.gatein.wcm.api.model.security.WcmAce;
+import org.gatein.wcm.api.model.security.WcmUser;
+import org.gatein.wcm.api.services.WcmContentService;
+import org.gatein.wcm.api.services.WcmPublishService;
+import org.gatein.wcm.api.services.WcmRepositoryService;
+import org.gatein.wcm.api.services.WcmSecurityService;
+import org.gatein.wcm.api.services.exceptions.WcmContentIOException;
+import org.gatein.wcm.api.services.exceptions.WcmContentSecurityException;
 import org.gatein.wcm.impl.jcr.JcrMappings;
 import org.gatein.wcm.impl.security.WcmSecurityFactory;
-import org.gatein.wcm.impl.services.WcmContentService;
+import org.gatein.wcm.impl.services.WcmContentServiceImpl;
 import org.jboss.logging.Logger;
 import org.modeshape.jcr.api.Repositories;
 
 
-public class WcmServicesManager implements RepositoryService, ObjectFactory {
+public class WcmServicesManager implements WcmRepositoryService, ObjectFactory {
 
     private static final Logger log = Logger.getLogger(WcmServicesManager.class);
 
     private Repositories repositories;
-    User u = null;
+    WcmUser u = null;
     private boolean isAdmin = false;
     private String ADMIN_ROLE = "admin";
 
@@ -49,19 +49,19 @@ public class WcmServicesManager implements RepositoryService, ObjectFactory {
     }
 
     @Override
-    public ContentService createContentSession(String idRepository, String idWorkspace, String user, String password) throws ContentIOException,
-            ContentSecurityException {
+    public WcmContentService createContentSession(String idRepository, String idWorkspace, String user, String password) throws WcmContentIOException,
+            WcmContentSecurityException {
 
         checkParameters(idRepository, idWorkspace, user, password);
 
         try {
-            SecurityService service = WcmSecurityFactory.getSecurityService();
+            WcmSecurityService service = WcmSecurityFactory.getSecurityService();
             u = service.authenticate(user, password);
             isAdmin = service.hasRole(u, ADMIN_ROLE);
-        } catch (ContentIOException e) {
-            throw new ContentIOException( "Unable to connect to WCM Security Service: " + e.getMessage() );
-        } catch (ContentSecurityException e) {
-            throw new ContentSecurityException( "Bad user/password for user: " + user + " " + e.getMessage() );
+        } catch (WcmContentIOException e) {
+            throw new WcmContentIOException( "Unable to connect to WCM Security Service: " + e.getMessage() );
+        } catch (WcmContentSecurityException e) {
+            throw new WcmContentSecurityException( "Bad user/password for user: " + user + " " + e.getMessage() );
         }
 
         try {
@@ -69,28 +69,28 @@ public class WcmServicesManager implements RepositoryService, ObjectFactory {
            repositories = (Repositories)ctx.lookup( "java:/jcr" );
            Repository rep = repositories.getRepository(idRepository);
            if (rep == null)
-               throw new ContentIOException( "Unable to connect to JCR repository: " + idRepository );
+               throw new WcmContentIOException( "Unable to connect to JCR repository: " + idRepository );
 
            SimpleCredentials credentials = new SimpleCredentials(u.getUserName(), u.getPassword().toCharArray());
            Session s = rep.login(credentials, idWorkspace);
 
            initMetadata( s );
 
-           return new WcmContentService( idRepository, s, u );
+           return new WcmContentServiceImpl( idRepository, s, u );
         } catch (NamingException e) {
-            throw new ContentIOException( "Unable to connect to ModeShape JNDI java:/jcr" );
+            throw new WcmContentIOException( "Unable to connect to ModeShape JNDI java:/jcr" );
         }  catch (NullPointerException e) {
-            throw new ContentIOException( "Unable to connect to ModeShape JNDI java:/jcr" );
+            throw new WcmContentIOException( "Unable to connect to ModeShape JNDI java:/jcr" );
         } catch (LoginException e) {
-            throw new ContentSecurityException( "User " + u.getUserName() + " has not rights on " + idRepository + "/" + idWorkspace);
+            throw new WcmContentSecurityException( "User " + u.getUserName() + " has not rights on " + idRepository + "/" + idWorkspace);
         } catch (RepositoryException e) {
-            throw new ContentIOException( "Unexpected error in reporitory " + idRepository + ". Error: " + e.getMessage() );
+            throw new WcmContentIOException( "Unexpected error in reporitory " + idRepository + ". Error: " + e.getMessage() );
         }
     }
 
     @Override
-    public PublishService createPublishSession(String idRepository, String idWorkspace, String user, String password) throws ContentIOException,
-            ContentSecurityException {
+    public WcmPublishService createPublishSession(String idRepository, String idWorkspace, String user, String password) throws WcmContentIOException,
+            WcmContentSecurityException {
 
         log.info("[[ TESTING createPublishSession() ");
 
@@ -106,7 +106,7 @@ public class WcmServicesManager implements RepositoryService, ObjectFactory {
                 // Setting specific ACL for / for admin users
                 if (isAdmin) {
                     JcrMappings jcr = new JcrMappings(session, u);
-                    jcr.createContentACE("/", u.getUserName(), PrincipalType.USER, ACE.PermissionType.ALL);
+                    jcr.createContentAce("/", u.getUserName(), PrincipalType.USER, WcmAce.PermissionType.ALL);
                 }
             }
             if (!session.itemExists("/__categories")) {
@@ -115,7 +115,7 @@ public class WcmServicesManager implements RepositoryService, ObjectFactory {
                 // Setting specific ACL for categories for admin users
                 if (isAdmin) {
                     JcrMappings jcr = new JcrMappings(session, u);
-                    jcr.createContentACE("/__categories", u.getUserName(), PrincipalType.USER, ACE.PermissionType.ALL);
+                    jcr.createContentAce("/__categories", u.getUserName(), PrincipalType.USER, WcmAce.PermissionType.ALL);
                 }
             }
             if (!session.itemExists("/__comments")) {
@@ -132,15 +132,15 @@ public class WcmServicesManager implements RepositoryService, ObjectFactory {
         }
     }
 
-    private void checkParameters(String idRepository, String idWorkspace, String user, String password) throws ContentSecurityException {
+    private void checkParameters(String idRepository, String idWorkspace, String user, String password) throws WcmContentSecurityException {
         if (idRepository == null || "".equals(idRepository))
-            throw new ContentSecurityException("Repository name cannot be null or empty");
+            throw new WcmContentSecurityException("Repository name cannot be null or empty");
         if (idWorkspace == null || "".equals(idWorkspace))
-            throw new ContentSecurityException("Workspace name cannot be null or empty");
+            throw new WcmContentSecurityException("Workspace name cannot be null or empty");
         if (user == null || "".equals(user))
-            throw new ContentSecurityException("User cannot be null or empty");
+            throw new WcmContentSecurityException("User cannot be null or empty");
         if (password == null || "".equals(password))
-            throw new ContentSecurityException("Password cannot be null or empty");
+            throw new WcmContentSecurityException("Password cannot be null or empty");
     }
 
 }

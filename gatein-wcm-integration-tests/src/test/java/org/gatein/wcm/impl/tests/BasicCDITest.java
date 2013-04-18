@@ -6,9 +6,9 @@ import javax.annotation.Resource;
 
 import junit.framework.Assert;
 
-import org.gatein.wcm.api.services.ContentService;
-import org.gatein.wcm.api.services.RepositoryService;
-import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
+import org.gatein.wcm.api.services.WcmContentService;
+import org.gatein.wcm.api.services.WcmRepositoryService;
+import org.gatein.wcm.api.services.exceptions.WcmContentSecurityException;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.logging.Logger;
@@ -34,14 +34,14 @@ public class BasicCDITest {
     }
 
     @Resource(mappedName = "java:jboss/gatein-wcm")
-    RepositoryService repos;
+    WcmRepositoryService repos;
 
     @Test
     public void goodPassword() {
 
         log.debug("[[ START TEST  goodPassword ]]");
         try {
-            ContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
+            WcmContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
             log.debug( cs );
             log.debug("[[ END TEST  goodPassword ]]");
             Assert.assertTrue( true );
@@ -55,11 +55,11 @@ public class BasicCDITest {
 
         log.debug("[[ START TEST  badPassword ]]");
         try {
-            ContentService cs = repos.createContentSession("sample", "default", "admin", "badpassword");
+            WcmContentService cs = repos.createContentSession("sample", "default", "admin", "badpassword");
             log.debug( cs );
             Assert.fail("Expecting exception...");
 
-        } catch (ContentSecurityException e) {
+        } catch (WcmContentSecurityException e) {
             log.debug(" [[ Expected: " + e.getMessage());
             log.debug("[[ END TEST  badPassword ]]");
             Assert.assertTrue( true );

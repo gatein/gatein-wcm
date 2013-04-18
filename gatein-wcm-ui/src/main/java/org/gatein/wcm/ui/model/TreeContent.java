@@ -3,10 +3,10 @@ package org.gatein.wcm.ui.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.gatein.wcm.api.model.content.BinaryContent;
-import org.gatein.wcm.api.model.content.Content;
-import org.gatein.wcm.api.model.content.Folder;
-import org.gatein.wcm.api.model.content.TextContent;
+import org.gatein.wcm.api.model.content.WcmBinaryObject;
+import org.gatein.wcm.api.model.content.WcmObject;
+import org.gatein.wcm.api.model.content.WcmFolder;
+import org.gatein.wcm.api.model.content.WcmTextObject;
 
 public class TreeContent {
 
@@ -18,30 +18,30 @@ public class TreeContent {
         TYPE_TEXT, TYPE_FOLDER, TYPE_BINARY, NO_TYPE
     };
 
-    private Content content;
+    private WcmObject content;
 
     // TextContent temp properties
     private String text;
 
-    public TreeContent(Content content) {
+    public TreeContent(WcmObject content) {
         this.content = content;
     }
 
-    public Content getContent() {
+    public WcmObject getContent() {
         return content;
     }
 
-    public void setContent(Content content) {
+    public void setContent(WcmObject content) {
         this.content = content;
     }
 
     public List<TreeContent> getNodes() {
-        if (content instanceof Folder) {
-            Folder f = (Folder)content;
+        if (content instanceof WcmFolder) {
+            WcmFolder f = (WcmFolder)content;
             if (f.getChildren() == null) return null;
             if (f.getChildren().size() == 0) return null;
             ArrayList<TreeContent> children = new ArrayList<TreeContent>();
-            for (Content c : f.getChildren())
+            for (WcmObject c : f.getChildren())
                 children.add(new TreeContent(c));
             return children;
         }
@@ -49,11 +49,11 @@ public class TreeContent {
     }
 
     public Type getType() {
-        if (content instanceof Folder)
+        if (content instanceof WcmFolder)
             return Type.TYPE_FOLDER;
-        if (content instanceof TextContent)
+        if (content instanceof WcmTextObject)
             return Type.TYPE_TEXT;
-        if (content instanceof BinaryContent)
+        if (content instanceof WcmBinaryObject)
             return Type.TYPE_BINARY;
         return Type.NO_TYPE;
     }
@@ -73,21 +73,21 @@ public class TreeContent {
         return "user_delete.png";
     }
 
-    public Folder getFolder() {
+    public WcmFolder getFolder() {
         if (getType() == Type.TYPE_FOLDER)
-            return (Folder)content;
+            return (WcmFolder)content;
         return null;
     }
 
-    public TextContent getTextContent() {
+    public WcmTextObject getTextContent() {
         if (getType() == Type.TYPE_TEXT)
-            return (TextContent)content;
+            return (WcmTextObject)content;
         return null;
     }
 
-    public BinaryContent getBinaryContent() {
+    public WcmBinaryObject getBinaryContent() {
         if (getType() == Type.TYPE_BINARY)
-            return (BinaryContent)content;
+            return (WcmBinaryObject)content;
         return null;
     }
 

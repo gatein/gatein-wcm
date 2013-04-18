@@ -13,15 +13,15 @@ import javax.annotation.Resource;
 
 import junit.framework.Assert;
 
-import org.gatein.wcm.api.model.content.BinaryContent;
-import org.gatein.wcm.api.model.content.Content;
-import org.gatein.wcm.api.model.content.Folder;
-import org.gatein.wcm.api.model.content.TextContent;
-import org.gatein.wcm.api.services.ContentService;
-import org.gatein.wcm.api.services.RepositoryService;
-import org.gatein.wcm.api.services.exceptions.ContentException;
-import org.gatein.wcm.api.services.exceptions.ContentIOException;
-import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
+import org.gatein.wcm.api.model.content.WcmBinaryObject;
+import org.gatein.wcm.api.model.content.WcmObject;
+import org.gatein.wcm.api.model.content.WcmFolder;
+import org.gatein.wcm.api.model.content.WcmTextObject;
+import org.gatein.wcm.api.services.WcmContentService;
+import org.gatein.wcm.api.services.WcmRepositoryService;
+import org.gatein.wcm.api.services.exceptions.WcmContentException;
+import org.gatein.wcm.api.services.exceptions.WcmContentIOException;
+import org.gatein.wcm.api.services.exceptions.WcmContentSecurityException;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.logging.Logger;
@@ -55,39 +55,39 @@ public class BasicAPITest {
 	}
 
 	@Resource(mappedName = "java:jboss/gatein-wcm")
-	RepositoryService repos;
+	WcmRepositoryService repos;
 
 	@Test
-	public void createTextContent() throws ContentIOException,
-			ContentSecurityException, ContentException {
+	public void createTextContent() throws WcmContentIOException,
+			WcmContentSecurityException, WcmContentException {
 
 		log.debug("[[ START TEST  createTextContent ]]");
-		ContentService cs = repos.createContentSession("sample", "default",
+		WcmContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
-		Content c1 = cs.createTextContent("test01", "es", "/",
+		WcmObject c1 = cs.createTextContent("test01", "es", "/",
 				"<h1>Primer test...</h1><p>Este es un párrafo.</p>");
-		Content c2 = cs.createTextContent("test01", "en", "/",
+		WcmObject c2 = cs.createTextContent("test01", "en", "/",
 				"<h1>First test...</h1><p>This is a paragraph</p>");
-		Content c3 = cs.createTextContent("test01", "fr", "/",
+		WcmObject c3 = cs.createTextContent("test01", "fr", "/",
 				"<h1>First test...</h1><p>Ceci est un paragraphe</p>");
-		Content c4 = cs.createTextContent("test01", "de", "/",
+		WcmObject c4 = cs.createTextContent("test01", "de", "/",
 				"<h1>Erster Test...</h1><p>Dies ist ein Absatz</p>");
 		log.debug(c1);
 		Assert.assertTrue(c1.getId().equals("test01"));
 		Assert.assertTrue(c1.getLocale().equals("es"));
-		Assert.assertTrue(c1.getLocation().equals("/"));
+		Assert.assertTrue(c1.getParentPath().equals("/"));
 		log.debug(c2);
 		Assert.assertTrue(c2.getId().equals("test01"));
 		Assert.assertTrue(c2.getLocale().equals("en"));
-		Assert.assertTrue(c2.getLocation().equals("/"));
+		Assert.assertTrue(c2.getParentPath().equals("/"));
 		log.debug(c3);
 		Assert.assertTrue(c3.getId().equals("test01"));
 		Assert.assertTrue(c3.getLocale().equals("fr"));
-		Assert.assertTrue(c3.getLocation().equals("/"));
+		Assert.assertTrue(c3.getParentPath().equals("/"));
 		log.debug(c4);
 		Assert.assertTrue(c4.getId().equals("test01"));
 		Assert.assertTrue(c4.getLocale().equals("de"));
-		Assert.assertTrue(c4.getLocation().equals("/"));
+		Assert.assertTrue(c4.getParentPath().equals("/"));
 
 		// Cleaning test
 		cs.deleteContent("/test01");
@@ -96,44 +96,44 @@ public class BasicAPITest {
 	}
 
 	@Test
-	public void createFolders() throws ContentException, ContentIOException,
-			ContentSecurityException {
+	public void createFolders() throws WcmContentException, WcmContentIOException,
+			WcmContentSecurityException {
 
 		log.debug("[[ START TEST  createFolders ]]");
-		ContentService cs = repos.createContentSession("sample", "default",
+		WcmContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
-		Content f1 = cs.createFolder("test02", "/");
-		Content f2 = cs.createFolder("a", "/test02");
-		Content f3 = cs.createFolder("b", "/test02");
-		Content f4 = cs.createFolder("c", "/test02/a");
-		Content f5 = cs.createFolder("d", "/test02/a");
-		Content f6 = cs.createFolder("e", "/test02/b");
-		Content f7 = cs.createFolder("f", "/test02/b");
-		Content f8 = cs.createFolder("g", "/test02/a/c");
+		WcmObject f1 = cs.createFolder("test02", "/");
+		WcmObject f2 = cs.createFolder("a", "/test02");
+		WcmObject f3 = cs.createFolder("b", "/test02");
+		WcmObject f4 = cs.createFolder("c", "/test02/a");
+		WcmObject f5 = cs.createFolder("d", "/test02/a");
+		WcmObject f6 = cs.createFolder("e", "/test02/b");
+		WcmObject f7 = cs.createFolder("f", "/test02/b");
+		WcmObject f8 = cs.createFolder("g", "/test02/a/c");
 		log.debug(f1);
 		Assert.assertTrue(f1.getId().equals("test02"));
-		Assert.assertTrue(f1.getLocation().equals("/"));
+		Assert.assertTrue(f1.getParentPath().equals("/"));
 		log.debug(f2);
 		Assert.assertTrue(f2.getId().equals("a"));
-		Assert.assertTrue(f2.getLocation().equals("/test02"));
+		Assert.assertTrue(f2.getParentPath().equals("/test02"));
 		log.debug(f3);
 		Assert.assertTrue(f3.getId().equals("b"));
-		Assert.assertTrue(f3.getLocation().equals("/test02"));
+		Assert.assertTrue(f3.getParentPath().equals("/test02"));
 		log.debug(f4);
 		Assert.assertTrue(f4.getId().equals("c"));
-		Assert.assertTrue(f4.getLocation().equals("/test02/a"));
+		Assert.assertTrue(f4.getParentPath().equals("/test02/a"));
 		log.debug(f5);
 		Assert.assertTrue(f5.getId().equals("d"));
-		Assert.assertTrue(f5.getLocation().equals("/test02/a"));
+		Assert.assertTrue(f5.getParentPath().equals("/test02/a"));
 		log.debug(f6);
 		Assert.assertTrue(f6.getId().equals("e"));
-		Assert.assertTrue(f6.getLocation().equals("/test02/b"));
+		Assert.assertTrue(f6.getParentPath().equals("/test02/b"));
 		log.debug(f7);
 		Assert.assertTrue(f7.getId().equals("f"));
-		Assert.assertTrue(f7.getLocation().equals("/test02/b"));
+		Assert.assertTrue(f7.getParentPath().equals("/test02/b"));
 		log.debug(f8);
 		Assert.assertTrue(f8.getId().equals("g"));
-		Assert.assertTrue(f8.getLocation().equals("/test02/a/c"));
+		Assert.assertTrue(f8.getParentPath().equals("/test02/a/c"));
 
 		// Cleaning test
 		cs.deleteContent("/test02");
@@ -141,8 +141,8 @@ public class BasicAPITest {
 	}
 
 	@Test
-	public void createBinaryContent() throws ContentException,
-			ContentIOException, ContentSecurityException {
+	public void createBinaryContent() throws WcmContentException,
+			WcmContentIOException, WcmContentSecurityException {
 
 		log.debug("[[ START TEST  createBinaryContent ]]");
 		InputStream pdf = getClass().getClassLoader().getResourceAsStream(
@@ -152,30 +152,30 @@ public class BasicAPITest {
 		byte[] _pdf = toByteArray(pdf);
 		byte[] _jpg = toByteArray(jpg);
 
-		ContentService cs = repos.createContentSession("sample", "default",
+		WcmContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
-		Content f1 = cs.createFolder("test03", "/");
-		Content b1 = cs.createBinaryContent("gatein-userguide", "en",
+		WcmObject f1 = cs.createFolder("test03", "/");
+		WcmObject b1 = cs.createBinaryContent("gatein-userguide", "en",
 				"/test03", "application/pdf", (long) _pdf.length,
 				"GateIn-UserGuide-v3.5.pdf", new ByteArrayInputStream(_pdf));
-		Content b2 = cs.createBinaryContent("wcm-whiteboard", "en", "/test03",
+		WcmObject b2 = cs.createBinaryContent("wcm-whiteboard", "en", "/test03",
 				"image/jpeg", Long.valueOf(_jpg.length), "wcm-whiteboard.jpg",
 				new ByteArrayInputStream(_jpg));
 		log.debug(f1);
 		log.debug(b1);
-		Assert.assertTrue(((BinaryContent) b1).getFileName().equals(
+		Assert.assertTrue(((WcmBinaryObject) b1).getFileName().equals(
 				"GateIn-UserGuide-v3.5.pdf"));
-		Assert.assertTrue(((BinaryContent) b1).getSize() == _pdf.length);
-		Assert.assertTrue(((BinaryContent) b1).getContentType().equals(
+		Assert.assertTrue(((WcmBinaryObject) b1).getSize() == _pdf.length);
+		Assert.assertTrue(((WcmBinaryObject) b1).getMimeType().equals(
 				"application/pdf"));
-		Assert.assertTrue(((BinaryContent) b1).getContent() != null);
+		Assert.assertTrue(((WcmBinaryObject) b1).getContent() != null);
 		log.debug(b2);
-		Assert.assertTrue(((BinaryContent) b2).getFileName().equals(
+		Assert.assertTrue(((WcmBinaryObject) b2).getFileName().equals(
 				"wcm-whiteboard.jpg"));
-		Assert.assertTrue(((BinaryContent) b2).getSize() == _jpg.length);
-		Assert.assertTrue(((BinaryContent) b2).getContentType().equals(
+		Assert.assertTrue(((WcmBinaryObject) b2).getSize() == _jpg.length);
+		Assert.assertTrue(((WcmBinaryObject) b2).getMimeType().equals(
 				"image/jpeg"));
-		Assert.assertTrue(((BinaryContent) b2).getContent() != null);
+		Assert.assertTrue(((WcmBinaryObject) b2).getContent() != null);
 
 		// Cleaning test
 		cs.deleteContent("/test03");
@@ -183,8 +183,8 @@ public class BasicAPITest {
 	}
 
 	@Test
-	public void getContent() throws ContentIOException,
-			ContentSecurityException, ContentException {
+	public void getContent() throws WcmContentIOException,
+			WcmContentSecurityException, WcmContentException {
 
 		log.debug("[[ START TEST  getContent ]]");
 		int MAX_FOLDERS = 10;
@@ -194,7 +194,7 @@ public class BasicAPITest {
 				"/wcm-whiteboard.jpg");
 		byte[] _pdf = toByteArray(pdf);
 		byte[] _jpg = toByteArray(jpg);
-		ContentService cs = repos.createContentSession("sample", "default",
+		WcmContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
 		cs.createFolder("test04", "/");
 		for (int i = 0; i < MAX_FOLDERS; i++) {
@@ -215,8 +215,8 @@ public class BasicAPITest {
 					+ "/air", "image/jpeg", (long) _jpg.length,
 					"wcm-whiteboard.jpg", new ByteArrayInputStream(_jpg));
 		}
-		Content root_es = cs.getContent("/", "es");
-		Content root_en = cs.getContent("/", "en");
+		WcmObject root_es = cs.getContent("/", "es");
+		WcmObject root_en = cs.getContent("/", "en");
 		print(root_es, "/tmp");
 		print(root_en, "/tmp");
 
@@ -226,11 +226,11 @@ public class BasicAPITest {
 	}
 
 	@Test
-	public void getContentLocales() throws ContentException,
-			ContentIOException, ContentSecurityException {
+	public void getContentLocales() throws WcmContentException,
+			WcmContentIOException, WcmContentSecurityException {
 
 		log.debug("[[ START TEST  getContentLocales ]]");
-		ContentService cs = repos.createContentSession("sample", "default",
+		WcmContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
 		cs.createTextContent("test05", "es", "/", "<h1>Primer test...</h1>");
 		cs.createTextContent("test05", "en", "/", "<h1>First test...</h1>");
@@ -244,7 +244,7 @@ public class BasicAPITest {
 		log.debug("Locales: " + locales);
 		Assert.assertTrue(locales.contains("it"));
 
-		Content c = cs.getContent("/test05", "es");
+		WcmObject c = cs.getContent("/test05", "es");
 		Assert.assertEquals(7, c.getLocales().size());
 
 		// Cleaning test
@@ -254,25 +254,25 @@ public class BasicAPITest {
 	}
 
 	@Test
-	public void updateTextContent() throws ContentException,
-			ContentIOException, ContentSecurityException {
+	public void updateTextContent() throws WcmContentException,
+			WcmContentIOException, WcmContentSecurityException {
 
 		log.debug("[[ START TEST  updateTextContent ]]");
-		ContentService cs = repos.createContentSession("sample", "default",
+		WcmContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
-		Content c1 = cs.createTextContent("test06", "es", "/",
+		WcmObject c1 = cs.createTextContent("test06", "es", "/",
 				"<h1>Primer test...</h1><p>Este es un párrafo.</p>");
-		Content c2 = cs.createTextContent("test06", "en", "/",
+		WcmObject c2 = cs.createTextContent("test06", "en", "/",
 				"<h1>First test...</h1><p>This is a paragraph</p>");
-		Content c3 = cs.createTextContent("test06", "fr", "/",
+		WcmObject c3 = cs.createTextContent("test06", "fr", "/",
 				"<h1>First test...</h1><p>Ceci est un paragraphe</p>");
-		Content c4 = cs.createTextContent("test06", "de", "/",
+		WcmObject c4 = cs.createTextContent("test06", "de", "/",
 				"<h1>Erster Test...</h1><p>Dies ist ein Absatz</p>");
 		log.debug(c1);
-		Assert.assertTrue(((TextContent) c1).getContent().equals(
+		Assert.assertTrue(((WcmTextObject) c1).getContent().equals(
 				"<h1>Primer test...</h1><p>Este es un párrafo.</p>"));
 		log.debug(c2);
-		Assert.assertTrue(((TextContent) c2).getContent().equals(
+		Assert.assertTrue(((WcmTextObject) c2).getContent().equals(
 				"<h1>First test...</h1><p>This is a paragraph</p>"));
 		log.debug(c3);
 		log.debug(c4);
@@ -281,10 +281,10 @@ public class BasicAPITest {
 		c2 = cs.updateTextContent("/test06", "en",
 				"<h1>Second test...</h1><p>This is another paragraph.</p>");
 		log.debug(c1);
-		Assert.assertTrue(((TextContent) c1).getContent().equals(
+		Assert.assertTrue(((WcmTextObject) c1).getContent().equals(
 				"<h1>Segundo test...</h1><p>Este es otro párrafo.</p>"));
 		log.debug(c2);
-		Assert.assertTrue(((TextContent) c2).getContent().equals(
+		Assert.assertTrue(((WcmTextObject) c2).getContent().equals(
 				"<h1>Second test...</h1><p>This is another paragraph.</p>"));
 
 		// Cleaning test
@@ -293,20 +293,20 @@ public class BasicAPITest {
 	}
 
 	@Test
-	public void updateFolderLocation() throws ContentException,
-			ContentIOException, ContentSecurityException {
+	public void updateFolderLocation() throws WcmContentException,
+			WcmContentIOException, WcmContentSecurityException {
 
 		log.debug("[[ START TEST  updateFolderLocation ]]");
-		ContentService cs = repos.createContentSession("sample", "default",
+		WcmContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
-		Content f1 = cs.createFolder("test07", "/");
-		Content f2 = cs.createFolder("a", "/test07");
-		Content f3 = cs.createFolder("b", "/test07");
-		Content f4 = cs.createFolder("c", "/test07/a");
-		Content f5 = cs.createFolder("d", "/test07/a");
-		Content f6 = cs.createFolder("e", "/test07/b");
-		Content f7 = cs.createFolder("f", "/test07/b");
-		Content f8 = cs.createFolder("g", "/test07/a/c");
+		WcmObject f1 = cs.createFolder("test07", "/");
+		WcmObject f2 = cs.createFolder("a", "/test07");
+		WcmObject f3 = cs.createFolder("b", "/test07");
+		WcmObject f4 = cs.createFolder("c", "/test07/a");
+		WcmObject f5 = cs.createFolder("d", "/test07/a");
+		WcmObject f6 = cs.createFolder("e", "/test07/b");
+		WcmObject f7 = cs.createFolder("f", "/test07/b");
+		WcmObject f8 = cs.createFolder("g", "/test07/a/c");
 		log.debug(f1);
 		log.debug(f2);
 		log.debug(f3);
@@ -315,9 +315,9 @@ public class BasicAPITest {
 		log.debug(f6);
 		log.debug(f7);
 		log.debug(f8);
-		Content f10 = cs.updateFolderLocation("/test07/a", "en", "/test07/b");
+		WcmObject f10 = cs.updateFolderLocation("/test07/a", "en", "/test07/b");
 		log.debug(f10);
-		Assert.assertTrue(((Folder) f10).getLocation().equals("/test07/b"));
+		Assert.assertTrue(((WcmFolder) f10).getParentPath().equals("/test07/b"));
 
 		// Cleaning test
 		cs.deleteContent("/test07");
@@ -326,20 +326,20 @@ public class BasicAPITest {
 	}
 
 	@Test
-	public void updateFolderName() throws ContentException, ContentIOException,
-			ContentSecurityException {
+	public void updateFolderName() throws WcmContentException, WcmContentIOException,
+			WcmContentSecurityException {
 
 		log.debug("[[ START TEST  updateFolderName ]]");
-		ContentService cs = repos.createContentSession("sample", "default",
+		WcmContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
-		Content f1 = cs.createFolder("test08", "/");
-		Content f2 = cs.createFolder("a", "/test08");
-		Content f3 = cs.createFolder("b", "/test08");
-		Content f4 = cs.createFolder("c", "/test08/a");
-		Content f5 = cs.createFolder("d", "/test08/a");
-		Content f6 = cs.createFolder("e", "/test08/b");
-		Content f7 = cs.createFolder("f", "/test08/b");
-		Content f8 = cs.createFolder("g", "/test08/a/c");
+		WcmObject f1 = cs.createFolder("test08", "/");
+		WcmObject f2 = cs.createFolder("a", "/test08");
+		WcmObject f3 = cs.createFolder("b", "/test08");
+		WcmObject f4 = cs.createFolder("c", "/test08/a");
+		WcmObject f5 = cs.createFolder("d", "/test08/a");
+		WcmObject f6 = cs.createFolder("e", "/test08/b");
+		WcmObject f7 = cs.createFolder("f", "/test08/b");
+		WcmObject f8 = cs.createFolder("g", "/test08/a/c");
 		log.debug(f1);
 		log.debug(f2);
 		log.debug(f3);
@@ -348,7 +348,7 @@ public class BasicAPITest {
 		log.debug(f6);
 		log.debug(f7);
 		log.debug(f8);
-		Content f10 = cs.updateFolderName("/test08/a", "en", "new-name");
+		WcmObject f10 = cs.updateFolderName("/test08/a", "en", "new-name");
 		log.debug(f10);
 		Assert.assertTrue(f10.getId().equals("new-name"));
 
@@ -359,8 +359,8 @@ public class BasicAPITest {
 	}
 
 	@Test
-	public void updateBinaryContent() throws ContentIOException,
-			ContentSecurityException, ContentException {
+	public void updateBinaryContent() throws WcmContentIOException,
+			WcmContentSecurityException, WcmContentException {
 
 		log.debug("[[ START TEST  updateBinaryContent ]]");
 		InputStream pdf = getClass().getClassLoader().getResourceAsStream(
@@ -376,13 +376,13 @@ public class BasicAPITest {
 		long sizeJpg = _jpg.length;
 		long sizePdf2 = _pdf2.length;
 
-		ContentService cs = repos.createContentSession("sample", "default",
+		WcmContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
-		Content f1 = cs.createFolder("test09", "/");
-		Content b1 = cs.createBinaryContent("gatein-userguide", "en",
+		WcmObject f1 = cs.createFolder("test09", "/");
+		WcmObject b1 = cs.createBinaryContent("gatein-userguide", "en",
 				"/test09", "application/pdf", sizePdf,
 				"GateIn-UserGuide-v3.5.pdf", new ByteArrayInputStream(_pdf));
-		Content b2 = cs.createBinaryContent("wcm-whiteboard", "en", "/test09",
+		WcmObject b2 = cs.createBinaryContent("wcm-whiteboard", "en", "/test09",
 				"image/jpeg", sizeJpg, "wcm-whiteboard.jpg",
 				new ByteArrayInputStream(_jpg));
 		log.debug(f1);
@@ -392,10 +392,10 @@ public class BasicAPITest {
 				"application/pdf", sizePdf2, "jbossportletbridge.pdf",
 				new ByteArrayInputStream(_pdf2));
 
-		Assert.assertTrue(((BinaryContent) b1).getFileName().equals(
+		Assert.assertTrue(((WcmBinaryObject) b1).getFileName().equals(
 				"jbossportletbridge.pdf"));
-		Assert.assertTrue(((BinaryContent) b1).getSize() == sizePdf2);
-		Assert.assertTrue(((BinaryContent) b1).getContent() != null);
+		Assert.assertTrue(((WcmBinaryObject) b1).getSize() == sizePdf2);
+		Assert.assertTrue(((WcmBinaryObject) b1).getContent() != null);
 
 		// Cleaning test
 		cs.deleteContent("/test09");
@@ -404,19 +404,19 @@ public class BasicAPITest {
 	}
 
 	@Test
-	public void deleteContent() throws ContentException, ContentIOException,
-			ContentSecurityException {
+	public void deleteContent() throws WcmContentException, WcmContentIOException,
+			WcmContentSecurityException {
 
 		log.debug("[[ START TEST  deleteContent ]]");
-		ContentService cs = repos.createContentSession("sample", "default",
+		WcmContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
-		Content c1 = cs.createTextContent("test10", "es", "/",
+		WcmObject c1 = cs.createTextContent("test10", "es", "/",
 				"<h1>Primer test...</h1><p>Este es un párrafo.</p>");
-		Content c2 = cs.createTextContent("test10", "en", "/",
+		WcmObject c2 = cs.createTextContent("test10", "en", "/",
 				"<h1>First test...</h1><p>This is a paragraph</p>");
-		Content c3 = cs.createTextContent("test10", "fr", "/",
+		WcmObject c3 = cs.createTextContent("test10", "fr", "/",
 				"<h1>First test...</h1><p>Ceci est un paragraphe</p>");
-		Content c4 = cs.createTextContent("test10", "de", "/",
+		WcmObject c4 = cs.createTextContent("test10", "de", "/",
 				"<h1>Erster Test...</h1><p>Dies ist ein Absatz</p>");
 		log.debug(c1);
 		log.debug(c2);
@@ -459,25 +459,25 @@ public class BasicAPITest {
 		}
 	}
 
-	private void print(Content c, String tmpFolder) {
+	private void print(WcmObject c, String tmpFolder) {
 
-		log.debug("--> " + c.getLocation() + " - " + c.getId());
-		if (c instanceof Folder) {
-			List<Content> children = ((Folder) c).getChildren();
-			for (Content _c : children)
+		log.debug("--> " + c.getParentPath() + " - " + c.getId());
+		if (c instanceof WcmFolder) {
+			List<WcmObject> children = ((WcmFolder) c).getChildren();
+			for (WcmObject _c : children)
 				print(_c, tmpFolder);
 		}
-		if (c instanceof TextContent) {
-			TextContent t = (TextContent) c;
+		if (c instanceof WcmTextObject) {
+			WcmTextObject t = (WcmTextObject) c;
 			log.debug("Text: " + t.getContent());
 		}
-		if (c instanceof BinaryContent) {
-			BinaryContent b = (BinaryContent) c;
+		if (c instanceof WcmBinaryObject) {
+			WcmBinaryObject b = (WcmBinaryObject) c;
 			String filename = b.getFileName();
 			log.debug(" Writting " + filename);
 			inputStreamToFile(b.getContent(), filename, tmpFolder);
 		}
-		log.debug("<-- " + c.getLocation() + " - " + c.getId());
+		log.debug("<-- " + c.getParentPath() + " - " + c.getId());
 
 	}
 

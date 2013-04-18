@@ -1,19 +1,19 @@
 package org.gatein.wcm.impl.tests;
 
 import java.io.File;
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
 import junit.framework.Assert;
 
-import org.gatein.wcm.api.model.content.Content;
-import org.gatein.wcm.api.model.metadata.Property;
-import org.gatein.wcm.api.services.ContentService;
-import org.gatein.wcm.api.services.RepositoryService;
-import org.gatein.wcm.api.services.exceptions.ContentException;
-import org.gatein.wcm.api.services.exceptions.ContentIOException;
-import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
+import org.gatein.wcm.api.model.content.WcmObject;
+import org.gatein.wcm.api.services.WcmContentService;
+import org.gatein.wcm.api.services.WcmRepositoryService;
+import org.gatein.wcm.api.services.exceptions.WcmContentException;
+import org.gatein.wcm.api.services.exceptions.WcmContentIOException;
+import org.gatein.wcm.api.services.exceptions.WcmContentSecurityException;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.logging.Logger;
@@ -41,14 +41,14 @@ public class PropertiesTest {
 	}
 
 	@Resource(mappedName = "java:jboss/gatein-wcm")
-	RepositoryService repos;
+	WcmRepositoryService repos;
 
 	@Test
-	public void createProperties() throws ContentIOException,
-			ContentSecurityException, ContentException {
+	public void createProperties() throws WcmContentIOException,
+			WcmContentSecurityException, WcmContentException {
 
 		log.debug("[[ START TEST  createProperties ]]");
-		ContentService cs = repos.createContentSession("sample", "default",
+		WcmContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
 
 		cs.createFolder("testproperties", "/");
@@ -58,12 +58,13 @@ public class PropertiesTest {
 
 		cs.createContentProperty("/testproperties", "en", "special", "ID123456789 ");
 		cs.createContentProperty("/testproperties", "en", "name", "This is a name property");
-		Content c = cs.createContentProperty("/testproperties", "en", "custom", "This is a name property");
+		WcmObject c = cs.createContentProperty("/testproperties", "en", "custom", "This is a name property");
 		Assert.assertEquals(3, c.getProperties().size());
 
-		List<Property> properties = c.getProperties();
-		for (Property p : properties) {
-		    log.debug("Property: " + p.getName() + " Value: " + p.getValue());
+		Map<String, String> properties = c.getProperties();
+		Set<String> sProperties = properties.keySet();
+		for (String key : sProperties) {
+		    log.debug("Property: " + key + " Value: " + properties.get(key));
 		}
 
 		cs.deleteContent("/testproperties");
@@ -73,11 +74,11 @@ public class PropertiesTest {
 	}
 
 	@Test
-    public void deleteProperties() throws ContentIOException,
-            ContentSecurityException, ContentException {
+    public void deleteProperties() throws WcmContentIOException,
+            WcmContentSecurityException, WcmContentException {
 
         log.debug("[[ START TEST  deleteProperties ]]");
-        ContentService cs = repos.createContentSession("sample", "default",
+        WcmContentService cs = repos.createContentSession("sample", "default",
                 "admin", "admin");
 
         cs.createFolder("deleteproperties", "/");
@@ -94,14 +95,14 @@ public class PropertiesTest {
         cs.createContentProperty("/deleteproperties/test3", "en", "special", "ID123456789-test3");
         cs.createContentProperty("/deleteproperties/test3", "en", "name", "This is a name property test3");
 
-        Content c = cs.deleteContentProperty("/deleteproperties/test1", "en", "name");
+        WcmObject c = cs.deleteContentProperty("/deleteproperties/test1", "en", "name");
         Assert.assertEquals(1, c.getProperties().size());
 
-        Content _c = cs.deleteContentProperty("/deleteproperties/test2", "en", "name");
+        WcmObject _c = cs.deleteContentProperty("/deleteproperties/test2", "en", "name");
         Assert.assertEquals(1, _c.getProperties().size());
 
         cs.deleteContentProperty("/deleteproperties/test3", "en", "name");
-        Content __c = cs.deleteContentProperty("/deleteproperties/test3", "en", "special");
+        WcmObject __c = cs.deleteContentProperty("/deleteproperties/test3", "en", "special");
         Assert.assertEquals(null, __c.getProperties());
 
         cs.deleteContent("/deleteproperties");

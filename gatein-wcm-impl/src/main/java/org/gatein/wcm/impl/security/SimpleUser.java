@@ -2,9 +2,9 @@ package org.gatein.wcm.impl.security;
 
 import java.util.Date;
 
-import org.gatein.wcm.api.model.security.User;
+import org.gatein.wcm.api.model.security.WcmUser;
 
-public class SimpleUser implements User {
+public class SimpleUser implements WcmUser {
 
     String userName;
     String password;
@@ -57,19 +57,19 @@ public class SimpleUser implements User {
         email = s;
     }
 
-    protected void setCreatedDate(Date createdDate) {
+    protected void setCreatedOn(Date createdDate) {
         this.createdDate = createdDate;
     }
 
-    public Date getCreatedDate() {
+    public Date getCreatedOn() {
         return createdDate;
     }
 
-    protected void setLastLoginTime(Date lastLoginTime) {
+    protected void setLastLoginOn(Date lastLoginTime) {
         this.lastLoginTime = lastLoginTime;
     }
 
-    public Date getLastLoginTime() {
+    public Date getLastLoginOn() {
         return lastLoginTime;
     }
 

@@ -15,11 +15,11 @@ import javax.annotation.Resource;
 
 import junit.framework.Assert;
 
-import org.gatein.wcm.api.services.ContentService;
-import org.gatein.wcm.api.services.RepositoryService;
-import org.gatein.wcm.api.services.exceptions.ContentException;
-import org.gatein.wcm.api.services.exceptions.ContentIOException;
-import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
+import org.gatein.wcm.api.services.WcmContentService;
+import org.gatein.wcm.api.services.WcmRepositoryService;
+import org.gatein.wcm.api.services.exceptions.WcmContentException;
+import org.gatein.wcm.api.services.exceptions.WcmContentIOException;
+import org.gatein.wcm.api.services.exceptions.WcmContentSecurityException;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.logging.Logger;
@@ -56,11 +56,11 @@ public class SamplePageTest {
     }
 
     @Resource(mappedName = "java:jboss/gatein-wcm")
-    RepositoryService repos;
+    WcmRepositoryService repos;
 
     @Test
-    public void createSimpleWebSite() throws ContentIOException,
-            ContentSecurityException, ContentException, IOException {
+    public void createSimpleWebSite() throws WcmContentIOException,
+            WcmContentSecurityException, WcmContentException, IOException {
 
         InputStream png = getClass().getClassLoader().getResourceAsStream(
                 "/testBackground.png");
@@ -77,7 +77,7 @@ public class SamplePageTest {
         String _html = toString(html);
 
         log.debug("[[ START TEST  createSimpleWebSite ]]");
-        ContentService cs = repos.createContentSession("sample", "default",
+        WcmContentService cs = repos.createContentSession("sample", "default",
                 "admin", "admin");
 
         cs.createFolder("testWebSite", "/");

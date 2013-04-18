@@ -13,12 +13,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.gatein.wcm.api.model.content.Content;
-import org.gatein.wcm.api.services.ContentService;
-import org.gatein.wcm.api.services.RepositoryService;
-import org.gatein.wcm.api.services.exceptions.ContentException;
-import org.gatein.wcm.api.services.exceptions.ContentIOException;
-import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
+import org.gatein.wcm.api.model.content.WcmObject;
+import org.gatein.wcm.api.services.WcmContentService;
+import org.gatein.wcm.api.services.WcmRepositoryService;
+import org.gatein.wcm.api.services.exceptions.WcmContentException;
+import org.gatein.wcm.api.services.exceptions.WcmContentIOException;
+import org.gatein.wcm.api.services.exceptions.WcmContentSecurityException;
 import org.jboss.logging.Logger;
 
 @WebServlet("/test/performancetest1")
@@ -27,7 +27,7 @@ public class PerformanceTest1 extends HttpServlet {
     private static final Logger log = Logger.getLogger(PerformanceTest1.class);
 
     @Resource(mappedName = "java:jboss/gatein-wcm")
-    RepositoryService repos;
+    WcmRepositoryService repos;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -59,7 +59,7 @@ public class PerformanceTest1 extends HttpServlet {
         int random = Math.round( (float)Math.random() * 99);
 
         // Performance test
-        ContentService cs = null;
+        WcmContentService cs = null;
         try {
             //  0.- Connection
             cs = repos.createContentSession(repository, workspace, user, password);
@@ -92,16 +92,16 @@ public class PerformanceTest1 extends HttpServlet {
             out.println("Created binary1 binary content under es locale <br>");
 
             //  6.- Get content
-            Content c1_es = cs.getContent("/test_" + uuid + "/text1", "es");
+            WcmObject c1_es = cs.getContent("/test_" + uuid + "/text1", "es");
             out.println("Getting content " + c1_es.getId() + " <br>");
 
-            Content c1_en = cs.getContent("/test_" + uuid + "/text1", "en");
+            WcmObject c1_en = cs.getContent("/test_" + uuid + "/text1", "en");
             out.println("Getting content " + c1_en.getId() + " <br>");
 
-            Content c2_es = cs.getContent("/test_" + uuid + "/binary1", "es");
+            WcmObject c2_es = cs.getContent("/test_" + uuid + "/binary1", "es");
             out.println("Getting content " + c2_es.getId() + " <br>");
 
-            Content c2_en = cs.getContent("/test_" + uuid + "/binary1", "en");
+            WcmObject c2_en = cs.getContent("/test_" + uuid + "/binary1", "en");
             out.println("Getting content " + c2_en.getId() + " <br>");
 
             //  7.- Delete content
@@ -115,13 +115,13 @@ public class PerformanceTest1 extends HttpServlet {
             cs.closeSession();
             out.println("Closing session <br>");
 
-        } catch (ContentException e) {
+        } catch (WcmContentException e) {
             log.error(e.getMessage());
             out.println(e.getMessage() + " <br>");
-        } catch (ContentIOException e) {
+        } catch (WcmContentIOException e) {
             log.error(e.getMessage());
             out.println(e.getMessage() + " <br>");
-        } catch (ContentSecurityException e) {
+        } catch (WcmContentSecurityException e) {
             log.error(e.getMessage());
             out.println(e.getMessage() + " <br>");
         }

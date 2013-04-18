@@ -4,10 +4,10 @@ import javax.jcr.Credentials;
 import javax.jcr.SimpleCredentials;
 import javax.security.auth.login.LoginException;
 
-import org.gatein.wcm.api.model.security.User;
-import org.gatein.wcm.api.services.SecurityService;
-import org.gatein.wcm.api.services.exceptions.ContentIOException;
-import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
+import org.gatein.wcm.api.model.security.WcmUser;
+import org.gatein.wcm.api.services.WcmSecurityService;
+import org.gatein.wcm.api.services.exceptions.WcmContentIOException;
+import org.gatein.wcm.api.services.exceptions.WcmContentSecurityException;
 import org.modeshape.common.logging.Logger;
 import org.modeshape.jcr.security.SecurityContext;
 
@@ -16,8 +16,8 @@ public class WcmSecurityContext implements SecurityContext {
     private static final Logger log = Logger.getLogger(WcmSecurityContext.class);
 
     SimpleCredentials sCredentials = null;
-    SecurityService wcmSecurityService = null;
-    User loggedUser = null;
+    WcmSecurityService wcmSecurityService = null;
+    WcmUser loggedUser = null;
 
     protected WcmSecurityContext(Credentials credentials) throws LoginException {
         // Expecting JCR SimpleCredentials
@@ -26,13 +26,13 @@ public class WcmSecurityContext implements SecurityContext {
 
         try {
             wcmSecurityService = WcmSecurityFactory.getSecurityService();
-        } catch (ContentIOException e) {
+        } catch (WcmContentIOException e) {
             throw new LoginException("Unable to connect to SecuritySystem: " + e.getMessage());
         }
 
         try {
             loggedUser = wcmSecurityService.authenticate(sCredentials.getUserID(), new String(sCredentials.getPassword()));
-        } catch (ContentSecurityException e) {
+        } catch (WcmContentSecurityException e) {
             throw new LoginException(e.getMessage());
         }
 
@@ -46,7 +46,7 @@ public class WcmSecurityContext implements SecurityContext {
 
         try {
             return wcmSecurityService.hasRole(loggedUser, role);
-        } catch (ContentSecurityException e) {
+        } catch (WcmContentSecurityException e) {
             log.error(new WcmLog("Error getting role: " + e.getMessage()), loggedUser);
         }
 

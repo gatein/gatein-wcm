@@ -7,13 +7,13 @@ import javax.annotation.Resource;
 
 import junit.framework.Assert;
 
-import org.gatein.wcm.api.model.content.Content;
-import org.gatein.wcm.api.model.metadata.Comment;
-import org.gatein.wcm.api.services.ContentService;
-import org.gatein.wcm.api.services.RepositoryService;
-import org.gatein.wcm.api.services.exceptions.ContentException;
-import org.gatein.wcm.api.services.exceptions.ContentIOException;
-import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
+import org.gatein.wcm.api.model.content.WcmObject;
+import org.gatein.wcm.api.model.metadata.WcmComment;
+import org.gatein.wcm.api.services.WcmContentService;
+import org.gatein.wcm.api.services.WcmRepositoryService;
+import org.gatein.wcm.api.services.exceptions.WcmContentException;
+import org.gatein.wcm.api.services.exceptions.WcmContentIOException;
+import org.gatein.wcm.api.services.exceptions.WcmContentSecurityException;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.logging.Logger;
@@ -41,14 +41,14 @@ public class CommentsTest {
 	}
 
 	@Resource(mappedName = "java:jboss/gatein-wcm")
-	RepositoryService repos;
+	WcmRepositoryService repos;
 
 	@Test
-	public void createComments() throws ContentIOException,
-			ContentSecurityException, ContentException {
+	public void createComments() throws WcmContentIOException,
+			WcmContentSecurityException, WcmContentException {
 
 		log.debug("[[ START TEST  createComments ]]");
-		ContentService cs = repos.createContentSession("sample", "default",
+		WcmContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
 
 		cs.createFolder("testcomments", "/");
@@ -58,13 +58,13 @@ public class CommentsTest {
 
 		cs.createContentComment("/testcomments", "en", "This is a comment A");
 		cs.createContentComment("/testcomments", "en", "This is a comment B");
-		Content c = cs.createContentComment("/testcomments", "en", "This is a comment C");
+		WcmObject c = cs.createContentComment("/testcomments", "en", "This is a comment C");
 
 		Assert.assertEquals(3, c.getComments().size());
 
-		List<Comment> comments = c.getComments();
-		for (Comment comment : comments) {
-		    log.debug(comment.getCreatedBy().getUserName() + " date: " + comment.getCreated().toString() + ": " + comment.getComment());
+		List<WcmComment> comments = c.getComments();
+		for (WcmComment comment : comments) {
+		    log.debug(comment.getCreatedBy().getUserName() + " date: " + comment.getCreatedOn().toString() + ": " + comment.getComment());
 		}
 
 		cs.deleteContent("/testcomments");
@@ -74,11 +74,11 @@ public class CommentsTest {
 	}
 
     @Test
-    public void deleteComments() throws ContentIOException,
-            ContentSecurityException, ContentException {
+    public void deleteComments() throws WcmContentIOException,
+            WcmContentSecurityException, WcmContentException {
 
         log.debug("[[ START TEST  deleteComments ]]");
-        ContentService cs = repos.createContentSession("sample", "default",
+        WcmContentService cs = repos.createContentSession("sample", "default",
                 "admin", "admin");
 
         cs.createFolder("deletecomments", "/");
@@ -90,21 +90,21 @@ public class CommentsTest {
         cs.createContentComment("/deletecomments", "en", "This is a comment B");
         cs.createContentComment("/deletecomments", "en", "This is a comment C");
         cs.createContentComment("/deletecomments", "en", "This is a comment D");
-        Content c = cs.createContentComment("/deletecomments", "en", "This is a comment D");
+        WcmObject c = cs.createContentComment("/deletecomments", "en", "This is a comment D");
 
         Assert.assertEquals(5, c.getComments().size());
 
-        List<Comment> comments = c.getComments();
-        for (Comment comment : comments) {
-            log.debug(comment.getCreatedBy().getUserName() + " date: " + comment.getCreated().toString() + ": " + comment.getComment());
+        List<WcmComment> comments = c.getComments();
+        for (WcmComment comment : comments) {
+            log.debug(comment.getCreatedBy().getUserName() + " date: " + comment.getCreatedOn().toString() + ": " + comment.getComment());
             cs.deleteContentComment("/deletecomments", "en", comment.getId());
         }
 
-        Content _c = cs.getContent("/deletecomments", "en");
+        WcmObject _c = cs.getContent("/deletecomments", "en");
         Assert.assertEquals(null, _c.getComments());
 
         cs.createContentComment("/deletecomments", "en", "This is a comment E");
-        Content __c = cs.createContentComment("/deletecomments", "en", "This is a comment F");
+        WcmObject __c = cs.createContentComment("/deletecomments", "en", "This is a comment F");
         Assert.assertEquals(2, __c.getComments().size());
 
         cs.deleteContent("/deletecomments");

@@ -2,23 +2,26 @@ package org.gatein.wcm.impl.model;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
-import org.gatein.wcm.api.model.content.Content;
-import org.gatein.wcm.api.model.content.Folder;
-import org.gatein.wcm.api.model.metadata.Category;
-import org.gatein.wcm.api.model.metadata.Comment;
-import org.gatein.wcm.api.model.metadata.Property;
-import org.gatein.wcm.api.model.security.ACE.PermissionType;
-import org.gatein.wcm.api.model.security.ACL;
-import org.gatein.wcm.api.model.security.Principal;
-import org.gatein.wcm.api.model.security.User;
-import org.gatein.wcm.api.services.exceptions.ContentIOException;
+import org.gatein.wcm.api.model.content.WcmBinaryObject;
+import org.gatein.wcm.api.model.content.WcmFolder;
+import org.gatein.wcm.api.model.content.WcmObject;
+import org.gatein.wcm.api.model.content.WcmTextObject;
+import org.gatein.wcm.api.model.metadata.WcmCategory;
+import org.gatein.wcm.api.model.metadata.WcmComment;
+import org.gatein.wcm.api.model.security.WcmAce.PermissionType;
+import org.gatein.wcm.api.model.security.WcmAcl;
+import org.gatein.wcm.api.model.security.WcmPrincipal;
+import org.gatein.wcm.api.model.security.WcmUser;
+import org.gatein.wcm.api.services.exceptions.WcmContentIOException;
 import org.gatein.wcm.impl.jcr.JcrMappings;
 
 /**
@@ -30,19 +33,19 @@ import org.gatein.wcm.impl.jcr.JcrMappings;
  */
 public class WcmContentFactory {
 
-    User logged = null;
+    WcmUser logged = null;
     JcrMappings jcr = null;
 
     private final String MARK = "__";
 
-    public WcmContentFactory(JcrMappings jcr, User user) throws ContentIOException {
+    public WcmContentFactory(JcrMappings jcr, WcmUser user) throws WcmContentIOException {
         logged = user;
         this.jcr = jcr;
     }
 
-    public Content createTextContent(String id, String locale, String location, String html) {
+    public WcmTextObject createTextContent(String id, String locale, String location, String html) {
 
-        WcmTextContent c = new WcmTextContent();
+        WcmTextObjectImpl c = new WcmTextObjectImpl();
 
         String tmpLocation = ("/".equals(location)?"":location);
         // String absLocation = tmpLocation + "/" + id + "/" + MARK + locale + "/" + MARK + id;
@@ -56,15 +59,15 @@ public class WcmContentFactory {
         List<String> locales = new ArrayList<String>();
         locales.add(locale);
         c.setLocales(locales);
-
-        c.setLocation(location);
+        c.setParentPath(location);
+        c.setPath(absLocation);
 
         // By default a new content will get the ACL of parent parent.
         // A null value means that this content is using ACL of parent folder.
         c.setAcl(null);
 
-        c.setCreated(jcr.jcrCreated(absLocation));
-        c.setLastModified(jcr.jcrLastModified(absLocation));
+        c.setCreatedOn(jcr.jcrCreatedOn(absLocation));
+        c.setLastModifiedOn(jcr.jcrLastModifiedOn(absLocation));
 
         // By default a new content will get the Publishing status of his parent
         // A null value means that this content is using parent's publishing information
@@ -96,44 +99,44 @@ public class WcmContentFactory {
      * @param str
      * @return
      */
-    public ACL parseACL(String id, String description, String acl) {
-        WcmACL wcmACL = new WcmACL(id, description);
+    public WcmAcl parseACL(String id, String description, String acl) {
+        WcmAclImpl wcmACL = new WcmAclImpl(id, description);
         String[] aces = acl.split(",");
         for (String ace : aces) {
             String user = ace.split(":")[0];
             String type = ace.split(":")[1];
             String permission = ace.split(":")[2];
 
-            WcmPrincipal wcmPrincipal = null;
-            WcmACE wcmACE = null;
+            WcmPrincipalImpl wcmPrincipal = null;
+            WcmAceImpl wcmACE = null;
             if (type.equals("USER"))
-                wcmPrincipal = new WcmPrincipal(user, Principal.PrincipalType.USER);
+                wcmPrincipal = new WcmPrincipalImpl(user, WcmPrincipal.PrincipalType.USER);
             else
-                wcmPrincipal = new WcmPrincipal(user, Principal.PrincipalType.GROUP);
+                wcmPrincipal = new WcmPrincipalImpl(user, WcmPrincipal.PrincipalType.GROUP);
 
             if (permission.equals("NONE")) {
-                wcmACE = new WcmACE(wcmPrincipal, PermissionType.NONE);
+                wcmACE = new WcmAceImpl(wcmPrincipal, PermissionType.NONE);
             }
             if (permission.equals("READ")) {
-                wcmACE = new WcmACE(wcmPrincipal, PermissionType.READ);
+                wcmACE = new WcmAceImpl(wcmPrincipal, PermissionType.READ);
             }
             if (permission.equals("COMMENTS")) {
-                wcmACE = new WcmACE(wcmPrincipal, PermissionType.COMMENTS);
+                wcmACE = new WcmAceImpl(wcmPrincipal, PermissionType.COMMENTS);
             }
             if (permission.equals("WRITE")) {
-                wcmACE = new WcmACE(wcmPrincipal, PermissionType.WRITE);
+                wcmACE = new WcmAceImpl(wcmPrincipal, PermissionType.WRITE);
             }
             if (permission.equals("ALL")) {
-                wcmACE = new WcmACE(wcmPrincipal, PermissionType.ALL);
+                wcmACE = new WcmAceImpl(wcmPrincipal, PermissionType.ALL);
             }
             wcmACL.getAces().add(wcmACE);
         }
         return wcmACL;
     }
 
-    public Content createFolder(String id, String location) {
+    public WcmFolder createFolder(String id, String location) {
 
-        WcmFolder f = new WcmFolder();
+        WcmFolderImpl f = new WcmFolderImpl();
 
         String tmpLocation = ("/".equals(location)?"":location);
         String absLocation = tmpLocation + "/" + id;
@@ -141,14 +144,15 @@ public class WcmContentFactory {
         f.setId(id);
         // Folders can have multiple locales, so, it will be null.
         f.setLocale(null);
-        f.setLocation(location);
+        f.setParentPath(location);
+        f.setPath(absLocation);
 
         // By default a new content will get the ACL of parent parent.
         // A null value means that this content is using ACL of parent folder.
         f.setAcl(null);
 
-        f.setCreated(jcr.jcrCreated(absLocation));
-        f.setLastModified(jcr.jcrLastModified(absLocation));
+        f.setCreatedOn(jcr.jcrCreatedOn(absLocation));
+        f.setLastModifiedOn(jcr.jcrLastModifiedOn(absLocation));
 
         // By default a new content will get the Publishing status of his parent
         // A null value means that this content is using parent's publishing information
@@ -171,10 +175,10 @@ public class WcmContentFactory {
         return f;
     }
 
-    public Content createBinaryContent(String id, String locale, String location, String contentType, Long size,
+    public WcmBinaryObject createBinaryContent(String id, String locale, String location, String contentType, long size,
             String fileName, InputStream content) {
 
-        WcmBinaryContent b = new WcmBinaryContent();
+        WcmBinaryObjectImpl b = new WcmBinaryObjectImpl();
 
         String tmpLocation = ("/".equals(location)?"":location);
         // String absLocation = tmpLocation + "/" + id + "/" + MARK + locale + "/" + MARK + id;
@@ -188,14 +192,15 @@ public class WcmContentFactory {
         List<String> locales = new ArrayList<String>();
         locales.add(locale);
         b.setLocales(locales);
-        b.setLocation(location);
+        b.setParentPath(location);
+        b.setPath(absLocation);
 
         // By default a new content will get the ACL of parent parent.
         // A null value means that this content is using ACL of parent folder.
         b.setAcl(null);
 
-        b.setCreated(jcr.jcrCreated(absLocation));
-        b.setLastModified(jcr.jcrLastModified(absLocation));
+        b.setCreatedOn(jcr.jcrCreatedOn(absLocation));
+        b.setLastModifiedOn(jcr.jcrLastModifiedOn(absLocation));
 
         // By default a new content will get the Publishing status of his parent
         // A null value means that this content is using parent's publishing information
@@ -224,9 +229,9 @@ public class WcmContentFactory {
         return b;
     }
 
-    public Content getContent(String location, String locale) throws RepositoryException {
+    public WcmObject getContent(String path, String locale) throws RepositoryException {
         // Get root node of search
-        Node n = jcr.getSession().getNode(location);
+        Node n = jcr.getSession().getNode(path);
 
         // Checking reserved words
         if (WcmConstants.RESERVED_ENTRIES.contains(n.getName())) {
@@ -234,21 +239,21 @@ public class WcmContentFactory {
         }
 
         // Check if we are in a reference or in the original path
-        if (!"/".equals(location)) {
+        if (!"/".equals(path)) {
             String description = n.getProperty("jcr:description").getString();
             String absPath = description.split(":")[1];
             n = jcr.getSession().getNode(absPath);
         }
-        Content c = convertToContent(n, locale);
+        WcmObject c = convertToContent(n, locale);
 
-        if (c instanceof WcmFolder) {
-            WcmFolder f = (WcmFolder) c;
-            ArrayList<Content> children = new ArrayList<Content>();
+        if (c instanceof WcmFolderImpl) {
+            WcmFolderImpl f = (WcmFolderImpl) c;
+            ArrayList<WcmObject> children = new ArrayList<WcmObject>();
             f.setChildren(children);
             NodeIterator ni = n.getNodes();
             while (ni.hasNext()) {
                 Node child = ni.nextNode();
-                Content cChild = getContent(child.getPath(), locale);
+                WcmObject cChild = getContent(child.getPath(), locale);
                 if (cChild != null)
                     children.add(cChild);
                 updateLocales(f, cChild);
@@ -258,7 +263,44 @@ public class WcmContentFactory {
         return c;
     }
 
-    private Content convertToContent(Node n, String locale) throws RepositoryException {
+    public WcmObject getContent(String path, String locale, String version) throws RepositoryException {
+
+        // Check version
+        // Get root node of search
+        Node n = jcr.jcrVersionNode(path, version);
+
+        // Checking reserved words
+        if (WcmConstants.RESERVED_ENTRIES.contains(n.getName())) {
+            return null;
+        }
+
+        // Check if we are in a reference or in the original path
+        // We are in a versioning node
+//        if (!"/".equals(location)) {
+//            String description = n.getProperty("jcr:description").getString();
+//            String absPath = description.split(":")[1];
+//            n = jcr.getSession().getNode(absPath);
+//        }
+        WcmObject c = convertToContent(n, locale);
+
+        if (c instanceof WcmFolderImpl) {
+            WcmFolderImpl f = (WcmFolderImpl) c;
+            ArrayList<WcmObject> children = new ArrayList<WcmObject>();
+            f.setChildren(children);
+            NodeIterator ni = n.getNodes();
+            while (ni.hasNext()) {
+                Node child = ni.nextNode();
+                WcmObject cChild = getContent(child.getPath(), locale);
+                if (cChild != null)
+                    children.add(cChild);
+                updateLocales(f, cChild);
+            }
+        }
+
+        return c;
+    }
+
+    private WcmObject convertToContent(Node n, String locale) throws RepositoryException {
 
         // Check if we are using some reserved entries in the JCR
         if (n == null || locale == null)
@@ -314,20 +356,21 @@ public class WcmContentFactory {
         // Look and convert node to content
 
         if (root) {
-            WcmFolder _folder = new WcmFolder();
+            WcmFolderImpl _folder = new WcmFolderImpl();
 
             _folder.setId("root");
             // Folders only have locales at properties level
             _folder.setLocale(locale);
             _folder.setLocales(jcr.jcrLocalesProperties(n));
-            _folder.setLocation("/");
+            _folder.setParentPath("/"); // Special case for root
+            _folder.setPath("/"); // Special case for root
 
             // By default a new content will get the ACL of parent parent.
             // A null value means that this content is using ACL of parent folder.
             _folder.setAcl(jcr.jcrACL(n.getPath()));
 
-            _folder.setCreated(null);
-            _folder.setLastModified(null);
+            _folder.setCreatedOn(null);
+            _folder.setLastModifiedOn(null);
 
             // By default a new content will get the Publishing status of his parent
             // A null value means that this content is using parent's publishing information
@@ -353,7 +396,7 @@ public class WcmContentFactory {
             return _folder;
         }
         if (folder) {
-            WcmFolder _folder = new WcmFolder();
+            WcmFolderImpl _folder = new WcmFolderImpl();
 
             _folder.setId(n.getName());
             // Folders only have locales at properties level
@@ -361,22 +404,23 @@ public class WcmContentFactory {
             _folder.setLocales(jcr.jcrLocalesProperties(n));
 
             String location = n.getProperty("jcr:description").getString().split(":")[1];
-            _folder.setLocation(jcr.parent(location));
+            _folder.setParentPath(jcr.parent(location));
+            _folder.setPath(location);
 
             // By default a new content will get the ACL of parent parent.
             // A null value means that this content is using ACL of parent folder.
             _folder.setAcl(jcr.jcrACL(n.getPath()));
 
-            _folder.setCreated(jcr.jcrCreated(n));
-            _folder.setLastModified(jcr.jcrLastModified(n));
+            _folder.setCreatedOn(jcr.jcrCreatedOn(n));
+            _folder.setLastModifiedOn(jcr.jcrLastModifiedOn(n));
 
             // By default a new content will get the Publishing status of his parent
             // A null value means that this content is using parent's publishing information
             _folder.setPublishStatus(jcr.jcrPublishStatus(n));
             _folder.setPublishingRoles(jcr.jcrPublishingRoles(n));
 
-            _folder.setCreatedBy(new WcmUser(jcr.jcrCreatedBy(n)));
-            _folder.setLastModifiedBy(new WcmUser(jcr.jcrLastModifiedBy(n)));
+            _folder.setCreatedBy(new WcmUserImpl(jcr.jcrCreatedBy(n)));
+            _folder.setLastModifiedBy(new WcmUserImpl(jcr.jcrLastModifiedBy(n)));
 
             // By default a folder will not be locked
             // TODO: Set up in future
@@ -394,7 +438,7 @@ public class WcmContentFactory {
             return _folder;
         }
         if (textcontent) {
-            WcmTextContent _textcontent = new WcmTextContent();
+            WcmTextObjectImpl _textcontent = new WcmTextObjectImpl();
 
             // _textcontent.setVersion(jcr.jcrVersion(n.getNode(MARK + locale + "/" + MARK + n.getName())));
             _textcontent.setVersion(jcr.jcrVersion(n));
@@ -404,22 +448,23 @@ public class WcmContentFactory {
             _textcontent.setLocales(jcr.jcrLocales(n));
 
             String location = n.getProperty("jcr:description").getString().split(":")[1];
-            _textcontent.setLocation(jcr.parent(location));
+            _textcontent.setParentPath(jcr.parent(location));
+            _textcontent.setPath(location);
 
             // By default a new content will get the ACL of parent parent.
             // A null value means that this content is using ACL of parent folder.
             _textcontent.setAcl(jcr.jcrACL(n.getPath()));
 
-            _textcontent.setCreated(jcr.jcrCreated(n));
-            _textcontent.setLastModified(jcr.jcrLastModified(n));
+            _textcontent.setCreatedOn(jcr.jcrCreatedOn(n));
+            _textcontent.setLastModifiedOn(jcr.jcrLastModifiedOn(n));
 
             // By default a new content will get the Publishing status of his parent
             // A null value means that this content is using parent's publishing information
             _textcontent.setPublishStatus(jcr.jcrPublishStatus(n));
             _textcontent.setPublishingRoles(jcr.jcrPublishingRoles(n));
 
-            _textcontent.setCreatedBy(new WcmUser(jcr.jcrCreatedBy(n)));
-            _textcontent.setLastModifiedBy(new WcmUser(
+            _textcontent.setCreatedBy(new WcmUserImpl(jcr.jcrCreatedBy(n)));
+            _textcontent.setLastModifiedBy(new WcmUserImpl(
                     jcr.jcrLastModifiedBy(n)));
 
             // By default a folder will not be locked
@@ -436,7 +481,7 @@ public class WcmContentFactory {
             return _textcontent;
         }
         if (binarycontent) {
-            WcmBinaryContent _binarycontent = new WcmBinaryContent();
+            WcmBinaryObjectImpl _binarycontent = new WcmBinaryObjectImpl();
 
             _binarycontent.setVersion(jcr.jcrVersion(n));
             _binarycontent.setId(n.getName());
@@ -445,22 +490,23 @@ public class WcmContentFactory {
             _binarycontent.setLocales(jcr.jcrLocales(n));
 
             String location = n.getProperty("jcr:description").getString().split(":")[1];
-            _binarycontent.setLocation(jcr.parent(location));
+            _binarycontent.setParentPath(jcr.parent(location));
+            _binarycontent.setPath(location);
 
             // By default a new content will get the ACL of parent parent.
             // A null value means that this content is using ACL of parent folder.
             _binarycontent.setAcl(jcr.jcrACL(n.getPath()));
 
-            _binarycontent.setCreated(jcr.jcrCreated(n));
-            _binarycontent.setLastModified(jcr.jcrLastModified(n));
+            _binarycontent.setCreatedOn(jcr.jcrCreatedOn(n));
+            _binarycontent.setLastModifiedOn(jcr.jcrLastModifiedOn(n));
 
             // By default a new content will get the Publishing status of his parent
             // A null value means that this content is using parent's publishing information
             _binarycontent.setPublishStatus(jcr.jcrPublishStatus(n));
             _binarycontent.setPublishingRoles(jcr.jcrPublishingRoles(n));
 
-            _binarycontent.setCreatedBy(new WcmUser(jcr.jcrCreatedBy(n)));
-            _binarycontent.setLastModifiedBy(new WcmUser(jcr.jcrLastModifiedBy(n)));
+            _binarycontent.setCreatedBy(new WcmUserImpl(jcr.jcrCreatedBy(n)));
+            _binarycontent.setLastModifiedBy(new WcmUserImpl(jcr.jcrLastModifiedBy(n)));
 
             // By default a folder will not be locked
             _binarycontent.setLocked(false);
@@ -484,7 +530,7 @@ public class WcmContentFactory {
         return null;
     }
 
-    private void updateLocales(WcmFolder parent, Content child) {
+    private void updateLocales(WcmFolderImpl parent, WcmObject child) {
         if (child == null) return;
         if (parent == null) return;
         if (child.getLocales() == null) return;
@@ -496,22 +542,22 @@ public class WcmContentFactory {
         }
     }
 
-    private void readComments(Content c) {
+    private void readComments(WcmObject c) {
 
-        String tmpLocation = ("/".equals(c.getLocation())?"":c.getLocation());
+        String tmpLocation = ("/".equals(c.getParentPath())?"":c.getParentPath());
         String location = "/__comments" + tmpLocation + "/" + c.getId();
-        List<Comment> comments = null;
+        List<WcmComment> comments = null;
 
         try {
             NodeIterator ni = jcr.getSession().getNode(location).getNodes();
             while (ni.hasNext()) {
-                if (comments == null) comments = new ArrayList<Comment>();
+                if (comments == null) comments = new ArrayList<WcmComment>();
                 Node child = ni.nextNode();
                 if (child != null) {
-                    WcmComment comment = new WcmComment();
+                    WcmCommentImpl comment = new WcmCommentImpl();
                     comment.setId(child.getName());
-                    comment.setCreatedBy(new WcmUser(child.getProperty("jcr:createdBy").toString()));
-                    comment.setCreated(child.getProperty("jcr:created").getDate().getTime());
+                    comment.setCreatedBy(new WcmUserImpl(child.getProperty("jcr:createdBy").toString()));
+                    comment.setCreatedOn(child.getProperty("jcr:created").getDate().getTime());
                     comment.setComment(child.getProperty("jcr:description").getString());
                     comments.add(comment);
                 }
@@ -520,39 +566,36 @@ public class WcmContentFactory {
         }
 
         if (comments != null) {
-            if (c instanceof WcmContent)
-                ((WcmContent)c).setComments(comments);
+            if (c instanceof WcmObjectImpl)
+                ((WcmObjectImpl)c).setComments(comments);
         }
     }
 
-    private void readProperties(Content c) {
+    private void readProperties(WcmObject c) {
 
-        String tmpLocation = ("/".equals(c.getLocation())?"":c.getLocation());
+        String tmpLocation = ("/".equals(c.getParentPath())?"":c.getParentPath());
         String location = "/__properties" + tmpLocation + "/" + c.getId() + "/" + MARK + c.getLocale();
-        List<Property> properties = null;
+        Map<String, String> properties = null;
 
         try {
             NodeIterator ni = jcr.getSession().getNode(location).getNodes();
             while (ni.hasNext()) {
-                if (properties == null) properties = new ArrayList<Property>();
+                if (properties == null) properties = new HashMap<String, String>();
                 Node child = ni.nextNode();
                 if (child != null) {
-                    WcmProperty property = new WcmProperty();
-                    property.setName(child.getName());
-                    property.setValue(child.getProperty("jcr:description").getString());
-                    properties.add(property);
+                    properties.put(child.getName(), child.getProperty("jcr:description").getString());
                 }
             }
         } catch (RepositoryException ignored) {
         }
 
         if (properties != null) {
-            if (c instanceof WcmContent)
-                ((WcmContent)c).setProperties(properties);
+            if (c instanceof WcmObjectImpl)
+                ((WcmObjectImpl)c).setProperties(properties);
         }
     }
 
-    public Category getCategory(String fullLocation, String locale) throws RepositoryException {
+    public WcmCategory getCategory(String fullLocation, String locale) throws RepositoryException {
 
         if (fullLocation == null)
             return null;
@@ -562,19 +605,23 @@ public class WcmContentFactory {
         if ("/__categories".equals(fullLocation))
             return null;
 
-        WcmCategory cat = new WcmCategory();
+        WcmCategoryImpl cat = new WcmCategoryImpl();
 
         cat.setId(fullLocation.substring(fullLocation.lastIndexOf("/") + 1));
         cat.setLocale(locale);
         String location = fullLocation.substring("/__categories".length(), fullLocation.lastIndexOf("/"));
         if ("".equals( location )) location = "/"; // Root of categories
-        cat.setLocation( location );
+        cat.setParentPath( location );
+        if ("/".equals(location))
+            cat.setPath(cat.getParentPath() + cat.getId());
+        else
+            cat.setPath(cat.getParentPath() + "/" + cat.getId());
         cat.setDescription(jcr.jcrCategoryDescription(fullLocation, locale));
         String[] childLocations = jcr.jcrChildCategories(fullLocation);
         if (childLocations != null) {
-            ArrayList<Category> childs = new ArrayList<Category>();
+            ArrayList<WcmCategory> childs = new ArrayList<WcmCategory>();
             for (String childLocation : childLocations) {
-                Category child = getCategory(childLocation, locale);
+                WcmCategory child = getCategory(childLocation, locale);
                 if (child != null)
                     childs.add(child);
             }
@@ -585,8 +632,8 @@ public class WcmContentFactory {
         return cat;
     }
 
-    public List<Category> getCategories(String fullLocation, String locale) throws RepositoryException {
-        ArrayList<Category> output = new ArrayList<Category>();
+    public List<WcmCategory> getCategories(String fullLocation, String locale) throws RepositoryException {
+        ArrayList<WcmCategory> output = new ArrayList<WcmCategory>();
 
         if ("/__categories".equals(fullLocation)) {
             String[] children = jcr.jcrChildCategories(fullLocation);
@@ -599,13 +646,13 @@ public class WcmContentFactory {
     }
 
     // Query methods
-    public void getCategoryContent(Category c, String filterLocation, String filterLocale, ArrayList<Content> output)
+    public void getCategoryContent(WcmCategory c, String filterLocation, String filterLocale, ArrayList<WcmObject> output)
             throws RepositoryException {
         String pathRootCategory;
-        if ("/".equals( c.getLocation() ))
-            pathRootCategory = "/__categories" + c.getLocation() + c.getId() + "/__references";
+        if ("/".equals( c.getParentPath() ))
+            pathRootCategory = "/__categories" + c.getParentPath() + c.getId() + "/__references";
         else
-            pathRootCategory = "/__categories" + c.getLocation() + "/" + c.getId() + "/__references";
+            pathRootCategory = "/__categories" + c.getParentPath() + "/" + c.getId() + "/__references";
         Node rootCategory = jcr.getSession().getNode( pathRootCategory );
         // References that are in the main category
         // or references that are in the children
@@ -613,24 +660,24 @@ public class WcmContentFactory {
             NodeIterator ni = rootCategory.getNodes();
             while (ni.hasNext()) {
                 Node n = ni.nextNode();
-                Content content = getContent(n.getPath(), filterLocale);
-                if (content.getLocation().startsWith(filterLocation)) {
+                WcmObject content = getContent(n.getPath(), filterLocale);
+                if (content.getParentPath().startsWith(filterLocation)) {
                     output.add( content );
                     addChildrenContent(output, content);
                 }
             }
         } else {
-            for (Category child : c.getChildCategories()) {
+            for (WcmCategory child : c.getChildCategories()) {
                 getCategoryContent(child, filterLocation, filterLocale, output);
             }
         }
     }
 
-    private void addChildrenContent(ArrayList<Content> output, Content c) {
+    private void addChildrenContent(ArrayList<WcmObject> output, WcmObject c) {
         if (c == null) return;
-        if (c instanceof Folder) {
-            List<Content> children = ((Folder) c).getChildren();
-            for (Content cc : children) {
+        if (c instanceof WcmFolder) {
+            List<WcmObject> children = ((WcmFolder) c).getChildren();
+            for (WcmObject cc : children) {
                 output.add( cc );
                 addChildrenContent( output, cc );
             }

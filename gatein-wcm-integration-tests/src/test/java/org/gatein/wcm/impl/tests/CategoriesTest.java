@@ -8,13 +8,13 @@ import javax.annotation.Resource;
 
 import junit.framework.Assert;
 
-import org.gatein.wcm.api.model.content.Content;
-import org.gatein.wcm.api.model.metadata.Category;
-import org.gatein.wcm.api.services.ContentService;
-import org.gatein.wcm.api.services.RepositoryService;
-import org.gatein.wcm.api.services.exceptions.ContentException;
-import org.gatein.wcm.api.services.exceptions.ContentIOException;
-import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
+import org.gatein.wcm.api.model.content.WcmObject;
+import org.gatein.wcm.api.model.metadata.WcmCategory;
+import org.gatein.wcm.api.services.WcmContentService;
+import org.gatein.wcm.api.services.WcmRepositoryService;
+import org.gatein.wcm.api.services.exceptions.WcmContentException;
+import org.gatein.wcm.api.services.exceptions.WcmContentIOException;
+import org.gatein.wcm.api.services.exceptions.WcmContentSecurityException;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.logging.Logger;
@@ -43,31 +43,31 @@ public class CategoriesTest {
     }
 
     @Resource(mappedName = "java:jboss/gatein-wcm")
-    RepositoryService repos;
+    WcmRepositoryService repos;
 
     @Test
-    public void createCategories() throws ContentIOException, ContentSecurityException, ContentException {
+    public void createCategories() throws WcmContentIOException, WcmContentSecurityException, WcmContentException {
 
         log.debug("[[ START TEST  createCategories ]]");
-        ContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
-        Category c1 = cs.createCategory("sports1", "en", "Sports", "/");
-        Category c2 = cs.createCategory("sports1", "es", "Deportes", "/");
-        Category c3 = cs.createCategory("sports1", "fr", "Sportif", "/");
-        Category c4 = cs.createCategory("news1", "en", "News", "/");
-        Category c5 = cs.createCategory("news1", "es", "Noticias", "/");
-        Category c6 = cs.createCategory("news1", "fr", "Nouvelles", "/");
-        Category c7 = cs.createCategory("basket", "en", "Basketball", "/sports1");
-        Category c8 = cs.createCategory("basket", "es", "Baloncesto", "/sports1");
-        Category c9 = cs.createCategory("basket", "fr", "Baloncesto", "/sports1");
-        Category c10 = cs.createCategory("football", "en", "Soccer", "/sports1");
-        Category c11 = cs.createCategory("football", "es", "Futbol", "/sports1");
-        Category c12 = cs.createCategory("football", "fr", "Football", "/sports1");
-        Category c13 = cs.createCategory("national", "en", "National", "/news1");
-        Category c14 = cs.createCategory("national", "es", "Nacional", "/news1");
-        Category c15 = cs.createCategory("national", "fr", "National", "/news1");
-        Category c16 = cs.createCategory("international", "en", "International", "/news1");
-        Category c17 = cs.createCategory("international", "es", "Internacional", "/news1");
-        Category c18 = cs.createCategory("international", "fr", "International", "/news1");
+        WcmContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
+        WcmCategory c1 = cs.createCategory("sports1", "en", "Sports", "/");
+        WcmCategory c2 = cs.createCategory("sports1", "es", "Deportes", "/");
+        WcmCategory c3 = cs.createCategory("sports1", "fr", "Sportif", "/");
+        WcmCategory c4 = cs.createCategory("news1", "en", "News", "/");
+        WcmCategory c5 = cs.createCategory("news1", "es", "Noticias", "/");
+        WcmCategory c6 = cs.createCategory("news1", "fr", "Nouvelles", "/");
+        WcmCategory c7 = cs.createCategory("basket", "en", "Basketball", "/sports1");
+        WcmCategory c8 = cs.createCategory("basket", "es", "Baloncesto", "/sports1");
+        WcmCategory c9 = cs.createCategory("basket", "fr", "Baloncesto", "/sports1");
+        WcmCategory c10 = cs.createCategory("football", "en", "Soccer", "/sports1");
+        WcmCategory c11 = cs.createCategory("football", "es", "Futbol", "/sports1");
+        WcmCategory c12 = cs.createCategory("football", "fr", "Football", "/sports1");
+        WcmCategory c13 = cs.createCategory("national", "en", "National", "/news1");
+        WcmCategory c14 = cs.createCategory("national", "es", "Nacional", "/news1");
+        WcmCategory c15 = cs.createCategory("national", "fr", "National", "/news1");
+        WcmCategory c16 = cs.createCategory("international", "en", "International", "/news1");
+        WcmCategory c17 = cs.createCategory("international", "es", "Internacional", "/news1");
+        WcmCategory c18 = cs.createCategory("international", "fr", "International", "/news1");
 
         log.debug(c1);
         log.debug(c2);
@@ -85,13 +85,13 @@ public class CategoriesTest {
         log.debug(c14);
         log.debug(c15);
         Assert.assertTrue(c15.getId().equals("national"));
-        Assert.assertTrue(c15.getLocation().equals("/news1"));
+        Assert.assertTrue(c15.getParentPath().equals("/news1"));
         Assert.assertTrue(c15.getLocale().equals("fr"));
         log.debug(c16);
         log.debug(c17);
         log.debug(c18);
         Assert.assertTrue(c18.getId().equals("international"));
-        Assert.assertTrue(c18.getLocation().equals("/news1"));
+        Assert.assertTrue(c18.getParentPath().equals("/news1"));
         Assert.assertTrue(c18.getLocale().equals("fr"));
 
         // Clean test
@@ -106,7 +106,7 @@ public class CategoriesTest {
 
         log.debug("[[ START TEST  updateCategories ]]");
         try {
-            ContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
+            WcmContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
             cs.createCategory("sports2", "en", "Sports", "/");
             cs.createCategory("sports2", "es", "Deportes", "/");
             cs.createCategory("sports2", "fr", "Sportif", "/");
@@ -126,16 +126,16 @@ public class CategoriesTest {
             cs.createCategory("international2", "es", "Internacional", "/news2");
             cs.createCategory("international2", "fr", "International", "/news2");
 
-            Category c1 = cs.updateCategoryDescription("/news2/national2", "es", "Noticias en español");
+            WcmCategory c1 = cs.updateCategoryDescription("/news2/national2", "es", "Noticias en español");
             log.debug(c1);
             Assert.assertTrue(c1.getId().equals("national2"));
-            Assert.assertTrue(c1.getLocation().equals("/news2"));
+            Assert.assertTrue(c1.getParentPath().equals("/news2"));
             Assert.assertTrue(c1.getLocale().equals("es"));
 
-            Category c2 = cs.updateCategoryLocation("/sports2", "es", "/news2");
+            WcmCategory c2 = cs.updateCategoryLocation("/sports2", "es", "/news2");
             log.debug(c2);
             Assert.assertTrue(c2.getId().equals("sports2"));
-            Assert.assertTrue(c2.getLocation().equals("/news2"));
+            Assert.assertTrue(c2.getParentPath().equals("/news2"));
             Assert.assertTrue(c2.getLocale().equals("es"));
 
             // Clean test
@@ -153,7 +153,7 @@ public class CategoriesTest {
 
         log.debug("[[ START TEST  getCategories ]]");
         try {
-            ContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
+            WcmContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
 
             // Cleaning a old test
             try {
@@ -181,23 +181,23 @@ public class CategoriesTest {
             cs.createCategory("international3", "es", "Internacional", "/news3");
             cs.createCategory("international3", "fr", "International", "/news3");
 
-            List<Category> categories = cs.getCategories("/", "es");
+            List<WcmCategory> categories = cs.getCategories("/", "es");
             Assert.assertTrue(categories.size() == 2);
-            for (Category cy : categories) {
+            for (WcmCategory cy : categories) {
                 log.debug(cy);
             }
             categories = cs.getCategories("/sports3", "en");
             // I get only a category with sports3 not their childs, I need to
             // browse
             Assert.assertTrue(categories.size() == 1);
-            for (Category cy : categories) {
+            for (WcmCategory cy : categories) {
                 log.debug(cy);
             }
             categories = cs.getCategories("/news3", "en");
             // I get only a category with news3 not their child, I need to
             // browse
             Assert.assertTrue(categories.size() == 1);
-            for (Category cy : categories) {
+            for (WcmCategory cy : categories) {
                 log.debug(cy);
             }
 
@@ -217,7 +217,7 @@ public class CategoriesTest {
 
         log.debug("[[ START TEST  addCategories ]]");
         try {
-            ContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
+            WcmContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
             cs.createCategory("sports4", "en", "Sports", "/");
             cs.createCategory("sports4", "es", "Deportes", "/");
             cs.createCategory("sports4", "fr", "Sportif", "/");
@@ -237,9 +237,9 @@ public class CategoriesTest {
             cs.createCategory("international4", "es", "Internacional", "/news4");
             cs.createCategory("international4", "fr", "International", "/news4");
 
-            Category c1 = cs.updateCategoryDescription("/news4/national4", "es", "Noticias en español");
+            WcmCategory c1 = cs.updateCategoryDescription("/news4/national4", "es", "Noticias en español");
             log.debug(c1);
-            Category c2 = cs.updateCategoryLocation("/sports4", "es", "/news4");
+            WcmCategory c2 = cs.updateCategoryLocation("/sports4", "es", "/news4");
             log.debug(c2);
 
             cs.createTextContent("my noticia", "es", "/", "Esta es una noticia de ejemplo");
@@ -262,7 +262,7 @@ public class CategoriesTest {
 
         log.debug("[[ START TEST  deleteCategories ]]");
         try {
-            ContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
+            WcmContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
             cs.createCategory("sports5", "en", "Sports", "/");
             cs.createCategory("sports5", "es", "Deportes", "/");
             cs.createCategory("sports5", "fr", "Sportif", "/");
@@ -282,11 +282,11 @@ public class CategoriesTest {
             cs.createCategory("international5", "es", "Internacional", "/news5");
             cs.createCategory("international5", "fr", "International", "/news5");
 
-            Category c = cs.deleteCategory("/sports5", "fr");
+            WcmCategory c = cs.deleteCategory("/sports5", "fr");
             Assert.assertTrue(c == null); // We are in the parent of categories
             cs.deleteCategory("/sports5/basket5");
 
-            List<Category> r = cs.getCategories("/sports5", "es");
+            List<WcmCategory> r = cs.getCategories("/sports5", "es");
             Assert.assertTrue(r.size() == 1);
 
             // Clean test
@@ -301,9 +301,9 @@ public class CategoriesTest {
     }
 
     @Test
-    public void queryCategories() throws ContentException, ContentIOException, ContentSecurityException {
+    public void queryCategories() throws WcmContentException, WcmContentIOException, WcmContentSecurityException {
 
-        ContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
+        WcmContentService cs = repos.createContentSession("sample", "default", "admin", "admin");
 
         /*
          * Sites In both locales {es, en}
@@ -321,7 +321,7 @@ public class CategoriesTest {
          */
 
         // Creating test content
-        Content c = null;
+        WcmObject c = null;
         for (int i = 1; i <= 3; i++) {
             c = cs.createFolder("site" + i, "/");
             log.debug(c);
@@ -338,7 +338,7 @@ public class CategoriesTest {
         }
 
         // Creating categories
-        Category cat = null;
+        WcmCategory cat = null;
         cat = cs.createCategory("news", "es", "Noticias", "/");
         log.debug(cat);
         cat = cs.createCategory("news", "en", "News", "/");
@@ -385,13 +385,13 @@ public class CategoriesTest {
          *
          * /news --> new1, new2 :: filtered by location "/site1" /news --> new5, new6 :: filtered by location "/site2"
          */
-        List<Category> cats;
-        List<Content> result;
+        List<WcmCategory> cats;
+        List<WcmObject> result;
 
         cats = cs.getCategories("/news", "es");
         result = cs.getContent(cats, "/site1", "es");
         ArrayList<String> ids = new ArrayList<String>();
-        for (Content r : result) {
+        for (WcmObject r : result) {
             log.debug(r);
             ids.add(r.getId());
         }
@@ -402,7 +402,7 @@ public class CategoriesTest {
 
         result = cs.getContent(cats, "/site2", "es");
         ids = new ArrayList<String>();
-        for (Content r : result) {
+        for (WcmObject r : result) {
             log.debug(r);
             ids.add(r.getId());
         }
@@ -413,7 +413,7 @@ public class CategoriesTest {
 
         result = cs.getContent(cats, "/", "es");
         ids = new ArrayList<String>();
-        for (Content r : result) {
+        for (WcmObject r : result) {
             log.debug(r);
             ids.add(r.getId());
         }
@@ -429,7 +429,7 @@ public class CategoriesTest {
         cats = cs.getCategories("/countries", "es");
         result = cs.getContent(cats, "/", "es");
         ids = new ArrayList<String>();
-        for (Content r : result) {
+        for (WcmObject r : result) {
             log.debug(r);
             ids.add(r.getId());
         }

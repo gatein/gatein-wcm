@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.gatein.wcm.api.services.ContentService;
-import org.gatein.wcm.api.services.RepositoryService;
-import org.gatein.wcm.api.services.exceptions.ContentIOException;
-import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
+import org.gatein.wcm.api.services.WcmContentService;
+import org.gatein.wcm.api.services.WcmRepositoryService;
+import org.gatein.wcm.api.services.exceptions.WcmContentIOException;
+import org.gatein.wcm.api.services.exceptions.WcmContentSecurityException;
 import org.gatein.wcm.ui.Connect;
 import org.jboss.logging.Logger;
 
@@ -45,7 +45,7 @@ public class Connection extends HttpServlet {
     }
 
     @Resource(mappedName = "java:jboss/gatein-wcm")
-    RepositoryService repos;
+    WcmRepositoryService repos;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -68,18 +68,18 @@ public class Connection extends HttpServlet {
             c.setWorkspace(workspace);
             c.setUser(user);
             c.setPassword(password);
-            ContentService cs = null;
+            WcmContentService cs = null;
             try {
                 cs = repos.createContentSession(c.getRepository(), c.getWorkspace(), c.getUser(), c.getPassword());
                 c.setConnected(true);
                 req.getSession().setAttribute("connection", c);
                 req.getSession().setAttribute("cs", cs);
                 out.println("<p>Connected to " + c.getRepository() + "/" + c.getWorkspace() + "  " + c.getUser() + "/" + c.getPassword() + " </p>");
-            } catch (ContentIOException e) {
+            } catch (WcmContentIOException e) {
                 log.error(e.getMessage());
                 out.println(e.getMessage());
                 e.printStackTrace();
-            } catch (ContentSecurityException e) {
+            } catch (WcmContentSecurityException e) {
                 log.error(e.getMessage());
                 out.println(e.getMessage());
                 e.printStackTrace();

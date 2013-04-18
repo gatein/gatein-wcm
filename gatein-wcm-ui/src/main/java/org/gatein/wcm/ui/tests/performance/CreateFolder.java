@@ -11,11 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.gatein.wcm.api.model.content.Content;
-import org.gatein.wcm.api.services.ContentService;
-import org.gatein.wcm.api.services.exceptions.ContentException;
-import org.gatein.wcm.api.services.exceptions.ContentIOException;
-import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
+import org.gatein.wcm.api.model.content.WcmObject;
+import org.gatein.wcm.api.services.WcmContentService;
+import org.gatein.wcm.api.services.exceptions.WcmContentException;
+import org.gatein.wcm.api.services.exceptions.WcmContentIOException;
+import org.gatein.wcm.api.services.exceptions.WcmContentSecurityException;
 import org.gatein.wcm.ui.Connect;
 import org.jboss.logging.Logger;
 
@@ -60,28 +60,28 @@ public class CreateFolder extends HttpServlet {
         out.println("<html><head><title>GateIn WCM: CREATE FOLDER test</title></head><body>");
 
         Connect c = checkConnection(req);
-        ContentService cs = (ContentService)req.getSession().getAttribute("cs");
+        WcmContentService cs = (WcmContentService)req.getSession().getAttribute("cs");
         if (c == null || cs == null || !c.isConnected()) {
             out.println("<p>WARNING: it's needed to be connected to use this test</p>");
         } else {
-            Content _c = null;
+            WcmObject _c = null;
             try {
                 _c = cs.createFolder(id, location);
-            } catch (ContentException e) {
+            } catch (WcmContentException e) {
                 log.error(e.getMessage());
                 out.println(e.getMessage());
                 e.printStackTrace();
-            } catch (ContentIOException e) {
+            } catch (WcmContentIOException e) {
                 log.error(e.getMessage());
                 out.println(e.getMessage());
                 e.printStackTrace();
-            } catch (ContentSecurityException e) {
+            } catch (WcmContentSecurityException e) {
                 log.error(e.getMessage());
                 out.println(e.getMessage());
                 e.printStackTrace();
             }
             if (_c != null)
-                out.println("<p>Create folder at : " + ("/".equals(_c.getLocation())?"":_c.getLocation()) + "/" + _c.getId() + "</p>");
+                out.println("<p>Create folder at : " + ("/".equals(_c.getParentPath())?"":_c.getParentPath()) + "/" + _c.getId() + "</p>");
         }
         out.println(Common.MENU);
         out.println("</body></html>");

@@ -7,6 +7,7 @@ import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Repository;
 import javax.jcr.SimpleCredentials;
+import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.Value;
 import javax.jcr.version.Version;
 import javax.jcr.version.VersionHistory;
@@ -261,6 +262,26 @@ public class VersioningAPITest {
         jcrSession.save();
         jcrSession.logout();
 
+    }
+
+    @Test
+    public void checkNonVersionableFolder() throws Exception {
+        // Connecting
+        SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
+        javax.jcr.Session jcrSession = repository.login(credentials, "default");
+
+        Node n = jcrSession.getRootNode();
+
+        n.addNode("checkNonVersionableFolder");
+
+        try {
+            VersionManager vm = jcrSession.getWorkspace().getVersionManager();
+            vm.getBaseVersion("/checkNonVersionableFolder");
+        } catch (UnsupportedRepositoryOperationException expected) {
+            // Expected
+        }
+        jcrSession.save();
+        jcrSession.logout();
     }
 
 }

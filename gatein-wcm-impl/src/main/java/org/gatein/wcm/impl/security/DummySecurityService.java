@@ -2,9 +2,9 @@ package org.gatein.wcm.impl.security;
 
 import java.util.Date;
 
-import org.gatein.wcm.api.model.security.User;
-import org.gatein.wcm.api.services.SecurityService;
-import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
+import org.gatein.wcm.api.model.security.WcmUser;
+import org.gatein.wcm.api.services.WcmSecurityService;
+import org.gatein.wcm.api.services.exceptions.WcmContentSecurityException;
 import org.jboss.logging.Logger;
 
 /**
@@ -18,11 +18,11 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
  *
  */
-public class DummySecurityService implements SecurityService {
+public class DummySecurityService implements WcmSecurityService {
 
     private static final Logger log = Logger.getLogger(DummySecurityService.class);
 
-    public User authenticate(String idUser, String password) throws ContentSecurityException {
+    public WcmUser authenticate(String idUser, String password) throws WcmContentSecurityException {
 
         log.debug("Authenticating user... " + idUser);
 
@@ -38,15 +38,15 @@ public class DummySecurityService implements SecurityService {
             user.setOrganizationId(idUser + " - Organization");
             user.setPassword(password);
             user.setEmail(idUser + "@dummy.com");
-            user.setCreatedDate(new Date());
-            user.setLastLoginTime(new Date());
+            user.setCreatedOn(new Date());
+            user.setLastLoginOn(new Date());
 
             String[] groups = {"group1", "group2"};
             user.setGroups( groups );
 
             return user;
         } else {
-            throw new ContentSecurityException("Bad password for user " + idUser);
+            throw new WcmContentSecurityException("Bad password for user " + idUser);
         }
 
     }
@@ -58,10 +58,10 @@ public class DummySecurityService implements SecurityService {
     //
     // Roles: {readonly, readwrite, admin}
 
-    public boolean hasRole(User user, String role) throws ContentSecurityException {
+    public boolean hasRole(WcmUser user, String role) throws WcmContentSecurityException {
 
         if (user == null) {
-            throw new ContentSecurityException("Bad user ");
+            throw new WcmContentSecurityException("Bad user ");
         }
 
         log.debug("Authorization of user " + user.getUserName() + " with role " + role + " ...");

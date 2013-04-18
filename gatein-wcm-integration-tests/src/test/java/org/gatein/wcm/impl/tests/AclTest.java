@@ -7,14 +7,14 @@ import javax.annotation.Resource;
 
 import junit.framework.Assert;
 
-import org.gatein.wcm.api.model.content.Content;
-import org.gatein.wcm.api.model.security.ACE;
-import org.gatein.wcm.api.model.security.Principal;
-import org.gatein.wcm.api.services.ContentService;
-import org.gatein.wcm.api.services.RepositoryService;
-import org.gatein.wcm.api.services.exceptions.ContentException;
-import org.gatein.wcm.api.services.exceptions.ContentIOException;
-import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
+import org.gatein.wcm.api.model.content.WcmObject;
+import org.gatein.wcm.api.model.security.WcmAce;
+import org.gatein.wcm.api.model.security.WcmPrincipal;
+import org.gatein.wcm.api.services.WcmContentService;
+import org.gatein.wcm.api.services.WcmRepositoryService;
+import org.gatein.wcm.api.services.exceptions.WcmContentException;
+import org.gatein.wcm.api.services.exceptions.WcmContentIOException;
+import org.gatein.wcm.api.services.exceptions.WcmContentSecurityException;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
@@ -38,13 +38,13 @@ public class AclTest {
 	}
 
 	@Resource(mappedName = "java:jboss/gatein-wcm")
-	RepositoryService repos;
+	WcmRepositoryService repos;
 
 	@Test
-	public void createAcl() throws ContentIOException,
-			ContentSecurityException, ContentException {
+	public void createAcl() throws WcmContentIOException,
+			WcmContentSecurityException, WcmContentException {
 
-	    ContentService cs = repos.createContentSession("sample", "default",
+	    WcmContentService cs = repos.createContentSession("sample", "default",
 				"admin", "admin");
 
 		cs.createFolder("createacl", "/");
@@ -53,15 +53,15 @@ public class AclTest {
 		cs.createTextContent("test3", "en", "/createacl", "This is a test3");
 
 		// Root ACL
-		cs.createContentACE("/", "en", "admin", Principal.PrincipalType.USER, ACE.PermissionType.ALL);
-		cs.createContentACE("/", "en", "other", Principal.PrincipalType.GROUP, ACE.PermissionType.READ);
-        Content c = cs.createContentACE("/", "en", "guess", Principal.PrincipalType.USER, ACE.PermissionType.COMMENTS);
-        List<ACE> aces = c.getAcl().getAces();
+		cs.createContentAce("/", "en", "admin", WcmPrincipal.PrincipalType.USER, WcmAce.PermissionType.ALL);
+		cs.createContentAce("/", "en", "other", WcmPrincipal.PrincipalType.GROUP, WcmAce.PermissionType.READ);
+        WcmObject c = cs.createContentAce("/", "en", "guess", WcmPrincipal.PrincipalType.USER, WcmAce.PermissionType.COMMENTS);
+        List<WcmAce> aces = c.getAcl().getAces();
         Assert.assertEquals(3, aces.size());
 
         // Child ACL
-        cs.createContentACE("/createacl/test3", "en", "admin", Principal.PrincipalType.USER, ACE.PermissionType.ALL);
-        Content _c = cs.createContentACE("/createacl/test3", "en", "other", Principal.PrincipalType.GROUP, ACE.PermissionType.READ);
+        cs.createContentAce("/createacl/test3", "en", "admin", WcmPrincipal.PrincipalType.USER, WcmAce.PermissionType.ALL);
+        WcmObject _c = cs.createContentAce("/createacl/test3", "en", "other", WcmPrincipal.PrincipalType.GROUP, WcmAce.PermissionType.READ);
         aces = _c.getAcl().getAces();
         Assert.assertEquals(2, aces.size());
 
@@ -71,10 +71,10 @@ public class AclTest {
 	}
 
 	@Test
-    public void deleteAcl() throws ContentIOException,
-            ContentSecurityException, ContentException {
+    public void deleteAcl() throws WcmContentIOException,
+            WcmContentSecurityException, WcmContentException {
 
-        ContentService cs = repos.createContentSession("sample", "default",
+        WcmContentService cs = repos.createContentSession("sample", "default",
                 "admin", "admin");
 
         cs.createFolder("deleteacl", "/");

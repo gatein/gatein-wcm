@@ -19,6 +19,7 @@ import javax.jcr.Property;
 import javax.jcr.ReferentialIntegrityException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.Value;
 import javax.jcr.ValueFormatException;
 import javax.jcr.lock.LockException;
@@ -31,16 +32,16 @@ import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
 import javax.jcr.version.VersionManager;
 
-import org.gatein.wcm.api.model.publishing.PublishStatus;
-import org.gatein.wcm.api.model.security.ACE;
-import org.gatein.wcm.api.model.security.ACE.PermissionType;
-import org.gatein.wcm.api.model.security.ACL;
-import org.gatein.wcm.api.model.security.Principal;
-import org.gatein.wcm.api.model.security.Principal.PrincipalType;
-import org.gatein.wcm.api.model.security.User;
-import org.gatein.wcm.api.services.exceptions.ContentException;
-import org.gatein.wcm.api.services.exceptions.ContentIOException;
-import org.gatein.wcm.api.services.exceptions.ContentSecurityException;
+import org.gatein.wcm.api.model.publishing.WcmPublishStatus;
+import org.gatein.wcm.api.model.security.WcmAce;
+import org.gatein.wcm.api.model.security.WcmAce.PermissionType;
+import org.gatein.wcm.api.model.security.WcmAcl;
+import org.gatein.wcm.api.model.security.WcmPrincipal;
+import org.gatein.wcm.api.model.security.WcmPrincipal.PrincipalType;
+import org.gatein.wcm.api.model.security.WcmUser;
+import org.gatein.wcm.api.services.exceptions.WcmContentException;
+import org.gatein.wcm.api.services.exceptions.WcmContentIOException;
+import org.gatein.wcm.api.services.exceptions.WcmContentSecurityException;
 import org.gatein.wcm.impl.model.WcmConstants;
 import org.gatein.wcm.impl.model.WcmContentFactory;
 import org.jboss.logging.Logger;
@@ -62,16 +63,16 @@ public class JcrMappings {
     WcmContentFactory factory = null;
 
     Session jcrSession = null;
-    User logged = null;
+    WcmUser logged = null;
     VersionManager vm = null;
 
-    public JcrMappings(Session session, User user) throws ContentIOException {
+    public JcrMappings(Session session, WcmUser user) throws WcmContentIOException {
         try {
             jcrSession = session;
             logged = user;
             vm = jcrSession.getWorkspace().getVersionManager();
         } catch (RepositoryException e) {
-            throw new ContentIOException("Unexpected error initializating session JCR objects. Msg: " + e.getMessage());
+            throw new WcmContentIOException("Unexpected error initializating session JCR objects. Msg: " + e.getMessage());
         }
     }
 
@@ -153,7 +154,7 @@ public class JcrMappings {
     public boolean checkUserWriteACL(String location) {
 
         // Create ACL from location
-        ACL acl = null;
+        WcmAcl acl = null;
         try {
             acl = jcrACL(location);
             // If there are not __acl folder in the location, we will check to the parent node
@@ -167,7 +168,7 @@ public class JcrMappings {
         }
 
         // Validate ACL with logged user
-        for (ACE ace : acl.getAces()) {
+        for (WcmAce ace : acl.getAces()) {
             // Check if we have a GROUP ACE
             if (ace.getPrincipal().getType() == PrincipalType.GROUP
                     && Arrays.asList(PermissionType.WRITE, PermissionType.ALL).contains(ace.getPermission())) {
@@ -187,7 +188,7 @@ public class JcrMappings {
     public boolean checkUserReadACL(String location) {
 
         // Create ACL from location
-        ACL acl = null;
+        WcmAcl acl = null;
         try {
             acl = jcrACL(location);
             // If there are not __acl folder in the location, we will check to the parent node
@@ -201,7 +202,7 @@ public class JcrMappings {
         }
 
         // Validate ACL with logged user
-        for (ACE ace : acl.getAces()) {
+        for (WcmAce ace : acl.getAces()) {
             // Check if we have a GROUP ACE
             if (ace.getPrincipal().getType() == PrincipalType.GROUP
                     && Arrays.asList(PermissionType.READ, PermissionType.COMMENTS, PermissionType.WRITE, PermissionType.ALL)
@@ -224,7 +225,7 @@ public class JcrMappings {
     public boolean checkUserAdminACL(String location) {
 
         // Create ACL from location
-        ACL acl = null;
+        WcmAcl acl = null;
         try {
             acl = jcrACL(location);
             // If there are not __acl folder in the location, we will check to the parent node
@@ -238,7 +239,7 @@ public class JcrMappings {
         }
 
         // Validate ACL with logged user
-        for (ACE ace : acl.getAces()) {
+        for (WcmAce ace : acl.getAces()) {
             // Check if we have a GROUP ACE
             if (ace.getPrincipal().getType() == PrincipalType.GROUP
                     && Arrays.asList(PermissionType.ALL).contains(ace.getPermission())) {
@@ -258,7 +259,7 @@ public class JcrMappings {
     public boolean checkUserCommentsACL(String location) {
 
         // Create ACL from location
-        ACL acl = null;
+        WcmAcl acl = null;
         try {
             acl = jcrACL(location);
             // If there are not __acl folder in the location, we will check to the parent node
@@ -272,7 +273,7 @@ public class JcrMappings {
         }
 
         // Validate ACL with logged user
-        for (ACE ace : acl.getAces()) {
+        for (WcmAce ace : acl.getAces()) {
             // Check if we have a GROUP ACE
             if (ace.getPrincipal().getType() == PrincipalType.GROUP
                     && Arrays.asList(PermissionType.COMMENTS, PermissionType.WRITE, PermissionType.ALL).contains(
@@ -292,35 +293,35 @@ public class JcrMappings {
         return false;
     }
 
-    public void checkJCRException(RepositoryException e) throws ContentException, ContentIOException, ContentSecurityException {
+    public void checkJCRException(RepositoryException e) throws WcmContentException, WcmContentIOException, WcmContentSecurityException {
         if (e instanceof PathNotFoundException) {
-            throw new ContentException("Location doesn't found. Msg: " + e.getMessage());
+            throw new WcmContentException("Location doesn't found. Msg: " + e.getMessage());
         }
         if (e instanceof ItemExistsException) {
-            throw new ContentException("Item exists. Msg: " + e.getMessage());
+            throw new WcmContentException("Item exists. Msg: " + e.getMessage());
         }
         if (e instanceof NoSuchNodeTypeException) {
-            throw new ContentException("Trying to write in a different node type. Msg: " + e.getMessage());
+            throw new WcmContentException("Trying to write in a different node type. Msg: " + e.getMessage());
         }
         if (e instanceof LockException) {
-            throw new ContentSecurityException("Trying to write in a lock node. Msg: " + e.getMessage());
+            throw new WcmContentSecurityException("Trying to write in a lock node. Msg: " + e.getMessage());
         }
         if (e instanceof VersionException) {
-            throw new ContentSecurityException("Error in versioning. Msg: " + e.getMessage());
+            throw new WcmContentSecurityException("Error in versioning. Msg: " + e.getMessage());
         }
         if (e instanceof ConstraintViolationException) {
-            throw new ContentSecurityException("Unexpected constraint violation. Msg: " + e.getMessage());
+            throw new WcmContentSecurityException("Unexpected constraint violation. Msg: " + e.getMessage());
         }
         if (e instanceof ValueFormatException) {
-            throw new ContentException("Wrong value format. Msg: " + e.getMessage());
+            throw new WcmContentException("Wrong value format. Msg: " + e.getMessage());
         }
         if (e instanceof AccessDeniedException) {
-            throw new ContentSecurityException("Access denied. Msg: " + e.getMessage());
+            throw new WcmContentSecurityException("Access denied. Msg: " + e.getMessage());
         }
         if (e instanceof ReferentialIntegrityException) {
-            throw new ContentException("Unexpected referencial integrity. Msg: " + e.getMessage());
+            throw new WcmContentException("Unexpected referencial integrity. Msg: " + e.getMessage());
         }
-        throw new ContentIOException("Unexpected repository error. Msg: " + e.getMessage());
+        throw new WcmContentIOException("Unexpected repository error. Msg: " + e.getMessage());
     }
 
     public boolean checkLocaleContent(String location) {
@@ -747,21 +748,10 @@ public class JcrMappings {
         jcrSession.save();
     }
 
-    /*
-     * __acl can be part of versionable content and not versionable content.
-     *
-     * Versionable content are text and binary content.
-     * Folders are not versionable in this first version due overhead:
-     *  - We can have an exponential O(n^n) rate if we need to check for a leaf all tree.
-     *  - We can loose target of versioning, that is to have several copies of a specific content.
-     *
-     * So in the implementation, only we will check-out/check-in __acl content where we are in a versionable content.
-     *
-     */
-    public void createContentACE(String location, String name, Principal.PrincipalType principal, ACE.PermissionType permission)
+    public void createContentAce(String path, String name, WcmPrincipal.PrincipalType principal, WcmAce.PermissionType permission)
             throws RepositoryException {
 
-        String tmpLocation = ("/".equals(location)?"":location);
+        String tmpLocation = ("/".equals(path)?"":path);
         String contentId = "/__acl" + tmpLocation;
 
         String acl = null;
@@ -785,21 +775,21 @@ public class JcrMappings {
 
     }
 
-    private String addAcl(String acl, String name, Principal.PrincipalType principal, ACE.PermissionType permission) {
+    private String addAcl(String acl, String name, WcmPrincipal.PrincipalType principal, WcmAce.PermissionType permission) {
         String newAce = "" + name + ":";
-        if (principal == Principal.PrincipalType.USER)
+        if (principal == WcmPrincipal.PrincipalType.USER)
             newAce += "USER:";
-        if (principal == Principal.PrincipalType.GROUP)
+        if (principal == WcmPrincipal.PrincipalType.GROUP)
             newAce += "GROUP:";
-        if (permission == ACE.PermissionType.NONE)
+        if (permission == WcmAce.PermissionType.NONE)
             newAce += "NONE";
-        if (permission == ACE.PermissionType.ALL)
+        if (permission == WcmAce.PermissionType.ALL)
             newAce += "ALL";
-        if (permission == ACE.PermissionType.COMMENTS)
+        if (permission == WcmAce.PermissionType.COMMENTS)
             newAce += "COMMENTS";
-        if (permission == ACE.PermissionType.READ)
+        if (permission == WcmAce.PermissionType.READ)
             newAce += "READ";
-        if (permission == ACE.PermissionType.WRITE)
+        if (permission == WcmAce.PermissionType.WRITE)
             newAce += "WRITE";
 
         // Check if newAce is in Acl
@@ -832,10 +822,10 @@ public class JcrMappings {
         return tempAcl;
     }
 
-    public void deleteContentACE(String location, String name) throws RepositoryException {
+    public void deleteContentAce(String path, String name) throws RepositoryException {
 
         String acl = null;
-        String tmpLocation = ("/".equals(location)?"":location);
+        String tmpLocation = ("/".equals(path)?"":path);
         if (!jcrSession.itemExists("/acl" + tmpLocation))
             return;
 
@@ -875,7 +865,11 @@ public class JcrMappings {
         }
     }
 
-    public Date jcrCreated(String location) {
+    public Node jcrVersionNode(String location, String version) throws RepositoryException {
+        return jcrSession.getWorkspace().getVersionManager().getVersionHistory(location).getVersion(version).getFrozenNode();
+    }
+
+    public Date jcrCreatedOn(String location) {
         try {
             return jcrSession.getNode(location).getProperty("jcr:created").getDate().getTime();
         } catch (Exception e) {
@@ -884,7 +878,7 @@ public class JcrMappings {
         }
     }
 
-    public Date jcrCreated(Node n) {
+    public Date jcrCreatedOn(Node n) {
         try {
             return n.getProperty("jcr:created").getDate().getTime();
         } catch (Exception e) {
@@ -893,7 +887,7 @@ public class JcrMappings {
         }
     }
 
-    public Date jcrLastModified(String location) {
+    public Date jcrLastModifiedOn(String location) {
         try {
             return jcrSession.getNode(location).getProperty("jcr:lastModified").getDate().getTime();
         } catch (Exception e) {
@@ -902,7 +896,7 @@ public class JcrMappings {
         }
     }
 
-    public Date jcrLastModified(Node n) {
+    public Date jcrLastModifiedOn(Node n) {
         try {
             return n.getProperty("jcr:lastModified").getDate().getTime();
         } catch (Exception e) {
@@ -914,9 +908,9 @@ public class JcrMappings {
     /*
      * All ACL will be storage under /__acl as a non versionable tree
      */
-    public ACL jcrACL(String location) throws RepositoryException {
+    public WcmAcl jcrACL(String location) throws RepositoryException {
         // Create ACL from location
-        ACL acl = null;
+        WcmAcl acl = null;
         // Check if we are in the root node or child node
         Node n = null;
         String tmpLocation = ("/".equals(location)?"":location);
@@ -1013,7 +1007,7 @@ public class JcrMappings {
         }
     }
 
-    public PublishStatus jcrPublishStatus(String location) {
+    public WcmPublishStatus jcrPublishStatus(String location) {
         // TODO to complete
         if (location == null)
             return null;
@@ -1021,21 +1015,21 @@ public class JcrMappings {
         return null;
     }
 
-    public PublishStatus jcrPublishStatus(Node n) {
+    public WcmPublishStatus jcrPublishStatus(Node n) {
         // TODO to complete
         if (n == null)
             return null;
         return null;
     }
 
-    public List<Principal> jcrPublishingRoles(String location) {
+    public List<WcmPrincipal> jcrPublishingRoles(String location) {
         // TODO to complete
         if (location == null)
             return null;
         return null;
     }
 
-    public List<Principal> jcrPublishingRoles(Node n) {
+    public List<WcmPrincipal> jcrPublishingRoles(Node n) {
         // TODO to complete
         if (n == null)
             return null;
@@ -1238,6 +1232,39 @@ public class JcrMappings {
             return locales;
         else
             return null;
+    }
+
+    public List<String> jcrContentVersions(String location) throws RepositoryException {
+
+        if (location == null) return null;
+        if ("".equals(location)) return null;
+
+        VersionHistory vh = null;
+        try {
+            vh = vm.getVersionHistory(location);
+        } catch (UnsupportedRepositoryOperationException expected) {
+            // location is a folder or non versionable element
+            return null;
+        }
+
+        if (vh != null) {
+            List<String> result = new ArrayList<String>();
+            VersionIterator vIt = vh.getAllVersions();
+            while (vIt.hasNext()) {
+                Version v = vIt.nextVersion();
+                if (!v.getName().equals("jcr:rootVersion"))
+                    result.add(v.getName());
+            }
+            return result;
+        }
+
+        return null;
+    }
+
+    public void jcrRestore(String location, String version) throws RepositoryException {
+        if (location == null || version == null) return;
+        if ("".equals(location) || "".equals(version)) return;
+
     }
 
     // Aux methods
