@@ -31,11 +31,13 @@ public class WcmContentServiceImpl implements WcmContentService {
     Session jcrSession = null;
     WcmUser logged = null;
     String repository = null;
+    String defaultLocale = null;
 
-    public WcmContentServiceImpl(String repository, Session session, WcmUser user) throws WcmContentIOException {
+    public WcmContentServiceImpl(String repository, Session session, WcmUser user, String defaultLocale) throws WcmContentIOException {
         jcrSession = session;
         logged = user;
         this.repository = repository;
+        this.defaultLocale = defaultLocale;
     }
 
     /**
@@ -49,6 +51,25 @@ public class WcmContentServiceImpl implements WcmContentService {
 
         CreateCommand command = new CreateCommand(jcrSession, logged);
         WcmTextObject output = command.createTextContent(id, locale, path, html);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("createTextContent() takes " + ((long) (stop - start)) + " ms");
+
+        return output;
+    }
+
+    /**
+     * @see {@link WcmContentService#createTextContent(String, String, String)}
+     */
+    @Override
+    public WcmTextObject createTextContent(String id, String path, String html) throws WcmContentException,
+            WcmContentIOException, WcmContentSecurityException {
+
+        long start = System.currentTimeMillis();
+
+        CreateCommand command = new CreateCommand(jcrSession, logged);
+        WcmTextObject output = command.createTextContent(id, defaultLocale, path, html);
 
         long stop = System.currentTimeMillis();
 
@@ -96,6 +117,25 @@ public class WcmContentServiceImpl implements WcmContentService {
     }
 
     /**
+     * @see {@link WcmContentService#createBinaryContent(String, String, String, long, String, InputStream)}
+     */
+    @Override
+    public WcmBinaryObject createBinaryContent(String id, String path, String contentType, long size,
+            String fileName, InputStream content) throws WcmContentException, WcmContentIOException, WcmContentSecurityException {
+
+        long start = System.currentTimeMillis();
+
+        CreateCommand command = new CreateCommand(jcrSession, logged);
+        WcmBinaryObject output = command.createBinaryContent(id, defaultLocale, path, contentType, size, fileName, content);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("createBinaryContent() takes " + ((long) (stop - start)) + " ms");
+
+        return output;
+    }
+
+    /**
      * @see {@link WcmContentService#getContent(String, String)}
      */
     @Override
@@ -115,15 +155,34 @@ public class WcmContentServiceImpl implements WcmContentService {
     }
 
     /**
+     * @see {@link WcmContentService#getContent(String)}
+     */
+    @Override
+    public WcmObject getContent(String path) throws WcmContentException, WcmContentIOException,
+            WcmContentSecurityException {
+
+        long start = System.currentTimeMillis();
+
+        ReadCommand command = new ReadCommand(jcrSession, logged);
+        WcmObject output = command.getContent(path, defaultLocale);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("getContent() takes " + ((long) (stop - start)) + " ms");
+
+        return output;
+    }
+
+    /**
      * @see {@link WcmContentService#getContentLocales(String)}
      */
     @Override
-    public List<String> getContentLocales(String location) throws WcmContentException, WcmContentIOException,
+    public List<String> getContentLocales(String path) throws WcmContentException, WcmContentIOException,
             WcmContentSecurityException {
         long start = System.currentTimeMillis();
 
         ReadCommand command = new ReadCommand(jcrSession, logged);
-        List<String> output = command.getContentLocales(location);
+        List<String> output = command.getContentLocales(path);
 
         long stop = System.currentTimeMillis();
 
@@ -152,6 +211,25 @@ public class WcmContentServiceImpl implements WcmContentService {
     }
 
     /**
+     * @see {@link WcmContentService#updateTextContent(String, String)}
+     */
+    @Override
+    public WcmTextObject updateTextContent(String path, String html) throws WcmContentException, WcmContentIOException,
+            WcmContentSecurityException {
+
+        long start = System.currentTimeMillis();
+
+        UpdateCommand command = new UpdateCommand(jcrSession, logged);
+        WcmTextObject output = command.updateTextContent(path, defaultLocale, html);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("updateTextContent() takes " + ((long) (stop - start)) + " ms");
+
+        return output;
+    }
+
+    /**
      * @see {@link WcmContentService#updateFolderLocation(String, String, String)}
      */
     @Override
@@ -162,6 +240,25 @@ public class WcmContentServiceImpl implements WcmContentService {
 
         UpdateCommand command = new UpdateCommand(jcrSession, logged);
         WcmFolder output = command.updateFolderLocation(path, locale, newPath);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("updateFolderLocation() takes " + ((long) (stop - start)) + " ms");
+
+        return output;
+    }
+
+    /**
+     * @see {@link WcmContentService#updateFolderLocation(String, String)}
+     */
+    @Override
+    public WcmFolder updateFolderLocation(String path, String newPath) throws WcmContentException,
+            WcmContentIOException, WcmContentSecurityException {
+
+        long start = System.currentTimeMillis();
+
+        UpdateCommand command = new UpdateCommand(jcrSession, logged);
+        WcmFolder output = command.updateFolderLocation(path, defaultLocale, newPath);
 
         long stop = System.currentTimeMillis();
 
@@ -190,6 +287,25 @@ public class WcmContentServiceImpl implements WcmContentService {
     }
 
     /**
+     * @see {@link WcmContentService#updateFolderName(String, String)}
+     */
+    @Override
+    public WcmFolder updateFolderName(String path, String newName) throws WcmContentException,
+            WcmContentIOException, WcmContentSecurityException {
+
+        long start = System.currentTimeMillis();
+
+        UpdateCommand command = new UpdateCommand(jcrSession, logged);
+        WcmFolder output = command.updateFolderName(path, defaultLocale, newName);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("updateFolderName() takes " + ((long) (stop - start)) + " ms");
+
+        return output;
+    }
+
+    /**
      * @see {@link WcmContentService#updateBinaryContent(String, String, String, long, String, InputStream)}
      */
     @Override
@@ -200,6 +316,25 @@ public class WcmContentServiceImpl implements WcmContentService {
 
         UpdateCommand command = new UpdateCommand(jcrSession, logged);
         WcmBinaryObject output = command.updateBinaryContent(path, locale, contentType, size, fileName, content);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("updateBinaryContent() takes " + ((long) (stop - start)) + " ms");
+
+        return output;
+    }
+
+    /**
+     * @see {@link WcmContentService#updateBinaryContent(String, String, long, String, InputStream)}
+     */
+    @Override
+    public WcmBinaryObject updateBinaryContent(String path, String mimeType, long size, String fileName,
+            InputStream content) throws WcmContentException, WcmContentIOException, WcmContentSecurityException {
+
+        long start = System.currentTimeMillis();
+
+        UpdateCommand command = new UpdateCommand(jcrSession, logged);
+        WcmBinaryObject output = command.updateBinaryContent(path, defaultLocale, mimeType, size, fileName, content);
 
         long stop = System.currentTimeMillis();
 
@@ -247,6 +382,25 @@ public class WcmContentServiceImpl implements WcmContentService {
     }
 
     /**
+     * @see {@link WcmContentService#createCategory(String, String, String)}
+     */
+    @Override
+    public WcmCategory createCategory(String id, String description, String categoryPath)
+            throws WcmContentException, WcmContentIOException, WcmContentSecurityException {
+
+        long start = System.currentTimeMillis();
+
+        CreateCommand command = new CreateCommand(jcrSession, logged);
+        WcmCategory category = command.createCategory(id, defaultLocale, description, categoryPath);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("createCategory() takes " + ((long) (stop - start)) + " ms");
+
+        return category;
+    }
+
+    /**
      * @see {@link WcmContentService#updateCategoryDescription(String, String, String)}
      */
     @Override
@@ -257,6 +411,25 @@ public class WcmContentServiceImpl implements WcmContentService {
 
         UpdateCommand command = new UpdateCommand(jcrSession, logged);
         WcmCategory category = command.updateCategoryDescription(categoryPath, locale, description);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("updateCategoryDescription() takes " + ((long) (stop - start)) + " ms");
+
+        return category;
+    }
+
+    /**
+     * @see {@link WcmContentService#updateCategoryDescription(String, String)}
+     */
+    @Override
+    public WcmCategory updateCategoryDescription(String categoryPath, String description)
+            throws WcmContentException, WcmContentIOException, WcmContentSecurityException {
+
+        long start = System.currentTimeMillis();
+
+        UpdateCommand command = new UpdateCommand(jcrSession, logged);
+        WcmCategory category = command.updateCategoryDescription(categoryPath, defaultLocale, description);
 
         long stop = System.currentTimeMillis();
 
@@ -285,6 +458,25 @@ public class WcmContentServiceImpl implements WcmContentService {
     }
 
     /**
+     * @see {@link WcmContentService#updateCategoryDescription(String, String)}
+     */
+    @Override
+    public WcmCategory updateCategoryLocation(String categoryPath, String newPath) throws WcmContentException,
+            WcmContentIOException, WcmContentSecurityException {
+
+        long start = System.currentTimeMillis();
+
+        UpdateCommand command = new UpdateCommand(jcrSession, logged);
+        WcmCategory category = command.updateCategoryLocation(categoryPath, defaultLocale, newPath);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("updateCategoryLocation() takes " + ((long) (stop - start)) + " ms");
+
+        return category;
+    }
+
+    /**
      * @see {@link WcmContentService#getCategories(String, String)}
      */
     @Override
@@ -295,6 +487,25 @@ public class WcmContentServiceImpl implements WcmContentService {
 
         ReadCommand command = new ReadCommand(jcrSession, logged);
         List<WcmCategory> category = command.getCategories(categoryPath, locale);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("getCategories() takes " + ((long) (stop - start)) + " ms");
+
+        return category;
+    }
+
+    /**
+     * @see {@link WcmContentService#getCategories(String)}
+     */
+    @Override
+    public List<WcmCategory> getCategories(String categoryPath) throws WcmContentException, WcmContentIOException,
+            WcmContentSecurityException {
+
+        long start = System.currentTimeMillis();
+
+        ReadCommand command = new ReadCommand(jcrSession, logged);
+        List<WcmCategory> category = command.getCategories(categoryPath, defaultLocale);
 
         long stop = System.currentTimeMillis();
 
@@ -359,12 +570,30 @@ public class WcmContentServiceImpl implements WcmContentService {
      * @see {@link WcmContentService#getContent(List, String, String)}
      */
     @Override
-    public List<WcmObject> getContent(List<WcmCategory> categories, String location, String locale) throws WcmContentException,
+    public List<WcmObject> getContent(List<WcmCategory> categories, String path, String locale) throws WcmContentException,
             WcmContentIOException, WcmContentSecurityException {
         long start = System.currentTimeMillis();
 
         ReadCommand command = new ReadCommand(jcrSession, logged);
-        List<WcmObject> result = command.getContent(categories, location, locale);
+        List<WcmObject> result = command.getContent(categories, path, locale);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("deleteCategory() takes " + ((long) (stop - start)) + " ms");
+
+        return result;
+    }
+
+    /**
+     * @see {@link WcmContentService#getContent(List, String)}
+     */
+    @Override
+    public List<WcmObject> getContent(List<WcmCategory> categories, String path) throws WcmContentException,
+            WcmContentIOException, WcmContentSecurityException {
+        long start = System.currentTimeMillis();
+
+        ReadCommand command = new ReadCommand(jcrSession, logged);
+        List<WcmObject> result = command.getContent(categories, path, defaultLocale);
 
         long stop = System.currentTimeMillis();
 
@@ -392,6 +621,24 @@ public class WcmContentServiceImpl implements WcmContentService {
     }
 
     /**
+     * @see {@link WcmContentService#createContentComment(String, String)}
+     */
+    @Override
+    public WcmObject createContentComment(String path, String comment) throws WcmContentException,
+            WcmContentIOException, WcmContentSecurityException {
+        long start = System.currentTimeMillis();
+
+        CreateCommand command = new CreateCommand(jcrSession, logged);
+        WcmObject result = command.createContentComment(path, defaultLocale, comment);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("createContentComment() takes " + ((long) (stop - start)) + " ms");
+
+        return result;
+    }
+
+    /**
      * @see {@link WcmContentService#deleteContentComment(String, String, String)}
      */
     @Override
@@ -401,6 +648,24 @@ public class WcmContentServiceImpl implements WcmContentService {
 
         DeleteCommand command = new DeleteCommand(jcrSession, logged);
         WcmObject result = command.deleteContentComment(location, locale, idComment);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("createContentComment() takes " + ((long) (stop - start)) + " ms");
+
+        return result;
+    }
+
+    /**
+     * @see {@link WcmContentService#deleteContentComment(String, String, String)}
+     */
+    @Override
+    public WcmObject deleteContentComment(String location, String idComment) throws WcmContentException,
+            WcmContentIOException, WcmContentSecurityException {
+        long start = System.currentTimeMillis();
+
+        DeleteCommand command = new DeleteCommand(jcrSession, logged);
+        WcmObject result = command.deleteContentComment(location, defaultLocale, idComment);
 
         long stop = System.currentTimeMillis();
 
@@ -428,6 +693,24 @@ public class WcmContentServiceImpl implements WcmContentService {
     }
 
     /**
+     * @see {@link WcmContentService#createContentProperty(String, String, String, String)}
+     */
+    @Override
+    public WcmObject createContentProperty(String path, String name, String value) throws WcmContentException,
+            WcmContentIOException, WcmContentSecurityException {
+        long start = System.currentTimeMillis();
+
+        CreateCommand command = new CreateCommand(jcrSession, logged);
+        WcmObject result = command.createContentProperty(path, defaultLocale, name, value);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("createContentProperty() takes " + ((long) (stop - start)) + " ms");
+
+        return result;
+    }
+
+    /**
      * @see {@link WcmContentService#updateContentProperty(String, String, String, String)}
      */
     @Override
@@ -437,6 +720,24 @@ public class WcmContentServiceImpl implements WcmContentService {
 
         UpdateCommand command = new UpdateCommand(jcrSession, logged);
         WcmObject result = command.updateContentProperty(path, locale, name, value);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("updateContentProperty() takes " + ((long) (stop - start)) + " ms");
+
+        return result;
+    }
+
+    /**
+     * @see {@link WcmContentService#updateContentProperty(String, String, String)}
+     */
+    @Override
+    public WcmObject updateContentProperty(String path, String name, String value) throws WcmContentException,
+            WcmContentIOException, WcmContentSecurityException {
+        long start = System.currentTimeMillis();
+
+        UpdateCommand command = new UpdateCommand(jcrSession, logged);
+        WcmObject result = command.updateContentProperty(path, defaultLocale, name, value);
 
         long stop = System.currentTimeMillis();
 
@@ -464,6 +765,24 @@ public class WcmContentServiceImpl implements WcmContentService {
     }
 
     /**
+     * @see {@link WcmContentService#deleteContentProperty(String, String, String)}
+     */
+    @Override
+    public WcmObject deleteContentProperty(String path, String name) throws WcmContentException,
+            WcmContentIOException, WcmContentSecurityException {
+        long start = System.currentTimeMillis();
+
+        DeleteCommand command = new DeleteCommand(jcrSession, logged);
+        WcmObject result = command.deleteContentProperty(path, defaultLocale, name);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("deleteContentProperty() takes " + ((long) (stop - start)) + " ms");
+
+        return result;
+    }
+
+    /**
      * @see {@link WcmContentService#createContentAce(String, String, String, org.gatein.wcm.api.model.security.WcmPrincipal.PrincipalType, PermissionType)}
      */
     @Override
@@ -476,7 +795,25 @@ public class WcmContentServiceImpl implements WcmContentService {
 
         long stop = System.currentTimeMillis();
 
-        log.debug("createContentACE() takes " + ((long) (stop - start)) + " ms");
+        log.debug("createContentAce() takes " + ((long) (stop - start)) + " ms");
+
+        return result;
+    }
+
+    /**
+     * @see {@link WcmContentService#createContentAce(String, String, org.gatein.wcm.api.model.security.WcmPrincipal.PrincipalType, PermissionType)}
+     */
+    @Override
+    public WcmObject createContentAce(String path, String name, WcmPrincipal.PrincipalType principal,
+            PermissionType permission) throws WcmContentException, WcmContentIOException, WcmContentSecurityException {
+        long start = System.currentTimeMillis();
+
+        CreateCommand command = new CreateCommand(jcrSession, logged);
+        WcmObject result = command.createContentAce(path, defaultLocale, name, principal, permission);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("createContentAce() takes " + ((long) (stop - start)) + " ms");
 
         return result;
     }
@@ -494,7 +831,25 @@ public class WcmContentServiceImpl implements WcmContentService {
 
         long stop = System.currentTimeMillis();
 
-        log.debug("deleteContentACE() takes " + ((long) (stop - start)) + " ms");
+        log.debug("deleteContentAce() takes " + ((long) (stop - start)) + " ms");
+
+        return result;
+    }
+
+    /**
+     * @see {@link WcmContentService#deleteContentAce(String, String)}
+     */
+    @Override
+    public WcmObject deleteContentAce(String path, String name) throws WcmContentException, WcmContentIOException,
+            WcmContentSecurityException {
+        long start = System.currentTimeMillis();
+
+        DeleteCommand command = new DeleteCommand(jcrSession, logged);
+        WcmObject result = command.deleteContentAce(path, defaultLocale, name);
+
+        long stop = System.currentTimeMillis();
+
+        log.debug("deleteContentAce() takes " + ((long) (stop - start)) + " ms");
 
         return result;
     }
@@ -532,23 +887,6 @@ public class WcmContentServiceImpl implements WcmContentService {
         log.debug("restore() takes " + ((long) (stop - start)) + " ms");
     }
 
-    /**
-     * @see {@link WcmContentService#getContent(String, String, String)}
-     */
-    @Override
-    public WcmObject getContent(String path, String locale, String version) throws WcmContentException,
-            WcmContentIOException, WcmContentSecurityException {
-        long start = System.currentTimeMillis();
-
-        ReadCommand command = new ReadCommand(jcrSession, logged);
-        WcmObject output = command.getContent(path, locale, version);
-
-        long stop = System.currentTimeMillis();
-
-        log.debug("getContent() takes " + ((long) (stop - start)) + " ms");
-
-        return output;
-    }
 
     /**
      * @see {@link WcmContentService#deleteContentVersion(String, String)}

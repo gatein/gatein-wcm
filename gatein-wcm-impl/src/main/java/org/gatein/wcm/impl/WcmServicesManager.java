@@ -37,6 +37,8 @@ public class WcmServicesManager implements WcmRepositoryService, ObjectFactory {
     WcmUser u = null;
     private boolean isAdmin = false;
     private String ADMIN_ROLE = "admin";
+    // TODO this DEFAULT LOCALE should be read from configuration file, for example in the subsystem configuration
+    private String DEFAULT_LOCALE = "en";
 
     public WcmServicesManager() {
 
@@ -76,7 +78,7 @@ public class WcmServicesManager implements WcmRepositoryService, ObjectFactory {
 
            initMetadata( s );
 
-           return new WcmContentServiceImpl( idRepository, s, u );
+           return new WcmContentServiceImpl( idRepository, s, u, DEFAULT_LOCALE );
         } catch (NamingException e) {
             throw new WcmContentIOException( "Unable to connect to ModeShape JNDI java:/jcr" );
         }  catch (NullPointerException e) {

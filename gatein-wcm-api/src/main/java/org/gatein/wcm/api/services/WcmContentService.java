@@ -67,6 +67,24 @@ public interface WcmContentService {
 
     /**
      *
+     * Creates a new text content in the default repository under default locale.
+     *
+     * @param id - Key under which to store the content.
+     * @param path - Path where to store the content. <br>
+     *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+     *        where "/" is the root of repository and &lt;id&gt; folders ID
+     * @param html - HTML content as string.
+     * @return Content updated (if ok), null (if error).
+     * @throws WcmContentException if the id exists in the repository (then user should use updateTextContent to create a new
+     *         version).
+     * @throws WcmContentIOException if any IO related problem with repository.
+     * @throws WcmContentSecurityException if user has not been granted to create content under specified location.
+     */
+    WcmTextObject createTextContent(String id, String path, String html) throws WcmContentException, WcmContentIOException,
+            WcmContentSecurityException;
+
+    /**
+     *
      * Creates a new folder in the default repository.
      *
      * @param id - Key under which to store the folder.
@@ -79,7 +97,8 @@ public interface WcmContentService {
      * @throws WcmContentIOException if any IO related problem with repository.
      * @throws WcmContentSecurityException if user has not been granted to create content under specified location.
      */
-    WcmFolder createFolder(String id, String path) throws WcmContentException, WcmContentIOException, WcmContentSecurityException;
+    WcmFolder createFolder(String id, String path) throws WcmContentException, WcmContentIOException,
+            WcmContentSecurityException;
 
     /**
      *
@@ -104,6 +123,27 @@ public interface WcmContentService {
 
     /**
      *
+     * Creates new file resource in the default repository under default locale.
+     *
+     * @param id - Key under which to store the resource.
+     * @param locale - Locale under content is stored.
+     * @param path - Location where to store the content. <br>
+     *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+     *        where "/" is the root of repository and &lt;id&gt; folders ID
+     * @param contentType - MIME Type content type
+     * @param size - Size's file.
+     * @param fileName - Name's file.
+     * @param content - Source of the file.
+     * @return Content updated (if ok), null (if error).
+     * @throws WcmContentException if the id exists in the repository
+     * @throws WcmContentIOException if any IO related problem with repository.
+     * @throws WcmContentSecurityException if user has not been granted to create content under specified location.
+     */
+    WcmBinaryObject createBinaryContent(String id, String path, String contentType, long size, String fileName,
+            InputStream content) throws WcmContentException, WcmContentIOException, WcmContentSecurityException;
+
+    /**
+     *
      * Retrieves a content from a specified path. <br>
      *
      * @param path - Path where the content is stored. <br>
@@ -115,7 +155,22 @@ public interface WcmContentService {
      * @throws WcmContentIOException if any IO related problem with repository.
      * @throws WcmContentSecurityException if user has not been granted to access content under specified location.
      */
-    WcmObject getContent(String path, String locale) throws WcmContentException, WcmContentIOException, WcmContentSecurityException;
+    WcmObject getContent(String path, String locale) throws WcmContentException, WcmContentIOException,
+            WcmContentSecurityException;
+
+    /**
+     *
+     * Retrieves a content from a specified path under default locale. <br>
+     *
+     * @param path - Path where the content is stored. <br>
+     *        path with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+     *        where "/" is the root of repository and &lt;id&gt; folders ID
+     * @return List of content under specified location.
+     * @throws WcmContentException if content doesn't exist in the location.
+     * @throws WcmContentIOException if any IO related problem with repository.
+     * @throws WcmContentSecurityException if user has not been granted to access content under specified location.
+     */
+    WcmObject getContent(String path) throws WcmContentException, WcmContentIOException, WcmContentSecurityException;
 
     /**
      *
@@ -150,6 +205,22 @@ public interface WcmContentService {
 
     /**
      *
+     * Updates a existing text content in the default repository under default locale.
+     *
+     * @param path - Location where to update the content. <br>
+     *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+     *        where "/" is the root of repository and &lt;id&gt; folders ID
+     * @param html - HTML content as string.
+     * @return Content updated (if ok), null (if error).
+     * @throws WcmContentException if the location doesn't exists in the repository.
+     * @throws WcmContentIOException if any IO related problem with repository.
+     * @throws WcmContentSecurityException if user has not been granted to create content under specified location.
+     */
+    WcmTextObject updateTextContent(String path, String html) throws WcmContentException, WcmContentIOException,
+            WcmContentSecurityException;
+
+    /**
+     *
      * Moves an existing folder in the default repository.
      *
      * @param path - Path where content is stored the content. <br>
@@ -169,32 +240,69 @@ public interface WcmContentService {
             WcmContentIOException, WcmContentSecurityException;
 
     /**
-     *
-     * Renames an existing folder in the default repository.
-     *
-     * @param path - Path where content is stored. <br>
-     *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
-     *        where "/" is the root of repository and &lt;id&gt; folders ID
-     * @param locale - Locale under content is stored.
-     * @return Content updated (if ok), null (if error).
-     * @throws WcmContentException if the id exists in the repository (folder can not be updated, folder gets latest version of
-     *         their most recent item).
-     * @throws WcmContentIOException if any IO related problem with repository.
-     * @throws WcmContentSecurityException if user has not been granted to create content under specified location.
-     */
-    WcmFolder updateFolderName(String path, String locale, String newName) throws WcmContentException, WcmContentIOException,
-            WcmContentSecurityException;
+    *
+    * Moves an existing folder in the default repository. <br>
+    * It will retrieve content from default locale.
+    *
+    * @param path - Path where content is stored the content. <br>
+    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+    *        where "/" is the root of repository and &lt;id&gt; folders ID
+    * @param newPath - New path where to store the content. <br>
+    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+    *        where "/" is the root of repository and &lt;id&gt; folders ID
+    * @return Content updated (if ok), null (if error).
+    * @throws WcmContentException if the id exists in the repository (folder can not be updated, folder gets latest version of
+    *         their most recent item).
+    * @throws WcmContentIOException if any IO related problem with repository.
+    * @throws WcmContentSecurityException if user has not been granted to create content under specified location.
+    */
+   WcmFolder updateFolderLocation(String path, String newPath) throws WcmContentException,
+           WcmContentIOException, WcmContentSecurityException;
+
+    /**
+    *
+    * Renames an existing folder in the default repository. <br>
+    *
+    *
+    * @param path - Path where content is stored. <br>
+    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+    *        where "/" is the root of repository and &lt;id&gt; folders ID
+    * @param locale - Locale under content is stored.
+    * @return Content updated (if ok), null (if error).
+    * @throws WcmContentException if the id exists in the repository (folder can not be updated, folder gets latest version of
+    *         their most recent item).
+    * @throws WcmContentIOException if any IO related problem with repository.
+    * @throws WcmContentSecurityException if user has not been granted to create content under specified location.
+    */
+   WcmFolder updateFolderName(String path, String locale, String newName) throws WcmContentException, WcmContentIOException,
+           WcmContentSecurityException;
+
+   /**
+    *
+    * Renames an existing folder in the default repository. <br>
+    * It will retrieve content from default locale.
+    *
+    * @param path - Path where content is stored. <br>
+    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+    *        where "/" is the root of repository and &lt;id&gt; folders ID
+    * @return Content updated (if ok), null (if error).
+    * @throws WcmContentException if the id exists in the repository (folder can not be updated, folder gets latest version of
+    *         their most recent item).
+    * @throws WcmContentIOException if any IO related problem with repository.
+    * @throws WcmContentSecurityException if user has not been granted to create content under specified location.
+    */
+   WcmFolder updateFolderName(String path, String newName) throws WcmContentException, WcmContentIOException,
+           WcmContentSecurityException;
 
     /**
      *
-     * Updates new file resource in the default repository.
+     * Updates new file resource in the default repository. <br>
      *
-     * @param id - Key under which to store the resource.
-     * @param locale - Locale under content is stored.
-     * @param path - Location where to store the content. <br>
+     * @param path - Location where content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
-     * @param contentType - ContentType's file.
+     * @param locale - Locale under content is stored.
+     * @param mimeType - MimeType's file.
      * @param size - Size's file.
      * @param fileName - Name's file.
      * @param content - Source of the file.
@@ -203,13 +311,32 @@ public interface WcmContentService {
      * @throws WcmContentIOException if any IO related problem with repository.
      * @throws WcmContentSecurityException if user has not been granted to create content under specified location.
      */
-    WcmBinaryObject updateBinaryContent(String path, String locale, String contentType, long size, String fileName,
+    WcmBinaryObject updateBinaryContent(String path, String locale, String mimeType, long size, String fileName,
             InputStream content) throws WcmContentException, WcmContentIOException, WcmContentSecurityException;
+
+    /**
+    *
+    * Updates new file resource in the default repository.
+    *
+    * @param path - Location where content is stored. <br>
+    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+    *        where "/" is the root of repository and &lt;id&gt; folders ID
+    * @param mimeType - ContentType's file.
+    * @param size - Size's file.
+    * @param fileName - Name's file.
+    * @param content - Source of the file.
+    * @return Content updated (if ok), null (if error).
+    * @throws WcmContentException if the id doesn't exist in the repository
+    * @throws WcmContentIOException if any IO related problem with repository.
+    * @throws WcmContentSecurityException if user has not been granted to create content under specified location.
+    */
+   WcmBinaryObject updateBinaryContent(String path, String mimeType, long size, String fileName,
+           InputStream content) throws WcmContentException, WcmContentIOException, WcmContentSecurityException;
 
     /**
      * Deletes content from a specified path. <br>
      *
-     * @param path - PAth where the content is stored. <br>
+     * @param path - Path where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
      * @param locale - Locale version of the content to remove.
@@ -218,7 +345,8 @@ public interface WcmContentService {
      * @throws WcmContentIOException if any IO related problem with repository.
      * @throws WcmContentSecurityException if user has not been granted to modify content under specified location.
      */
-    String deleteContent(String path, String locale) throws WcmContentException, WcmContentIOException, WcmContentSecurityException;
+    String deleteContent(String path, String locale) throws WcmContentException, WcmContentIOException,
+            WcmContentSecurityException;
 
     /**
      *
@@ -241,6 +369,25 @@ public interface WcmContentService {
             WcmContentIOException, WcmContentSecurityException;
 
     /**
+    *
+    * Creates new Category in the repository under default locale. <br />
+    * Categories can be organized in a hierarchical tree of categories parents and children. <br />
+    * An admin user can organize content in categories. <br />
+    *
+    * @param id - Category id.
+    * @param description - Category description.
+    * @param categoryPath - Path where the category is stored. <br>
+    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+    *        where "/" is the root of repository and &lt;id&gt; folders ID
+    * @return Category created (if ok), null (if error).
+    * @throws WcmContentException if the id exists (categories are not versionable items).
+    * @throws WcmContentIOException if any IO related problem with repository.
+    * @throws WcmContentSecurityException if user has not been granted to create categories.
+    */
+   WcmCategory createCategory(String id, String description, String categoryPath) throws WcmContentException,
+           WcmContentIOException, WcmContentSecurityException;
+
+    /**
      *
      * Updates existing Category in the repository. <br>
      * Categories can be organized in a hierarchical tree of categories parents and children. <br />
@@ -260,6 +407,24 @@ public interface WcmContentService {
             WcmContentIOException, WcmContentSecurityException;
 
     /**
+    *
+    * Updates existing Category in the repository under default locale. <br>
+    * Categories can be organized in a hierarchical tree of categories parents and children. <br />
+    * An admin user can organize content in categories. <br />
+    *
+    * @param categoryPath - Path where the category is stored. <br>
+    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+    *        where "/" is the root of repository and &lt;id&gt; folders ID
+    * @param description - Category description.
+    * @return Category created (if ok), null (if error).
+    * @throws WcmContentException if the categoryLocation doesn't exist
+    * @throws WcmContentIOException if any IO related problem with repository.
+    * @throws WcmContentSecurityException if user has not been granted to create categories.
+    */
+   WcmCategory updateCategoryDescription(String categoryPath, String description) throws WcmContentException,
+           WcmContentIOException, WcmContentSecurityException;
+
+    /**
      *
      * Updates an existing Category into a new category path. <br>
      *
@@ -276,6 +441,21 @@ public interface WcmContentService {
     WcmCategory updateCategoryLocation(String categoryPath, String locale, String newPath) throws WcmContentException,
             WcmContentIOException, WcmContentSecurityException;
 
+    /**
+    *
+    * Updates an existing Category into a new category path under default locale. <br>
+    *
+    * @param categoryPath - Path where the category is stored. <br>
+    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+    *        where "/" is the root of repository and &lt;id&gt; folders ID
+    * @param newPath - New path where category will be moved
+    * @return Category updated
+    * @throws WcmContentException if the categoryLocation doesn't exist.
+    * @throws WcmContentIOException if any IO related problem with repository.
+    * @throws WcmContentSecurityException if user has not been granted to create categories.
+    */
+   WcmCategory updateCategoryLocation(String categoryPath, String newPath) throws WcmContentException,
+           WcmContentIOException, WcmContentSecurityException;
 
     /**
      *
@@ -292,6 +472,22 @@ public interface WcmContentService {
      */
     List<WcmCategory> getCategories(String categoryPath, String locale) throws WcmContentException, WcmContentIOException,
             WcmContentSecurityException;
+
+    /**
+    *
+    * Get all categories for a specific path and default locale.
+    *
+    * @param categoryPath - Path where the category is stored. <br>
+    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+    *        where "/" is the root of repository and &lt;id&gt; folders ID
+    * @param locale - Locale of category
+    * @return List of categories
+    * @throws WcmContentException
+    * @throws WcmContentIOException
+    * @throws WcmContentSecurityException
+    */
+   List<WcmCategory> getCategories(String categoryPath) throws WcmContentException, WcmContentIOException,
+           WcmContentSecurityException;
 
     /**
      *
@@ -321,9 +517,10 @@ public interface WcmContentService {
 
     /**
      *
-     * Deletes a Category from repository.
+     * Deletes a Category from repository for a specific locale.
      *
      * @param categoryPath - Category path.
+     * @param locale - Category locale.
      * @return parent Category.
      * @throws WcmContentException if category has been asigned to Content.
      * @throws WcmContentIOException if any IO related problem with repository.
@@ -350,6 +547,22 @@ public interface WcmContentService {
             WcmContentIOException, WcmContentSecurityException;
 
     /**
+    *
+    * Get Content filtered by categories under default locale. <br>
+    *
+    * @param categories - List of Categories to filter Content.
+    * @param path - Filter for location. Method will search under specified path. "/" for whole repository. <br>
+    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+    *        where "/" is the root of repository and &lt;id&gt; folders ID
+    * @return List of Content.
+    * @throws WcmContentException if location it doesn's exist
+    * @throws WcmContentIOException if any IO related problem with repository.
+    * @throws WcmContentSecurityException if user has not been granted to create categories.
+    */
+   List<WcmObject> getContent(List<WcmCategory> categories, String path) throws WcmContentException,
+           WcmContentIOException, WcmContentSecurityException;
+
+    /**
      *
      * Creates a comment under the specified Content path. <br>
      *
@@ -363,8 +576,25 @@ public interface WcmContentService {
      * @throws WcmContentIOException if any IO related problem with repository.
      * @throws WcmContentSecurityException if user has not been granted to create comments.
      */
-    WcmObject createContentComment(String path, String locale, String comment) throws WcmContentException, WcmContentIOException,
-            WcmContentSecurityException;
+    WcmObject createContentComment(String path, String locale, String comment) throws WcmContentException,
+            WcmContentIOException, WcmContentSecurityException;
+
+    /**
+    *
+    * Creates a comment under the specified Content path under default locale. <br>
+    *
+    * @param path - Path where the content is stored. <br>
+    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+    *        where "/" is the root of repository and &lt;id&gt; folders ID
+    * @param locale - Locale to add comment
+    * @param comment - Comment to add
+    * @return Content with comment updated.
+    * @throws WcmContentException if content doesn't exist.
+    * @throws WcmContentIOException if any IO related problem with repository.
+    * @throws WcmContentSecurityException if user has not been granted to create comments.
+    */
+   WcmObject createContentComment(String path, String comment) throws WcmContentException,
+           WcmContentIOException, WcmContentSecurityException;
 
     /**
      *
@@ -380,8 +610,24 @@ public interface WcmContentService {
      * @throws WcmContentIOException if any IO related problem with repository.
      * @throws WcmContentSecurityException if user has not been granted to create comments.
      */
-    WcmObject deleteContentComment(String path, String locale, String idComment) throws WcmContentException, WcmContentIOException,
-            WcmContentSecurityException;
+    WcmObject deleteContentComment(String path, String locale, String idComment) throws WcmContentException,
+            WcmContentIOException, WcmContentSecurityException;
+
+    /**
+    *
+    * Removes a comment under the specified Content path under default locale. <br>
+    *
+    * @param path - Path where the content is stored. <br>
+    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+    *        where "/" is the root of repository and &lt;id&gt; folders ID
+    * @param comment - Comment to add
+    * @return Content with comment updated.
+    * @throws WcmContentException if content doesn't exist.
+    * @throws WcmContentIOException if any IO related problem with repository.
+    * @throws WcmContentSecurityException if user has not been granted to create comments.
+    */
+   WcmObject deleteContentComment(String path, String idComment) throws WcmContentException,
+           WcmContentIOException, WcmContentSecurityException;
 
     /**
      *
@@ -394,6 +640,7 @@ public interface WcmContentService {
      * @param path - Path where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
+     * @param locale - Locale where property is stored
      * @param name - Name of property
      * @param value - Value
      * @return Content (default locale) with properties updated.
@@ -405,6 +652,24 @@ public interface WcmContentService {
             WcmContentIOException, WcmContentSecurityException;
 
     /**
+    *
+    * Creates a property in the form {KEY}/VALUE to a Content. <br>
+    * This property is stored under default locale. <br>
+    *
+    * @param path - Path where the content is stored. <br>
+    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+    *        where "/" is the root of repository and &lt;id&gt; folders ID
+    * @param name - Name of property
+    * @param value - Value
+    * @return Content (default locale) with properties updated.
+    * @throws WcmContentException if content doesn't exist.
+    * @throws WcmContentIOException if any IO related problem with repository.
+    * @throws WcmContentSecurityException if user has not been granted to create properties.
+    */
+   WcmObject createContentProperty(String path, String name, String value) throws WcmContentException,
+           WcmContentIOException, WcmContentSecurityException;
+
+    /**
      *
      * Modifies a property in the form {KEY,LOCALE}/VALUE to a Content. <br>
      * Properties are specific for each locale. <br>
@@ -412,6 +677,7 @@ public interface WcmContentService {
      * @param path - Path where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
+     * @param locale - Locale where property is stored
      * @param name - Name of property
      * @param value - Value
      * @return Content (default locale) with properties updated.
@@ -423,21 +689,56 @@ public interface WcmContentService {
             WcmContentIOException, WcmContentSecurityException;
 
     /**
+    *
+    * Modifies a property in the form {KEY}/VALUE to a Content. <br>
+    * This property is stored under default locale. <br>
+    *
+    * @param path - Path where the content is stored. <br>
+    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+    *        where "/" is the root of repository and &lt;id&gt; folders ID
+    * @param name - Name of property
+    * @param value - Value
+    * @return Content (default locale) with properties updated.
+    * @throws WcmContentException if content doesn't exist or property doesn't exist.
+    * @throws WcmContentIOException if any IO related problem with repository.
+    * @throws WcmContentSecurityException if user has not been granted to create properties.
+    */
+   WcmObject updateContentProperty(String path, String name, String value) throws WcmContentException,
+           WcmContentIOException, WcmContentSecurityException;
+
+    /**
      *
      * Deletes a property in the form {KEY,LOCALE}/VALUE to a Content. <br>
-     * Properties are shared between locales of same Content. <br>
+     * Properties are specific for each locale. <br>
      *
      * @param path - Path where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
      * @param name - Name of property
-     * @return Content (default locale) with properties updated.
+     * @return Content with properties updated.
      * @throws WcmContentException if content doesn't exist or property doesn't exist.
      * @throws WcmContentIOException if any IO related problem with repository.
      * @throws WcmContentSecurityException if user has not been granted to create properties.
      */
     WcmObject deleteContentProperty(String path, String locale, String name) throws WcmContentException, WcmContentIOException,
             WcmContentSecurityException;
+
+    /**
+    *
+    * Deletes a property in the form {KEY}/VALUE to a Content. <br>
+    * This property is deleted from default locale. <br>
+    *
+    * @param path - Path where the content is stored. <br>
+    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+    *        where "/" is the root of repository and &lt;id&gt; folders ID
+    * @param name - Name of property
+    * @return Content (default locale) with properties updated.
+    * @throws WcmContentException if content doesn't exist or property doesn't exist.
+    * @throws WcmContentIOException if any IO related problem with repository.
+    * @throws WcmContentSecurityException if user has not been granted to create properties.
+    */
+   WcmObject deleteContentProperty(String path, String name) throws WcmContentException, WcmContentIOException,
+           WcmContentSecurityException;
 
     /**
      *
@@ -462,6 +763,7 @@ public interface WcmContentService {
      * @param path - Path where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
+     * @param locale - Locale of the content returned.
      * @param principal - Principal of ACE.
      * @param permission - Type of permission for this principal.
      * @return Content (default locale) with ACL updated.
@@ -471,6 +773,39 @@ public interface WcmContentService {
      */
     WcmObject createContentAce(String path, String locale, String name, WcmPrincipal.PrincipalType principal,
             WcmAce.PermissionType permission) throws WcmContentException, WcmContentIOException, WcmContentSecurityException;
+
+    /**
+    *
+    * Adds an authorization to a specific content. <br>
+    *
+    * in org.gatein.wcm a Principal can represent: <br>
+    * - A user. <br>
+    * - A group. <br>
+    * - A specific role in specific group. <br>
+    * - A specific role in whatever group. <br>
+    * <br>
+    * An WcmAce represents a link between a Principal and their authorization rights. <br>
+    * We define the following permissions: <br>
+    * - NONE: No access to the content. <br>
+    * - READ: Access to the content for read. <br>
+    * - COMMENTS: Access to the content for read and add comments. <br>
+    * - WRITE: Access to the content to modify the content but it can not delete it, only versioning. <br>
+    * - ALL: Principal can delete content. <br>
+    * <br>
+    * All WcmAcl and WcmAce applies to all locale version of the content. <br>
+    *
+    * @param path - Path where the content is stored. <br>
+    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+    *        where "/" is the root of repository and &lt;id&gt; folders ID
+    * @param principal - Principal of ACE.
+    * @param permission - Type of permission for this principal.
+    * @return Content (default locale) with ACL updated.
+    * @throws WcmContentException if content doesn't exist or property doesn't exist.
+    * @throws WcmContentIOException if any IO related problem with repository.
+    * @throws WcmContentSecurityException if user has not been granted to add ACLs.
+    */
+   WcmObject createContentAce(String path, String name, WcmPrincipal.PrincipalType principal,
+           WcmAce.PermissionType permission) throws WcmContentException, WcmContentIOException, WcmContentSecurityException;
 
     /**
      *
@@ -495,6 +830,7 @@ public interface WcmContentService {
      * @param path - Path where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
+     * @param locale - Locale of the content returned.
      * @param principal - Principal of ACE.
      * @return Content (default locale) with ACL updated.
      * @throws WcmContentException if content doesn't exist or property doesn't exist.
@@ -503,6 +839,38 @@ public interface WcmContentService {
      */
     WcmObject deleteContentAce(String path, String locale, String name) throws WcmContentException, WcmContentIOException,
             WcmContentSecurityException;
+
+    /**
+    *
+    * Remove an authorization to a specific content. <br>
+    *
+    * in org.gatein.wcm a Principal can represent: <br>
+    * - A user. <br>
+    * - A group. <br>
+    * - A specific role in specific group. <br>
+    * - A specific role in whatever group. <br>
+    * <br>
+    * An ACE represents a link between a Principal and their authorization rights. <br>
+    * We define the following permissions: <br>
+    * - NONE: No access to the content. <br>
+    * - READ: Access to the content for read. <br>
+    * - COMMENTS: Access to the content for read and add comments. <br>
+    * - WRITE: Access to the content to modify the content but it can not delete it, only versioning. <br>
+    * - ALL: Principal can delete content. <br>
+    * <br>
+    * All ACL and ACE applies to all locale version of the content. <br>
+    *
+    * @param path - Path where the content is stored. <br>
+    *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
+    *        where "/" is the root of repository and &lt;id&gt; folders ID
+    * @param principal - Principal of ACE.
+    * @return Content (default locale) with ACL updated.
+    * @throws WcmContentException if content doesn't exist or property doesn't exist.
+    * @throws WcmContentIOException if any IO related problem with repository.
+    * @throws WcmContentSecurityException if user has not been granted to add ACLs.
+    */
+   WcmObject deleteContentAce(String path, String name) throws WcmContentException, WcmContentIOException,
+           WcmContentSecurityException;
 
     /**
      *
@@ -535,39 +903,11 @@ public interface WcmContentService {
 
     /**
      *
-     * Retrieves a list of content from a specified path. <br>
-     * Also specify specific version to retrieve.
-     *
-     * @param location - Location where the content is stored. <br>
-     *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
-     *        where "/" is the root of repository and &lt;id&gt; folders ID
-     * @param locale - Locale under content is stored.
-     * @param version - Content version to retrieve.
-     * @return List of content under specified location.
-     * @throws WcmContentException if content doesn't exist in the location.
-     * @throws WcmContentIOException if any IO related problem with repository.
-     * @throws WcmContentSecurityException if user has not been granted to access content under specified location.
-     */
-    WcmObject getContent(String path, String locale, String version) throws WcmContentException, WcmContentIOException,
-            WcmContentSecurityException;
-
-    /**
-     *
      * Removes content from a specified path and version. <br>
-     * Differences between: <br>
-     * <p>
-     * <b>deleteContent(String, String)</b>
-     * <li>Remove all versions for a given locale.
-     * </p>
-     * <p>
-     * <b>deleteContentVersion(String, String)</b>
-     * <li>Remove just version specified for a given locale.
-     * </p>
      *
      * @param path - Path where the content is stored. <br>
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
-     * @param locale - Locale version of the content to remove.
      * @param version - Content version to remove.
      * @return Current location of the content, or parent location if all locales were removed.
      * @throws WcmContentException if content doesn't exist
