@@ -1,70 +1,100 @@
+/*
+ * JBoss, a division of Red Hat
+ * Copyright 2013, Red Hat Middleware, LLC, and individual
+ * contributors as indicated by the @authors tag. See the
+ * copyright.txt in the distribution for a full listing of
+ * individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.gatein.wcm.impl.services.commands;
 
+import javax.jcr.AccessDeniedException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import org.gatein.wcm.api.model.content.WcmObject;
-import org.gatein.wcm.api.model.metadata.WcmCategory;
-import org.gatein.wcm.api.model.security.WcmUser;
-import org.gatein.wcm.api.services.WcmContentService;
-import org.gatein.wcm.api.services.exceptions.WcmContentException;
-import org.gatein.wcm.api.services.exceptions.WcmContentIOException;
-import org.gatein.wcm.api.services.exceptions.WcmContentSecurityException;
+import org.gatein.wcm.api.model.content.WCMObject;
+import org.gatein.wcm.api.model.security.WCMUser;
+import org.gatein.wcm.api.services.WCMContentService;
+import org.gatein.wcm.api.services.exceptions.WCMContentException;
+import org.gatein.wcm.api.services.exceptions.WCMContentIOException;
+import org.gatein.wcm.api.services.exceptions.WCMContentSecurityException;
 import org.gatein.wcm.impl.jcr.JcrMappings;
-import org.gatein.wcm.impl.model.WcmContentFactory;
+import org.gatein.wcm.impl.model.WCMContentFactory;
 import org.jboss.logging.Logger;
 
+/**
+ * All delete* methods for WCM Content should be placed here.
+ * <p>
+ *
+ * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
+ *
+ */
 public class DeleteCommand {
 
     private static final Logger log = Logger.getLogger(DeleteCommand.class);
 
     Session jcrSession = null;
-    WcmUser logged = null;
-    WcmContentFactory factory = null;
+    WCMUser logged = null;
+    WCMContentFactory factory = null;
     JcrMappings jcr = null;
 
-    public DeleteCommand(Session session, WcmUser user) throws WcmContentIOException {
+    public DeleteCommand(Session session, WCMUser user) throws WCMContentIOException {
         jcrSession = session;
         logged = user;
         jcr = new JcrMappings(jcrSession, logged);
-        factory = new WcmContentFactory(jcr, logged);
+        factory = new WCMContentFactory(jcr, logged);
         jcr.setFactory(factory);
     }
 
     /**
-     *
-     * Removes content from a specified location. <br>
-     * All locales and versions are removed. <br>
-     *
+     * @see {@link WCMContentService#deleteContent(String)}
      */
-    public String deleteContent(String location) throws WcmContentException, WcmContentIOException, WcmContentSecurityException {
+    public String deleteContent(String path) throws WCMContentException, WCMContentIOException, WCMContentSecurityException {
 
         log.debug("deleteContent()");
 
         // Check null parameters
-        if (location == null || "".equals(location)) {
-            throw new WcmContentException("Parameter location cannot be null or empty");
+        if (path == null || "".equals(path)) {
+            throw new WCMContentException("Parameter path cannot be null or empty");
         }
 
         // Check if the current JCR Session is valid
         if (!jcr.checkSession())
-            throw new WcmContentIOException("JCR Session is null");
+            throw new WCMContentIOException("JCR Session is null");
 
-        if ("/".equals(location))
-            throw new WcmContentException("Root location cannot be deteled by API");
+        if ("/".equals(path))
+            throw new WCMContentException("Root path cannot be deteled by API");
 
-        // Check if the location specified exists in the JCR Repository/Workspace
-        if (!jcr.checkLocation(location))
-            throw new WcmContentException("Location: " + location + " doesn't exist for deleteContet() operation. ");
+        // Check if the path specified exists in the JCR Repository/Workspace
+        try {
+            if (!jcr.checkPath(path))
+                throw new WCMContentException("Path: " + path + " doesn't exist for deleteContent() operation. ");
+        } catch (AccessDeniedException e) {
+            throw new WCMContentSecurityException("User: " + logged.getUserName() + " has not READ rights in path: " + path);
+        }
 
         // Check if user has rights to access - delete operations must be performed by an admin
-        if (!jcr.checkUserWriteACL(location))
-            throw new WcmContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: "
-                    + location);
+        if (!jcr.checkUserWriteACL(path))
+            throw new WCMContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: "
+                    + path);
 
         // Delete a node
         try {
-            String parent = jcr.deleteNode(location);
+            String parent = jcr.deleteNode(path);
             return parent;
         } catch (RepositoryException e) {
             jcr.checkJCRException(e);
@@ -73,47 +103,45 @@ public class DeleteCommand {
     }
 
     /**
-     * @see {@link WcmContentService#deleteContent(String, String)}
+     * @see {@link WCMContentService#deleteContentVersion(String, String)}
      */
-    public String deleteContent(String location, String locale) throws WcmContentException, WcmContentIOException,
-            WcmContentSecurityException {
+    public String deleteContentVersion(String path, String version) throws WCMContentException, WCMContentIOException,
+            WCMContentSecurityException {
 
-        log.debug("deleteContent()");
+        log.debug("deleteContentVersion()");
 
         // Check null parameters
-        if (location == null || "".equals(location)) {
-            throw new WcmContentException("Parameter location cannot be null or empty");
+        if (path == null || "".equals(path)) {
+            throw new WCMContentException("Parameter path cannot be null or empty");
         }
-        if (locale == null || "".equals(locale)) {
-            throw new WcmContentException("Parameter locale cannot be null or empty");
+        if (version == null || "".equals(version)) {
+            throw new WCMContentException("Parameter locale cannot be null or empty");
         }
 
         // Check if the current JCR Session is valid
         if (!jcr.checkSession())
-            throw new WcmContentIOException("JCR Session is null");
+            throw new WCMContentIOException("JCR Session is null");
 
-        if ("/".equals(location))
-            throw new WcmContentException("Root location cannot be deteled by API");
+        if ("/".equals(path))
+            throw new WCMContentException("Root path cannot be deteled by API");
 
-        // Check if the location specified exists in the JCR Repository/Workspace
-        if (!jcr.checkLocation(location, locale))
-            throw new WcmContentException("Location: " + location + " with locale: " + locale
-                    + " doesn't exist for deleteContent() operation. ");
-
-        // If we try to delete a folder we invoke the generic deleteContent() method
-        if (!jcr.checkLocaleContent(location)) {
-            return deleteContent(location);
+        // Check if the path specified exists in the JCR Repository/Workspace
+        try {
+            if (!jcr.checkPath(path))
+                throw new WCMContentException("Path: " + path + " doesn't exist for deleteContentVersion() operation. ");
+        } catch (AccessDeniedException e) {
+            throw new WCMContentSecurityException("User: " + logged.getUserName() + " has not READ rights in path: " + path);
         }
 
         // Check if user has rights to access - delete operations must be performed by an admin
-        if (!jcr.checkUserWriteACL(location))
-            throw new WcmContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: "
-                    + location);
+        if (!jcr.checkUserWriteACL(path))
+            throw new WCMContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in path: "
+                    + path);
 
         // Delete a node
         try {
-            String parent = jcr.deleteNode(location, locale);
-            return parent;
+            jcr.jcrDeleteVersion(path, version);
+            return path;
         } catch (RepositoryException e) {
             jcr.checkJCRException(e);
         }
@@ -121,212 +149,209 @@ public class DeleteCommand {
     }
 
     /**
-     * @see {@link WcmContentService#deleteCategory(String)}
+     * @see {@link WCMContentService#deleteCategory(String)}
      */
-    public void deleteCategory(String categoryPath) throws WcmContentException, WcmContentIOException, WcmContentSecurityException {
+    public void deleteCategory(String categoryPath) throws WCMContentException, WCMContentIOException, WCMContentSecurityException {
         log.debug("deleteCategory()");
 
         // Check null parameters
         if (categoryPath == null || "".equals(categoryPath)) {
-            throw new WcmContentException("Parameter categoryLocation cannot be null or empty");
+            throw new WCMContentException("Parameter categoryLocation cannot be null or empty");
         }
 
         // Check if the current JCR Session is valid
         if (!jcr.checkSession())
-            throw new WcmContentIOException("JCR Session is null");
+            throw new WCMContentIOException("JCR Session is null");
 
         if ("/".equals(categoryPath))
-            throw new WcmContentException("Cannot delete root categories");
+            throw new WCMContentException("Cannot delete root categories");
 
         // Check if the location specified exists in the JCR Repository/Workspace
-        if (!jcr.checkLocation("/__categories" + categoryPath))
-            throw new WcmContentException("Location: " + categoryPath + " doesn't exist for deleteCategory() operation. ");
+        try {
+            if (!jcr.checkCategoryPath(categoryPath))
+                throw new WCMContentException("Path: " + categoryPath + " doesn't exist for deleteCategory() operation. ");
+        } catch (AccessDeniedException e) {
+            throw new WCMContentSecurityException("User: " + logged.getUserName() + " has not READ rights in categories. ");
+        }
+
 
         if (jcr.checkCategoryReferences(categoryPath))
-            throw new WcmContentException("Category in location: " + categoryPath + " has references.");
+            throw new WCMContentException("Category in path: " + categoryPath + " has references.");
 
         // Check if user has rights to access
-        if (!jcr.checkUserAdminACL("/__categories"))
-            throw new WcmContentSecurityException("User: " + logged.getUserName() + " has not ADMIN rights in location: "
-                    + "/__categories");
+        if (!jcr.checkUserAdminCategories())
+            throw new WCMContentSecurityException("User: " + logged.getUserName() + " has not ADMIN rights in categories");
 
         try {
-            jcr.deleteCategory("/__categories" + categoryPath);
+            jcr.deleteCategory(categoryPath);
         } catch (RepositoryException e) {
             jcr.checkJCRException(e);
         }
     }
 
     /**
-     *
-     * Deletes a Category from repository.
-     *
+     * @see {@link WCMContentService#deleteCategory(String, String)}
      */
-    public WcmCategory deleteCategory(String categoryLocation, String locale) throws WcmContentException, WcmContentIOException,
-            WcmContentSecurityException {
+    public void deleteCategory(String categoryPath, String locale) throws WCMContentException, WCMContentIOException,
+            WCMContentSecurityException {
         log.debug("deleteCategory()");
 
         // Check null parameters
-        if (categoryLocation == null || "".equals(categoryLocation)) {
-            throw new WcmContentException("Parameter location cannot be null or empty");
+        if (categoryPath == null || "".equals(categoryPath)) {
+            throw new WCMContentException("Parameter categoryPath cannot be null or empty");
         }
         if (locale == null || "".equals(locale)) {
-            throw new WcmContentException("Parameter locale cannot be null or empty");
+            throw new WCMContentException("Parameter locale cannot be null or empty");
         }
 
         // Check if the current JCR Session is valid
         if (!jcr.checkSession())
-            throw new WcmContentIOException("JCR Session is null");
+            throw new WCMContentIOException("JCR Session is null");
 
-        if ("/".equals(categoryLocation))
-            throw new WcmContentException("Cannot delete root categories");
+        if ("/".equals(categoryPath))
+            throw new WCMContentException("Cannot delete root categories");
 
         // Check if the location specified exists in the JCR Repository/Workspace
-        if (!jcr.checkLocation("/__categories" + categoryLocation, locale))
-            throw new WcmContentException("Location: " + categoryLocation + " and locale " + locale
-                    + " doesn't exist for addContentCategory() operation. ");
+        try {
+            if (!jcr.checkCategoryPath(categoryPath))
+                throw new WCMContentException("Path: " + categoryPath
+                        + " doesn't exist for deleteCategory() operation. ");
+        } catch (AccessDeniedException e) {
+            throw new WCMContentSecurityException("User: " + logged.getUserName() + " has not READ rights in categories. ");
+        }
 
-        if (jcr.checkCategoryReferences(categoryLocation))
-            throw new WcmContentException("Category in location: " + categoryLocation + " has references.");
+        if (jcr.checkCategoryReferences(categoryPath))
+            throw new WCMContentException("Category in location: " + categoryPath + " has references.");
 
         // Check if user has rights to access
-        if (!jcr.checkUserAdminACL("/__categories"))
-            throw new WcmContentSecurityException("User: " + logged.getUserName() + " has not ADMIN rights in location: "
-                    + "/__categories");
+        if (!jcr.checkUserAdminCategories())
+            throw new WCMContentSecurityException("User: " + logged.getUserName() + " has not ADMIN rights in categories.");
 
         try {
-            jcr.deleteCategory("/__categories" + categoryLocation, locale);
-            String parent = jcr.parent(categoryLocation);
-            if ("/".contains(parent))
-                return null;
-            return factory.getCategory(jcr.parent(categoryLocation), locale);
+            jcr.deleteCategory(categoryPath, locale);
         } catch (RepositoryException e) {
             jcr.checkJCRException(e);
         }
-
-        return null;
     }
 
     /**
-     *
-     * Removes a comment under the specified Content location. <br>
-     *
+     * @see {@link WCMContentService#deleteCategory(String, String)}
      */
-    public WcmObject deleteContentComment(String location, String locale, String idComment) throws WcmContentException,
-            WcmContentIOException, WcmContentSecurityException {
+    public WCMObject deleteContentComment(String path, String idComment) throws WCMContentException,
+            WCMContentIOException, WCMContentSecurityException {
         log.debug("deleteContentComment()");
 
         // Check null parameters
-        if (location == null || "".equals(location)) {
-            throw new WcmContentException("Parameter location cannot be null or empty");
-        }
-        if (locale == null || "".equals(locale)) {
-            throw new WcmContentException("Parameter locale cannot be null or empty");
+        if (path == null || "".equals(path)) {
+            throw new WCMContentException("Parameter path cannot be null or empty");
         }
         if (idComment == null || "".equals(idComment)) {
-            throw new WcmContentException("Parameter comment cannot be null or empty");
+            throw new WCMContentException("Parameter comment cannot be null or empty");
         }
 
         // Check if the current JCR Session is valid
         if (!jcr.checkSession())
-            throw new WcmContentIOException("JCR Session is null");
+            throw new WCMContentIOException("JCR Session is null");
 
         // Check if the location specified exists in the JCR Repository/Workspace
-        if (!jcr.checkLocation(location))
-            throw new WcmContentException("Location: " + location + " doesn't exist for deleteContentComment() operation. ");
-
-        // Check if user has rights to access - delete operations must be performed by an admin
-        if (!jcr.checkUserWriteACL(location))
-            throw new WcmContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: "
-                    + location);
-
         try {
-            jcr.deleteContentComment(location, idComment);
-            return factory.getContent(location, locale);
-        } catch (RepositoryException e) {
-            jcr.checkJCRException(e);
+            if (!jcr.checkPath(path))
+                throw new WCMContentException("Path: " + path + " doesn't exist for deleteContentComment() operation. ");
+        } catch (AccessDeniedException e) {
+            throw new WCMContentSecurityException("User: " + logged.getUserName() + " has not READ rights in path: " + path);
         }
-
-        return null;
-    }
-
-    /**
-     *
-     * Deletes a property in the form KEY/VALUE to a Content. <br>
-     * Properties are shared between locales of same Content. <br>
-     *
-     */
-    public WcmObject deleteContentProperty(String location, String locale, String name) throws WcmContentException,
-            WcmContentIOException, WcmContentSecurityException {
-        log.debug("deleteContentProperty()");
-
-        // Check null parameters
-        if (location == null || "".equals(location)) {
-            throw new WcmContentException("Parameter location cannot be null or empty");
-        }
-        if (locale == null || "".equals(locale)) {
-            throw new WcmContentException("Parameter locale cannot be null or empty");
-        }
-        if (name == null || "".equals(name)) {
-            throw new WcmContentException("Parameter name cannot be null or empty");
-        }
-
-        // Check if the current JCR Session is valid
-        if (!jcr.checkSession())
-            throw new WcmContentIOException("JCR Session is null");
-
-        // Check if the location specified exists in the JCR Repository/Workspace
-        if (!jcr.checkLocation(location))
-            throw new WcmContentException("Location: " + location + " doesn't exist for deleteContentComment() operation. ");
-
-        // Check if user has rights to access - delete operations must be performed by an admin
-        if (!jcr.checkUserWriteACL(location))
-            throw new WcmContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in location: "
-                    + location);
-
-        try {
-            jcr.deleteContentProperty(location, locale, name);
-            return factory.getContent(location, locale);
-        } catch (RepositoryException e) {
-            jcr.checkJCRException(e);
-        }
-
-        return null;
-    }
-
-    /**
-     * @see {@link WcmContentService#deleteContentAce(String, String, String)}
-     */
-    public WcmObject deleteContentAce(String path, String locale, String name) throws WcmContentException, WcmContentIOException,
-            WcmContentSecurityException {
-
-        // Check null parameters
-        if (path == null || "".equals(path)) {
-            throw new WcmContentException("Parameter path cannot be null or empty");
-        }
-        if (locale == null || "".equals(locale)) {
-            throw new WcmContentException("Parameter locale cannot be null or empty");
-        }
-        if (name == null || "".equals(name)) {
-            throw new WcmContentException("Parameter name cannot be null or empty");
-        }
-
-        // Check if the current JCR Session is valid
-        if (!jcr.checkSession())
-            throw new WcmContentIOException("JCR Session is null");
-
-        // Check if the location specified exists in the JCR Repository/Workspace
-        if (!jcr.checkLocation(path))
-            throw new WcmContentException("Location: " + path + " doesn't exist for deleteContentComment() operation. ");
 
         // Check if user has rights to access - delete operations must be performed by an admin
         if (!jcr.checkUserWriteACL(path))
-            throw new WcmContentSecurityException("User: " + logged.getUserName() + " has not COMMENTS rights in location: "
+            throw new WCMContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in path: "
                     + path);
 
         try {
-            jcr.deleteContentAce(path, name);
-            return factory.getContent(path, locale);
+            jcr.deleteContentComment(path, idComment);
+            return factory.getContent(path);
+        } catch (RepositoryException e) {
+            jcr.checkJCRException(e);
+        }
+
+        return null;
+    }
+
+    /**
+     * @see {@link WCMContentService#deleteContentProperty(String, String)}
+     */
+    public WCMObject deleteContentProperty(String path, String name) throws WCMContentException,
+            WCMContentIOException, WCMContentSecurityException {
+        log.debug("deleteContentProperty()");
+
+        // Check null parameters
+        if (path == null || "".equals(path)) {
+            throw new WCMContentException("Parameter path cannot be null or empty");
+        }
+        if (name == null || "".equals(name)) {
+            throw new WCMContentException("Parameter name cannot be null or empty");
+        }
+
+        // Check if the current JCR Session is valid
+        if (!jcr.checkSession())
+            throw new WCMContentIOException("JCR Session is null");
+
+        // Check if the location specified exists in the JCR Repository/Workspace
+        try {
+            if (!jcr.checkPath(path))
+                throw new WCMContentException("Path: " + path + " doesn't exist for deleteContentProperty() operation. ");
+        } catch (AccessDeniedException e) {
+            throw new WCMContentSecurityException("User: " + logged.getUserName() + " has not READ rights in path: " + path);
+        }
+
+        // Check if user has rights to access - delete operations must be performed by an admin
+        if (!jcr.checkUserWriteACL(path))
+            throw new WCMContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in path: "
+                    + path);
+
+        try {
+            jcr.deleteContentProperty(path, name);
+            return factory.getContent(path);
+        } catch (RepositoryException e) {
+            jcr.checkJCRException(e);
+        }
+
+        return null;
+    }
+
+    /**
+     * @see {@link WCMContentService#deleteContentAce(String, String)}
+     */
+    public WCMObject deleteContentAce(String path, String principalId) throws WCMContentException, WCMContentIOException,
+            WCMContentSecurityException {
+
+        // Check null parameters
+        if (path == null || "".equals(path)) {
+            throw new WCMContentException("Parameter path cannot be null or empty");
+        }
+        if (principalId == null || "".equals(principalId)) {
+            throw new WCMContentException("Parameter principalId cannot be null or empty");
+        }
+
+        // Check if the current JCR Session is valid
+        if (!jcr.checkSession())
+            throw new WCMContentIOException("JCR Session is null");
+
+        // Check if the location specified exists in the JCR Repository/Workspace
+        try {
+            if (!jcr.checkPath(path))
+                throw new WCMContentException("Path: " + path + " doesn't exist for deleteContentAce() operation. ");
+        } catch (AccessDeniedException e) {
+            throw new WCMContentSecurityException("User: " + logged.getUserName() + " has not READ rights in path: " + path);
+        }
+
+        // Check if user has rights to access - delete operations must be performed by an admin
+        if (!jcr.checkUserWriteACL(path))
+            throw new WCMContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in path: "
+                    + path);
+
+        try {
+            jcr.deleteContentAce(path, principalId);
+            return factory.getContent(path);
         } catch (RepositoryException e) {
             jcr.checkJCRException(e);
         }

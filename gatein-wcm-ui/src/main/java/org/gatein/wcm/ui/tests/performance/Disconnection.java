@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.gatein.wcm.api.services.WcmContentService;
-import org.gatein.wcm.api.services.exceptions.WcmContentIOException;
+import org.gatein.wcm.api.services.WCMContentService;
+import org.gatein.wcm.api.services.exceptions.WCMContentIOException;
 import org.gatein.wcm.ui.Connect;
 import org.jboss.logging.Logger;
 
@@ -30,13 +30,13 @@ public class Disconnection extends HttpServlet {
         out.println("<html><head><title>GateIn WCM: DISCONNECT test</title></head><body>");
 
         Connect c = checkConnection(req);
-        WcmContentService cs = (WcmContentService)req.getSession().getAttribute("cs");
+        WCMContentService cs = (WCMContentService)req.getSession().getAttribute("cs");
         if (c != null && cs != null && !c.isConnected()) {
             try {
                 cs.closeSession();
                 req.getSession().setAttribute("connection", null);
                 req.getSession().setAttribute("cs", null);
-            } catch (WcmContentIOException e) {
+            } catch (WCMContentIOException e) {
                 log.error(e.getMessage());
                 out.println(e.getMessage());
                 e.printStackTrace();

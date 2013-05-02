@@ -334,9 +334,9 @@
       </cache-container>
     </subsystem>
     <subsystem xmlns="urn:jboss:domain:modeshape:1.0">
-      <repository name="sample">
+      <repository name="sample" security-domain="none">
         <authenticators>
-          <authenticator name="gatein-wcm-security" classname="org.gatein.wcm.impl.security.WcmModeShapeProvider" />
+          <authenticator name="gatein-wcm-security" classname="org.gatein.wcm.impl.security.WCMModeShapeProvider" />
         </authenticators>
         <!-- Using cache to storage index, once we can choose if we configure a store for index cache -->
         <cache-index-storage data-cache-name="index_data" cache-container="index_cache_container" />
@@ -428,7 +428,7 @@
     </subsystem>
     <subsystem xmlns="urn:jboss:domain:naming:1.1">
       <bindings>
-        <object-factory name="java:jboss/gatein-wcm" module="org.gatein.wcm.gatein-wcm-impl" class="org.gatein.wcm.impl.WcmServicesManager" />
+        <object-factory name="java:jboss/gatein-wcm" module="org.gatein.wcm.gatein-wcm-impl" class="org.gatein.wcm.impl.WCMServicesManager" />
       </bindings>
     </subsystem>
     <subsystem xmlns="urn:jboss:domain:osgi:1.2" activation="lazy">

@@ -1,17 +1,51 @@
+/*
+ * JBoss, a division of Red Hat
+ * Copyright 2013, Red Hat Middleware, LLC, and individual
+ * contributors as indicated by the @authors tag. See the
+ * copyright.txt in the distribution for a full listing of
+ * individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.gatein.wcm.impl.security;
 
-import org.gatein.wcm.api.services.WcmSecurityService;
-import org.gatein.wcm.api.services.exceptions.WcmContentIOException;
+import org.gatein.wcm.api.services.WCMSecurityService;
+import org.gatein.wcm.api.services.exceptions.WCMContentIOException;
 
+/**
+ *
+ * WCMSecurityFactory will be an abstraction to the underlying security implementation.
+ * <p>
+ * In future implementations should be read from configuration xml which is the default configuration available.
+ * <p>
+ * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
+ *
+ */
 public class WcmSecurityFactory {
 
-    private static WcmSecurityService securityInstance = null;
+    private static WCMSecurityService securityInstance = null;
 
-    // TODO This is only for dummy testing, this is a known bottleneck in a load test.
-    public static WcmSecurityService getSecurityService() throws WcmContentIOException {
+    /**
+     *
+     * @return Default WCMSecurityService available
+     * @throws WCMContentIOException
+     */
+    public static WCMSecurityService getSecurityService() throws WCMContentIOException {
         if (securityInstance == null)
             securityInstance = new DummySecurityService();
-
         return securityInstance;
     }
 

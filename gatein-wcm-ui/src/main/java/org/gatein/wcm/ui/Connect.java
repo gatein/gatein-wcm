@@ -9,9 +9,9 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
-import org.gatein.wcm.api.services.WcmRepositoryService;
-import org.gatein.wcm.api.services.exceptions.WcmContentIOException;
-import org.gatein.wcm.api.services.exceptions.WcmContentSecurityException;
+import org.gatein.wcm.api.services.WCMRepositoryService;
+import org.gatein.wcm.api.services.exceptions.WCMContentIOException;
+import org.gatein.wcm.api.services.exceptions.WCMContentSecurityException;
 import org.jboss.logging.Logger;
 
 @ManagedBean
@@ -69,21 +69,23 @@ public class Connect extends BaseBean implements Serializable {
     // Logic
 
     @Resource(mappedName = "java:jboss/gatein-wcm")
-    WcmRepositoryService repos;
+    WCMRepositoryService repos;
 
     // Connect to repository
     public void connect(ActionEvent event) {
         log.debug(event);
         log.info("Connecting to repository/workspace: " + repository + "/" + workspace + " with user/password: " + user + "/" + password);
         try {
-            repos.createContentSession(repository, workspace, user, password);
+            repos.setDefaultRepository(repository);
+            repos.setDefaultWorkspace(workspace);
+            repos.createContentSession(user, password);
             connected = true;
             msg("Connection OK");
-        } catch (WcmContentIOException ex) {
+        } catch (WCMContentIOException ex) {
             msg("Cannot connect with repository " + repository);
             log.error(ex.getMessage(), ex);
             connected = false;
-        } catch (WcmContentSecurityException ex) {
+        } catch (WCMContentSecurityException ex) {
             msg("User " + user + " incorrect for " + repository + "/" + workspace + "");
             log.warn("ContentSecurityException for " + user + " repository " + repository + " workspace " + workspace + ". Msg: " + ex.getMessage());
             connected = false;

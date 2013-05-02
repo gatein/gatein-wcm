@@ -9,13 +9,13 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 
-import org.gatein.wcm.api.model.content.WcmObject;
-import org.gatein.wcm.api.model.content.WcmFolder;
-import org.gatein.wcm.api.services.WcmContentService;
-import org.gatein.wcm.api.services.WcmRepositoryService;
-import org.gatein.wcm.api.services.exceptions.WcmContentException;
-import org.gatein.wcm.api.services.exceptions.WcmContentIOException;
-import org.gatein.wcm.api.services.exceptions.WcmContentSecurityException;
+import org.gatein.wcm.api.model.content.WCMFolder;
+import org.gatein.wcm.api.model.content.WCMObject;
+import org.gatein.wcm.api.services.WCMContentService;
+import org.gatein.wcm.api.services.WCMRepositoryService;
+import org.gatein.wcm.api.services.exceptions.WCMContentException;
+import org.gatein.wcm.api.services.exceptions.WCMContentIOException;
+import org.gatein.wcm.api.services.exceptions.WCMContentSecurityException;
 import org.gatein.wcm.ui.model.TreeContent;
 import org.jboss.logging.Logger;
 import org.richfaces.component.UITree;
@@ -68,30 +68,27 @@ public class Tree extends BaseBean {
     // Logic
 
     @Resource(mappedName = "java:jboss/gatein-wcm")
-    WcmRepositoryService repos;
+    WCMRepositoryService repos;
 
 
     private void queryRoot() {
         if (connect == null || !connect.isConnected()) return;
         try {
-            WcmContentService cs = repos.createContentSession(connect.getRepository(), connect.getWorkspace(), connect.getUser(), connect.getPassword());
-            WcmObject rootContent = cs.getContent("/", getLocale());
+            WCMContentService cs = repos.createContentSession(connect.getUser(), connect.getPassword());
+            WCMObject rootContent = null; // TODO cs.getContent("/", getLocale());
             root = new ArrayList<TreeContent>();
             // We don't show root node in the UI, only children
-            if (rootContent instanceof WcmFolder) {
-                WcmFolder f = (WcmFolder)rootContent;
-                for (WcmObject c : f.getChildren()) {
+            if (rootContent instanceof WCMFolder) {
+                WCMFolder f = (WCMFolder)rootContent;
+                for (WCMObject c : f.getChildren()) {
                     root.add(new TreeContent(c));
                 }
             }
-        } catch (WcmContentException e) {
-            msg("Cannot get root content from " + connect.getRepository() + "/" + connect.getWorkspace());
-            log.info("Cannot get root content from " + connect.getRepository() + "/" + connect.getWorkspace());
-        } catch (WcmContentIOException e) {
+        } catch (WCMContentIOException e) {
             msg("Cannot connect with repository " + connect.getRepository());
             log.error(e.getMessage(), e);
             connect.setConnected(false);
-        } catch (WcmContentSecurityException e) {
+        } catch (WCMContentSecurityException e) {
             msg("User " + connect.getUser() + " incorrect for " + connect.getRepository() + "/" + connect.getWorkspace() + "");
             log.warn("ContentSecurityException for " + connect.getUser() + " repository " + connect.getRepository() + " workspace " + connect.getWorkspace() + ". Msg: " + e.getMessage());
             connect.setConnected(false);

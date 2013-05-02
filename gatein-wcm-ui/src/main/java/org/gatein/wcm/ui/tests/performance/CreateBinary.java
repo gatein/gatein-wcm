@@ -18,11 +18,11 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.gatein.wcm.api.model.content.WcmObject;
-import org.gatein.wcm.api.services.WcmContentService;
-import org.gatein.wcm.api.services.exceptions.WcmContentException;
-import org.gatein.wcm.api.services.exceptions.WcmContentIOException;
-import org.gatein.wcm.api.services.exceptions.WcmContentSecurityException;
+import org.gatein.wcm.api.model.content.WCMObject;
+import org.gatein.wcm.api.services.WCMContentService;
+import org.gatein.wcm.api.services.exceptions.WCMContentException;
+import org.gatein.wcm.api.services.exceptions.WCMContentIOException;
+import org.gatein.wcm.api.services.exceptions.WCMContentSecurityException;
 import org.gatein.wcm.ui.Connect;
 import org.jboss.logging.Logger;
 
@@ -67,7 +67,7 @@ public class CreateBinary extends HttpServlet {
         out.println("<html><head><title>GateIn WCM: CREATE BINARY test</title></head><body>");
 
         Connect c = checkConnection(req);
-        WcmContentService cs = (WcmContentService)req.getSession().getAttribute("cs");
+        WCMContentService cs = (WCMContentService)req.getSession().getAttribute("cs");
         if (c == null || cs == null || !c.isConnected()) {
             out.println("<p>WARNING: it's needed to be connected to use this test</p>");
         } else {
@@ -107,19 +107,19 @@ public class CreateBinary extends HttpServlet {
                 e.printStackTrace();
             }
 
-            WcmObject _c = null;
+            WCMObject _c = null;
             try {
                 if (id != null && locale != null && location != null && file != null)
-                    _c = cs.createBinaryContent(id, locale, location, file.getContentType(), file.getSize(), file.getName(), file.getInputStream());
-            } catch (WcmContentException e) {
+                    _c = cs.createBinaryDocument(id, locale, location, file.getContentType(), file.getSize(), file.getName(), file.getInputStream());
+            } catch (WCMContentException e) {
                 log.error(e.getMessage());
                 out.println(e.getMessage());
                 e.printStackTrace();
-            } catch (WcmContentIOException e) {
+            } catch (WCMContentIOException e) {
                 log.error(e.getMessage());
                 out.println(e.getMessage());
                 e.printStackTrace();
-            } catch (WcmContentSecurityException e) {
+            } catch (WCMContentSecurityException e) {
                 log.error(e.getMessage());
                 out.println(e.getMessage());
                 e.printStackTrace();

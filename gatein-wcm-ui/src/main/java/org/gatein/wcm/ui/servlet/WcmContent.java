@@ -12,13 +12,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.gatein.wcm.api.model.content.WcmObject;
-import org.gatein.wcm.api.model.content.WcmTextObject;
-import org.gatein.wcm.api.services.WcmContentService;
-import org.gatein.wcm.api.services.WcmRepositoryService;
-import org.gatein.wcm.api.services.exceptions.WcmContentException;
-import org.gatein.wcm.api.services.exceptions.WcmContentIOException;
-import org.gatein.wcm.api.services.exceptions.WcmContentSecurityException;
+import org.gatein.wcm.api.model.content.WCMObject;
+import org.gatein.wcm.api.model.content.WCMTextDocument;
+import org.gatein.wcm.api.services.WCMContentService;
+import org.gatein.wcm.api.services.WCMRepositoryService;
+import org.gatein.wcm.api.services.exceptions.WCMContentException;
+import org.gatein.wcm.api.services.exceptions.WCMContentIOException;
+import org.gatein.wcm.api.services.exceptions.WCMContentSecurityException;
 import org.gatein.wcm.ui.Connect;
 import org.jboss.logging.Logger;
 
@@ -29,7 +29,7 @@ public class WcmContent extends HttpServlet {
     private static final Logger log = Logger.getLogger(WcmContent.class);
 
     @Resource(mappedName = "java:jboss/gatein-wcm")
-    WcmRepositoryService repos;
+    WCMRepositoryService repos;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -73,10 +73,10 @@ public class WcmContent extends HttpServlet {
                 log.error("Error accesing to repository");
                 return;
             }
-            WcmContentService cs = repos.createContentSession(c.getRepository(), c.getWorkspace(), c.getUser(), c.getPassword());
-            WcmObject content = cs.getContent(path, locale);
-            if (content instanceof WcmTextObject) {
-                WcmTextObject t = (WcmTextObject)content;
+            WCMContentService cs = repos.createContentSession(c.getUser(), c.getPassword());
+            WCMObject content = cs.getContent(path); // TODO to review
+            if (content instanceof WCMTextDocument) {
+                WCMTextDocument t = (WCMTextDocument)content;
                 resp.setContentType("text/html");
                 PrintWriter out = resp.getWriter();
                 out.print(t.getContent());
@@ -85,11 +85,11 @@ public class WcmContent extends HttpServlet {
             } else {
                 log.warn("Content in path: " + path + " and locale: " + locale + " is not a resource");
             }
-        } catch(WcmContentException e) {
+        } catch(WCMContentException e) {
             log.info("Cannot get root content from " + c.getRepository() + "/" + c.getWorkspace() + ", path: " + path + " and locale: " + locale + ". Msg: " + e.getMessage());
-        } catch (WcmContentIOException e) {
+        } catch (WCMContentIOException e) {
             log.error(e.getMessage(), e);
-        } catch (WcmContentSecurityException e) {
+        } catch (WCMContentSecurityException e) {
             log.error(e.getMessage(), e);
         } catch (IOException e) {
             log.error(e.getMessage(), e);

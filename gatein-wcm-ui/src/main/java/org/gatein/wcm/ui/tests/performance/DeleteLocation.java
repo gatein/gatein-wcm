@@ -11,10 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.gatein.wcm.api.services.WcmContentService;
-import org.gatein.wcm.api.services.exceptions.WcmContentException;
-import org.gatein.wcm.api.services.exceptions.WcmContentIOException;
-import org.gatein.wcm.api.services.exceptions.WcmContentSecurityException;
+import org.gatein.wcm.api.services.WCMContentService;
+import org.gatein.wcm.api.services.exceptions.WCMContentException;
+import org.gatein.wcm.api.services.exceptions.WCMContentIOException;
+import org.gatein.wcm.api.services.exceptions.WCMContentSecurityException;
 import org.gatein.wcm.ui.Connect;
 import org.jboss.logging.Logger;
 
@@ -57,22 +57,22 @@ public class DeleteLocation extends HttpServlet {
         out.println("<html><head><title>GateIn WCM: DELETE LOCATION test</title></head><body>");
 
         Connect c = checkConnection(req);
-        WcmContentService cs = (WcmContentService)req.getSession().getAttribute("cs");
+        WCMContentService cs = (WCMContentService)req.getSession().getAttribute("cs");
         if (c == null || cs == null || !c.isConnected()) {
             out.println("<p>WARNING: it's needed to be connected to use this test</p>");
         } else {
             String parent = null;
             try {
                 parent = cs.deleteContent(location);
-            } catch (WcmContentException e) {
+            } catch (WCMContentException e) {
                 log.error(e.getMessage());
                 out.println(e.getMessage());
                 e.printStackTrace();
-            } catch (WcmContentIOException e) {
+            } catch (WCMContentIOException e) {
                 log.error(e.getMessage());
                 out.println(e.getMessage());
                 e.printStackTrace();
-            } catch (WcmContentSecurityException e) {
+            } catch (WCMContentSecurityException e) {
                 log.error(e.getMessage());
                 out.println(e.getMessage());
                 e.printStackTrace();
