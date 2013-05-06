@@ -8,7 +8,7 @@
 
   <fileSets>
     <fileSet>
-      <directory>src/main/resources/jboss-as71</directory>
+      <directory>src/main/resources/jbossas-71</directory>
       <outputDirectory>/</outputDirectory>
       <filtered>true</filtered>
     </fileSet>
