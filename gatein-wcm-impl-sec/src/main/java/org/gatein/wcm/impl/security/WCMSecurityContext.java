@@ -56,6 +56,7 @@ public class WCMSecurityContext implements SecurityContext, AuthorizationProvide
 
     // TODO This admin user is needed to validate ACL
     // It's like a LDAP where you need a user with grants for all branchs to get info for other user.
+    // This user should come from configuration file
     String ADMIN_USER = "admin";
     String ADMIN_PASSWORD = "admin";
 
@@ -140,20 +141,34 @@ public class WCMSecurityContext implements SecurityContext, AuthorizationProvide
            GateIn WCM permissions (attached to a path in a ACL way)
            ========================================================
 
-           WCMPermissionType.NONE       (A user can't read a path)
-           WCMPermissionType.READ       (A user can read a path)
+           WCMPermissionType.NONE       (A user can't read a path or can't write comments)
+           WCMPermissionType.READ       (A user can read a path or write comments)
            WCMPermissionType.WRITE      (A user can read and write in a path and all their metadata, but it can't write in categories or in other paths)
            WCMPermissionType.ALL        (Full access to all paths and categories)
 
          *
          */
-
+        // Comments case
+        // This is the only exception:
+        // User wants to add/set nodes or property under /__comments
+        // In this case a WCMPermissionType.READ allows to do it
+        // For removing comments a user needs a WRITE permission
+        boolean flagComments = false;
         String checkPath;
         if (path == null) {
             // If path == null we will map WCM ACL to the root node of repository/workspace
             checkPath = "/";
         } else {
-            checkPath = path.getString();
+            if (!path.isAbsolute()) {
+                // TODO Known bug
+                // Modeshape 3.x can't have absolute path from a relative path
+                // So we can not validate ACL in lowlevel operations as getNode("/abspath").addNode("relativepath");
+                log.warn("Path relative for ACL operation: " + path.getString() + ". Skipping ACL");
+                return true;
+            }
+            checkPath = cleanPath(path.toString());
+            if (checkPath.contains("/__comments"))
+                flagComments = true;
         }
 
         if (jcr == null)
@@ -229,13 +244,17 @@ public class WCMSecurityContext implements SecurityContext, AuthorizationProvide
                     if (ace.getPrincipal().getType() == WCMPrincipalType.USER) {
                         found = ace.getPrincipal().getId().equals(loggedUser.getUserName());
                         found = found || ace.getPrincipal().getId().equals("*");
-                        granted = found && (ace.getPermission() == WCMPermissionType.WRITE) || (ace.getPermission() == WCMPermissionType.ALL);
+                        granted = found && ((ace.getPermission() == WCMPermissionType.WRITE) || (ace.getPermission() == WCMPermissionType.ALL));
+                        if (flagComments)
+                            granted = found && ((ace.getPermission() == WCMPermissionType.READ) || (ace.getPermission() == WCMPermissionType.WRITE) || (ace.getPermission() == WCMPermissionType.ALL));
                     } else {
                         for (String r : loggedUser.getRoles()) {
                             if (ace.getPrincipal().getId().equals(r) ||
                                 ace.getPrincipal().getId().equals("*")) {
                                 found = true;
-                                granted = (ace.getPermission() == WCMPermissionType.WRITE) || (ace.getPermission() == WCMPermissionType.ALL);
+                                granted = ((ace.getPermission() == WCMPermissionType.WRITE) || (ace.getPermission() == WCMPermissionType.ALL));
+                                if (flagComments)
+                                    granted = ((ace.getPermission() == WCMPermissionType.READ) || (ace.getPermission() == WCMPermissionType.WRITE) || (ace.getPermission() == WCMPermissionType.ALL));
                             }
                         }
                     }
@@ -259,6 +278,24 @@ public class WCMSecurityContext implements SecurityContext, AuthorizationProvide
         } catch (Exception e) {
             log.error("Error trying to access JCR repository: " + repository + "/" + workspace + " for authorization porpuses. ", e);
         }
+    }
+
+    /**
+     *
+     * @param path - With namespaces in the form /{}one/{}two
+     * @return Path without names as /one/two
+     */
+    private String cleanPath(String path) {
+        String cleanPath = path;
+
+        int i = cleanPath.indexOf("{");
+        while (i > -1) {
+            int j = cleanPath.indexOf("}");
+            cleanPath = cleanPath.replace(cleanPath.substring(i, j+1), "");
+            i = cleanPath.indexOf("{");
+        }
+
+        return cleanPath;
     }
 
 }

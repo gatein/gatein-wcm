@@ -350,6 +350,33 @@ public class SecurityTest {
         Assert.assertEquals("This is a document written by user1", doc.getContent());
         cs.closeSession();
 
+        // JCR
+        SimpleCredentials credentials = new SimpleCredentials("user1", "gtn".toCharArray());
+        javax.jcr.Session jcrSession = repository.login(credentials, "default");
+        jcrSession.getNode("/europe").addNode("eu3", "nt:folder");
+        jcrSession.getNode("/america/us1");
+        fail = false;
+        try {
+            jcrSession.getNode("/america").addNode("eu4", "nt:folder");
+        } catch (Exception expected) {
+            // Expected, We don't have rights to write on /america
+            fail = true;
+        }
+        jcrSession.logout();
+
+        credentials = new SimpleCredentials("user3", "gtn".toCharArray());
+        jcrSession = repository.login(credentials, "default");
+        jcrSession.getNode("/america").addNode("us3", "nt:folder");
+        jcrSession.getNode("/europe/eu1");
+        fail = false;
+        try {
+            jcrSession.getNode("/america").addNode("us4", "nt:folder");
+        } catch (Exception expected) {
+            // Expected, We don't have rights to write on /america
+            fail = true;
+        }
+        jcrSession.logout();
+
         // Cleaning ACLs for future tests
         cs = repos.createContentSession("admin", "admin");
         cs.deleteContent("/europe");
@@ -358,5 +385,117 @@ public class SecurityTest {
         cs.deleteContentAce("/", "america");
         cs.closeSession();
     }
+
+    @Test
+    public void rolesWritingWithMetadata() throws Exception {
+        // WCM
+        cs = repos.createContentSession("admin", "admin");
+        cs.createFolder("europe", "/");
+        cs.createFolder("america", "/");
+        // Both roles can access to root node
+        cs.createContentAce("/", "europe", WCMPrincipalType.ROLE, WCMPermissionType.READ);
+        cs.createContentAce("/", "america", WCMPrincipalType.ROLE, WCMPermissionType.READ);
+        // Only can read their folder
+        cs.createContentAce("/europe", "europe", WCMPrincipalType.ROLE, WCMPermissionType.WRITE);
+        cs.createContentAce("/europe", "america", WCMPrincipalType.ROLE, WCMPermissionType.READ);
+        // Only can read their folder
+        cs.createContentAce("/america", "europe", WCMPrincipalType.ROLE, WCMPermissionType.READ);
+        cs.createContentAce("/america", "america", WCMPrincipalType.ROLE, WCMPermissionType.WRITE);
+        cs.closeSession();
+
+        // Writing
+        cs = repos.createContentSession("user1", "gtn");
+        cs.createTextDocument("eu1", "/europe", "This is a document written by user1");
+        cs.createContentAce("/europe", "otherrole", WCMPrincipalType.ROLE, WCMPermissionType.READ);
+        boolean fail = false;
+        try {
+            cs.createContentAce("/america", "otherrole", WCMPrincipalType.ROLE, WCMPermissionType.READ);
+        } catch (Exception expected) {
+            // Expected, We don't have rights to access /america
+            fail = true;
+        }
+        cs.createContentComment("/europe/eu1", "This is a test comment");
+        // If I can read /america I can write comments
+        cs.createContentComment("/america", "This is a test comment");
+        cs.createContentProperty("/europe/eu1", "test", "Test value");
+
+        fail = false;
+        try {
+            cs.createTextDocument("eu2", "/america", "This is a document written by user1");
+        } catch (Exception expected) {
+            // Expected, We don't have rights to access /america
+            fail = true;
+        }
+        cs.closeSession();
+
+        if (!fail)
+            Assert.assertFalse(true);
+
+        cs = repos.createContentSession("user3", "gtn");
+        cs.createTextDocument("us1", "/america", "This is a document written by user3");
+
+        fail = false;
+        try {
+            cs.createTextDocument("us2", "/europe", "This is a document written by user3");
+        } catch (Exception expected) {
+            // Expected, We don't have rights to access /america
+            fail = true;
+        }
+        cs.closeSession();
+
+        if (!fail)
+            Assert.assertFalse(true);
+
+        // Reading
+        cs = repos.createContentSession("user1", "gtn");
+        WCMTextDocument doc = (WCMTextDocument) cs.getContent("/america/us1");
+        Assert.assertEquals("us1", doc.getId());
+        Assert.assertEquals("/america/us1", doc.getPath());
+        Assert.assertEquals("This is a document written by user3", doc.getContent());
+        cs.closeSession();
+
+        cs = repos.createContentSession("user3", "gtn");
+        doc = (WCMTextDocument) cs.getContent("/europe/eu1");
+        Assert.assertEquals("eu1", doc.getId());
+        Assert.assertEquals("/europe/eu1", doc.getPath());
+        Assert.assertEquals("This is a document written by user1", doc.getContent());
+        cs.closeSession();
+
+        // JCR
+        SimpleCredentials credentials = new SimpleCredentials("user1", "gtn".toCharArray());
+        javax.jcr.Session jcrSession = repository.login(credentials, "default");
+        jcrSession.getNode("/europe").addNode("eu3", "nt:folder");
+        jcrSession.getNode("/america/us1");
+        fail = false;
+        try {
+            jcrSession.getNode("/america").addNode("eu4", "nt:folder");
+        } catch (Exception expected) {
+            // Expected, We don't have rights to write on /america
+            fail = true;
+        }
+        jcrSession.logout();
+
+        credentials = new SimpleCredentials("user3", "gtn".toCharArray());
+        jcrSession = repository.login(credentials, "default");
+        jcrSession.getNode("/america").addNode("us3", "nt:folder");
+        jcrSession.getNode("/europe/eu1");
+        fail = false;
+        try {
+            jcrSession.getNode("/america").addNode("us4", "nt:folder");
+        } catch (Exception expected) {
+            // Expected, We don't have rights to write on /america
+            fail = true;
+        }
+        jcrSession.logout();
+
+        // Cleaning ACLs for future tests
+        cs = repos.createContentSession("admin", "admin");
+        cs.deleteContent("/europe");
+        cs.deleteContent("/america");
+        cs.deleteContentAce("/", "europe");
+        cs.deleteContentAce("/", "america");
+        cs.closeSession();
+    }
+
 
 }

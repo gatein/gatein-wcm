@@ -1141,7 +1141,7 @@ public class WCMContentServiceTest {
         Assert.assertEquals("/testupdate6", bin.getPath());
         Assert.assertEquals(size, bin.getSize());
 
-        cs.createFolder("/updatefolder3", "/");
+        cs.createFolder("updatefolder3", "/");
         cs.createFolder("sub1", "/updatefolder3");
 
         bin = (WCMBinaryDocument)cs.updateContentPath("/testupdate6", "/updatefolder3/sub1");
@@ -2571,7 +2571,9 @@ public class WCMContentServiceTest {
         Assert.assertEquals(WCMPermissionType.READ, c.getAcl().getAces().get(0).getPermission());
         c = cs.deleteContentAce("/deleteacl", "guess");
 
-        Assert.assertEquals(null, c.getAcl());
+        // It should take the ACL from their parent
+        Assert.assertFalse(c.getAcl() == null);
+        Assert.assertEquals(c.getParentPath(), c.getAcl().getId());
 
         cs.deleteContent("/deleteacl");
         cs.closeSession();

@@ -24,7 +24,6 @@ package org.gatein.wcm.impl.jcr;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -262,11 +261,8 @@ public class JcrMappings {
         WCMAcl acl = null;
         try {
             acl = jcrACL(path);
-            // If there are not __acl folder in the location, we will check to the parent node
-            if (acl == null && !"/".equals(path))
-                return checkUserWriteACL(parent(path));
-            if (acl == null && "/".equals("/"))
-                return true;
+            // If there is not acl, by default user is granted
+            if (acl == null) return true;
         } catch (RepositoryException e) {
             log.error("Unexpected error looking for acl in path " + path + ". Msg: " + e.getMessage());
             return false;
@@ -291,10 +287,7 @@ public class JcrMappings {
             }
         }
 
-        if (!found && !"/".equals(path))
-            return checkUserWriteACL(parent(path));
-        else
-            return granted;
+        return granted;
     }
 
     /**
@@ -314,35 +307,14 @@ public class JcrMappings {
         WCMAcl acl = null;
         try {
             acl = jcrACL(path);
-            // If there are not __acl folder in the location, we will check to the parent node
-            if (acl == null && !"/".equals(path))
-                return checkUserReadACL(parent(path));
-            if (acl == null && "/".equals("/"))
-                return true;
+            // If there is not acl, by default user is granted
+            if (acl == null) return true;
         } catch (RepositoryException e) {
             log.error("Unexpected error looking for acl in location " + path + ". Msg: " + e.getMessage());
             return false;
         }
 
         // Validate ACL with logged user
-        for (WCMAce ace : acl.getAces()) {
-            // Check if we have a GROUP ACE
-            if (ace.getPrincipal().getType() == WCMPrincipalType.ROLE
-                    && Arrays.asList(WCMPermissionType.READ, WCMPermissionType.WRITE,
-                            WCMPermissionType.ALL).contains(ace.getPermission())) {
-                for (String group : logged.getRoles())
-                    if (group.equals(ace.getPrincipal().getId()) || "*".equals(ace.getPrincipal().getId()))
-                        return true;
-            }
-            // Check if we have a USER ACE
-            if (ace.getPrincipal().getType() == WCMPrincipalType.USER
-                    && (ace.getPrincipal().getId().equals(logged.getUserName()) ||
-                        ace.getPrincipal().getId().equals("*"))
-                    && Arrays.asList(WCMPermissionType.READ, WCMPermissionType.WRITE,
-                            WCMPermissionType.ALL).contains(ace.getPermission()))
-                return true;
-        }
-
         boolean found = false;
         boolean granted = false;
         for (WCMAce ace : acl.getAces()) {
@@ -360,11 +332,7 @@ public class JcrMappings {
             }
         }
 
-        // If we don't have rights in this folder we will ask if I have access in the upper folder
-        if (!found)
-            return checkUserReadACL(parent(path));
-        else
-            return granted;
+        return granted;
     }
 
     /**
@@ -461,7 +429,6 @@ public class JcrMappings {
         String contentId = tmpPath + "/" + id;
 
         Node n;
-
         jcrSession.getNode(path).addNode(id, "nt:file").addNode("jcr:content", "nt:resource").setProperty("jcr:data", content);
 
         n = jcrSession.getNode(contentId);
@@ -482,6 +449,16 @@ public class JcrMappings {
 
         // Checkin version
         vm.checkin(contentId);
+
+        // Init metadata
+        // __acl
+        jcrCreatePath("/__acl" + contentId);
+        // __comments
+        jcrCreatePath("/__comments" + contentId);
+        // __properties
+        jcrCreatePath("/__properties" + contentId);
+        // __relationships
+        jcrCreatePath("/__relationships" + contentId);
     }
 
     /**
@@ -572,6 +549,10 @@ public class JcrMappings {
      * @throws RepositoryException
      */
     public void createFolder(String id, String parentPath) throws RepositoryException {
+
+        String tmpPath = ("/".equals(parentPath) ? "" : parentPath);
+        String contentId = tmpPath + "/" + id;
+
         Node n = jcrSession.getNode(parentPath).addNode(id, "nt:folder");
         n.addMixin("mix:title");
         n.addMixin("mix:lastModified");
@@ -581,6 +562,16 @@ public class JcrMappings {
 
         // Saving changes into JCR
         jcrSession.save();
+
+        // Init metadata
+        // __acl
+        jcrCreatePath("/__acl" + contentId);
+        // __comments
+        jcrCreatePath("/__comments" + contentId);
+        // __properties
+        jcrCreatePath("/__properties" + contentId);
+        // __relationships
+        jcrCreatePath("/__relationships" + contentId);
     }
 
     /**
@@ -633,6 +624,16 @@ public class JcrMappings {
 
         // Dispose binary
         _content.dispose();
+
+        // Init metadata
+        // __acl
+        jcrCreatePath("/__acl" + contentId);
+        // __comments
+        jcrCreatePath("/__comments" + contentId);
+        // __properties
+        jcrCreatePath("/__properties" + contentId);
+        // __relationships
+        jcrCreatePath("/__relationships" + contentId);
     }
 
     /**
@@ -981,10 +982,10 @@ public class JcrMappings {
         Node n;
         if (!jcrSession.itemExists(contentId)) {
             jcrCreatePath(contentId);
-            n = jcrSession.getNode(contentId);
-            n.addMixin("mix:title");
         }
         n = jcrSession.getNode(contentId);
+        if (!n.isNodeType("mix:title"))
+            n.addMixin("mix:title");
         try {
             acl = n.getProperty("jcr:description").getString();
         } catch (PathNotFoundException ignored) {
@@ -1217,14 +1218,37 @@ public class JcrMappings {
     public WCMAcl jcrACL(String path) throws RepositoryException {
         // Create ACL from path
         WCMAcl acl = null;
+
+        // Check metadata in path
+        String filterPath = path;
+        // ACL of metadata should be similar of main content
+        // Check __comments
+        if (path.startsWith("/__comments"))
+            filterPath = path.substring("/__comments".length());
+        // Check __properties
+        if (path.startsWith("/__properties"))
+            filterPath = path.substring("/__properties".length());
+        // Check __relationships
+        if (path.startsWith("/__relationships"))
+            filterPath = path.substring("/__relationships".length());
+        // Check __acl
+        if (path.startsWith("/__acl"))
+            filterPath = path.substring("/__acl".length());
+
+        if ("".equals(filterPath)) filterPath = "/";
+
         // Check if we are in the root node or child node
         Node n = null;
-        String tmpPath = ("/".equals(path) ? "" : path);
+        String tmpPath = ("/".equals(filterPath) ? "" : filterPath);
         if (jcrSession.itemExists("/__acl" + tmpPath))
             n = jcrSession.getNode("/__acl" + tmpPath);
-        else
-            return null;
 
+        if (n==null && "/".equals(path))
+            return null;
+        if (n==null && !"/".equals(path))
+            return jcrACL(parent(path));
+
+        // Found node, parsing ACL
         Property _acl = null;
         try {
             _acl = n.getProperty("jcr:description");
