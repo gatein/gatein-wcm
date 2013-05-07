@@ -102,8 +102,6 @@
 
   <modules>
     <module>gatein-wcm-api</module>
-    <!-- Uncomment to activate it -->
-    <!-- <module>gatein-wcm-portlets</module> -->
     <module>gatein-wcm-impl</module>
     <module>gatein-wcm-impl-sec</module>
     <module>gatein-wcm-cmis</module>
