@@ -51,7 +51,7 @@ public class WCMModeShapeProvider implements AuthenticationProvider {
             }
 
         } catch (LoginException e) {
-            log.warn(e.toString(), e);
+            log.debug(e.toString(), e);
             return null;
         }
         return null;
