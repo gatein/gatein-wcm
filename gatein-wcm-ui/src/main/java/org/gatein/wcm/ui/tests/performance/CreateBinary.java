@@ -110,7 +110,7 @@ public class CreateBinary extends HttpServlet {
             WCMObject _c = null;
             try {
                 if (id != null && locale != null && location != null && file != null)
-                    _c = cs.createBinaryDocument(id, locale, location, file.getContentType(), file.getSize(), file.getName(), file.getInputStream());
+                    _c = cs.createBinaryDocument(id, locale, location, file.getContentType(), file.getName(), file.getInputStream());
             } catch (WCMContentException e) {
                 log.error(e.getMessage());
                 out.println(e.getMessage());

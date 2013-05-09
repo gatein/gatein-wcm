@@ -78,12 +78,6 @@ public interface WCMBinaryDocument extends WCMObject {
 
     /**
      *
-     * @param size - Size of the file stored
-     */
-    void setSize(long size);
-
-    /**
-     *
      * @return This method returns name of file stored.
      */
     String getFileName();
@@ -98,12 +92,27 @@ public interface WCMBinaryDocument extends WCMObject {
      *
      * @return This method will return an InputStream of file stored.
      */
-    InputStream getContent();
+    InputStream getContentAsInputStream();
 
     /**
      *
      * @param content - InputStream with the binary content of the file.
      */
     void setContent(InputStream content);
+
+    /**
+     * Returns character encoding (e.g. {@code "UTF-8"}) which can be used to represent this {@link WCMBinaryDocument} as text.
+     * This method can return {@code null} if and only if this {@link WCMBinaryDocument} is not a text document.
+     *
+     * @return encoding or {@code null}
+     */
+    String getEncoding();
+
+    /**
+     * Sets character encoding (e.g. {@code "UTF-8"}) which can be used to represent this {@link WCMBinaryDocument} as text.
+     *
+     * @param encoding a valid encoding or {@code null} if this {@link WCMBinaryDocument} is not a text document
+     */
+    void setEncoding(String encoding);
 
 }

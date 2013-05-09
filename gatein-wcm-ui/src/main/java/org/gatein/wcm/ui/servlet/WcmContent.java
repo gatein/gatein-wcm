@@ -79,7 +79,7 @@ public class WcmContent extends HttpServlet {
                 WCMTextDocument t = (WCMTextDocument)content;
                 resp.setContentType("text/html");
                 PrintWriter out = resp.getWriter();
-                out.print(t.getContent());
+                out.print(t.getContentAsString());
                 out.flush();
                 out.close();
             } else {

@@ -306,11 +306,11 @@ public class SecurityTest {
 
         // Writing
         cs = repos.createContentSession("user1", "gtn");
-        cs.createTextDocument("eu1", "/europe", "This is a document written by user1");
+        cs.createTextDocument("eu1", "/europe", "text/plain", "This is a document written by user1");
 
         boolean fail = false;
         try {
-            cs.createTextDocument("eu2", "/america", "This is a document written by user1");
+            cs.createTextDocument("eu2", "/america", "text/plain", "This is a document written by user1");
         } catch (Exception expected) {
             // Expected, We don't have rights to access /america
             fail = true;
@@ -321,11 +321,11 @@ public class SecurityTest {
             Assert.assertFalse(true);
 
         cs = repos.createContentSession("user3", "gtn");
-        cs.createTextDocument("us1", "/america", "This is a document written by user3");
+        cs.createTextDocument("us1", "/america", "text/plain", "This is a document written by user3");
 
         fail = false;
         try {
-            cs.createTextDocument("us2", "/europe", "This is a document written by user3");
+            cs.createTextDocument("us2", "/europe", "text/plain", "This is a document written by user3");
         } catch (Exception expected) {
             // Expected, We don't have rights to access /america
             fail = true;
@@ -340,14 +340,14 @@ public class SecurityTest {
         WCMTextDocument doc = (WCMTextDocument) cs.getContent("/america/us1");
         Assert.assertEquals("us1", doc.getId());
         Assert.assertEquals("/america/us1", doc.getPath());
-        Assert.assertEquals("This is a document written by user3", doc.getContent());
+        Assert.assertEquals("This is a document written by user3", doc.getContentAsString());
         cs.closeSession();
 
         cs = repos.createContentSession("user3", "gtn");
         doc = (WCMTextDocument) cs.getContent("/europe/eu1");
         Assert.assertEquals("eu1", doc.getId());
         Assert.assertEquals("/europe/eu1", doc.getPath());
-        Assert.assertEquals("This is a document written by user1", doc.getContent());
+        Assert.assertEquals("This is a document written by user1", doc.getContentAsString());
         cs.closeSession();
 
         // JCR
@@ -405,7 +405,7 @@ public class SecurityTest {
 
         // Writing
         cs = repos.createContentSession("user1", "gtn");
-        cs.createTextDocument("eu1", "/europe", "This is a document written by user1");
+        cs.createTextDocument("eu1", "/europe", "text/plain", "This is a document written by user1");
         cs.createContentAce("/europe", "otherrole", WCMPrincipalType.ROLE, WCMPermissionType.READ);
         boolean fail = false;
         try {
@@ -421,7 +421,7 @@ public class SecurityTest {
 
         fail = false;
         try {
-            cs.createTextDocument("eu2", "/america", "This is a document written by user1");
+            cs.createTextDocument("eu2", "/america", "text/plain", "This is a document written by user1");
         } catch (Exception expected) {
             // Expected, We don't have rights to access /america
             fail = true;
@@ -432,11 +432,11 @@ public class SecurityTest {
             Assert.assertFalse(true);
 
         cs = repos.createContentSession("user3", "gtn");
-        cs.createTextDocument("us1", "/america", "This is a document written by user3");
+        cs.createTextDocument("us1", "/america", "text/plain", "This is a document written by user3");
 
         fail = false;
         try {
-            cs.createTextDocument("us2", "/europe", "This is a document written by user3");
+            cs.createTextDocument("us2", "/europe", "text/plain", "This is a document written by user3");
         } catch (Exception expected) {
             // Expected, We don't have rights to access /america
             fail = true;
@@ -451,14 +451,14 @@ public class SecurityTest {
         WCMTextDocument doc = (WCMTextDocument) cs.getContent("/america/us1");
         Assert.assertEquals("us1", doc.getId());
         Assert.assertEquals("/america/us1", doc.getPath());
-        Assert.assertEquals("This is a document written by user3", doc.getContent());
+        Assert.assertEquals("This is a document written by user3", doc.getContentAsString());
         cs.closeSession();
 
         cs = repos.createContentSession("user3", "gtn");
         doc = (WCMTextDocument) cs.getContent("/europe/eu1");
         Assert.assertEquals("eu1", doc.getId());
         Assert.assertEquals("/europe/eu1", doc.getPath());
-        Assert.assertEquals("This is a document written by user1", doc.getContent());
+        Assert.assertEquals("This is a document written by user1", doc.getContentAsString());
         cs.closeSession();
 
         // JCR

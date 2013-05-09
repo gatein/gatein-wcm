@@ -75,14 +75,14 @@ public class WCMContentServiceTest {
     public void createTextDocument() throws Exception {
         cs = repos.createContentSession("admin", "admin");
 
-        WCMTextDocument text1 = cs.createTextDocument("text1", "en", "/", "This is a content");
+        WCMTextDocument text1 = cs.createTextDocument("text1", "en", "/", "text/plain", "This is a content");
 
         Assert.assertFalse(text1 == null);
         Assert.assertEquals("text1", text1.getId());
         Assert.assertEquals("/", text1.getParentPath());
         Assert.assertEquals("/text1", text1.getPath());
         Assert.assertEquals("en", text1.getLocale());
-        Assert.assertEquals("This is a content", text1.getContent());
+        Assert.assertEquals("This is a content", text1.getContentAsString());
         Assert.assertEquals("admin", text1.getCreatedBy());
 
         cs.deleteContent("/text1");
@@ -93,34 +93,34 @@ public class WCMContentServiceTest {
     public void createTextDocumentSameIdSeveralLocales() throws Exception {
         cs = repos.createContentSession("admin", "admin");
 
-        WCMTextDocument text2 = cs.createTextDocument("text2", "en", "/", "This is a content");
+        WCMTextDocument text2 = cs.createTextDocument("text2", "en", "/", "text/plain", "This is a content");
 
         Assert.assertFalse(text2 == null);
         Assert.assertEquals("text2", text2.getId());
         Assert.assertEquals("/", text2.getParentPath());
         Assert.assertEquals("/text2", text2.getPath());
         Assert.assertEquals("en", text2.getLocale());
-        Assert.assertEquals("This is a content", text2.getContent());
+        Assert.assertEquals("This is a content", text2.getContentAsString());
         Assert.assertEquals("admin", text2.getCreatedBy());
 
-        WCMTextDocument text2_es = cs.createTextDocument("text2", "es", "/", "Este es un contenido");
+        WCMTextDocument text2_es = cs.createTextDocument("text2", "es", "/", "text/plain", "Este es un contenido");
 
         Assert.assertFalse(text2_es == null);
         Assert.assertEquals("text2__es", text2_es.getId());
         Assert.assertEquals("/", text2_es.getParentPath());
         Assert.assertEquals("/text2__es", text2_es.getPath());
         Assert.assertEquals("es", text2_es.getLocale());
-        Assert.assertEquals("Este es un contenido", text2_es.getContent());
+        Assert.assertEquals("Este es un contenido", text2_es.getContentAsString());
         Assert.assertEquals("admin", text2_es.getCreatedBy());
 
-        WCMTextDocument text2_fr = cs.createTextDocument("text2", "fr", "/", "C'est un contenu");
+        WCMTextDocument text2_fr = cs.createTextDocument("text2", "fr", "/", "text/plain", "C'est un contenu");
 
         Assert.assertFalse(text2_fr == null);
         Assert.assertEquals("text2__fr", text2_fr.getId());
         Assert.assertEquals("/", text2_fr.getParentPath());
         Assert.assertEquals("/text2__fr", text2_fr.getPath());
         Assert.assertEquals("fr", text2_fr.getLocale());
-        Assert.assertEquals("C'est un contenu", text2_fr.getContent());
+        Assert.assertEquals("C'est un contenu", text2_fr.getContentAsString());
         Assert.assertEquals("admin", text2_fr.getCreatedBy());
 
         cs.deleteContent("/text2");
@@ -133,19 +133,19 @@ public class WCMContentServiceTest {
     public void createTextDocumentFailsIfSameIdAndSameLocale() throws Exception {
         cs = repos.createContentSession("admin", "admin");
 
-        WCMTextDocument text3 = cs.createTextDocument("text3", "en", "/", "This is a content");
+        WCMTextDocument text3 = cs.createTextDocument("text3", "en", "/", "text/plain", "This is a content");
 
         Assert.assertFalse(text3 == null);
         Assert.assertEquals("text3", text3.getId());
         Assert.assertEquals("/", text3.getParentPath());
         Assert.assertEquals("/text3", text3.getPath());
         Assert.assertEquals("en", text3.getLocale());
-        Assert.assertEquals("This is a content", text3.getContent());
+        Assert.assertEquals("This is a content", text3.getContentAsString());
         Assert.assertEquals("admin", text3.getCreatedBy());
 
         boolean fail = false;
         try {
-            cs.createTextDocument("text3", "en", "/", "This is a repeated content");
+            cs.createTextDocument("text3", "en", "/", "text/plain", "This is a repeated content");
         } catch (Exception e) {
             // Expected to fail...
             fail = true;
@@ -164,7 +164,7 @@ public class WCMContentServiceTest {
 
         boolean fail = false;
         try {
-            cs.createTextDocument("dummy", "en", "/thispathdoentexist", "This is a dummy");
+            cs.createTextDocument("dummy", "en", "/thispathdoentexist", "text/plain", "This is a dummy");
         } catch (Exception e) {
             // Expected to fail...
             fail = true;
@@ -181,7 +181,7 @@ public class WCMContentServiceTest {
 
         boolean fail = false;
         try {
-            cs.createTextDocument("dummy", "en", "/thispathdoentexist", "This is a dummy");
+            cs.createTextDocument("dummy", "en", "/thispathdoentexist", "text/plain", "This is a dummy");
         } catch (Exception e) {
             // Expected to fail...
             fail = true;
@@ -196,53 +196,46 @@ public class WCMContentServiceTest {
     public void createTextDocumentFailsIfNullArguments() throws Exception {
         cs = repos.createContentSession("admin", "admin");
 
-        boolean fail = false;
         try {
-            cs.createTextDocument("dummy", "en", "/thispathdoentexist", null);
-        } catch (Exception e) {
-            // Expected to fail...
-            fail = true;
+            cs.createTextDocument("dummy", "en", "/thispathdoentexist", "text/plain", null);
+            Assert.fail("Exception expected.");
+        } catch (Exception expected) {
         }
 
         try {
-            cs.createTextDocument("dummy", "en", null, "Test");
-        } catch (Exception e) {
-            // Expected to fail...
-            fail = true;
+            cs.createTextDocument("dummy", "en", null, "text/plain", "Test");
+            Assert.fail("Exception expected.");
+        } catch (Exception expected) {
         }
 
         try {
-            cs.createTextDocument("dummy", null, "/thispathdoentexist", "Test");
-        } catch (Exception e) {
-            // Expected to fail...
-            fail = true;
+            cs.createTextDocument("dummy", null, "/thispathdoentexist", "text/plain", "Test");
+            Assert.fail("Exception expected.");
+        } catch (Exception expected) {
         }
 
         try {
-            cs.createTextDocument(null, "en", "/thispathdoentexist", "Test");
-        } catch (Exception e) {
-            // Expected to fail...
-            fail = true;
+            cs.createTextDocument(null, "en", "/thispathdoentexist", "text/plain", "Test");
+            Assert.fail("Exception expected.");
+        } catch (Exception expected) {
         }
 
         cs.closeSession();
 
-        if (!fail)
-            Assert.assertFalse(true);
     }
 
     @Test
     public void createTextDocumentDefaultLocale() throws Exception {
         cs = repos.createContentSession("admin", "admin");
 
-        WCMTextDocument text4 = cs.createTextDocument("text4", "/", "This is a content");
+        WCMTextDocument text4 = cs.createTextDocument("text4", "/", "text/plain", "This is a content");
 
         Assert.assertFalse(text4 == null);
         Assert.assertEquals("text4", text4.getId());
         Assert.assertEquals("/", text4.getParentPath());
         Assert.assertEquals("/text4", text4.getPath());
         Assert.assertEquals(repos.getDefaultLocale(), text4.getLocale());
-        Assert.assertEquals("This is a content", text4.getContent());
+        Assert.assertEquals("This is a content", text4.getContentAsString());
         Assert.assertEquals("admin", text4.getCreatedBy());
 
         cs.deleteContent("/text4");
@@ -277,12 +270,12 @@ public class WCMContentServiceTest {
     public void cantCreateContentUnderNotFolder() throws Exception {
         cs = repos.createContentSession("admin", "admin");
 
-        cs.createTextDocument("text5", "/", "This is a content");
+        cs.createTextDocument("text5", "/", "text/plain", "This is a content");
 
         boolean fail = false;
 
         try {
-            cs.createTextDocument("dummy", "/text5", "Dummy text");
+            cs.createTextDocument("dummy", "/text5", "text/plain", "Dummy text");
         } catch (Exception e) {
             // Expected to fail...
             fail = true;
@@ -371,7 +364,7 @@ public class WCMContentServiceTest {
 
         cs = repos.createContentSession("admin", "admin");
 
-        WCMBinaryDocument binary1 = cs.createBinaryDocument("binary1", "en", "/", mimeType, size, fileName, content);
+        WCMBinaryDocument binary1 = cs.createBinaryDocument("binary1", "en", "/", mimeType, fileName, content);
 
         Assert.assertFalse(binary1 == null);
         Assert.assertEquals("binary1", binary1.getId());
@@ -382,9 +375,10 @@ public class WCMContentServiceTest {
         Assert.assertEquals(fileName, binary1.getFileName());
         Assert.assertEquals(size, binary1.getSize());
         Assert.assertEquals(mimeType, binary1.getMimeType());
-        Assert.assertFalse(binary1.getContent() == null);
+        InputStream in = binary1.getContentAsInputStream();
+        Assert.assertNotNull(in);
 
-        byte[] file = toByteArray(binary1.getContent());
+        byte[] file = toByteArray(in);
         Assert.assertEquals(binary1.getSize(), file.length);
 
         cs.deleteContent("/binary1");
@@ -401,7 +395,7 @@ public class WCMContentServiceTest {
 
         cs = repos.createContentSession("admin", "admin");
 
-        WCMBinaryDocument binary2 = cs.createBinaryDocument("binary2", "/", mimeType, size, fileName, content);
+        WCMBinaryDocument binary2 = cs.createBinaryDocument("binary2", "/", mimeType, fileName, content);
 
         Assert.assertFalse(binary2 == null);
         Assert.assertEquals("binary2", binary2.getId());
@@ -412,9 +406,10 @@ public class WCMContentServiceTest {
         Assert.assertEquals(fileName, binary2.getFileName());
         Assert.assertEquals(size, binary2.getSize());
         Assert.assertEquals(mimeType, binary2.getMimeType());
-        Assert.assertFalse(binary2.getContent() == null);
+        InputStream in = binary2.getContentAsInputStream();
+        Assert.assertNotNull(in);
 
-        byte[] file = toByteArray(binary2.getContent());
+        byte[] file = toByteArray(in);
         Assert.assertEquals(binary2.getSize(), file.length);
 
         cs.deleteContent("/binary2");
@@ -433,42 +428,42 @@ public class WCMContentServiceTest {
 
         boolean fail = false;
         try {
-            cs.createBinaryDocument("dummy", "/thispathdoesntexist", mimeType, size, fileName, null);
+            cs.createBinaryDocument("dummy", "/thispathdoesntexist", mimeType, fileName, null);
         } catch (Exception e) {
             // Expected to fail...
             fail = true;
         }
 
         try {
-            cs.createBinaryDocument("dummy", "/thispathdoesntexist", mimeType, size, null, content);
+            cs.createBinaryDocument("dummy", "/thispathdoesntexist", mimeType, null, content);
         } catch (Exception e) {
             // Expected to fail...
             fail = true;
         }
 
         try {
-            cs.createBinaryDocument("dummy", "/thispathdoesntexist", mimeType, 0, fileName, content);
+            cs.createBinaryDocument("dummy", "/thispathdoesntexist", mimeType, fileName, content);
         } catch (Exception e) {
             // Expected to fail...
             fail = true;
         }
 
         try {
-            cs.createBinaryDocument("dummy", "/thispathdoesntexist", null, size, fileName, content);
+            cs.createBinaryDocument("dummy", "/thispathdoesntexist", null, fileName, content);
         } catch (Exception e) {
             // Expected to fail...
             fail = true;
         }
 
         try {
-            cs.createBinaryDocument("dummy", null, mimeType, size, fileName, content);
+            cs.createBinaryDocument("dummy", null, mimeType, fileName, content);
         } catch (Exception e) {
             // Expected to fail...
             fail = true;
         }
 
         try {
-            cs.createBinaryDocument(null, "/thispathdoesntexist", mimeType, size, fileName, content);
+            cs.createBinaryDocument(null, "/thispathdoesntexist", mimeType, fileName, content);
         } catch (Exception e) {
             // Expected to fail...
             fail = true;
@@ -491,7 +486,7 @@ public class WCMContentServiceTest {
 
         boolean fail = false;
         try {
-            cs.createBinaryDocument("dummy", "/thispathdoesntexist", mimeType, size, fileName, content);
+            cs.createBinaryDocument("dummy", "/thispathdoesntexist", mimeType, fileName, content);
         } catch (Exception e) {
             // Expected to fail...
             fail = true;
@@ -512,7 +507,7 @@ public class WCMContentServiceTest {
 
         cs = repos.createContentSession("admin", "admin");
 
-        WCMBinaryDocument binary3 = cs.createBinaryDocument("binary3", "en", "/", mimeType, size, fileName, content);
+        WCMBinaryDocument binary3 = cs.createBinaryDocument("binary3", "en", "/", mimeType, fileName, content);
 
         Assert.assertFalse(binary3 == null);
         Assert.assertEquals("binary3", binary3.getId());
@@ -523,14 +518,15 @@ public class WCMContentServiceTest {
         Assert.assertEquals(fileName, binary3.getFileName());
         Assert.assertEquals(size, binary3.getSize());
         Assert.assertEquals(mimeType, binary3.getMimeType());
-        Assert.assertFalse(binary3.getContent() == null);
+        InputStream in = binary3.getContentAsInputStream();
+        Assert.assertNotNull(in);
 
-        byte[] file = toByteArray(binary3.getContent());
+        byte[] file = toByteArray(in);
         Assert.assertEquals(binary3.getSize(), file.length);
 
         boolean fail = false;
         try {
-            cs.createBinaryDocument("binary3", "en", "/", mimeType, size, fileName, content);
+            cs.createBinaryDocument("binary3", "en", "/", mimeType, fileName, content);
         } catch (Exception e) {
             // Expected to fail...
             fail = true;
@@ -553,7 +549,7 @@ public class WCMContentServiceTest {
 
         cs = repos.createContentSession("admin", "admin");
 
-        WCMBinaryDocument binary4 = cs.createBinaryDocument("binary4", "en", "/", mimeType, size, fileName, content);
+        WCMBinaryDocument binary4 = cs.createBinaryDocument("binary4", "en", "/", mimeType, fileName, content);
 
         Assert.assertFalse(binary4 == null);
         Assert.assertEquals("binary4", binary4.getId());
@@ -564,16 +560,17 @@ public class WCMContentServiceTest {
         Assert.assertEquals(fileName, binary4.getFileName());
         Assert.assertEquals(size, binary4.getSize());
         Assert.assertEquals(mimeType, binary4.getMimeType());
-        Assert.assertFalse(binary4.getContent() == null);
+        InputStream in = binary4.getContentAsInputStream();
+        Assert.assertNotNull(in);
 
-        byte[] file = toByteArray(binary4.getContent());
+        byte[] file = toByteArray(in);
         Assert.assertEquals(binary4.getSize(), file.length);
 
         // To re-read the same InputStream
         content = (FileInputStream) Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("/GateIn-UserGuide-v3.5.pdf");
 
-        WCMBinaryDocument binary4_es = cs.createBinaryDocument("binary4", "es", "/", mimeType, size, fileName, content);
+        WCMBinaryDocument binary4_es = cs.createBinaryDocument("binary4", "es", "/", mimeType, fileName, content);
 
         Assert.assertFalse(binary4_es == null);
         Assert.assertEquals("binary4__es", binary4_es.getId());
@@ -584,16 +581,17 @@ public class WCMContentServiceTest {
         Assert.assertEquals(fileName, binary4_es.getFileName());
         Assert.assertEquals(size, binary4_es.getSize());
         Assert.assertEquals(mimeType, binary4_es.getMimeType());
-        Assert.assertFalse(binary4_es.getContent() == null);
+        InputStream inEs = binary4_es.getContentAsInputStream();
+        Assert.assertNotNull(inEs);
 
-        byte[] file_es = toByteArray(binary4_es.getContent());
+        byte[] file_es = toByteArray(inEs);
         Assert.assertEquals(binary4_es.getSize(), file_es.length);
 
         // To re-read the same InputStream
         content = (FileInputStream) Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("/GateIn-UserGuide-v3.5.pdf");
 
-        WCMBinaryDocument binary4_fr = cs.createBinaryDocument("binary4", "fr", "/", mimeType, size, fileName, content);
+        WCMBinaryDocument binary4_fr = cs.createBinaryDocument("binary4", "fr", "/", mimeType, fileName, content);
 
         Assert.assertFalse(binary4_fr == null);
         Assert.assertEquals("binary4__fr", binary4_fr.getId());
@@ -604,9 +602,10 @@ public class WCMContentServiceTest {
         Assert.assertEquals(fileName, binary4_fr.getFileName());
         Assert.assertEquals(size, binary4_fr.getSize());
         Assert.assertEquals(mimeType, binary4_fr.getMimeType());
-        Assert.assertFalse(binary4_fr.getContent() == null);
+        InputStream inFr = binary4_fr.getContentAsInputStream();
+        Assert.assertNotNull(inFr);
 
-        byte[] file_fr = toByteArray(binary4_fr.getContent());
+        byte[] file_fr = toByteArray(inFr);
         Assert.assertEquals(binary4_fr.getSize(), file_fr.length);
 
         cs.deleteContent("/binary4");
@@ -627,7 +626,7 @@ public class WCMContentServiceTest {
 
         boolean fail = false;
         try {
-            cs.createBinaryDocument("dummy", "en", "/thispathdoentexist", mimeType, size, fileName, content);
+            cs.createBinaryDocument("dummy", "en", "/thispathdoentexist", mimeType, fileName, content);
         } catch (Exception e) {
             // Expected to fail...
             fail = true;
@@ -642,7 +641,7 @@ public class WCMContentServiceTest {
     public void getContentWithTextDocuments() throws Exception {
         cs = repos.createContentSession("admin", "admin");
 
-        WCMTextDocument text6 = cs.createTextDocument("text6", "en", "/", "This is a content");
+        WCMTextDocument text6 = cs.createTextDocument("text6", "en", "/", "text/plain", "This is a content");
         WCMObject obj = cs.getContent("/text6");
 
         Assert.assertFalse(text6 == null);
@@ -662,7 +661,7 @@ public class WCMContentServiceTest {
 
         cs = repos.createContentSession("admin", "admin");
 
-        WCMBinaryDocument binary5 = cs.createBinaryDocument("binary5", "/", mimeType, size, fileName, content);
+        WCMBinaryDocument binary5 = cs.createBinaryDocument("binary5", "/", mimeType, fileName, content);
         WCMObject obj = cs.getContent("/binary5");
 
         Assert.assertFalse(binary5 == null);
@@ -698,8 +697,8 @@ public class WCMContentServiceTest {
 
         WCMFolder folder4 = cs.createFolder("folder4", "/");
         WCMFolder folder41 = cs.createFolder("folder41", folder4.getPath());
-        WCMTextDocument text411 = cs.createTextDocument("text411", folder41.getPath(), "This is text 411");
-        WCMBinaryDocument binary411 = cs.createBinaryDocument("binary411", folder41.getPath(), mimeType, size, fileName,
+        WCMTextDocument text411 = cs.createTextDocument("text411", folder41.getPath(), "text/plain", "This is text 411");
+        WCMBinaryDocument binary411 = cs.createBinaryDocument("binary411", folder41.getPath(), mimeType, fileName,
                 content);
 
         // folder4 and folder41 are not updated so we need to use getContent() for children
@@ -730,8 +729,8 @@ public class WCMContentServiceTest {
     public void createRelationship() throws Exception {
         cs = repos.createContentSession("admin", "admin");
 
-        cs.createTextDocument("rel1", "en", "/", "This is a content for a relationship");
-        cs.createTextDocument("rel2", "es", "/", "Este es otro contenido para una relación");
+        cs.createTextDocument("rel1", "en", "/", "text/plain", "This is a content for a relationship");
+        cs.createTextDocument("rel2", "es", "/", "text/plain", "Este es otro contenido para una relación");
         cs.createContentRelation("/rel1", "/rel2", "es");
         WCMObject obj = cs.getContent("/rel1", "es");
         Assert.assertFalse(obj == null);
@@ -740,7 +739,7 @@ public class WCMContentServiceTest {
         Assert.assertEquals("rel2", text.getId());
         Assert.assertEquals("/", text.getParentPath());
         Assert.assertEquals("/rel2", text.getPath());
-        Assert.assertEquals("Este es otro contenido para una relación", text.getContent());
+        Assert.assertEquals("Este es otro contenido para una relación", text.getContentAsString());
         Assert.assertEquals("es", text.getLocale());
 
         cs.deleteContent("/rel1");
@@ -756,12 +755,12 @@ public class WCMContentServiceTest {
         cs.createFolder("en", "/");
         cs.createFolder("noticias", "/es");
         cs.createFolder("news", "/en");
-        cs.createTextDocument("not1", "es", "/es/noticias", "Esta es la noticia 1");
-        cs.createTextDocument("not2", "es", "/es/noticias", "Esta es la noticia 2");
-        cs.createTextDocument("not3", "es", "/es/noticias", "Esta es la noticia 3");
-        cs.createTextDocument("new1", "en", "/en/news", "This is news 1");
-        cs.createTextDocument("new2", "en", "/en/news", "This is news 2");
-        cs.createTextDocument("new3", "en", "/en/news", "This is news 3");
+        cs.createTextDocument("not1", "es", "/es/noticias", "text/plain", "Esta es la noticia 1");
+        cs.createTextDocument("not2", "es", "/es/noticias", "text/plain", "Esta es la noticia 2");
+        cs.createTextDocument("not3", "es", "/es/noticias", "text/plain", "Esta es la noticia 3");
+        cs.createTextDocument("new1", "en", "/en/news", "text/plain", "This is news 1");
+        cs.createTextDocument("new2", "en", "/en/news", "text/plain", "This is news 2");
+        cs.createTextDocument("new3", "en", "/en/news", "text/plain", "This is news 3");
         cs.createContentRelation("/es", "/en", "en");
         WCMObject obj = cs.getContent("/es", "en");
         Assert.assertFalse(obj == null);
@@ -811,7 +810,7 @@ public class WCMContentServiceTest {
     public void createRelationshipFailsIfPathDoesntExist() throws Exception {
         cs = repos.createContentSession("admin", "admin");
 
-        cs.createTextDocument("fail", "es", "/", "Esta es un contenido de test");
+        cs.createTextDocument("fail", "es", "/", "text/plain", "Esta es un contenido de test");
 
         boolean fail = false;
         try {
@@ -839,7 +838,7 @@ public class WCMContentServiceTest {
     public void updateTextDocument() throws Exception {
         cs = repos.createContentSession("admin", "admin");
 
-        WCMTextDocument text = cs.createTextDocument("update1", "es", "/", "Esta es un contenido de test");
+        WCMTextDocument text = cs.createTextDocument("update1", "es", "/", "text/plain", "Esta es un contenido de test");
         text.setLocale("en");
         text.setContent("This is an update for a content");
         text = cs.updateTextDocument("/update1", text);
@@ -849,7 +848,7 @@ public class WCMContentServiceTest {
         Assert.assertEquals("/", text.getParentPath());
         Assert.assertEquals("/update1", text.getPath());
         Assert.assertEquals("en", text.getLocale());
-        Assert.assertEquals("This is an update for a content", text.getContent());
+        Assert.assertEquals("This is an update for a content", text.getContentAsString());
 
         cs.deleteContent("/update1");
         cs.closeSession();
@@ -859,7 +858,7 @@ public class WCMContentServiceTest {
     public void updateTextDocumentFailsIfNullArguments() throws Exception {
         cs = repos.createContentSession("admin", "admin");
 
-        WCMTextDocument text = cs.createTextDocument("update2", "es", "/", "Esta es un contenido de test");
+        WCMTextDocument text = cs.createTextDocument("update2", "es", "/", "text/plain", "Esta es un contenido de test");
         text.setLocale("en");
         text.setContent("This is an update for a content");
 
@@ -888,7 +887,7 @@ public class WCMContentServiceTest {
         }
 
         try {
-            text.setContent(null);
+            text.setContent((InputStream)null);
             cs.updateTextDocument("/update2", text);
         } catch (Exception e) {
             // Expected to fail...
@@ -907,7 +906,7 @@ public class WCMContentServiceTest {
     public void updateTextDocumentFailsIfPathDoesntExist() throws Exception {
         cs = repos.createContentSession("admin", "admin");
 
-        WCMTextDocument text = cs.createTextDocument("update3", "es", "/", "Esta es un contenido de test");
+        WCMTextDocument text = cs.createTextDocument("update3", "es", "/", "text/plain", "Esta es un contenido de test");
         text.setLocale("en");
         text.setContent("This is an update for a content");
 
@@ -930,8 +929,8 @@ public class WCMContentServiceTest {
     public void updateTextDocumentWithRelationships() throws Exception {
         cs = repos.createContentSession("admin", "admin");
 
-        cs.createTextDocument("update4es", "es", "/", "Este es un contenido de test");
-        WCMTextDocument updated = cs.createTextDocument("update4en", "en", "/", "This is a test content");
+        cs.createTextDocument("update4es", "es", "/", "text/plain", "Este es un contenido de test");
+        WCMTextDocument updated = cs.createTextDocument("update4en", "en", "/", "text/plain", "This is a test content");
         cs.createContentRelation("/update4es", "/update4en", "en");
 
         updated.setContent("This is an UPDATE of update4en");
@@ -951,14 +950,14 @@ public class WCMContentServiceTest {
     public void updateContentName() throws Exception {
         cs = repos.createContentSession("admin", "admin");
 
-        WCMTextDocument doc = cs.createTextDocument("testupdate1", "/", "This is a test content");
+        WCMTextDocument doc = cs.createTextDocument("testupdate1", "/", "text/plain", "This is a test content");
         Assert.assertEquals("testupdate1", doc.getId());
         Assert.assertEquals("/testupdate1", doc.getPath());
 
         doc = (WCMTextDocument)cs.updateContentName("/testupdate1", "newnamemodified");
         Assert.assertEquals("newnamemodified", doc.getId());
         Assert.assertEquals("/newnamemodified", doc.getPath());
-        Assert.assertEquals("This is a test content", doc.getContent());
+        Assert.assertEquals("This is a test content", doc.getContentAsString());
 
         cs.deleteContent("/newnamemodified");
         cs.closeSession();
@@ -992,7 +991,7 @@ public class WCMContentServiceTest {
 
         cs = repos.createContentSession("admin", "admin");
 
-        WCMBinaryDocument bin = cs.createBinaryDocument("testupdate3", "/", mimeType, size, fileName, content);
+        WCMBinaryDocument bin = cs.createBinaryDocument("testupdate3", "/", mimeType, fileName, content);
         Assert.assertEquals("testupdate3", bin.getId());
         Assert.assertEquals("/testupdate3", bin.getPath());
         Assert.assertEquals(size, bin.getSize());
@@ -1012,30 +1011,30 @@ public class WCMContentServiceTest {
 
         WCMTextDocument doc, doc2;
 
-        cs.createTextDocument("testupdate4", "/", "This is a test content");
+        cs.createTextDocument("testupdate4", "/", "text/plain", "This is a test content");
         cs.createContentAce("/testupdate4", "admin", WCMPrincipalType.USER, WCMPermissionType.ALL);
         cs.createContentComment("/testupdate4", "This is a test comment");
-        cs.createTextDocument("testupdate4", "es", "/", "Este es un contenido relacionado");
+        cs.createTextDocument("testupdate4", "es", "/", "text/plain", "Este es un contenido relacionado");
         doc = (WCMTextDocument)cs.createContentProperty("/testupdate4", "test", "test property");
         doc2 = (WCMTextDocument)cs.getContent("/testupdate4", "es");
 
         Assert.assertEquals("testupdate4", doc.getId());
         Assert.assertEquals("/testupdate4", doc.getPath());
-        Assert.assertEquals("This is a test content", doc.getContent());
+        Assert.assertEquals("This is a test content", doc.getContentAsString());
         Assert.assertEquals(1, doc.getAcl().getAces().size());
         Assert.assertEquals(1, doc.getComments().size());
         Assert.assertEquals("test property", doc.getProperties().get("test"));
-        Assert.assertEquals("Este es un contenido relacionado", doc2.getContent());
+        Assert.assertEquals("Este es un contenido relacionado", doc2.getContentAsString());
 
         doc = (WCMTextDocument)cs.updateContentName("/testupdate4", "newnamemodified4");
         doc2 = (WCMTextDocument)cs.getContent("/newnamemodified4", "es");
         Assert.assertEquals("newnamemodified4", doc.getId());
         Assert.assertEquals("/newnamemodified4", doc.getPath());
-        Assert.assertEquals("This is a test content", doc.getContent());
+        Assert.assertEquals("This is a test content", doc.getContentAsString());
         Assert.assertEquals(1, doc.getAcl().getAces().size());
         Assert.assertEquals(1, doc.getComments().size());
         Assert.assertEquals("test property", doc.getProperties().get("test"));
-        Assert.assertEquals("Este es un contenido relacionado", doc2.getContent());
+        Assert.assertEquals("Este es un contenido relacionado", doc2.getContentAsString());
 
         cs.deleteContent(doc.getPath());
         cs.deleteContent(doc2.getPath());
@@ -1092,15 +1091,15 @@ public class WCMContentServiceTest {
         WCMTextDocument doc;
 
         cs.createFolder("updatefolder1", "/");
-        doc = cs.createTextDocument("testupdate5", "/", "This is a test content");
+        doc = cs.createTextDocument("testupdate5", "/", "text/plain", "This is a test content");
         Assert.assertEquals("testupdate5", doc.getId());
         Assert.assertEquals("/testupdate5", doc.getPath());
-        Assert.assertEquals("This is a test content", doc.getContent());
+        Assert.assertEquals("This is a test content", doc.getContentAsString());
 
         doc = (WCMTextDocument)cs.updateContentPath("/testupdate5", "/updatefolder1");
         Assert.assertEquals("testupdate5", doc.getId());
         Assert.assertEquals("/updatefolder1/testupdate5", doc.getPath());
-        Assert.assertEquals("This is a test content", doc.getContent());
+        Assert.assertEquals("This is a test content", doc.getContentAsString());
 
         cs.deleteContent("/updatefolder1");
         cs.closeSession();
@@ -1136,7 +1135,7 @@ public class WCMContentServiceTest {
 
         cs = repos.createContentSession("admin", "admin");
 
-        WCMBinaryDocument bin = cs.createBinaryDocument("testupdate6", "/", mimeType, size, fileName, content);
+        WCMBinaryDocument bin = cs.createBinaryDocument("testupdate6", "/", mimeType, fileName, content);
         Assert.assertEquals("testupdate6", bin.getId());
         Assert.assertEquals("/testupdate6", bin.getPath());
         Assert.assertEquals(size, bin.getSize());
@@ -1159,31 +1158,31 @@ public class WCMContentServiceTest {
 
         WCMTextDocument doc, doc2;
 
-        cs.createTextDocument("testupdate7", "/", "This is a test content");
+        cs.createTextDocument("testupdate7", "/", "text/plain", "This is a test content");
         cs.createContentAce("/testupdate7", "admin", WCMPrincipalType.USER, WCMPermissionType.ALL);
         cs.createContentComment("/testupdate7", "This is a test comment");
-        cs.createTextDocument("testupdate7", "es", "/", "Este es un contenido relacionado");
+        cs.createTextDocument("testupdate7", "es", "/", "text/plain", "Este es un contenido relacionado");
         doc = (WCMTextDocument)cs.createContentProperty("/testupdate7", "test", "test property");
         doc2 = (WCMTextDocument)cs.getContent("/testupdate7", "es");
 
         Assert.assertEquals("testupdate7", doc.getId());
         Assert.assertEquals("/testupdate7", doc.getPath());
-        Assert.assertEquals("This is a test content", doc.getContent());
+        Assert.assertEquals("This is a test content", doc.getContentAsString());
         Assert.assertEquals(1, doc.getAcl().getAces().size());
         Assert.assertEquals(1, doc.getComments().size());
         Assert.assertEquals("test property", doc.getProperties().get("test"));
-        Assert.assertEquals("Este es un contenido relacionado", doc2.getContent());
+        Assert.assertEquals("Este es un contenido relacionado", doc2.getContentAsString());
 
         cs.createFolder("subfolder7", "/");
         doc = (WCMTextDocument)cs.updateContentPath("/testupdate7", "/subfolder7");
         doc2 = (WCMTextDocument)cs.getContent("/subfolder7/testupdate7", "es");
         Assert.assertEquals("testupdate7", doc.getId());
         Assert.assertEquals("/subfolder7/testupdate7", doc.getPath());
-        Assert.assertEquals("This is a test content", doc.getContent());
+        Assert.assertEquals("This is a test content", doc.getContentAsString());
         Assert.assertEquals(1, doc.getAcl().getAces().size());
         Assert.assertEquals(1, doc.getComments().size());
         Assert.assertEquals("test property", doc.getProperties().get("test"));
-        Assert.assertEquals("Este es un contenido relacionado", doc2.getContent());
+        Assert.assertEquals("Este es un contenido relacionado", doc2.getContentAsString());
 
         cs.deleteContent("/subfolder7");
         cs.deleteContent(doc2.getPath());
@@ -1238,7 +1237,7 @@ public class WCMContentServiceTest {
     // By default "lucas" user has not READ rights on default root repository
     public void updateTextDocumentFailsIfUserDoesntHaveRights() throws Exception {
         cs = repos.createContentSession("admin", "admin");
-        cs.createTextDocument("update5", "es", "/", "Este es un contenido de test");
+        cs.createTextDocument("update5", "es", "/", "text/plain", "Este es un contenido de test");
         cs.closeSession();
 
         cs = repos.createContentSession("admin", "admin");
@@ -1269,7 +1268,7 @@ public class WCMContentServiceTest {
         String mimeType = "application/pdf";
 
         cs = repos.createContentSession("admin", "admin");
-        WCMBinaryDocument update6 = cs.createBinaryDocument("update6", "en", "/", mimeType, size, fileName, content);
+        WCMBinaryDocument update6 = cs.createBinaryDocument("update6", "en", "/", mimeType, fileName, content);
 
         content = (FileInputStream) Thread.currentThread().getContextClassLoader().getResourceAsStream("/wcm-whiteboard.jpg");
         size = content.available();
@@ -1277,7 +1276,6 @@ public class WCMContentServiceTest {
         mimeType = "image/jpeg";
 
         update6.setContent(content);
-        update6.setSize(size);
         update6.setFileName(fileName);
         update6.setMimeType(mimeType);
         update6 = cs.updateBinaryDocument("/update6", update6);
@@ -1291,9 +1289,10 @@ public class WCMContentServiceTest {
         Assert.assertEquals(fileName, update6.getFileName());
         Assert.assertEquals(size, update6.getSize());
         Assert.assertEquals(mimeType, update6.getMimeType());
-        Assert.assertFalse(update6.getContent() == null);
+        InputStream in = update6.getContentAsInputStream();
+        Assert.assertNotNull(in);
 
-        byte[] file = toByteArray(update6.getContent());
+        byte[] file = toByteArray(in);
         Assert.assertEquals(update6.getSize(), file.length);
 
         cs.deleteContent("/update6");
@@ -1309,7 +1308,7 @@ public class WCMContentServiceTest {
         String mimeType = "application/pdf";
 
         cs = repos.createContentSession("admin", "admin");
-        WCMBinaryDocument update7 = cs.createBinaryDocument("update7", "en", "/", mimeType, size, fileName, content);
+        WCMBinaryDocument update7 = cs.createBinaryDocument("update7", "en", "/", mimeType, fileName, content);
 
         content = (FileInputStream) Thread.currentThread().getContextClassLoader().getResourceAsStream("/wcm-whiteboard.jpg");
         size = content.available();
@@ -1318,7 +1317,6 @@ public class WCMContentServiceTest {
 
         update7.setLocale("es");
         update7.setContent(content);
-        update7.setSize(size);
         update7.setFileName(fileName);
         update7.setMimeType(mimeType);
 
@@ -1356,15 +1354,6 @@ public class WCMContentServiceTest {
         }
 
         try {
-            update7.setSize(0);
-            cs.updateBinaryDocument("/update7", update7);
-        } catch (Exception e) {
-            // Expected to fail...
-            fail = true;
-            update7.setSize(size);
-        }
-
-        try {
             update7.setFileName(null);
             cs.updateBinaryDocument("/update7", update7);
         } catch (Exception e) {
@@ -1398,7 +1387,7 @@ public class WCMContentServiceTest {
         String mimeType = "application/pdf";
 
         cs = repos.createContentSession("admin", "admin");
-        WCMBinaryDocument update8 = cs.createBinaryDocument("update8", "en", "/", mimeType, size, fileName, content);
+        WCMBinaryDocument update8 = cs.createBinaryDocument("update8", "en", "/", mimeType, fileName, content);
 
         content = (FileInputStream) Thread.currentThread().getContextClassLoader().getResourceAsStream("/wcm-whiteboard.jpg");
         size = content.available();
@@ -1407,7 +1396,6 @@ public class WCMContentServiceTest {
 
         update8.setLocale("es");
         update8.setContent(content);
-        update8.setSize(size);
         update8.setFileName(fileName);
         update8.setMimeType(mimeType);
 
@@ -1437,7 +1425,7 @@ public class WCMContentServiceTest {
         String mimeType = "application/pdf";
 
         cs = repos.createContentSession("admin", "admin");
-        WCMBinaryDocument update9 = cs.createBinaryDocument("update9", "en", "/", mimeType, size, fileName, content);
+        WCMBinaryDocument update9 = cs.createBinaryDocument("update9", "en", "/", mimeType, fileName, content);
         cs.closeSession();
 
         cs = repos.createContentSession("admin", "admin");
@@ -1449,7 +1437,6 @@ public class WCMContentServiceTest {
 
         update9.setLocale("es");
         update9.setContent(content);
-        update9.setSize(size);
         update9.setFileName(fileName);
         update9.setMimeType(mimeType);
 
@@ -1489,12 +1476,11 @@ public class WCMContentServiceTest {
         String mimeType3 = "image/jpeg";
 
         cs = repos.createContentSession("admin", "admin");
-        cs.createBinaryDocument("update10en", "en", "/", mimeType, size, fileName, content);
-        WCMBinaryDocument update10es = cs.createBinaryDocument("update10es", "es", "/", mimeType2, size2, fileName2, content2);
+        cs.createBinaryDocument("update10en", "en", "/", mimeType, fileName, content);
+        WCMBinaryDocument update10es = cs.createBinaryDocument("update10es", "es", "/", mimeType2, fileName2, content2);
         cs.createContentRelation("/update10en", "/update10es", "es");
 
         update10es.setContent(content3);
-        update10es.setSize(size3);
         update10es.setFileName(fileName3);
         update10es.setMimeType(mimeType3);
 
@@ -1503,7 +1489,7 @@ public class WCMContentServiceTest {
 
         Assert.assertTrue(obj.equals(bin));
 
-        byte[] file = toByteArray(((WCMBinaryDocument) obj).getContent());
+        byte[] file = toByteArray(((WCMBinaryDocument) obj).getContentAsInputStream());
         Assert.assertEquals(bin.getSize(), file.length);
 
         cs.deleteContent("/update10es");
@@ -1927,7 +1913,7 @@ public class WCMContentServiceTest {
     public void putContentCategory() throws Exception {
         cs = repos.createContentSession("admin", "admin");
 
-        cs.createTextDocument("testcat", "/", "This is a test of attached category to a content");
+        cs.createTextDocument("testcat", "/", "text/plain", "This is a test of attached category to a content");
         cs.createCategory("world11", "World category", "/");
         cs.createCategory("sports1", "Sports category", "/");
         cs.putContentCategory("/testcat", "/world11");
@@ -2006,9 +1992,9 @@ public class WCMContentServiceTest {
         cs = repos.createContentSession("admin", "admin");
 
         cs.createCategory("testcategory", "Test Category", "/");
-        cs.createTextDocument("testcat1", "/", "This is test content for category 1");
-        cs.createTextDocument("testcat2", "/", "This is test content for category 2");
-        cs.createTextDocument("testcat3", "/", "This is test content for category 3");
+        cs.createTextDocument("testcat1", "/", "text/plain", "This is test content for category 1");
+        cs.createTextDocument("testcat2", "/", "text/plain", "This is test content for category 2");
+        cs.createTextDocument("testcat3", "/", "text/plain", "This is test content for category 3");
 
         cs.putContentCategory("/testcat1", "/testcategory");
         cs.putContentCategory("/testcat2", "/testcategory");
@@ -2110,8 +2096,8 @@ public class WCMContentServiceTest {
         int news = 1;
         for (int site = 1; site <= 3; site++) {
             for (int i = 1; i <= 4; i++) {
-                cs.createTextDocument("new" + news, "es", "/site" + site, "Esta es la noticia " + news);
-                cs.createTextDocument("new" + news, "en", "/site" + site, "This is the news " + news);
+                cs.createTextDocument("new" + news, "es", "/site" + site, "text/plain", "Esta es la noticia " + news);
+                cs.createTextDocument("new" + news, "en", "/site" + site, "text/plain", "This is the news " + news);
                 news++;
             }
         }
@@ -2231,7 +2217,7 @@ public class WCMContentServiceTest {
     public void createComment() throws Exception {
         cs = repos.createContentSession("admin", "admin");
 
-        cs.createTextDocument("testcomment", "/", "This is a text with comments");
+        cs.createTextDocument("testcomment", "/", "text/plain", "This is a text with comments");
         WCMTextDocument c = (WCMTextDocument)cs.createContentComment("/testcomment", "This is comment 1");
         Assert.assertEquals("This is comment 1", c.getComments().get(0).getComment());
 
@@ -2289,7 +2275,7 @@ public class WCMContentServiceTest {
     public void deleteComment() throws Exception {
         cs = repos.createContentSession("admin", "admin");
 
-        cs.createTextDocument("testcomment2", "/", "This is a text with comments");
+        cs.createTextDocument("testcomment2", "/", "text/plain", "This is a text with comments");
         WCMTextDocument d = (WCMTextDocument)cs.createContentComment("/testcomment2", "This is comment 1");
         WCMComment c = d.getComments().get(0);
 
@@ -2309,7 +2295,7 @@ public class WCMContentServiceTest {
     public void createContentProperty() throws Exception {
         cs = repos.createContentSession("admin", "admin");
 
-        cs.createTextDocument("testproperty1", "/", "This is a text with properties");
+        cs.createTextDocument("testproperty1", "/", "text/plain", "This is a text with properties");
         cs.createContentProperty("/testproperty1", "title", "This is the title");
         cs.createContentProperty("/testproperty1", "description", "This is a description");
         WCMTextDocument obj = (WCMTextDocument) cs.createContentProperty("/testproperty1", "kpi", "10");
@@ -2377,7 +2363,7 @@ public class WCMContentServiceTest {
     public void updateContentProperty() throws Exception {
         cs = repos.createContentSession("admin", "admin");
 
-        cs.createTextDocument("testproperty2", "/", "This is a text with properties");
+        cs.createTextDocument("testproperty2", "/", "text/plain", "This is a text with properties");
         cs.createContentProperty("/testproperty2", "title", "This is the title");
         cs.createContentProperty("/testproperty2", "description", "This is a description");
         cs.createContentProperty("/testproperty2", "kpi", "10");
@@ -2446,7 +2432,7 @@ public class WCMContentServiceTest {
     public void deleteContentProperty() throws Exception {
         cs = repos.createContentSession("admin", "admin");
 
-        cs.createTextDocument("testproperty3", "/", "This is a text with properties");
+        cs.createTextDocument("testproperty3", "/", "text/plain", "This is a text with properties");
         cs.createContentProperty("/testproperty3", "title", "This is the title");
         cs.createContentProperty("/testproperty3", "description", "This is a description");
         WCMTextDocument obj = (WCMTextDocument) cs.createContentProperty("/testproperty3", "kpi", "10");
@@ -2626,7 +2612,7 @@ public class WCMContentServiceTest {
     public void getVersions() throws Exception {
         cs = repos.createContentSession("admin", "admin");
 
-        WCMTextDocument doc = cs.createTextDocument("testversions", "/", "This is Version 1");
+        WCMTextDocument doc = cs.createTextDocument("testversions", "/", "text/plain", "This is Version 1");
 
         Assert.assertEquals(1, cs.getVersions("/testversions").size());
 
@@ -2702,7 +2688,7 @@ public class WCMContentServiceTest {
         cs = repos.createContentSession("admin", "admin");
 
         // Version 1.0
-        WCMTextDocument doc = cs.createTextDocument("testversions3", "/", "This is Version 1");
+        WCMTextDocument doc = cs.createTextDocument("testversions3", "/", "text/plain", "This is Version 1");
 
         // Version 1.1
         doc.setContent("This is Version 2");
@@ -2718,19 +2704,19 @@ public class WCMContentServiceTest {
 
         cs.restore("/testversions3", "1.0");
         doc = (WCMTextDocument) cs.getContent("/testversions3");
-        Assert.assertEquals("This is Version 1", doc.getContent());
+        Assert.assertEquals("This is Version 1", doc.getContentAsString());
 
         cs.restore("/testversions3", "1.1");
         doc = (WCMTextDocument) cs.getContent("/testversions3");
-        Assert.assertEquals("This is Version 2", doc.getContent());
+        Assert.assertEquals("This is Version 2", doc.getContentAsString());
 
         cs.restore("/testversions3", "1.2");
         doc = (WCMTextDocument) cs.getContent("/testversions3");
-        Assert.assertEquals("This is Version 3", doc.getContent());
+        Assert.assertEquals("This is Version 3", doc.getContentAsString());
 
         cs.restore("/testversions3", "1.3");
         doc = (WCMTextDocument) cs.getContent("/testversions3");
-        Assert.assertEquals("This is Version 4", doc.getContent());
+        Assert.assertEquals("This is Version 4", doc.getContentAsString());
 
         cs.deleteContent("/testversions3");
         cs.closeSession();
@@ -2804,7 +2790,7 @@ public class WCMContentServiceTest {
         cs = repos.createContentSession("admin", "admin");
 
         // Version 1.0
-        WCMTextDocument doc = cs.createTextDocument("testversions5", "/", "This is Version 1");
+        WCMTextDocument doc = cs.createTextDocument("testversions5", "/", "text/plain", "This is Version 1");
 
         // Version 1.1
         doc.setContent("This is Version 2");

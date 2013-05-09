@@ -35,4 +35,14 @@ public class WCMConstants {
 
     public static final List<String> RESERVED_ENTRIES = Arrays.asList("jcr:system", "__acl", "__wcmstatus", "__wcmroles", "__comments", "__categories", "__properties" , "__relationships");
 
+    /**
+     * Size used when reading from or writing to binary or character streams.
+     */
+    public static final int BUFFER_SIZE = 128;
+
+    public static final String DEFAULT_ENCODING = "UTF-8";
+
+    public static final String MIME_TEXT_HTML = "text/html";
+    public static final String DEFAULT_MIME_TYPE = MIME_TEXT_HTML;
+
 }

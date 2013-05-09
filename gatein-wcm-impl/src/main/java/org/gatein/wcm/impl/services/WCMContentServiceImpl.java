@@ -22,7 +22,9 @@
  */
 package org.gatein.wcm.impl.services;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Set;
 
@@ -40,10 +42,12 @@ import org.gatein.wcm.api.services.WCMContentService;
 import org.gatein.wcm.api.services.exceptions.WCMContentException;
 import org.gatein.wcm.api.services.exceptions.WCMContentIOException;
 import org.gatein.wcm.api.services.exceptions.WCMContentSecurityException;
+import org.gatein.wcm.impl.model.WCMConstants;
 import org.gatein.wcm.impl.services.commands.CreateCommand;
 import org.gatein.wcm.impl.services.commands.DeleteCommand;
 import org.gatein.wcm.impl.services.commands.ReadCommand;
 import org.gatein.wcm.impl.services.commands.UpdateCommand;
+import org.gatein.wcm.impl.util.ConvertibleByteArrayOutputStream;
 
 /**
  * @see {@link WCMContentService}
@@ -69,10 +73,18 @@ public class WCMContentServiceImpl implements WCMContentService {
      * @see {@link WCMContentService#createTextDocument(String, String, String, String)}
      */
     @Override
-    public WCMTextDocument createTextDocument(String id, String locale, String path, String content)
+    public WCMTextDocument createTextDocument(String id, String locale, String path, String mimeType, String content)
             throws WCMContentException, WCMContentIOException, WCMContentSecurityException {
         CreateCommand command = new CreateCommand(jcrSession, logged);
-        WCMTextDocument output = command.createTextDocument(id, locale, path, content);
+        ConvertibleByteArrayOutputStream out = new ConvertibleByteArrayOutputStream();
+        try {
+            OutputStreamWriter w = new OutputStreamWriter(out, WCMConstants.DEFAULT_ENCODING);
+            w.write(content);
+            w.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        WCMTextDocument output = (WCMTextDocument) command.createBinaryContent(id, locale, path, mimeType, WCMConstants.DEFAULT_ENCODING, id, out.createInputStream());
         return output;
     }
 
@@ -80,11 +92,9 @@ public class WCMContentServiceImpl implements WCMContentService {
      * @see {@link WCMContentService#createTextContent(String, String, String)}
      */
     @Override
-    public WCMTextDocument createTextDocument(String id, String path, String html) throws WCMContentException,
+    public WCMTextDocument createTextDocument(String id, String path, String mimeType, String content) throws WCMContentException,
             WCMContentIOException, WCMContentSecurityException {
-        CreateCommand command = new CreateCommand(jcrSession, logged);
-        WCMTextDocument output = command.createTextDocument(id, defaultLocale, path, html);
-        return output;
+        return createTextDocument(id, defaultLocale, path, mimeType, content);
     }
 
     /**
@@ -102,11 +112,11 @@ public class WCMContentServiceImpl implements WCMContentService {
      * @see {@link WCMContentService#createBinaryContent(String, String, String, String, long, String, InputStream)}
      */
     @Override
-    public WCMBinaryDocument createBinaryDocument(String id, String locale, String path, String contentType, long size,
+    public WCMBinaryDocument createBinaryDocument(String id, String locale, String path, String contentType,
             String fileName, InputStream content) throws WCMContentException, WCMContentIOException,
             WCMContentSecurityException {
         CreateCommand command = new CreateCommand(jcrSession, logged);
-        WCMBinaryDocument output = command.createBinaryContent(id, locale, path, contentType, size, fileName, content);
+        WCMBinaryDocument output = command.createBinaryContent(id, locale, path, contentType, null, fileName, content);
         return output;
     }
 
@@ -114,11 +124,9 @@ public class WCMContentServiceImpl implements WCMContentService {
      * @see {@link WCMContentService#createBinaryContent(String, String, String, long, String, InputStream)}
      */
     @Override
-    public WCMBinaryDocument createBinaryDocument(String id, String path, String contentType, long size, String fileName,
+    public WCMBinaryDocument createBinaryDocument(String id, String path, String contentType, String fileName,
             InputStream content) throws WCMContentException, WCMContentIOException, WCMContentSecurityException {
-        CreateCommand command = new CreateCommand(jcrSession, logged);
-        WCMBinaryDocument output = command.createBinaryContent(id, defaultLocale, path, contentType, size, fileName, content);
-        return output;
+        return createBinaryDocument(id, defaultLocale, path, contentType, fileName, content);
     }
 
     /**

@@ -85,7 +85,7 @@ public class WcmResource extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_OK);
 
                 byte[] buffer = new byte[16384];
-                InputStream in = b.getContent();
+                InputStream in = b.getContentAsInputStream();
                 BufferedOutputStream out = new BufferedOutputStream(resp.getOutputStream());
                 for (int length = 0; (length = in.read(buffer)) > 0;) {
                     out.write(buffer, 0, length);

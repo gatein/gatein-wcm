@@ -22,6 +22,8 @@
  */
 package org.gatein.wcm.api.model.content;
 
+import java.io.Reader;
+
 /**
  *
  * Text content representation. <br />
@@ -37,31 +39,27 @@ package org.gatein.wcm.api.model.content;
  * @author <a href="mailto:lponce@redhat.com">Lucas Ponce</a>
  *
  */
-public interface WCMTextDocument extends WCMObject {
+public interface WCMTextDocument extends WCMBinaryDocument {
 
     /**
+     * Returns a {@link Reader} suitable for getting a text representation of this {@link WCMTextDocument}. Do not forget to
+     * call {@link Reader#close()} when you are finished with reading the returned {@link Reader}.
      *
-     * @return This method returns locale of the document. <br>
+     * @return a reader
      */
-    String getLocale();
-
-    /**
-     *
-     * @param locale Locale of the content
-     */
-    void setLocale(String locale);
-
-    /**
-     *
-     * @return This method returns the version of the content.
-     */
-    String getVersion();
+    Reader getContentAsReader();
 
     /**
      *
      * @return This method returns text of the content.
      */
-    String getContent();
+    void setContent(Reader reader);
+
+    /**
+     *
+     * @return This method returns text of the content.
+     */
+    String getContentAsString();
 
     /**
      *
