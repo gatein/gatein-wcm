@@ -63,7 +63,7 @@ public interface WCMContentService {
      * @throws WCMContentIOException if any IO related problem with repository.
      * @throws WCMContentSecurityException if user has not been granted to create content under specified path.
      */
-    WCMTextDocument createTextDocument(String id, String locale, String path, String content) throws WCMContentException,
+    WCMTextDocument createTextDocument(String id, String locale, String path, String mimeType, String content) throws WCMContentException,
             WCMContentIOException, WCMContentSecurityException;
 
     /**
@@ -81,7 +81,7 @@ public interface WCMContentService {
      * @throws WCMContentIOException if any IO related problem with repository.
      * @throws WCMContentSecurityException if user has not been granted to create content under specified path.
      */
-    WCMTextDocument createTextDocument(String id, String path, String html) throws WCMContentException, WCMContentIOException,
+    WCMTextDocument createTextDocument(String id, String path, String mimeType, String content) throws WCMContentException, WCMContentIOException,
             WCMContentSecurityException;
 
     /**
@@ -111,7 +111,6 @@ public interface WCMContentService {
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
      * @param mimeType - MIME Type content type
-     * @param size - Size's file.
      * @param fileName - Name's file.
      * @param content - Source of the file.
      * @return Content updated (if ok), null (if error).
@@ -119,7 +118,7 @@ public interface WCMContentService {
      * @throws WCMContentIOException if any IO related problem with repository.
      * @throws WCMContentSecurityException if user has not been granted to create content under specified path.
      */
-    WCMBinaryDocument createBinaryDocument(String id, String locale, String path, String mimeType, long size, String fileName,
+    WCMBinaryDocument createBinaryDocument(String id, String locale, String path, String mimeType, String fileName,
             InputStream content) throws WCMContentException, WCMContentIOException, WCMContentSecurityException;
 
     /**
@@ -132,7 +131,6 @@ public interface WCMContentService {
      *        String with format: / &lt;id&gt; / &lt;id&gt; / &lt;id&gt; <br>
      *        where "/" is the root of repository and &lt;id&gt; folders ID
      * @param mimeType - MIME Type content type
-     * @param size - Size's file.
      * @param fileName - Name's file.
      * @param content - Source of the file.
      * @return Content updated (if ok), null (if error).
@@ -140,7 +138,7 @@ public interface WCMContentService {
      * @throws WCMContentIOException if any IO related problem with repository.
      * @throws WCMContentSecurityException if user has not been granted to create content under specified path.
      */
-    WCMBinaryDocument createBinaryDocument(String id, String path, String mimeType, long size, String fileName,
+    WCMBinaryDocument createBinaryDocument(String id, String path, String mimeType, String fileName,
             InputStream content) throws WCMContentException, WCMContentIOException, WCMContentSecurityException;
 
     /**

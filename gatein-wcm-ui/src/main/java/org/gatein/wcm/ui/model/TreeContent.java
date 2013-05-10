@@ -93,7 +93,7 @@ public class TreeContent {
 
     public String getText() {
         if (text == null && getTextContent() != null) {
-            text = getTextContent().getContent();
+            text = getTextContent().getContentAsString();
         }
         return text;
     }

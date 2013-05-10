@@ -27,12 +27,10 @@ import java.io.InputStream;
 import javax.jcr.AccessDeniedException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.Value;
 
 import org.gatein.wcm.api.model.content.WCMBinaryDocument;
 import org.gatein.wcm.api.model.content.WCMFolder;
 import org.gatein.wcm.api.model.content.WCMObject;
-import org.gatein.wcm.api.model.content.WCMTextDocument;
 import org.gatein.wcm.api.model.metadata.WCMCategory;
 import org.gatein.wcm.api.model.security.WCMPermissionType;
 import org.gatein.wcm.api.model.security.WCMPrincipalType;
@@ -67,71 +65,6 @@ public class CreateCommand {
         jcr = new JcrMappings(jcrSession, logged);
         factory = new WCMContentFactory(jcr, logged);
         jcr.setFactory(factory);
-    }
-
-    /**
-     * @see {@link WCMContentService#createTextDocument(String, String, String, String)}
-     */
-    public WCMTextDocument createTextDocument(String id, String locale, String path, String content)
-            throws WCMContentException, WCMContentIOException, WCMContentSecurityException {
-        log.debug("createTextDocument()");
-
-        // Check null parameters
-        if (id == null || "".equals(id)) {
-            throw new WCMContentException("Parameter id cannot be null or empty");
-        }
-        if (locale == null || "".equals(locale)) {
-            throw new WCMContentException("Parameter locale cannot be null or empty");
-        }
-        if (path == null || "".equals(path)) {
-            throw new WCMContentException("Parameter path cannot be null or empty");
-        }
-        if (content == null || "".equals(content)) {
-            throw new WCMContentException("Parameter content cannot be null or empty");
-        }
-
-        // Check if the current JCR Session is valid
-        if (!jcr.checkSession())
-            throw new WCMContentIOException("JCR Session is null");
-
-        // Check if the location specified exists in the JCR Repository/Workspace
-        try {
-            if (!jcr.checkParentPath(path))
-                throw new WCMContentException("Path: " + path + " doesn't exist for createTextDocument() operation. ");
-        } catch (AccessDeniedException e) {
-            throw new WCMContentSecurityException("User: " + logged.getUserName() + " has not READ rights in path: " + path);
-        }
-
-        // Check if there is a content with same id in the specified location
-        String checkId = jcr.checkIdExists(path, id, locale);
-        if (checkId != null && checkId.equals(id))
-            throw new WCMContentException("Path: " + path + " Locale: " + locale + " id: " + id
-                    + " exists for createTextDocument() operation. ");
-        checkId = (checkId == null ? id : checkId);
-
-        // Check if user has rights to access
-        if (!jcr.checkUserWriteACL(path))
-            throw new WCMContentSecurityException("User: " + logged.getUserName() + " has not WRITE rights in path: " + path);
-
-        // Creating new Node
-        try {
-
-            Value contentValue = jcr.jcrValue(content);
-            jcr.createTextNode(checkId, locale, path, contentValue);
-            // Creates a relationship if the id is a suggested one
-            if (!checkId.equals(id)) {
-                String sourcePath = ("/".equals(path)?"/" + id:path + "/" + id);
-                String targetPath = ("/".equals(path)?"/" + checkId:path + "/" + checkId);
-                jcr.jcrRelationShip(sourcePath, targetPath, locale);
-            }
-            // Return the model with the content
-            return factory.createTextDocument(checkId, locale, path, content);
-
-        } catch (RepositoryException e) {
-            jcr.checkJCRException(e);
-        }
-
-        return null;
     }
 
     /**
@@ -184,8 +117,7 @@ public class CreateCommand {
     /**
      * @see {@link WCMContentService#createBinaryContent(String, String, String, String, long, String, InputStream)}
      */
-    public WCMBinaryDocument createBinaryContent(String id, String locale, String path, String mimeType, long size,
-            String fileName, InputStream content) throws WCMContentException, WCMContentIOException,
+    public WCMBinaryDocument createBinaryContent(String id, String locale, String path, String mimeType, String encoding, String fileName, InputStream content) throws WCMContentException, WCMContentIOException,
             WCMContentSecurityException {
         log.debug("createBinaryContent()");
 
@@ -201,9 +133,6 @@ public class CreateCommand {
         }
         if (mimeType == null || "".equals(mimeType)) {
             throw new WCMContentException("Parameter mimeType cannot be null or empty");
-        }
-        if (size == 0) {
-            throw new WCMContentException("Parameter size cannot be null or 0");
         }
         if (fileName == null || "".equals(fileName)) {
             throw new WCMContentException("Parameter fileName cannot be null or empty");
@@ -238,14 +167,14 @@ public class CreateCommand {
 
         // Creating new Node
         try {
-            jcr.createBinaryNode(checkId, locale, path, mimeType, size, fileName, content);
+            jcr.createBinaryNode(checkId, locale, path, mimeType, encoding, fileName, content);
             // Creates a relationship if the id is a suggested one
             if (!checkId.equals(id)) {
                 String sourcePath = ("/".equals(path)?"/" + id:path + "/" + id);
                 String targetPath = ("/".equals(path)?"/" + checkId:path + "/" + checkId);
                 jcr.jcrRelationShip(sourcePath, targetPath, locale);
             }
-            return factory.createBinaryContent(checkId, locale, path, mimeType, size, fileName);
+            return factory.createBinaryContent(checkId, locale, path, mimeType, encoding, fileName);
         } catch (RepositoryException e) {
             jcr.checkJCRException(e);
         }

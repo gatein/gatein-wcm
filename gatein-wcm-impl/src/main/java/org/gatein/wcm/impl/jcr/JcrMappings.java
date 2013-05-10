@@ -416,52 +416,6 @@ public class JcrMappings {
     }
 
     /**
-     * Maps a WCMTextDocument into JCR
-     * @param id - Id of the content
-     * @param locale - locale of the content
-     * @param path - Parent path of the content
-     * @param content - Value of the content
-     * @throws RepositoryException
-     */
-    public void createTextNode(String id, String locale, String path, Value content) throws RepositoryException {
-
-        String tmpPath = ("/".equals(path) ? "" : path);
-        String contentId = tmpPath + "/" + id;
-
-        Node n;
-        jcrSession.getNode(path).addNode(id, "nt:file").addNode("jcr:content", "nt:resource").setProperty("jcr:data", content);
-
-        n = jcrSession.getNode(contentId);
-        n.addMixin("mix:title");
-        n.addMixin("mix:lastModified");
-        n.addMixin("mix:shareable");
-        n.addMixin("mix:versionable");
-        n.addMixin("mix:language");
-
-        // Checking out for add new version of content
-        vm.checkout(contentId);
-
-        n.setProperty("jcr:description", "textcontent:" + n.getPath());
-        n.setProperty("jcr:language", locale);
-
-        // Saving changes into JCR
-        jcrSession.save();
-
-        // Checkin version
-        vm.checkin(contentId);
-
-        // Init metadata
-        // __acl
-        jcrCreatePath("/__acl" + contentId);
-        // __comments
-        jcrCreatePath("/__comments" + contentId);
-        // __properties
-        jcrCreatePath("/__properties" + contentId);
-        // __relationships
-        jcrCreatePath("/__relationships" + contentId);
-    }
-
-    /**
      * It deletes a node from JCR representing a WCM content.
      * It deletes also its metadata.
      * @param path
@@ -586,35 +540,41 @@ public class JcrMappings {
      * @param content
      * @throws RepositoryException
      */
-    public void createBinaryNode(String id, String locale, String path, String mimeType, long size, String fileName,
+    public void createBinaryNode(String id, String locale, String path, String mimeType, String encoding, String fileName,
             InputStream content) throws RepositoryException {
 
         String tmpPath = ("/".equals(path) ? "" : path);
         String contentId = tmpPath + "/" + id;
 
-        Node n;
+
+        Node ntFile = jcrSession.getNode(path).addNode(id, "nt:file");
+
+        ntFile.addMixin("mix:title");
+        ntFile.addMixin("mix:lastModified");
+        ntFile.addMixin("mix:shareable");
+        ntFile.addMixin("mix:versionable");
+        ntFile.addMixin("mix:language");
+        ntFile.addMixin("mix:mimeType");
+
+        Node ntResource = ntFile.addNode("jcr:content", "nt:resource");
+        ntResource.addMixin("mix:title");
 
         Binary _content = jcrSession.getValueFactory().createBinary(content);
-
-        jcrSession.getNode(path).addNode(id, "nt:file").addNode("jcr:content", "nt:resource").setProperty("jcr:data", _content);
-
-        n = jcrSession.getNode(contentId);
-        n.addMixin("mix:title");
-        n.addMixin("mix:lastModified");
-        n.addMixin("mix:shareable");
-        n.addMixin("mix:versionable");
-        n.addMixin("mix:language");
-        n.addMixin("mix:mimeType");
-        n.getNode("jcr:content").addMixin("mix:title");
+        ntResource.setProperty("jcr:data", _content);
+        ntResource.setProperty("jcr:description", _content.getSize());
+        if (encoding != null) {
+            ntResource.setProperty("jcr:encoding", encoding);
+        }
+        ntResource.setProperty("jcr:mimeType", mimeType);
 
         // Checking out for add new version of content
         vm.checkout(contentId);
 
-        n.setProperty("jcr:description", "binarycontent:" + n.getPath());
-        n.setProperty("jcr:language", locale);
-        n.setProperty("jcr:mimeType", mimeType);
-        n.setProperty("jcr:title", fileName);
-        n.getNode("jcr:content").setProperty("jcr:description", size);
+        ntFile.setProperty("jcr:description", "binarycontent:" + ntFile.getPath());
+        ntFile.setProperty("jcr:language", locale);
+        ntFile.setProperty("jcr:mimeType", mimeType);
+        ntFile.setProperty("jcr:title", fileName);
+
 
         // Saving changes into JCR
         jcrSession.save();
@@ -673,29 +633,6 @@ public class JcrMappings {
             return null;
 
         return keys;
-    }
-
-    /**
-     * Update a JCR node representing a WCMTextDocument
-     *
-     * @param path - Path in the JCR
-     * @param locale - Locale to update
-     * @param content - Content to update
-     * @throws RepositoryException
-     */
-    public void updateTextNode(String path, String locale, Value content) throws RepositoryException {
-        if ("/".equals(path))
-            return;
-
-        vm.checkout(path);
-
-        Node n = jcrSession.getNode(path);
-
-        n.setProperty("jcr:language", locale);
-        n.getNode("jcr:content").setProperty("jcr:data", content);
-
-        jcrSession.save();
-        vm.checkin(path);
     }
 
     /**
@@ -791,14 +728,21 @@ public class JcrMappings {
 
         vm.checkout(path);
 
-        Node n = jcrSession.getNode(path);
+        Node ntFile = jcrSession.getNode(path);
 
-        Binary content = jcrSession.getValueFactory().createBinary(doc.getContent());
 
-        n.getNode("jcr:content").setProperty("jcr:data", content);
-        n.setProperty("jcr:title", doc.getFileName());
-        n.setProperty("jcr:mimeType", doc.getMimeType());
-        n.getNode("jcr:content").setProperty("jcr:description", doc.getSize());
+
+        ntFile.setProperty("jcr:title", doc.getFileName());
+        ntFile.setProperty("jcr:mimeType", doc.getMimeType());
+        ntFile.setProperty("jcr:language", doc.getLocale());
+
+        Node ntResource = ntFile.getNode("jcr:content");
+        Binary bin = jcrSession.getValueFactory().createBinary(doc.getContentAsInputStream());
+        ntResource.setProperty("jcr:data", bin);
+        ntResource.setProperty("jcr:description", bin.getSize());
+        ntResource.setProperty("jcr:mimeType", doc.getMimeType());
+        ntResource.setProperty("jcr:encoding", doc.getEncoding());
+
 
         jcrSession.save();
         vm.checkin(path);
@@ -1269,15 +1213,12 @@ public class JcrMappings {
      * @param path - Path to nt:file
      * @return InputStream or null if path doesn't have a nt:file node
      */
-    public InputStream jcrBinary(String path) {
+    public Binary jcrBinary(String path) {
         try {
             if (!jcrSession.itemExists(path))
                 return null;
             Node n = jcrSession.getNode(path).getNode("jcr:content");
-            Binary b = n.getProperty("jcr:data").getBinary();
-            InputStream output = b.getStream();
-            b.dispose();
-            return output;
+            return n.getProperty("jcr:data").getBinary();
         } catch (RepositoryException e) {
             log.error("Unexpected error getting jcr:data for " + path + ". Msg: " + e.getMessage(), e);
         }

@@ -22,11 +22,13 @@
  */
 package org.gatein.wcm.impl.model;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.jcr.Binary;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
@@ -35,7 +37,6 @@ import javax.jcr.RepositoryException;
 import org.gatein.wcm.api.model.content.WCMBinaryDocument;
 import org.gatein.wcm.api.model.content.WCMFolder;
 import org.gatein.wcm.api.model.content.WCMObject;
-import org.gatein.wcm.api.model.content.WCMTextDocument;
 import org.gatein.wcm.api.model.metadata.WCMCategory;
 import org.gatein.wcm.api.model.metadata.WCMComment;
 import org.gatein.wcm.api.model.security.WCMAcl;
@@ -60,45 +61,6 @@ public class WCMContentFactory {
     public WCMContentFactory(JcrMappings jcr, WCMUser user) throws WCMContentIOException {
         logged = user;
         this.jcr = jcr;
-    }
-
-    public WCMTextDocument createTextDocument(String id, String locale, String path, String html) {
-
-        WCMTextDocumentImpl c = new WCMTextDocumentImpl();
-
-        String tmpPath = ("/".equals(path)?"":path);
-        String absPath = tmpPath + "/" + id;
-
-        // New document, so new version starting at 1
-        c.setVersion(jcr.jcrVersion(absPath));
-        c.setId(id);
-        c.setLocale(locale);
-        List<String> locales = new ArrayList<String>();
-        locales.add(locale);
-        c.setParentPath(path);
-        c.setPath(absPath);
-
-        // By default a new content will get the ACL of parent parent.
-        // A null value means that this content is using ACL of parent folder.
-        c.setAcl(null);
-
-        c.setCreatedOn(jcr.jcrCreatedOn(absPath));
-        c.setLastModifiedOn(jcr.jcrLastModifiedOn(absPath));
-
-        // By default a new content will get the Publishing status of his parent
-        // A null value means that this content is using parent's publishing information
-        c.setPublishStatus(null);
-        c.setPublishingRoles(null);
-
-        c.setCreatedBy(logged.getUserName());
-        c.setLastModifiedBy(logged.getUserName());
-
-        // By default a new content will not use locking
-        c.setLocked(false);
-        c.setLockOwner(null);
-
-        c.setContent(html);
-        return c;
     }
 
     /**
@@ -181,51 +143,55 @@ public class WCMContentFactory {
         return f;
     }
 
-    public WCMBinaryDocument createBinaryContent(String id, String locale, String path, String mimeType, long size,
-            String fileName) {
-
-        WCMBinaryDocumentImpl b = new WCMBinaryDocumentImpl();
-
+    public WCMBinaryDocument createBinaryContent(String id, String locale, String path, String mimeType, String encoding, String fileName) {
+        WCMBinaryDocumentImpl result = encoding != null ? new WCMTextDocumentImpl() : new WCMBinaryDocumentImpl();
         String tmpPath = ("/".equals(path)?"":path);
         String absPath = tmpPath + "/" + id;
 
         // New document, so new version starting at 1
-        b.setVersion(jcr.jcrVersion(absPath));
-        b.setId(id);
-        b.setLocale(locale);
+        result.setVersion(jcr.jcrVersion(absPath));
+        result.setId(id);
+        result.setLocale(locale);
         List<String> locales = new ArrayList<String>();
         locales.add(locale);
-        b.setParentPath(path);
-        b.setPath(absPath);
+        result.setParentPath(path);
+        result.setPath(absPath);
+        result.setEncoding(encoding);
 
         // By default a new content will get the ACL of parent parent.
         // A null value means that this content is using ACL of parent folder.
-        b.setAcl(null);
+        result.setAcl(null);
 
-        b.setCreatedOn(jcr.jcrCreatedOn(absPath));
-        b.setLastModifiedOn(jcr.jcrLastModifiedOn(absPath));
+        result.setCreatedOn(jcr.jcrCreatedOn(absPath));
+        result.setLastModifiedOn(jcr.jcrLastModifiedOn(absPath));
 
         // By default a new content will get the Publishing status of his parent
         // A null value means that this content is using parent's publishing information
-        b.setPublishStatus(null);
-        b.setPublishingRoles(null);
+        result.setPublishStatus(null);
+        result.setPublishingRoles(null);
 
-        b.setCreatedBy(logged.getUserName());
-        b.setLastModifiedBy(logged.getUserName());
+        result.setCreatedBy(logged.getUserName());
+        result.setLastModifiedBy(logged.getUserName());
 
-        b.setLocked(false);
-        b.setLockOwner(null);
+        // By default a new content will not be locked
+        result.setLocked(false);
+        result.setLockOwner(null);
 
 
-        b.setFileName(fileName);
-        b.setSize(size);
-        b.setMimeType(mimeType);
+        result.setFileName(fileName);
+        result.setMimeType(mimeType);
 
+        Binary bin = jcr.jcrBinary(absPath);
         // Creating the in memory
         // Point to improve in the future
-        b.setContent(jcr.jcrBinary(absPath));
-
-        return b;
+        try {
+            result.setContent(bin.getStream());
+            result.setSize(bin.getSize());
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
+        }
+        bin.dispose();
+        return result;
     }
 
     /**
@@ -347,8 +313,6 @@ public class WCMContentFactory {
 
         boolean root = false;
         boolean folder = false;
-        boolean textcontent = false;
-        boolean binarycontent = false;
 
         if ("/".equals(n.getPath()))
             root = true;
@@ -371,11 +335,6 @@ public class WCMContentFactory {
         if (description != null && "folder".equals(description))
             folder = true;
 
-        if (description != null && "textcontent".contains(description))
-            textcontent = true;
-
-        if (description != null && "binarycontent".contains(description))
-            binarycontent = true;
 
         // Look and convert node to content
         if (root) {
@@ -447,46 +406,49 @@ public class WCMContentFactory {
             readProperties(_folder);
 
             return _folder;
-        }
-        if (textcontent) {
-            WCMTextDocumentImpl _textcontent = new WCMTextDocumentImpl();
+//        if (textcontent) {
+//            WCMTextDocumentImpl _textcontent = new WCMTextDocumentImpl();
+//
+//            _textcontent.setVersion(jcr.jcrVersion(n));
+//            _textcontent.setId(n.getName());
+//            _textcontent.setLocale(jcr.jcrLocale(n));
+//
+//            String path = n.getProperty("jcr:description").getString().split(":")[1];
+//            _textcontent.setParentPath(jcr.parent(path));
+//            _textcontent.setPath(path);
+//
+//            // By default a new content will get the ACL of parent parent.
+//            // A null value means that this content is using ACL of parent folder.
+//            _textcontent.setAcl(jcr.jcrACL(n.getPath()));
+//
+//            _textcontent.setCreatedOn(jcr.jcrCreatedOn(n));
+//            _textcontent.setLastModifiedOn(jcr.jcrLastModifiedOn(n));
+//
+//            // By default a new content will get the Publishing status of his parent
+//            // A null value means that this content is using parent's publishing information
+//            _textcontent.setPublishStatus(jcr.jcrPublishStatus(n));
+//            _textcontent.setPublishingRoles(jcr.jcrPublishingRoles(n));
+//
+//            _textcontent.setCreatedBy(logged.getUserName());
+//            _textcontent.setLastModifiedBy(logged.getUserName());
+//
+//            // By default a folder will not be locked
+//            _textcontent.setLocked(false);
+//            _textcontent.setLockOwner(null);
+//
+//            _textcontent.setContent(jcr.jcrTextContent(n));
+//
+//            readComments(_textcontent);
+//            readProperties(_textcontent);
+//
+//            return _textcontent;
+//        }
+        } else {
 
-            _textcontent.setVersion(jcr.jcrVersion(n));
-            _textcontent.setId(n.getName());
-            _textcontent.setLocale(jcr.jcrLocale(n));
+            Node ntResource = n.getNode("jcr:content");
+            String encoding = ntResource.hasProperty("jcr:encoding") ? ntResource.getProperty("jcr:encoding").getString() : null;
 
-            String path = n.getProperty("jcr:description").getString().split(":")[1];
-            _textcontent.setParentPath(jcr.parent(path));
-            _textcontent.setPath(path);
-
-            // By default a new content will get the ACL of parent parent.
-            // A null value means that this content is using ACL of parent folder.
-            _textcontent.setAcl(jcr.jcrACL(n.getPath()));
-
-            _textcontent.setCreatedOn(jcr.jcrCreatedOn(n));
-            _textcontent.setLastModifiedOn(jcr.jcrLastModifiedOn(n));
-
-            // By default a new content will get the Publishing status of his parent
-            // A null value means that this content is using parent's publishing information
-            _textcontent.setPublishStatus(jcr.jcrPublishStatus(n));
-            _textcontent.setPublishingRoles(jcr.jcrPublishingRoles(n));
-
-            _textcontent.setCreatedBy(logged.getUserName());
-            _textcontent.setLastModifiedBy(logged.getUserName());
-
-            // By default a folder will not be locked
-            _textcontent.setLocked(false);
-            _textcontent.setLockOwner(null);
-
-            _textcontent.setContent(jcr.jcrTextContent(n));
-
-            readComments(_textcontent);
-            readProperties(_textcontent);
-
-            return _textcontent;
-        }
-        if (binarycontent) {
-            WCMBinaryDocumentImpl _binarycontent = new WCMBinaryDocumentImpl();
+            WCMBinaryDocumentImpl _binarycontent = encoding != null ? new WCMTextDocumentImpl() : new WCMBinaryDocumentImpl();
 
             _binarycontent.setVersion(jcr.jcrVersion(n));
             _binarycontent.setId(n.getName());
@@ -517,6 +479,7 @@ public class WCMContentFactory {
 
             _binarycontent.setMimeType(jcr.jcrMimeType(n));
             _binarycontent.setSize(jcr.jcrSize(n));
+            _binarycontent.setEncoding(encoding);
             _binarycontent.setFileName(jcr.jcrTitle(n));
             _binarycontent.setContent(jcr.jcrContent(n));
 
@@ -525,8 +488,6 @@ public class WCMContentFactory {
 
             return _binarycontent;
         }
-
-        return null;
     }
 
     /**

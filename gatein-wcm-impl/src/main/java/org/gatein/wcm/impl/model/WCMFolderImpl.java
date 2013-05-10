@@ -79,7 +79,7 @@ public class WCMFolderImpl extends WCMObjectImpl implements WCMFolder {
         if (binaryContent == null) {
             binaryContent = new ArrayList<WCMBinaryDocument>();
             for (WCMObject o : children) {
-                if (o instanceof WCMBinaryDocument)
+                if (o instanceof WCMBinaryDocument && !(o instanceof WCMTextDocument))
                     binaryContent.add((WCMBinaryDocument)o);
             }
         }

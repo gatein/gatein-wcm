@@ -55,8 +55,9 @@ public class CreateText extends HttpServlet {
         String locale = req.getParameter("locale");
         String location = req.getParameter("location");
         String text = req.getParameter("text");
+        String mimeType = "text/html";
 
-        resp.setContentType("text/html");
+        resp.setContentType(mimeType);
         PrintWriter out = resp.getWriter();
 
         // Connect form
@@ -69,7 +70,7 @@ public class CreateText extends HttpServlet {
         } else {
             WCMObject _c = null;
             try {
-                _c = cs.createTextDocument(id, locale, location, text);
+                _c = cs.createTextDocument(id, locale, location, mimeType, text);
             } catch (WCMContentException e) {
                 log.error(e.getMessage());
                 out.println(e.getMessage());

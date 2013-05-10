@@ -39,6 +39,7 @@ public class WCMBinaryDocumentImpl extends WCMObjectImpl implements WCMBinaryDoc
     protected long size;
     protected String fileName;
     protected InputStream content;
+    protected String encoding;
 
     @Override
     public String getLocale() {
@@ -66,7 +67,7 @@ public class WCMBinaryDocumentImpl extends WCMObjectImpl implements WCMBinaryDoc
     }
 
     @Override
-    public InputStream getContent() {
+    public InputStream getContentAsInputStream() {
         return content;
     }
 
@@ -88,7 +89,7 @@ public class WCMBinaryDocumentImpl extends WCMObjectImpl implements WCMBinaryDoc
         this.mimeType = mimeType;
     }
 
-    public void setSize(long size) {
+    void setSize(long size) {
         this.size = size;
     }
 
@@ -100,11 +101,16 @@ public class WCMBinaryDocumentImpl extends WCMObjectImpl implements WCMBinaryDoc
         this.content = content;
     }
 
-    // InputStream not included
+    /**
+     * Note that {@link #content} is not considered to compute the hash code.
+     *
+     * @see java.lang.Object#hashCode()
+     */
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
+        result = prime * result + ((encoding == null) ? 0 : encoding.hashCode());
         result = prime * result + ((fileName == null) ? 0 : fileName.hashCode());
         result = prime * result + ((locale == null) ? 0 : locale.hashCode());
         result = prime * result + ((mimeType == null) ? 0 : mimeType.hashCode());
@@ -113,7 +119,11 @@ public class WCMBinaryDocumentImpl extends WCMObjectImpl implements WCMBinaryDoc
         return result;
     }
 
-    // InputStream not included
+    /**
+     * Note that {@link #content} is not considered to compare.
+     *
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -123,6 +133,11 @@ public class WCMBinaryDocumentImpl extends WCMObjectImpl implements WCMBinaryDoc
         if (getClass() != obj.getClass())
             return false;
         WCMBinaryDocumentImpl other = (WCMBinaryDocumentImpl) obj;
+        if (encoding == null) {
+            if (other.encoding != null)
+                return false;
+        } else if (!encoding.equals(other.encoding))
+            return false;
         if (fileName == null) {
             if (other.fileName != null)
                 return false;
@@ -146,5 +161,21 @@ public class WCMBinaryDocumentImpl extends WCMObjectImpl implements WCMBinaryDoc
         } else if (!version.equals(other.version))
             return false;
         return true;
+    }
+
+    /**
+     * @see org.gatein.wcm.api.model.content.WCMBinaryDocument#getEncoding()
+     */
+    @Override
+    public String getEncoding() {
+        return encoding;
+    }
+
+    /**
+     * @see org.gatein.wcm.api.model.content.WCMBinaryDocument#setEncoding(java.lang.String)
+     */
+    @Override
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
     }
 }

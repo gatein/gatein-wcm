@@ -27,7 +27,6 @@ import java.util.List;
 import javax.jcr.AccessDeniedException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.Value;
 
 import org.gatein.wcm.api.model.content.WCMBinaryDocument;
 import org.gatein.wcm.api.model.content.WCMObject;
@@ -80,7 +79,7 @@ public class UpdateCommand {
             throw new WCMContentException("Parameter doc cannot be null or empty");
         if (doc.getLocale() == null || "".equals(doc.getLocale()))
             throw new WCMContentException("Parameter doc.getLocale() cannot be null or empty");
-        if (doc.getContent() == null || "".equals(doc.getContent()))
+        if (doc.getContentAsInputStream() == null || doc.getSize() == 0)
             throw new WCMContentException("Parameter doc.getContent() cannot be null or empty");
 
         // Check if the current JCR Session is valid
@@ -102,8 +101,7 @@ public class UpdateCommand {
         // Updating existing Node
         try {
 
-            Value content = jcr.jcrValue(doc.getContent());
-            jcr.updateTextNode(path, doc.getLocale(), content);
+            jcr.updateBinaryNode(path, doc);
 
             WCMObject obj = factory.getContent(path);
             if (obj instanceof WCMTextDocument)
@@ -241,7 +239,7 @@ public class UpdateCommand {
             throw new WCMContentException("Parameter doc.getSize() cannot be 0");
         if (doc.getFileName() == null || "".endsWith(doc.getFileName()))
             throw new WCMContentException("Parameter doc.getFileName() cannot be null or empty");
-        if (doc.getContent() == null)
+        if (doc.getContentAsInputStream() == null)
             throw new WCMContentException("Parameter content in InputStream cannot be null");
 
         // Check if the current JCR Session is valid
