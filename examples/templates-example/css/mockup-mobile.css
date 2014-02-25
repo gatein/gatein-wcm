@@ -1,0 +1,98 @@
+.mockup-mobile-main {
+    text-align: right; /* orientation=rt */
+    text-align: left; /* orientation=lt */
+    margin-bottom: 2.1875em;
+    padding: 1.5625em 2.5641% 0;
+    position: relative;
+}
+
+.mockup-mobile-main h1 {
+    color: #333;
+    font-weight: normal;
+    font-size: 2em;
+    margin: 0 0 0.3125em 0;
+}
+
+.mockup-mobile-list {
+    margin: auto;
+    padding: 0;
+    text-align: center;
+    list-style-type: none;
+}
+
+.mockup-mobile-list li {
+    width: 304px;
+    margin: 4px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+/* Single concert */
+.mockup-mobile-img {
+    width: 304px;
+    height: 176px;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+.mockup-mobile-img img {
+    height:auto;
+    width:auto;
+    max-width:304px;
+    max-height:300px;
+}
+
+.mockup-mobile-main h2 {
+    font-size: 1.375em;
+    font-weight: normal;
+    margin-bottom: 0.68181818181818em;
+    margin-top: 0.63636363636364em;
+    text-align: right; /* orientation=rt */
+    text-align: left;  /* orientation=lt */
+}
+
+.mockup-mobile-main p {
+    color: #666666;
+    font-size: 1em;
+    line-height: 1.4em;
+    margin-bottom: 0;
+    text-align: right; /* orientation=rt */
+    text-align: left;  /* orientation=lt */
+}
+
+.mockup-mobile-footer {
+    clear: both;
+}
+
+/* RWD */
+
+@media only screen and (max-width: 350px) {
+
+    .mockup-mobile-list li {
+        width: 250px;
+        margin: 4px;
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    /* Single concert */
+    .mockup-mobile-img {
+        width: 250px;
+        height: 176px;
+        overflow: hidden;
+        margin-bottom: 4px;
+    }
+    .mockup-mobile-img img {
+        height:auto;
+        width:auto;
+        max-width:250px;
+        max-height:176px;
+    }
+
+    .mockup-mobile-text img {
+        height:auto !important;
+        width:auto !important;
+        max-width:250px !important;
+        max-height:176px !important;
+    }
+
+}

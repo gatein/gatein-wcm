@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <parent>
+    <artifactId>wcm-parent</artifactId>
+    <groupId>org.gatein.wcm</groupId>
+    <version>1.0.0</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.gatein.wcm</groupId>
+  <artifactId>wcm</artifactId>
+  <version>1.0.0</version>
+  <packaging>war</packaging>
+
+  <dependencies>
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${version.junit}</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-api</artifactId>
+      <version>${version.javaee-api}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.portlet</groupId>
+      <artifactId>portlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.gatein.api</groupId>
+      <artifactId>gatein-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.gatein.pc</groupId>
+      <artifactId>pc-portlet</artifactId>
+      <version>${version.pc-portlet}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.container</artifactId>
+      <version>${version.exo.kernel.container}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.core</groupId>
+      <artifactId>exo.core.component.organization.api</artifactId>
+      <version>${version.exo.core.component.organization.api}</version>
+      <scope>provided</scope>
+    </dependency>
+    <!--
+        Note:
+            commons-fileupload is provided by GateIn.
+
+            In $GATEIN_HOME/modules/system/add-ons/gatein/org/apache/commons/fileupload/main/module.xml description we need to add dependency to commons-io module.
+
+            Example:
+
+              <dependencies>
+                [...]
+                <module name="org.apache.commons.io" />
+                [...]
+              </dependencies>
+    -->
+    <dependency>
+        <groupId>commons-fileupload</groupId>
+        <artifactId>commons-fileupload</artifactId>
+        <version>${version.commons-fileupload}</version>
+        <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.gatein.wcm</groupId>
+      <artifactId>wcm-api</artifactId>
+      <version>${version.wcm}</version>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <finalName>wcm</finalName>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${version.maven-compiler-plugin}</version>
+        <configuration>
+          <source>${version.source}</source>
+          <target>${version.target}</target>
+          <encoding>${version.encoding}</encoding>
+        </configuration>
+      </plugin>
+	  <plugin>
+	    <artifactId>maven-surefire-plugin</artifactId>
+	    <version>${version.maven-surefire-plugin}</version>
+	  </plugin>
+      <plugin>
+        <groupId>org.jboss.as.plugins</groupId>
+        <artifactId>jboss-as-maven-plugin</artifactId>
+        <version>${version.jboss.maven.plugin}</version>
+      </plugin>
+    </plugins>
+  </build>
+  
+</project>

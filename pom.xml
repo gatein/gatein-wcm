@@ -1,492 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ JBoss, Home of Professional Open Source.
-  ~ Copyright 2010, Red Hat, Inc., and individual contributors
-  ~ as indicated by the @author tags. See the copyright.txt file in the
-  ~ distribution for a full listing of individual contributors.
-  ~
-  ~ This is free software; you can redistribute it and/or modify it
-  ~ under the terms of the GNU Lesser General Public License as
-  ~ published by the Free Software Foundation; either version 2.1 of
-  ~ the License, or (at your option) any later version.
-  ~
-  ~ This software is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-  ~ Lesser General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU Lesser General Public
-  ~ License along with this software; if not, write to the Free
-  ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-  ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.jboss</groupId>
-    <artifactId>jboss-parent</artifactId>
-    <version>9</version>
-  </parent>
   <groupId>org.gatein.wcm</groupId>
-  <artifactId>gatein-wcm</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <artifactId>wcm-parent</artifactId>
+  <version>1.0.0</version>
   <packaging>pom</packaging>
-  <name>GateIn WCM</name>
-  <scm>
-    <url>https://github.com/lucasponce/gatein-wcm</url>
-  </scm>
-  <issueManagement>
-    <system>jira</system>
-    <url>http://issues.jboss.org/browse/GTNWCM</url>
-  </issueManagement>
-
-  <licenses>
-    <license>
-      <name>GNU Lesser General Public License</name>
-      <url>http://repository.jboss.org/licenses/lgpl-2.1.txt</url>
-      <distribution>repo</distribution>
-      <comments>A business-friendly OSS license</comments>
-    </license>
-  </licenses>
 
   <properties>
-    <version.javax.portlet>2.0</version.javax.portlet>
-    <version.javaee>6.0</version.javaee>
+    <version.wcm>1.0.0</version.wcm>
+    <version.javaee>1.0.0.Final</version.javaee>
+    <version.jboss.gatein.bom>1.0.1.Final</version.jboss.gatein.bom>
 
-    <!-- JBoss AS/EAP -->
-    <jbossas-version>7.2.0.Alpha1-redhat-4</jbossas-version>
-    <jboss.eap.groupId>org.jboss.as</jboss.eap.groupId>
-    <jboss.eap.artifactId>jboss-as-dist</jboss.eap.artifactId>
-    <!-- <jboss.eap.artifactId>jboss-eap</jboss.eap.artifactId> -->
-    <jboss.eap.version>7.2.0.Alpha1-redhat-4</jboss.eap.version>
-<!-- <jboss.eap.version>6.1.0.Alpha1</jboss.eap.version> -->
-    <jboss.eap.root.folder>jboss-eap-6.1</jboss.eap.root.folder>
+    <version.junit>4.8.1</version.junit>
+    <version.javaee-api>6.0</version.javaee-api>
+    <version.pc-portlet>2.4.1.Final</version.pc-portlet>
+    <version.exo.kernel.container>2.4.4-GA</version.exo.kernel.container>
+    <version.exo.core.component.organization.api>2.5.4-GA</version.exo.core.component.organization.api>
+    <version.commons-fileupload>1.2.1</version.commons-fileupload>
 
-    <jboss.eap.distribution.id>jbosseap-61-dist</jboss.eap.distribution.id>
-
-    <!-- ModeShape and its dependencies -->
-    <modeshape.version>3.2.0.Final</modeshape.version>
-    <tika.version>1.3</tika.version>
-    <jboss-javaee-6.0-with-tools.version>1.0.4.Final-redhat-1</jboss-javaee-6.0-with-tools.version>
-    <jboss-as-arquillian-container-managed.version>7.2.0.Final</jboss-as-arquillian-container-managed.version>
-
-    <!-- chemistry and its deps -->
-    <chemistry.version>0.7.0</chemistry.version>
-    <chemistry.activation.version>1.1.1</chemistry.activation.version>
-    <antlr.runtime.version>3.2</antlr.runtime.version>
-    <antlr.stringtemplate.version>3.2</antlr.stringtemplate.version>
-    <antlr.version>2.7.7</antlr.version>
-    <commons.fileupload.version>1.2.1</commons.fileupload.version>
-
-    <org.exoplatform.kernel.version>2.4.1-GA</org.exoplatform.kernel.version>
-    <org.exoplatform.core.version>2.5.1-CP01</org.exoplatform.core.version>
-    <gatein.version>3.5.0.Final</gatein.version>
-
-    <richfaces.version>4.3.1.Final</richfaces.version>
-    <version.resteasy>2.0.1.GA</version.resteasy>
-    <version.jboss-javaee-6.0>1.0.0.Final</version.jboss-javaee-6.0>
-    <jbossmsc.version>1.0.2.GA</jbossmsc.version>
-
-    <!-- plugins -->
-    <maven.compiler.target>1.6</maven.compiler.target>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-    <arquillian.version>1.0.3.Final</arquillian.version>
-    <debug.argline />
-
-    <checkstyle.version>2.9.1</checkstyle.version>
-
+    <version.maven-compiler-plugin>2.3.2</version.maven-compiler-plugin>
+    <version.source>1.7</version.source>
+    <version.target>1.7</version.target>
+    <version.encoding>UTF-8</version.encoding>
+    <version.maven-surefire-plugin>2.12</version.maven-surefire-plugin>
+    <version.jboss.maven.plugin>7.3.Final</version.jboss.maven.plugin>
   </properties>
-
-  <modules>
-    <module>gatein-wcm-api</module>
-    <module>gatein-wcm-impl</module>
-    <module>gatein-wcm-impl-sec</module>
-    <module>gatein-wcm-cmis</module>
-    <module>gatein-wcm-subsystem</module>
-    <module>gatein-wcm-distribution</module>
-    <module>gatein-wcm-integration-tests</module>
-    <module>gatein-wcm-ui</module>
-  </modules>
 
   <dependencyManagement>
     <dependencies>
-      <!-- JBoss distributes a complete set of Java EE 6 APIs including
-        a Bill of Materials (BOM). A BOM specifies the versions of a "stack" (or
-        a collection) of artifacts. We use this here so that we always get the correct
-        versions of artifacts. Here we use the jboss-javaee-6.0-with-tools stack
-        (you can read this as the JBoss stack of the Java EE 6 APIs, with some extras
-        tools for your project, such as Arquillian for testing) -->
+      <dependency>
+        <groupId>org.jboss.spec</groupId>
+        <artifactId>jboss-javaee-6.0</artifactId>
+        <version>${version.javaee}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
       <dependency>
         <groupId>org.jboss.bom</groupId>
-        <artifactId>jboss-javaee-6.0-with-tools</artifactId>
-        <version>${jboss-javaee-6.0-with-tools.version}</version>
+        <artifactId>gatein-3.6-bom</artifactId>
+        <version>${version.jboss.gatein.bom}</version>
         <type>pom</type>
         <scope>import</scope>
-      </dependency>
-      <!-- Import the ModeShape BOM for embedded usage. This adds to the "dependenciesManagement"
-        section defaults for all of the modules we might need, but we still have
-        to include in the "dependencies" section the modules we DO need. The benefit
-        is that we don't have to specify the versions of any of those modules. -->
-      <dependency>
-        <groupId>org.modeshape.bom</groupId>
-        <artifactId>modeshape-bom-jbosseap</artifactId>
-        <version>${modeshape.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.modeshape.bom</groupId>
-        <artifactId>modeshape-bom-embedded</artifactId>
-        <version>${modeshape.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.jboss.as</groupId>
-        <artifactId>jboss-as-controller</artifactId>
-        <version>${jbossas-version}</version>
-        <scope>provided</scope>
-      </dependency>
-
-      <!-- CMIS -->
-      <dependency>
-        <groupId>org.modeshape</groupId>
-        <artifactId>modeshape-web-cmis</artifactId>
-        <version>${modeshape.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.modeshape</groupId>
-        <artifactId>modeshape-web-jcr</artifactId>
-        <version>${modeshape.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.chemistry.opencmis</groupId>
-        <artifactId>chemistry-opencmis-commons-api</artifactId>
-        <version>${chemistry.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.chemistry.opencmis</groupId>
-        <artifactId>chemistry-opencmis-commons-impl</artifactId>
-        <version>${chemistry.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.chemistry.opencmis</groupId>
-        <artifactId>chemistry-opencmis-server-bindings</artifactId>
-        <version>${chemistry.version}</version>
-        <classifier>classes</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.chemistry.opencmis</groupId>
-        <artifactId>chemistry-opencmis-server-jcr</artifactId>
-        <version>${chemistry.version}</version>
-        <classifier>classes</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.chemistry.opencmis</groupId>
-        <artifactId>chemistry-opencmis-server-support</artifactId>
-        <version>${chemistry.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.apache.chemistry.opencmis</groupId>
-        <artifactId>chemistry-opencmis-client-impl</artifactId>
-        <version>${chemistry.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>antlr</groupId>
-        <artifactId>antlr</artifactId>
-        <version>${antlr.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.antlr</groupId>
-        <artifactId>antlr-runtime</artifactId>
-        <version>${antlr.runtime.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.antlr</groupId>
-        <artifactId>stringtemplate</artifactId>
-        <version>${antlr.stringtemplate.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>commons-fileupload</groupId>
-        <artifactId>commons-fileupload</artifactId>
-        <version>${commons.fileupload.version}</version>
-      </dependency>
-
-
-      <dependency>
-        <groupId>org.jboss.arquillian</groupId>
-        <artifactId>arquillian-bom</artifactId>
-        <version>${arquillian.version}</version>
-        <scope>import</scope>
-        <type>pom</type>
-      </dependency>
-
-      <!-- RichFaces BOM Import -->
-      <dependency>
-        <groupId>org.richfaces</groupId>
-        <artifactId>richfaces-bom</artifactId>
-        <version>${richfaces.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>javax.portlet</groupId>
-        <artifactId>portlet-api</artifactId>
-        <version>${version.javax.portlet}</version>
-        <scope>provided</scope>
-        <type>jar</type>
-      </dependency>
-      <dependency>
-        <groupId>log4j</groupId>
-        <artifactId>log4j</artifactId>
-        <version>1.2.16</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>commons-io</groupId>
-        <artifactId>commons-io</artifactId>
-        <version>1.4</version>
-      </dependency>
-      <dependency>
-        <groupId>org.exoplatform.kernel</groupId>
-        <artifactId>exo.kernel.container</artifactId>
-        <version>${org.exoplatform.kernel.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.exoplatform.core</groupId>
-        <artifactId>exo.core.component.organization.api</artifactId>
-        <version>${org.exoplatform.core.version}</version>
-        <scope>provided</scope>
       </dependency>
     </dependencies>
-
   </dependencyManagement>
 
-
-  <build>
-    <!-- This section defines the default plugin settings inherited by child projects. -->
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <configuration>
-            <!-- <forkMode>always</forkMode> -->
-            <systemProperties combine.children="append">
-              <property>
-                <name>java.io.tmpdir</name>
-                <value>${basedir}/target</value>
-              </property>
-              <property>
-                <name>java.net.preferIPv4Stack</name>
-                <value>${jgroups.preferIpv4}</value>
-              </property>
-              <property>
-                <name>java.net.preferIPv6Addresses</name>
-                <value>${jgroups.preferIpv6}</value>
-              </property>
-            </systemProperties>
-            <argLine>-Xmx1024M ${debug.argline} -XX:MaxPermSize=256M</argLine>
-            <runOrder>alphabetical</runOrder>
-          </configuration>
-        </plugin>
-        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
-        <plugin>
-          <groupId>org.eclipse.m2e</groupId>
-          <artifactId>lifecycle-mapping</artifactId>
-          <version>1.0.0</version>
-          <configuration>
-            <lifecycleMappingMetadata>
-              <pluginExecutions>
-                <pluginExecution>
-                  <pluginExecutionFilter>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <versionRange>[1.6,)</versionRange>
-                    <goals>
-                      <goal>run</goal>
-                    </goals>
-                  </pluginExecutionFilter>
-                  <action>
-                    <ignore></ignore>
-                  </action>
-                </pluginExecution>
-                <pluginExecution>
-                  <pluginExecutionFilter>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-checkstyle-plugin</artifactId>
-                    <versionRange>[2.9.1,)</versionRange>
-                    <goals>
-                      <goal>checkstyle</goal>
-                    </goals>
-                  </pluginExecutionFilter>
-                  <action>
-                    <ignore></ignore>
-                  </action>
-                </pluginExecution>
-                <pluginExecution>
-                  <pluginExecutionFilter>
-                    <groupId>org.jboss.jandex</groupId>
-                    <artifactId>jandex-maven-plugin</artifactId>
-                    <versionRange>[1.0.1,)</versionRange>
-                    <goals>
-                      <goal>jandex</goal>
-                    </goals>
-                  </pluginExecutionFilter>
-                  <action>
-                    <ignore></ignore>
-                  </action>
-                </pluginExecution>
-              </pluginExecutions>
-            </lifecycleMappingMetadata>
-          </configuration>
-        </plugin>
-
-        <!-- Checkstyle -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>${checkstyle.version}</version>
-          <configuration>
-            <configLocation>gatein-portal-checkstyle/checkstyle.xml</configLocation>
-            <consoleOutput>true</consoleOutput>
-            <failsOnError>true</failsOnError>
-            <useFile />
-          </configuration>
-          <dependencies>
-            <dependency>
-              <groupId>org.gatein</groupId>
-              <artifactId>gatein-portal-build-config</artifactId>
-              <version>${gatein.version}</version>
-            </dependency>
-          </dependencies>
-          <executions>
-            <execution>
-              <id>check-style</id>
-              <phase>compile</phase>
-              <goals>
-                <goal>checkstyle</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
-
-  <repositories>
-    <repository>
-      <id>jboss-public-repository-group</id>
-      <name>JBoss Public Maven Repository Group</name>
-      <url>https://repository.jboss.org/nexus/content/groups/public/</url>
-      <layout>default</layout>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>never</updatePolicy>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-        <updatePolicy>never</updatePolicy>
-      </snapshots>
-    </repository>
-  </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-      <id>jboss-public-repository-group-plugins</id>
-      <name>JBoss Public Maven Repository Group</name>
-      <url>https://repository.jboss.org/nexus/content/groups/public/</url>
-      <layout>default</layout>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>never</updatePolicy>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-        <updatePolicy>never</updatePolicy>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
-
-  <profiles>
-    <profile>
-      <id>arquillian-jbossas-managed</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>org.jboss.spec</groupId>
-          <artifactId>jboss-javaee-6.0</artifactId>
-          <version>1.0.0.Final</version>
-          <type>pom</type>
-          <scope>provided</scope>
-        </dependency>
-        <!--
-          Managed container.
-          Uncomment to launch JBossAS in the mvn test phase.
-        -->
-        <dependency>
-          <groupId>org.jboss.as</groupId>
-          <artifactId>jboss-as-arquillian-container-managed</artifactId>
-          <version>${jboss-as-arquillian-container-managed.version}</version>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.jboss.arquillian.protocol</groupId>
-          <artifactId>arquillian-protocol-servlet</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-
-    <profile>
-      <id>arquillian-jbossas-remote</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>org.jboss.spec</groupId>
-          <artifactId>jboss-javaee-6.0</artifactId>
-          <version>1.0.0.Final</version>
-          <type>pom</type>
-          <scope>provided</scope>
-        </dependency>
-        <!--
-          Remote container.
-          Uncomment for remote container.
-          JBossAS must be up and running.
-          Useful for remote debugging.
-        -->
-        <dependency>
-          <groupId>org.jboss.as</groupId>
-          <artifactId>jboss-as-arquillian-container-remote</artifactId>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.jboss.arquillian.protocol</groupId>
-          <artifactId>arquillian-protocol-servlet</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-
-  </profiles>
-
+  <modules>
+    <module>wcm-api</module>
+    <module>wcm</module>
+    <module>examples/api-example</module>
+  </modules>
+  
 </project>
