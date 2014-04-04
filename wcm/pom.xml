@@ -10,7 +10,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.gatein.wcm</groupId>
   <artifactId>wcm</artifactId>
-  <version>${version.wcm}</version>
+  <version>2.0.0</version>
   <packaging>war</packaging>
 
   <dependencies>
