@@ -27,7 +27,7 @@
 <script type="text/javascript" src="<%=renderResponse.encodeURL(renderRequest.getContextPath() + "/js/manager/manager.js") %>"></script>
 
 <div id="${n}manager-locks" class="wcm-popup-categories wcm-dialog">
-    <div id="${n}manager-locks-title" class="wcm-dialog-title">Locks</div>
+    <div id="${n}manager-locks-title" class="wcm-dialog-title">${rsc.getString('manager.locks')}</div>
     <a href="#" id="${n}close-manager-locks" class="wcm-dialog-close"><span> </span></a>
     <div class="wcm-dialog-body" id="${n}manager-locks-list">
 
@@ -40,7 +40,7 @@
 
     <div class="wcm-manager-actions">
         <div class="wcm-manager-locks">
-            <span class="glyphicon glyphicon-lock margin-right margin-top"></span> <a href="javascript:;" onclick="showLocks('${n}', '${showLocksEvent}', '${managerView}');">Locks</a>
+            <span class="glyphicon glyphicon-lock margin-right margin-top"></span> <a href="javascript:;" onclick="showLocks('${n}', '${showLocksEvent}', '${managerView}');">${rsc.getString('manager.locks')}</a>
         </div>
     </div>
 

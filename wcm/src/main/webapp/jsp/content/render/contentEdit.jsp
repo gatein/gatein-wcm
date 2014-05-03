@@ -45,12 +45,12 @@
     <img id="${n}uploads-preview-content" class="wcm-upload-image" src="" />
 </div>
 <div id="${n}post-select-upload" class="wcm-popup-categories wcm-dialog">
-    <div class="wcm-dialog-title">Select upload to Add</div>
+    <div class="wcm-dialog-title">${rsc.getString('post.select_upload')}</div>
     <a href="#" id="${n}close-post-select-upload" class="wcm-dialog-close"><span> </span></a>
     <div class="wcm-dialog-body">
         <div class="wcm-select left">
             <select id="${n}selectFilterCategory" class="wcm-input">
-                <option value="-1">All categories</option>
+                <option value="-1">${rsc.getString('post.all_categories')}</option>
                 <%
                     if (listCategories != null) {
                         for (Category c : listCategories) {
@@ -64,7 +64,7 @@
         </div>
         <div class="wcm-post-filtername right">
             <%
-                String filterName = "Filter By Name";
+                String filterName = ((ResourceBundle)pageContext.getAttribute("rsc")).getString("post.filter_by_name");
             %>
             <input id="${n}inputFilterName" class="wcm-input" value="<%= filterName %>" onfocus="if (this.value == 'Filter By Name') this.value=''" onblur="if (this.value == '') this.value='Filter By Name'" />
         </div>
@@ -77,6 +77,7 @@
     CKEDITOR.on( 'instanceCreated', function( event ) {
         var editor = event.editor;
         editor.portalnamespace='${n}';
+        editor.filter_by_name='${rsc.getString('post.filter_by_name')}';
         editor.on( 'focus', function( event ) {
             preSave('${n}', event.editor);
 
@@ -86,6 +87,7 @@
         });
         editor.on( 'configLoaded', function() {
             editor.config.removePlugins = 'stylescombo';
+            editor.config.language = '<%= renderRequest.getLocale().getLanguage() %>';
         });
     });
     checkExit('<%= n %>', '<%= request.getAttribute("editid") %>', '<%= unlockPostEvent %>&event=<%= Wcm.EVENTS.UNLOCK_POST %>');

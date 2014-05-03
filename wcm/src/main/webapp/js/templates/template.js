@@ -24,13 +24,13 @@
 /* Template functions
 ===================== */
 
-function saveNewTemplate(namespace) {
+function saveNewTemplate(namespace, templates, msgEmpty, templateName) {
     require(["SHARED/jquery"], function($) {
         var formId = "#" + namespace + "newTemplateForm";
         var nameId = "#" + namespace + "templateName";
         // null validation
-        if ($(nameId).val() == '' || $(nameId).val() == 'Template Name') {
-            showMsg(namespace, 'Template name cannot be empty', 'Templates');
+        if ($(nameId).val() == '' || $(nameId).val() == templateName) {
+            showMsg(namespace, msgEmpty, templates);
         } else {
             $(formId).submit();
         }
@@ -66,7 +66,7 @@ function showSelectUploadsPost(namespace, editor) {
         var selecfilterid = "#" + namespace + "selectFilterCategory";
         var inputfilterid = "#" + namespace + "inputFilterName";
 
-        $(inputfilterid).val('Filter By Name');
+        $(inputfilterid).val(editor.filter_by_name);
         $(selecfilterid)[0].selectedIndex = 0;
 
         // Events
@@ -254,11 +254,11 @@ function setTemplateModified() {
     templateModified = true;
 }
 
-function checkExit(namespace, editor, templateid, href) {
+function checkExit(namespace, editor, templateid, href, pendingMsg) {
     require(["SHARED/jquery"], function($) {
         $(window).bind("beforeunload", function() {
             if (editor.checkDirty() || templateModified) {
-                return "There are pending modifications in Template."
+                return pendingMsg;
             }
         });
         $(window).bind("unload", function() {

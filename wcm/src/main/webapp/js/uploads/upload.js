@@ -37,13 +37,13 @@ function showUploadFile(namespace) {
     });
 }
 
-function saveNewUpload(namespace) {
+function saveNewUpload(namespace, msgEmpty, uploads) {
     require(["SHARED/jquery"], function($) {
         var formId = "#" + namespace + "newUploadForm";
         var uploadId = "#" + namespace + "uploadFile";
 
         if ($(uploadId).val() == '') {
-            showMsg(namespace, 'Upload file cannot be empty', 'Uploads');
+            showMsg(namespace, msgEmpty, uploads);
         } else {
             $(formId).submit();
         }
@@ -77,11 +77,11 @@ function setUploadModified() {
     uploadModified = true;
 }
 
-function checkExit(namespace, uploadid, href) {
+function checkExit(namespace, uploadid, href, msg) {
     require(["SHARED/jquery"], function($) {
         $(window).bind("beforeunload", function() {
             if (uploadModified) {
-                return "There are pending modifications in Upload."
+                return msg;
             }
         });
         $(window).bind("unload", function() {

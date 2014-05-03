@@ -37,20 +37,20 @@ function showParentCategory(namespace) {
     });
 }
 
-function saveNewCategory(namespace) {
+function saveNewCategory(namespace, emptyMsg, categoriesTitle) {
     require(["SHARED/jquery"], function($) {
         var formId = "#" + namespace + "newCategoryForm";
         var nameId = "#" + namespace + "newCategoryName";
         // null validation
         if ($(nameId).val() == '') {
-            showMsg(namespace, 'Category name cannot be empty', 'Categories');
+            showMsg(namespace, emptyMsg, categoriesTitle);
         } else {
             $(formId).submit();
         }
     });
 }
 
-function saveUpdateCategory(namespace) {
+function saveUpdateCategory(namespace, emptyMsg, categoriesTitle) {
     require(["SHARED/jquery"], function($) {
         $(window).unbind("beforeunload");
         $(window).unbind("unload");
@@ -58,7 +58,7 @@ function saveUpdateCategory(namespace) {
         var nameId = "#" + namespace + "newCategoryName";
         // null validation
         if ($(nameId).val() == '') {
-            showMsg(namespace, 'Category name cannot be empty', 'Categories');
+            showMsg(namespace, emptyMsg, categoriesTitle);
         } else {
             $(formId).submit();
         }
@@ -71,11 +71,11 @@ function setCategoryModified() {
     categoryModified = true;
 }
 
-function checkExit(namespace, catid, href) {
+function checkExit(namespace, catid, href, pendingMsg) {
     require(["SHARED/jquery"], function($) {
         $(window).bind("beforeunload", function() {
             if (categoryModified) {
-                return "There are pending modifications in Category."
+                return pendingMsg;
             }
         });
         $(window).bind("unload", function() {

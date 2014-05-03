@@ -40,12 +40,12 @@
         <img id="${n}uploads-preview-content" class="wcm-upload-image" src="" />
     </div>
     <div id="${n}post-select-upload" class="wcm-popup-categories wcm-dialog">
-        <div class="wcm-dialog-title">Select upload to Add</div>
+        <div class="wcm-dialog-title">${rsc.getString('template.select_upload')}</div>
         <a href="#" id="${n}close-post-select-upload" class="wcm-dialog-close"><span> </span></a>
         <div class="wcm-dialog-body">
             <div class="wcm-select left">
                 <select id="${n}selectFilterCategory" class="wcm-input">
-                    <option value="-1">All categories</option>
+                    <option value="-1">${rsc.getString('template.all_categories')}</option>
                     <%
                         if (listCategories != null) {
                             for (Category c : listCategories) {
@@ -59,9 +59,9 @@
             </div>
             <div class="wcm-post-filtername right">
                 <%
-                    String filterName = "Filter By Name";
+                    String filterName = ((ResourceBundle)pageContext.getAttribute("rsc")).getString("template.filter_by_name");
                 %>
-                <input id="${n}inputFilterName" class="wcm-input" value="<%= filterName %>" onfocus="if (this.value == 'Filter By Name') this.value=''" onblur="if (this.value == '') this.value='Filter By Name'" />
+                <input id="${n}inputFilterName" class="wcm-input" value="<%= filterName %>" onfocus="if (this.value == '${rsc.getString('template.filter_by_name')}') this.value=''" onblur="if (this.value == '') this.value='${rsc.getString('template.filter_by_name')}'" />
             </div>
             <div class="clear"></div>
             <div class="wcm-post-uploads" id="${n}listUploads">
@@ -79,12 +79,12 @@
     </form>
     <form id="${n}editTemplateForm" method="post" action="${editTemplateAction}">
     <input type="hidden" id="${n}templateEditId" name="templateEditId" value="<%= t.getId() %>" />
-    <div class="wcm-newpost-title"><input id="${n}templateName" name="templateName" class="wcm-input" value="<%= t.getName() %>" onfocus="if (this.value == 'Template Name') this.value=''" onblur="if (this.value == '') this.value='Template Name'" onchange="setTemplateModified()"/></div>
+    <div class="wcm-newpost-title"><input id="${n}templateName" name="templateName" class="wcm-input" value="<%= t.getName() %>" onfocus="if (this.value == '${rsc.getString('template.template_name')}') this.value=''" onblur="if (this.value == '') this.value='${rsc.getString('template.template_name')}'" onchange="setTemplateModified()"/></div>
     <div class="wcm-newtemplate">
         <span class="glyphicon glyphicon-globe margin-right margin-top"></span>
-        Locale: <div class="wcm-newtemplate-locale"><input id="${n}templateLocale" name="templateLocale" class="wcm-input" value="<%= t.getLocale() %>" onchange="setTemplateModified()"/></div>
+        ${rsc.getString('template.locale')}: <div class="wcm-newtemplate-locale"><input id="${n}templateLocale" name="templateLocale" class="wcm-input" value="<%= t.getLocale() %>" onchange="setTemplateModified()"/></div>
         <span class="glyphicon glyphicon-sort margin-right margin-top"></span>
-        Version: <div class="wcm-newtemplate-versions">
+        ${rsc.getString('template.version')}: <div class="wcm-newtemplate-versions">
         <select id="${n}templateVersions" name="templateVersions" class="wcm-input" onchange="changeVersionTemplate('${n}');">
             <%
                 List<Long> versions = (List<Long>)request.getAttribute("versions");
@@ -103,7 +103,7 @@
             %>
         </select>
     </div>
-        <a href="javascript:saveUpdateTemplate('${n}');" class="button" title="Save Template">Save Template</a>
+        <a href="javascript:saveUpdateTemplate('${n}');" class="button" title="${rsc.getString('template.save_template')}">${rsc.getString('template.save_template')}</a>
     </div>
     <script type="text/javascript" src="<%=renderResponse.encodeURL(renderRequest.getContextPath() + "/js/ckeditor/ckeditor.js") %>"></script>
     <input id="${n}urlShowPostUploadsEvent" type="hidden" value="${showPostUploadsEvent}" />
@@ -111,8 +111,10 @@
         CKEDITOR.on( 'instanceCreated', function( event ) {
             var editor = event.editor;
             editor.portalnamespace='${n}';
+            editor.filter_by_name='${rsc.getString('template.filter_by_name')}';
             editor.config.enterMode = CKEDITOR.ENTER_BR;
-            checkExit('${n}', editor, '<%= t.getId() %>', '<%= unlockTemplateEvent %>&event=<%= Wcm.EVENTS.UNLOCK_TEMPLATE %>');
+            editor.config.language = '<%= renderRequest.getLocale().getLanguage() %>';
+            checkExit('${n}', editor, '<%= t.getId() %>', '<%= unlockTemplateEvent %>&event=<%= Wcm.EVENTS.UNLOCK_TEMPLATE %>', '${rsc.getString('template.pending')}');
         });
     </script>
     <textarea class="ckeditor" id="${n}templateContent" name="templateContent"><%= t.getContent() %></textarea>

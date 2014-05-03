@@ -35,6 +35,7 @@
             <portlet-mode>view</portlet-mode>
         </supports>
         <supported-locale>en</supported-locale>
+        <supported-locale>es</supported-locale>
         <resource-bundle>locale.portlet.wcm.editor</resource-bundle>
         <portlet-info>
             <title>WCM Editor</title>
@@ -55,6 +56,7 @@
             <portlet-mode>edit</portlet-mode>
         </supports>
         <supported-locale>en</supported-locale>
+        <supported-locale>es</supported-locale>
         <resource-bundle>locale.portlet.wcm.editor</resource-bundle>
         <portlet-info>
             <title>WCM Content</title>

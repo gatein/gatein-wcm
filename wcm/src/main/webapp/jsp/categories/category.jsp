@@ -36,23 +36,23 @@
     <form id="${n}newCategoryForm" method="post" action="${newCategoryAction}">
         <div class="wcm-newcategory">
                 <span class="glyphicon glyphicon-font margin-right margin-top"></span>
-                <label for="${n}newCategoryName">Category name: </label>
+                <label for="${n}newCategoryName">${rsc.getString('category.category_name')} </label>
                 <div class="wcm-newcategory-name"><input id="${n}newCategoryName" name="newCategoryName" class="wcm-input margin-left-cat" /></div>
                 <span class="glyphicon glyphicon-tag margin-right margin-top"></span>
-                <label for="${n}newCategoryType">Category type: </label>
+                <label for="${n}newCategoryType">${rsc.getString('category.category_type')} </label>
                 <div class="wcm-newcategory-type"><select id="${n}newCategoryType" name="newCategoryType" class="wcm-input">
-                    <option value="Category">Category</option>
-                    <option value="Folder">Folder</option>
-                    <option value="Tag">Tag</option>
+                    <option value="Category">${rsc.getString('category.category')}</option>
+                    <option value="Folder">${rsc.getString('category.folder')}</option>
+                    <option value="Tag">${rsc.getString('category.tag')}</option>
                 </select></div>
-                <a href="javascript:saveNewCategory('${n}');" class="button" title="Save Category">Save Category</a>
+                <a href="javascript:saveNewCategory('${n}', '${rsc.getString('category.name_empty')}', '${rsc.getString('category.categories')}');" class="button" title="${rsc.getString('category.save_category')}">${rsc.getString('category.save_category')}</a>
         </div>
         <div class="wcm-newcategory-parent" id="${n}editCategoryParentContainer">
             <span class="glyphicon glyphicon-folder-open margin-right margin-top"></span>
-            <label for="${n}newCategoryParent">Category parent: </label>
+            <label for="${n}newCategoryParent">${rsc.getString('category.category_parent')} </label>
             <div class="wcm-newcategory-type">
                 <select id="${n}newCategoryParent" name="newCategoryParent" class="wcm-input">
-                    <option value="-1">Root (no parent)</option>
+                    <option value="-1">${rsc.getString('category.root')}</option>
                     <%
                         List<Category> list = (List<Category>)renderRequest.getAttribute("categories");
                         if (list != null) {

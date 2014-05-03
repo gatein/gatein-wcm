@@ -31,7 +31,10 @@
 <%@ page import="java.util.Set" %>
 <%@ page import="org.gatein.wcm.portlet.util.ViewMetadata" %>
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@include file="../urls.jsp"%>
+<portlet:defineObjects />
+<c:set var="rsc" value="${portletConfig.getResourceBundle(resourceRequest.locale)}" />
 <portlet:resourceURL var="removeAclUploadEvent">
     <portlet:param name="event" value="<%= Wcm.EVENTS.REMOVE_ACL_UPLOAD %>" />
 </portlet:resourceURL>
@@ -49,7 +52,7 @@ ACLs:
     <li id="${n}acl<%= acl.getId() %>">
         <span class="glyphicon glyphicon-pencil margin-right"></span> <%= ViewMetadata.aclType(acl.getPermission()) %>
         <span class="glyphicon glyphicon-user margin-right margin-left-cat"></span> <%= acl.getPrincipal() %>
-        <a href="#" onclick="deleteAcl('<%= n %>', '${removeAclUploadEvent}', '<%= acl.getId() %>', '<%= upload.getId() %>')" title="Delete ACL"><span class="glyphicon glyphicon-remove wcm-acl-remove"></span></a>
+        <a href="#" onclick="deleteAcl('<%= n %>', '${removeAclUploadEvent}', '<%= acl.getId() %>', '<%= upload.getId() %>')" title="${rsc.getString('uploadsAcls.delete_acl')}"><span class="glyphicon glyphicon-remove wcm-acl-remove"></span></a>
     </li>
 <%
         }

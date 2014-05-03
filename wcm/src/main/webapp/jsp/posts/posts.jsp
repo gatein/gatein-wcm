@@ -70,18 +70,18 @@
                         }
                     %>
                     </div>
-                    <div class="wcm-post-actions"><% if (canWrite) { %><a href="${editPostView}&editid=<%= p.getId() %>">Edit</a> | <a href="javascript:deletePost('${n}', <%= p.getId() %>)">Delete</a> | <a href="javascript:;" onclick="javascript:showSingleCategoriesPost('${n}', this.id, '<%= p.getId() %>');" id="${n}addCategory<%= p.getId() %>">Category</a> | <a href="javascript:;" onclick="javascript:showSingleAclPost('${n}', this.id, '${showPostAclsEvent}', '<%= p.getId() %>', '${postsView}');" id="${n}addAcl<%= p.getId() %>">Security</a> | <a href="javascript:;" onclick="javascript:showRelationshipsPost('${n}', this.id, '${showPostRelationshipsEvent}', '<%= p.getId() %>', '${postsView}');" id="${n}addRelationShip<%= p.getId() %>">Relationships</a> | <% } %> <a href="javascript:;" onclick="javascript:showCommentsPost('${n}', this.id, '${showPostCommentsEvent}', '<%= p.getId() %>', '${postsView}');" id="${n}comments<%= p.getId() %>">Comments(<%= p.getComments().size() %>)</a></div>
+                    <div class="wcm-post-actions"><% if (canWrite) { %><a href="${editPostView}&editid=<%= p.getId() %>">${rsc.getString('posts.edit')}</a> | <a href="javascript:deletePost('${n}', <%= p.getId() %>, '${rsc.getString('posts.delete_post')}')">${rsc.getString('posts.delete')}</a> | <a href="javascript:;" onclick="javascript:showSingleCategoriesPost('${n}', this.id, '<%= p.getId() %>');" id="${n}addCategory<%= p.getId() %>">${rsc.getString('posts.category')}</a> | <a href="javascript:;" onclick="javascript:showSingleAclPost('${n}', this.id, '${showPostAclsEvent}', '<%= p.getId() %>', '${postsView}');" id="${n}addAcl<%= p.getId() %>">${rsc.getString('posts.security')}</a> | <a href="javascript:;" onclick="javascript:showRelationshipsPost('${n}', this.id, '${showPostRelationshipsEvent}', '<%= p.getId() %>', '${postsView}');" id="${n}addRelationShip<%= p.getId() %>">${rsc.getString('posts.relationships')}</a> | <% } %> <a href="javascript:;" onclick="javascript:showCommentsPost('${n}', this.id, '${showPostCommentsEvent}', '<%= p.getId() %>', '${postsView}');" id="${n}comments<%= p.getId() %>">${rsc.getString('posts.comments')}(<%= p.getComments().size() %>)</a></div>
                 </div>
             </td>
             <td class="row-author"><%= p.getAuthor() %></td>
             <%
                 String statusColor = "red";
-                String status = "Draft";
+                String status = ((ResourceBundle)pageContext.getAttribute("rsc")).getString("posts.draft");
                 String statusThumb = "down";
                 String nextStatus = Wcm.POSTS.PUBLISHED.toString();
                 if (p.getPostStatus().equals(Wcm.POSTS.PUBLISHED)) {
                     statusColor = "green";
-                    status = "Published";
+                    status = ((ResourceBundle)pageContext.getAttribute("rsc")).getString("posts.published");
                     statusThumb = "up";
                     nextStatus = Wcm.POSTS.DRAFT.toString();
                 }

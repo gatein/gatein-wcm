@@ -31,15 +31,15 @@
 <script type="text/javascript" src="<%=renderResponse.encodeURL(renderRequest.getContextPath() + "/js/uploads/uploadsActions.js") %>"></script>
 <div class="wcm-posts-actions">
     <div class="wcm-checkbox left">
-        <input type="checkbox" value="0" id="${n}selectAll" name="selectAll" onchange="selectAllUploads('${n}')" />
-        <label for="${n}selectAll" title="Select All"></label>
+        <input type="checkbox" value="0" id="${n}selectAll" name="${rsc.getString('uploadsActions.select_all')}" onchange="selectAllUploads('${n}')" />
+        <label for="${n}selectAll" title="${rsc.getString('uploadsActions.select_all')}"></label>
     </div>
 
     <form id="${n}deleteSelectedUploadForm" method="post" action="${deleteSelectedUploadAction}">
         <input type="hidden" id="${n}deleteSelectedListId" name="deleteSelectedListId" />
     </form>
     <div class="left margin-left">
-        <a href="javascript:deleteSelectedUploads('${n}');" class="button" title="Delete selected"><span class="glyphicon glyphicon-trash"></span></a>
+        <a href="javascript:deleteSelectedUploads('${n}', '${rsc.getString('uploadsActions.delete_selected_uploads')}');" class="button" title="${rsc.getString('uploadsActions.delete_selected')}"><span class="glyphicon glyphicon-trash"></span></a>
     </div>
 
     <form id="${n}addSelectedCategoryUploadForm" method="post" action="${addSelectedCategoryUploadAction}">
@@ -47,7 +47,7 @@
         <input type="hidden" id="${n}addCategoryUploadId" name="addCategoryUploadId" />
     </form>
     <div class="margin-center">
-        <a href="#" onclick="showSelectedCategories('${n}', this.id)" class="button" title="Assign Category" id="${n}assign-category"><span class="glyphicon glyphicon-tag"></span></a>
+        <a href="#" onclick="showSelectedCategories('${n}', this.id)" class="button" title="${rsc.getString('uploadsActions.assign_category')}" id="${n}assign-category"><span class="glyphicon glyphicon-tag"></span></a>
     </div>
 
     <%  ViewMetadata metadata = (ViewMetadata)portletSession.getAttribute("metadata");
@@ -61,7 +61,7 @@
     </form>
     <div class="wcm-select margin-left">
         <select id="${n}selectFilterCategory" class="wcm-input" onchange="showFilterCategories('${n}')">
-            <option value="-1">All categories</option>
+            <option value="-1">${rsc.getString('uploadsActions.all_categories')}</option>
             <%
                 if (listCategories != null) {
                     for (Category c : listCategories) {
@@ -75,20 +75,20 @@
     </div>
     <div class="wcm-post-filtername margin-left">
         <%
-            String filterName = "Filter By Name";
+            String filterName = ((ResourceBundle)pageContext.getAttribute("rsc")).getString("uploadsActions.filter_by_name");
             if (metadata != null && metadata.isFilterName()) filterName = metadata.getName();
         %>
-        <input id="${n}inputFilterName" class="wcm-input margin-left-cat" value="<%= filterName %>" onfocus="if (this.value == 'Filter By Name') this.value=''" onblur="if (this.value == '') this.value='Filter By Name'" onkeypress="showFilterNameUploads(event, '${n}')" />
+        <input id="${n}inputFilterName" class="wcm-input margin-left-cat" value="<%= filterName %>" onfocus="if (this.value == '${rsc.getString('uploadsActions.filter_by_name')}') this.value=''" onblur="if (this.value == '') this.value='${rsc.getString('uploadsActions.filter_by_name')}'" onkeypress="showFilterNameUploads(event, '${n}')" />
     </div>
     <%
         if (metadata != null && ((metadata.getToIndex() + 1) < metadata.getTotalIndex())) {
     %>
-    <a href="${rightUploadsAction}" class="button right" title="Older entries"><span class="glyphicon glyphicon-chevron-right"></span></a>
+    <a href="${rightUploadsAction}" class="button right" title="${rsc.getString('uploadsActions.older_entries')}"><span class="glyphicon glyphicon-chevron-right"></span></a>
     <%
         }
         if (metadata != null && ((metadata.getFromIndex() +1) >= Wcm.VIEWS.MAX_PER_PAGE)) {
     %>
-    <a href="${leftUploadsAction}" class="button right" title="Newer entries"><span class="glyphicon glyphicon-chevron-left"></span></a>
+    <a href="${leftUploadsAction}" class="button right" title="${rsc.getString('uploadsActions.newer_entries')}"><span class="glyphicon glyphicon-chevron-left"></span></a>
     <%
         }
         if (metadata != null) {
@@ -104,7 +104,7 @@
 </form>
 
 <div id="${n}uploads-categories" class="wcm-popup-categories wcm-dialog">
-    <div class="wcm-dialog-title">Select category to Add</div>
+    <div class="wcm-dialog-title">${rsc.getString('uploadsActions.select_category')}</div>
     <a href="#" id="${n}close-posts-categories" class="wcm-dialog-close"><span> </span></a>
     <div class="wcm-dialog-body">
         <div class="wcm-select left">
@@ -122,7 +122,7 @@
                 %>
             </select>
         </div>
-        <a href="#" class="button right" title="Assign Category" id="${n}assign-single-category"><span class="glyphicon glyphicon-tag"></span></a>
+        <a href="#" class="button right" title="${rsc.getString('uploadsActions.assign_category')}" id="${n}assign-single-category"><span class="glyphicon glyphicon-tag"></span></a>
         <div class="clear"></div>
     </div>
 </div>
@@ -137,7 +137,7 @@
     <a href="#" id="${n}close-uploads-acls" class="wcm-dialog-close"><span> </span></a>
     <div class="wcm-dialog-body">
         <div class="wcm-acl-new">
-            New ACL:
+            ${rsc.getString('uploadsActions.new_acl')}
 
             <div class="wcm-acl-type"><select id="${n}aclType" name="aclType" class="wcm-input wcm-acl-type-input">
                 <option value="<%= Wcm.ACL.WRITE %>">WRITE</option>
@@ -157,7 +157,7 @@
                     }
                 %>
             </select></div>
-            <a href="javascript:;" onclick="addAcl('${n}', '${addAclUploadEvent}')" id="${n}addAclButton" class="button" title="Add ACL"><span class="glyphicon glyphicon-plus"></span></a>
+            <a href="javascript:;" onclick="addAcl('${n}', '${addAclUploadEvent}')" id="${n}addAclButton" class="button" title="${rsc.getString('uploadsActions.add_acl')}"><span class="glyphicon glyphicon-plus"></span></a>
         </div>
 
         <div class="wcm-acl-attached" id="${n}uploads-acls-attached">

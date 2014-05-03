@@ -23,16 +23,16 @@
 
 /* Post functions
 ================= */
-function saveNewPost(namespace) {
+function saveNewPost(namespace, posts, msgEmpty, postTitle, postExcerpt) {
     require(["SHARED/jquery"], function($) {
         var formId = "#" + namespace + "newPostForm";
         var titleId = "#" + namespace + "postTitle";
         var excerptId = "#" + namespace + "postExcerpt";
         // null validation
-        if ($(titleId).val() == '' || $(titleId).val() == 'Post Title') {
-            showMsg(namespace, 'Post title cannot be empty', 'Posts');
+        if ($(titleId).val() == '' || $(titleId).val() == postTitle) {
+            showMsg(namespace, msgEmpty, posts);
         } else {
-            if ( $(excerptId).val() == 'Summary / Excerpt') {
+            if ( $(excerptId).val() == postExcerpt) {
                 $(excerptId).val('');
             }
             $(formId).submit();
@@ -69,7 +69,7 @@ function showSelectUploadsPost(namespace, editor) {
         var selecfilterid = "#" + namespace + "selectFilterCategory";
         var inputfilterid = "#" + namespace + "inputFilterName";
 
-        $(inputfilterid).val('Filter By Name');
+        $(inputfilterid).val(editor.filter_by_name);
         $(selecfilterid)[0].selectedIndex = 0;
 
         // Events
@@ -137,9 +137,8 @@ function filterCategoryUploadsPost(namespace, editor) {
         var href= $("#" + namespace + "urlShowPostUploadsEvent").val();
         var uploadsid = "#" + namespace + "listUploads";
 
-        $(filterinputid).val('Filter By Name');
+        $(filterinputid).val(editor.filter_by_name);
 
-        console.log("filterCategoryUploadsPost() value: " + $(filterselectid).val());
         $.ajax({
             type: "POST",
             url: href + "&namespace=" + namespace + "&filterCategoryId=" + $(filterselectid).val(),
@@ -166,7 +165,7 @@ function filterCategoryUploadsPost(namespace, editor) {
             },
             error: function(XMLHttpRequest, textStatus, errorThrown)
             {
-                alert("Problem accessing showSelectUploadsPost()");
+                alert("Problem accessing filterCategoryUploadsPost()");
             }
         });
 
@@ -183,7 +182,6 @@ function filterNameUploadsPost(namespace, editor) {
 
         $(filterselectid)[0].selectedIndex = 0;
 
-        console.log("filterNameUploadsPost() value: " + $(filterinputid).val());
         $.ajax({
             type: "POST",
             url: href + "&namespace=" + namespace + "&filterName=" + $(filterinputid).val(),
@@ -210,7 +208,7 @@ function filterNameUploadsPost(namespace, editor) {
             },
             error: function(XMLHttpRequest, textStatus, errorThrown)
             {
-                alert("Problem accessing showSelectUploadsPost()");
+                alert("Problem accessing filterNameUploadsPost()");
             }
         });
 
@@ -257,11 +255,11 @@ function setPostModified() {
     postModified = true;
 }
 
-function checkExit(namespace, editor, postid, href) {
+function checkExit(namespace, editor, postid, href, pendingMsg) {
     require(["SHARED/jquery"], function($) {
         $(window).bind("beforeunload", function() {
             if (editor.checkDirty() || postModified) {
-                return "There are pending modifications in Post."
+                return pendingMsg;
             }
         });
         $(window).bind("unload", function() {

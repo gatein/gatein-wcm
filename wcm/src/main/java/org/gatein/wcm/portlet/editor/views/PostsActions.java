@@ -541,6 +541,7 @@ public class PostsActions {
                     post.getAcls().add(newAcl);
                     newAcl.setPost(post);
                     wcm.update(post, userWcm);
+                    post = wcm.findPost(post.getId(), userWcm);
                 }
             } else {
                 post = null;

@@ -77,9 +77,9 @@ function showFilterCategoriesById(namespace, id) {
 }
 
 
-function deleteUpload(namespace, uploadid) {
+function deleteUpload(namespace, uploadid, msg) {
     require(["SHARED/jquery"], function($) {
-        if (confirm("Confirm delete Upload ID [" + uploadid + "] ?")) {
+        if (confirm(msg + uploadid + "}) ?")) {
             $("#" + namespace + "deleteUploadId").val(uploadid);
             $("#" + namespace + "deleteUploadForm").submit();
         }
@@ -142,13 +142,13 @@ function selectAllUploads(namespace) {
     });
 }
 
-function deleteSelectedUploads(namespace) {
+function deleteSelectedUploads(namespace, msg) {
     require(["SHARED/jquery"], function($) {
         var listUploadId = "#" + namespace + "listUploadId"
         var selectedId = "#" + namespace + "deleteSelectedListId";
         var deleteSelectedFormId = "#" + namespace + "deleteSelectedUploadForm";
         if ($(listUploadId).val().length > 0) {
-            if (confirm("Confirm delete Upload Selected ID [" + $(listUploadId).val() + "] ?")) {
+            if (confirm(msg + $(listUploadId).val() + "}) ?")) {
                 $(selectedId).val( $(listUploadId).val() );
                 $(deleteSelectedFormId).submit();
             }

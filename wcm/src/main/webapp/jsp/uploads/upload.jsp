@@ -33,14 +33,14 @@
     <form id="${n}newUploadForm" method="post" enctype="multipart/form-data" action="${newUploadAction}">
         <div class="wcm-newupload">
             <span class="glyphicon glyphicon-paperclip margin-right margin-top"></span>
-            <a href="javascript:showUploadFile('${n}');" class="button" title="Upload file">Upload file</a>
+            <a href="javascript:showUploadFile('${n}');" class="button" title="${rsc.getString('upload.upload_file')}">${rsc.getString('upload.upload_file')}</a>
             <input type="file" id="${n}uploadFile" name="uploadFile" class="wcm-newupload-file" />
             <div class="wcm-newupload-name" id="${n}uploadFileName"></div>
-            <a href="javascript:saveNewUpload('${n}');" class="button" title="Save Upload">Save Upload</a>
+            <a href="javascript:saveNewUpload('${n}', '${rsc.getString('upload.empty_upload')}', '${rsc.getString('upload.uploads')}');" class="button" title="${rsc.getString('upload.save_upload')}">${rsc.getString('upload.save_upload')}</a>
         </div>
         <div class="wcm-newupload">
             <span class="glyphicon glyphicon-font margin-right margin-top"></span>
-            <label for="${n}uploadFileDescription">Description: </label>
+            <label for="${n}uploadFileDescription">${rsc.getString('upload.description')}</label>
             <div class="wcm-newupload-description"><input id="${n}uploadFileDescription" name="uploadFileDescription" class="wcm-input margin-left-cat" /></div>
         </div>
     </form>

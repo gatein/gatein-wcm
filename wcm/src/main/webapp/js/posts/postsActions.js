@@ -64,9 +64,9 @@ function showFilterCategoriesById(namespace, id) {
     });
 }
 
-function deletePost(namespace, postid) {
+function deletePost(namespace, postid, msg) {
     require(["SHARED/jquery"], function($) {
-        if (confirm("Confirm delete Post ID [" + postid + "] ?")) {
+        if (confirm(msg + postid + "}) ?")) {
             $("#" + namespace + "deletePostId").val(postid);
             $("#" + namespace + "deletePostForm").submit();
         }
@@ -129,13 +129,13 @@ function selectAllPosts(namespace) {
     });
 }
 
-function deleteSelectedPosts(namespace) {
+function deleteSelectedPosts(namespace, msg) {
     require(["SHARED/jquery"], function($) {
         var listPostId = "#" + namespace + "listPostId"
         var selectedId = "#" + namespace + "deleteSelectedListId";
         var deleteSelectedFormId = "#" + namespace + "deleteSelectedPostForm";
         if ($(listPostId).val().length > 0) {
-            if (confirm("Confirm delete Post Selected ID [" + $(listPostId).val() + "] ?")) {
+            if (confirm(msg + $(listPostId).val() + "}) ?")) {
                 $(selectedId).val( $(listPostId).val() );
                 $(deleteSelectedFormId).submit();
             }
@@ -444,7 +444,6 @@ function showRelationshipsPost(namespace, link, href, postId, hrefClose) {
         $(id).css('left', w - $(document).scrollLeft());
         $(id).fadeIn(100);
 
-        $(inputfilterid).val('Filter By Name');
         $(selecfilterid)[0].selectedIndex = 0;
 
         // Events

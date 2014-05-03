@@ -69,7 +69,7 @@
                         %>
                     </div>
                     <% if (canWrite) { %>
-                    <div class="wcm-post-actions"><a href="${editUploadView}&editid=<%= u.getId() %>">Edit</a> | <a href="javascript:deleteUpload('${n}', <%= u.getId() %>)">Delete</a> | <a href="javascript:;" onclick="javascript:showSingleCategories('${n}', this.id, '<%= u.getId() %>');" id="${n}addCategory<%= u.getId() %>" >Category</a> | <a href="javascript:;" onclick="javascript:showSingleAclUpload('${n}', this.id, '${showUploadAclsEvent}', '<%= u.getId() %>', '${uploadsView}');" id="${n}addAcl<%= u.getId() %>">Security</a></div>
+                    <div class="wcm-post-actions"><a href="${editUploadView}&editid=<%= u.getId() %>">${rsc.getString('uploads.edit')}</a> | <a href="javascript:deleteUpload('${n}', <%= u.getId() %>, '${rsc.getString('uploads.delete_upload')}')">${rsc.getString('uploads.delete')}</a> | <a href="javascript:;" onclick="javascript:showSingleCategories('${n}', this.id, '<%= u.getId() %>');" id="${n}addCategory<%= u.getId() %>" >${rsc.getString('uploads.category')}</a> | <a href="javascript:;" onclick="javascript:showSingleAclUpload('${n}', this.id, '${showUploadAclsEvent}', '<%= u.getId() %>', '${uploadsView}');" id="${n}addAcl<%= u.getId() %>">${rsc.getString('uploads.security')}</a></div>
                     <% } %>
                 </div>
             </td>

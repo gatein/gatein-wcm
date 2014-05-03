@@ -29,16 +29,16 @@
     if (renderRequest.getAttribute("userWcm").equals("anonymous")) {
 %>
         <div class="wcm-notaccess inner">
-            <h2><span class="glyphicon glyphicon-warning-sign wcm-grey icon-big-size"></span> Anonymous user can not access into GateIn LightWeight WCM</h2>
-            <p>Please, login into GateIn.</p>
+            <h2><span class="glyphicon glyphicon-warning-sign wcm-grey icon-big-size"></span> ${rsc.getString('notaccess.anonymous_msg')}</h2>
+            <p>${rsc.getString('notaccess.login_msg')}</p>
         </div>
 <%
     } else {
-        UserWcm userWcm = (UserWcm)renderRequest.getAttribute("userWcm");
+        userWcm = (UserWcm)renderRequest.getAttribute("userWcm");
 %>
         <div class="wcm-notaccess inner">
-            <h2><span class="glyphicon glyphicon-warning-sign wcm-grey icon-big-size"></span> User <span class="wcm-red"><%= userWcm.getUsername() %></span> has not rights to access GateIn LightWeight WCM</h2>
-            <p>Please, contact with WCM administrator.</p>
+            <h2><span class="glyphicon glyphicon-warning-sign wcm-grey icon-big-size"></span> ${rsc.getString('notaccess.user')} <span class="wcm-red"> <%= userWcm.getUsername() %></span> ${rsc.getString('notaccess.norights_msg')}</h2>
+            <p>${rsc.getString('notaccess.contact_msg')}</p>
         </div>
 <%
     }

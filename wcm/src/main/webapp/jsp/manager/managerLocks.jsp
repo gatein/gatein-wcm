@@ -31,7 +31,10 @@
 <%@ page import="org.gatein.wcm.domain.Upload" %>
 <%@ page import="org.gatein.wcm.domain.Template" %>
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@include file="../urls.jsp"%>
+<portlet:defineObjects />
+<c:set var="rsc" value="${portletConfig.getResourceBundle(resourceRequest.locale)}" />
 <%
     String n = (String)request.getAttribute("namespace");
     List<Lock> locks = (List)request.getAttribute("locks");
@@ -80,7 +83,7 @@
             <div class="wcm-lock-user left margin-top"><span class="glyphicon glyphicon-user margin-right margin-top"></span> <%= l.getUsername() %></div>
             <div class="wcm-lock-created left margin-top"><span class="glyphicon glyphicon-time margin-right margin-top"></span> <%= ParseDates.parse(l.getCreated()) %></div>
             <div class="wcm-lock-action left margin-top">
-                <span class="glyphicon glyphicon-share-alt margin-right margin-top"></span> <a href="javascript:;" onclick="removeLock('<%= n %>', '<%= removeLockEvent %>', '<%= l.getOriginId() %>', '<%= l.getType() %>')" title="Remove lock">Unlock</a>
+                <span class="glyphicon glyphicon-share-alt margin-right margin-top"></span> <a href="javascript:;" onclick="removeLock('<%= n %>', '<%= removeLockEvent %>', '<%= l.getOriginId() %>', '<%= l.getType() %>')" title="${rsc.getString('manager.remove_lock')}">${rsc.getString('manager.unlock')}</a>
             </div>
             <div class="clear"></div>
         </li>

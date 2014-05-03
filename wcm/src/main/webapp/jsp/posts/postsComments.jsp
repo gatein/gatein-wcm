@@ -29,7 +29,10 @@
 <%@ page import="org.gatein.wcm.portlet.util.ParseDates" %>
 <%@ page import="org.gatein.wcm.domain.UserWcm" %>
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@include file="../urls.jsp"%>
+<portlet:defineObjects />
+<c:set var="rsc" value="${portletConfig.getResourceBundle(resourceRequest.locale)}" />
 <%
     String n = (String)request.getAttribute("namespace");
     Post p = (Post)request.getAttribute("post");
@@ -64,18 +67,18 @@
                     <%
                         if (c.getStatus().equals(Wcm.COMMENT.PUBLIC)) {
                     %>
-                    <span class="glyphicon glyphicon-eye-close margin-top"></span> <a href="javascript:;" onclick="changeStatusComment('<%= n %>', '<%= changeStatusCommentPostEvent%>', '<%= p.getId() %>', '<%= c.getId()%>', '<%= Wcm.COMMENT.REJECTED %>');">Reject</a>
+                    <span class="glyphicon glyphicon-eye-close margin-top"></span> <a href="javascript:;" onclick="changeStatusComment('<%= n %>', '<%= changeStatusCommentPostEvent%>', '<%= p.getId() %>', '<%= c.getId()%>', '<%= Wcm.COMMENT.REJECTED %>');">${rsc.getString('postsComments.reject')}</a>
                     <%
                         }
                     %>
                     <%
                         if (c.getStatus().equals(Wcm.COMMENT.REJECTED)) {
                     %>
-                    <span class="glyphicon glyphicon-eye-open margin-top"></span> <a href="javascript:;" onclick="changeStatusComment('<%= n %>', '<%= changeStatusCommentPostEvent%>', '<%= p.getId() %>', '<%= c.getId()%>', '<%= Wcm.COMMENT.PUBLIC %>');">Public</a>
+                    <span class="glyphicon glyphicon-eye-open margin-top"></span> <a href="javascript:;" onclick="changeStatusComment('<%= n %>', '<%= changeStatusCommentPostEvent%>', '<%= p.getId() %>', '<%= c.getId()%>', '<%= Wcm.COMMENT.PUBLIC %>');">${rsc.getString('postsComments.public')}</a>
                     <%
                         }
                     %>
-                    <span class="glyphicon glyphicon-remove margin-top"></span> <a href="javascript:;" onclick="changeStatusComment('<%= n %>', '<%= changeStatusCommentPostEvent%>', '<%= p.getId() %>', '<%= c.getId()%>', '<%= Wcm.COMMENT.DELETED %>');">Delete</a>
+                    <span class="glyphicon glyphicon-remove margin-top"></span> <a href="javascript:;" onclick="changeStatusComment('<%= n %>', '<%= changeStatusCommentPostEvent%>', '<%= p.getId() %>', '<%= c.getId()%>', '<%= Wcm.COMMENT.DELETED %>');">${rsc.getString('postsComments.delete')}</a>
                 </div>
                 <%
                     }
@@ -100,20 +103,20 @@
         <span class="glyphicon glyphicon-comment"></span>
     </div>
     <div class="wcm-comment-b">
-        <textarea id="<%= n %>newComment" name="newComment" class="wcm-input wcm-newcomment-comment" onfocus="if (this.value == 'New Comment') this.value=''" onblur="if (this.value == '') this.value='New Comment'">New Comment</textarea>
+        <textarea id="<%= n %>newComment" name="newComment" class="wcm-input wcm-newcomment-comment" onfocus="if (this.value == '${rsc.getString('postsComments.new_comment')}') this.value=''" onblur="if (this.value == '') this.value='${rsc.getString('postsComments.new_comment')}'">${rsc.getString('postsComments.new_comment')}</textarea>
 
     </div>
     <% } %>
     <div class="wcm-comment-c">
         <% if (!p.getCommentsStatus().equals(Wcm.COMMENTS.NO_COMMENTS)) { %>
-        <a href="javascript:;" onclick="addComment('<%= n %>', '<%= addCommentPostEvent%>', '<%= p.getId() %>');" id="<%= n %>addCommentButton" class="button" title="Add Comment"><span class="glyphicon glyphicon-comment"></span></a>
+        <a href="javascript:;" onclick="addComment('<%= n %>', '<%= addCommentPostEvent%>', '<%= p.getId() %>');" id="<%= n %>addCommentButton" class="button" title="${rsc.getString('postsComments.add_comment')}"><span class="glyphicon glyphicon-comment"></span></a>
         <% } %>
         <% if (canWrite) { %>
         <div class="wcm-newtemplate-type wcm-comment-type">
             <select id="<%= n %>postCommentsStatus" name="postCommentsStatus" class="wcm-input wcm-comment-select" onchange="changeCommentsPost('<%= n %>', '<%= changeCommentsPostEvent%>', '<%= p.getId() %>');">
-                <option value="<%= Wcm.COMMENTS.ANONYMOUS%>" <% if (p.getCommentsStatus().equals(Wcm.COMMENTS.ANONYMOUS)) { %>selected <% } %> >Anonymous</option>
-                <option value="<%= Wcm.COMMENTS.LOGGED%>" <% if (p.getCommentsStatus().equals(Wcm.COMMENTS.LOGGED)) { %>selected <% } %>>Logged</option>
-                <option value="<%= Wcm.COMMENTS.NO_COMMENTS%>" <% if (p.getCommentsStatus().equals(Wcm.COMMENTS.NO_COMMENTS)) { %>selected <% } %>>No Comments</option>
+                <option value="<%= Wcm.COMMENTS.ANONYMOUS%>" <% if (p.getCommentsStatus().equals(Wcm.COMMENTS.ANONYMOUS)) { %>selected <% } %> >${rsc.getString('postsComments.anonymous')}</option>
+                <option value="<%= Wcm.COMMENTS.LOGGED%>" <% if (p.getCommentsStatus().equals(Wcm.COMMENTS.LOGGED)) { %>selected <% } %>>${rsc.getString('postsComments.logged')}</option>
+                <option value="<%= Wcm.COMMENTS.NO_COMMENTS%>" <% if (p.getCommentsStatus().equals(Wcm.COMMENTS.NO_COMMENTS)) { %>selected <% } %>>${rsc.getString('postsComments.no_comments')}</option>
             </select>
         </div>
         <% } %>

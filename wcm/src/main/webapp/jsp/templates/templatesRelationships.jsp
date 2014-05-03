@@ -31,7 +31,10 @@
 <%@ page import="org.gatein.wcm.domain.Relationship" %>
 <%@ page import="org.gatein.wcm.domain.Template" %>
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@include file="../urls.jsp"%>
+<portlet:defineObjects />
+<c:set var="rsc" value="${portletConfig.getResourceBundle(resourceRequest.locale)}" />
 <portlet:resourceURL var="addTemplateRelationshipEvent">
     <portlet:param name="event" value="<%= Wcm.EVENTS.ADD_RELATIONSHIP_TEMPLATE %>" />
 </portlet:resourceURL>
@@ -57,7 +60,7 @@
                 <input id="<%= n %>inputNewKey<%= t.getId() %>" class="wcm-input margin-left-cat" />
             </div>
             <div class="wcm-relationship-newkey left margin-top margin-left">
-                <a href="javascript:;" onclick="addRelationshipTemplate('<%= n%>', '<%= addTemplateRelationshipEvent%>', '<%= template.getId() %>', '<%= t.getId() %>')" title="Add new relationship"><span class="glyphicon glyphicon-plus margin-right"></span></a>
+                <a href="javascript:;" onclick="addRelationshipTemplate('<%= n%>', '<%= addTemplateRelationshipEvent%>', '<%= template.getId() %>', '<%= t.getId() %>')" title="${rsc.getString('templatesRelationships.add_new_relationship')}"><span class="glyphicon glyphicon-plus margin-right"></span></a>
             </div>
             <div class="clear"></div>
         </li>
@@ -68,7 +71,7 @@
 </div>
 <% } %>
 <div class="wcm-relationships-selected" >
-    <span class="glyphicon glyphicon-random margin-top margin-right"></span> Relationships defined:
+    <span class="glyphicon glyphicon-random margin-top margin-right"></span> ${rsc.getString('templatesRelationships.relationships_defined')}
     <ul>
         <%
             List<Relationship> relations = (List<Relationship>)request.getAttribute("relations");
@@ -81,7 +84,7 @@
         <li>
             <div class="wcm-relationship-origin left margin-top left"><span class="glyphicon glyphicon-th margin-right margin-top"></span> <%= template.getName() %> <span class="glyphicon glyphicon-globe margin-left-locale margin-top"></span> <%= template.getLocale() %></div>
             <div class="wcm-relationship-newkey left margin-top margin-left">
-                <a href="javascript:;" onclick="removeRelationshipTemplate('<%= n%>', '<%= removeTemplateRelationshipEvent%>', '<%= template.getId() %>', '<%= r.getKey() %>')" title="Remove relationship"><span class="glyphicon glyphicon-minus margin-right"></span></a>
+                <a href="javascript:;" onclick="removeRelationshipTemplate('<%= n%>', '<%= removeTemplateRelationshipEvent%>', '<%= template.getId() %>', '<%= r.getKey() %>')" title="${rsc.getString('templatesRelationships.remove_relationship')}"><span class="glyphicon glyphicon-minus margin-right"></span></a>
             </div>
             <div class="clear"></div>
             <div class="wcm-relationship-key left margin-top"><span class="glyphicon glyphicon-hand-right margin-right margin-top"></span> <%= r.getKey() %></div>

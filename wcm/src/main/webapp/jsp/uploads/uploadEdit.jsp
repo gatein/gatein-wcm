@@ -37,7 +37,7 @@
         if (u != null) {
     %>
     <script>
-        checkExit('${n}', '<%= u.getId() %>', '<%= unlockUploadEvent %>&event=<%= Wcm.EVENTS.UNLOCK_UPLOAD %>');
+        checkExit('${n}', '<%= u.getId() %>', '<%= unlockUploadEvent %>&event=<%= Wcm.EVENTS.UNLOCK_UPLOAD %>', '${rsc.getString('upload.pending')}');
     </script>
     <portlet:resourceURL var="downloadUploadEvent">
         <portlet:param name="event" value="<%= Wcm.EVENTS.DOWNLOAD_UPLOAD %>" />
@@ -52,25 +52,25 @@
         <input type="hidden" id="${n}editUploadId" name="editUploadId" value="<%= u.getId() %>"/>
         <div class="wcm-newupload">
             <span class="glyphicon glyphicon-pushpin margin-right margin-top"></span>
-            <label>Filename: </label>
+            <label>${rsc.getString('upload.filename')}</label>
             <div class="wcm-editupload-name"><%= u.getFileName() %></div>
             <a href="${downloadUploadEvent}" target="_blank" class="button" title="Download">&nbsp;&nbsp;Download&nbsp;&nbsp;</a>
         </div>
         <div class="wcm-newupload">
             <span class="glyphicon glyphicon-paperclip margin-right margin-top"></span>
-            <a href="javascript:showUploadFile('${n}');" class="button" title="Upload file">Upload file</a>
+            <a href="javascript:showUploadFile('${n}');" class="button" title="${rsc.getString('upload.upload_file')}">${rsc.getString('upload.upload_file')}</a>
             <input type="file" id="${n}uploadFile" name="uploadFile" class="wcm-newupload-file" onchange="setUploadModified()" />
             <div class="wcm-newupload-name" id="${n}uploadFileName"></div>
-            <a href="javascript:saveUpdateUpload('${n}');" class="button" title="Save Upload">Save Upload</a>
+            <a href="javascript:saveUpdateUpload('${n}');" class="button" title="${rsc.getString('upload.save_upload')}">${rsc.getString('upload.save_upload')}</a>
         </div>
         <div class="wcm-newupload">
             <span class="glyphicon glyphicon-font margin-right margin-top"></span>
-            <label for="${n}uploadFileDescription">Description: </label>
+            <label for="${n}uploadFileDescription">${rsc.getString('upload.description')}</label>
             <div class="wcm-newupload-description"><input id="${n}uploadFileDescription" name="uploadFileDescription" class="wcm-input margin-left-cat"  value="<%= u.getDescription() %>" onchange="setUploadModified()" /></div>
         </div>
         <div class="wcm-newupload">
             <span class="glyphicon glyphicon-sort margin-right margin-top"></span>
-            <label for="${n}uploadVersions">Version: </label>
+            <label for="${n}uploadVersions">${rsc.getString('upload.version')}</label>
             <div class="wcm-newupload-versions">
                 <select id="${n}uploadVersions" name="uploadVersions" class="wcm-input" onchange="changeVersionUpload('${n}');">
                     <%

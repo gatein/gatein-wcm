@@ -27,7 +27,11 @@
 <%@ page import="static org.gatein.wcm.Wcm.*" %>
 <%@ page import="org.gatein.wcm.domain.UserWcm" %>
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@include file="../urls.jsp"%>
+<%@ page import="java.util.ResourceBundle"%>
+<portlet:defineObjects />
+<c:set var="rsc" value="${portletConfig.getResourceBundle(resourceRequest.locale)}" />
 <%
     /*
         UserWcm of request
@@ -52,33 +56,33 @@
             if (userWcm != null)
                 canWrite = userWcm.canWrite(c);
             String typeIcon = "bookmark";
-            String type = "Category";
+            String type = ((ResourceBundle)pageContext.getAttribute("rsc")).getString("categories.category");
             String color = "green";
             if (c.getType() == CATEGORIES.FOLDER) {
                 typeIcon = "folder-open";
-                type = "Folder";
+                type = ((ResourceBundle)pageContext.getAttribute("rsc")).getString("categories.folder");
                 color = "blue";
             }
             if (c.getType() == CATEGORIES.TAG) {
                 typeIcon = "tag";
-                type = "Tag";
+                type = ((ResourceBundle)pageContext.getAttribute("rsc")).getString("categories.tag");
                 color = "red";
             }
 %>
     <li>
         <div id="<%= namespace %>categoryId<%= c.getId()%>">
             <div class="wcm-category-title"><span class="glyphicon glyphicon-<%= typeIcon %> margin-right wcm-<%= color%>"></span> <%= c.getName() %> <span class="wcm-category-type">(<%= type %>)</span></div>
-            <div class="wcm-category-actions"><% if (canWrite) { %><a href="<%= editCategoryView %>&editid=<%= c.getId() %>">Edit</a> | <a href="javascript:deleteCategory('<%= namespace %>', <%= c.getId() %>)">Delete</a> | <a href="javascript:;" onclick="javascript:showSingleAclCategory('<%= namespace %>', this.id, '${showCategoryAclsEvent}', '<%= c.getId() %>', '${categoriesView}');" id="${n}addAcl<%= c.getId() %>">Security</a> | <% } %>
+            <div class="wcm-category-actions"><% if (canWrite) { %><a href="<%= editCategoryView %>&editid=<%= c.getId() %>">${rsc.getString('categories.edit')}</a> | <a href="javascript:deleteCategory('<%= namespace %>', <%= c.getId() %>)">${rsc.getString('categories.delete')}</a> | <a href="javascript:;" onclick="javascript:showSingleAclCategory('<%= namespace %>', this.id, '${showCategoryAclsEvent}', '<%= c.getId() %>', '${categoriesView}');" id="${n}addAcl<%= c.getId() %>">${rsc.getString('categories.security')}</a> | <% } %>
                 <%
                     if (c.getNumChildren() > 0) {
                 %>
-                 <a href="javascript:showChildrenCategories('<%= namespace %>', '<%= showCategoriesChildrenEvent %>', <%= c.getId() %>);" id="<%= namespace %>linkCatId<%= c.getId() %>">Show Children(<%= c.getNumChildren() %>)</a> |
+                 <a href="javascript:showChildrenCategories('<%= namespace %>', '<%= showCategoriesChildrenEvent %>', <%= c.getId() %>, '${rsc.getString('categories.hide_children')}');" id="<%= namespace %>linkCatId<%= c.getId() %>">${rsc.getString('categories.show_children')}(<%= c.getNumChildren() %>)</a> |
                 <%
                     }
                 %>
-                 <a href="${filterCategoryPostsAction}&filterCategoryId=<%= c.getId()%>" title="Show Posts"><span class="glyphicon glyphicon-file margin-right margin-left-cat"></span></a>
-                | <a href="${filterCategoryUploadsAction}&filterCategoryId=<%= c.getId()%>" title="Show Uploads"><span class="glyphicon glyphicon-picture margin-right margin-left-cat"></span></a>
-                <% if (isManager) { %>| <a href="${filterCategoryTemplatesAction}&filterCategoryId=<%= c.getId()%>" title="Show Templates"><span class="glyphicon glyphicon-th margin-right margin-left-cat"></span></a><% } %>
+                 <a href="${filterCategoryPostsAction}&filterCategoryId=<%= c.getId()%>" title="${rsc.getString('categories.show_posts')}"><span class="glyphicon glyphicon-file margin-right margin-left-cat"></span></a>
+                | <a href="${filterCategoryUploadsAction}&filterCategoryId=<%= c.getId()%>" title="${rsc.getString('categories.show_uploads')}"><span class="glyphicon glyphicon-picture margin-right margin-left-cat"></span></a>
+                <% if (isManager) { %>| <a href="${filterCategoryTemplatesAction}&filterCategoryId=<%= c.getId()%>" title="${rsc.getString('categories.show_templates')}"><span class="glyphicon glyphicon-th margin-right margin-left-cat"></span></a><% } %>
             </div>
         </div>
     </li>

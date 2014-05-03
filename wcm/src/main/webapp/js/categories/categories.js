@@ -24,7 +24,7 @@
 /* Categories functions
  ======================= */
 
-function showChildrenCategories(namespace, href, parentid) {
+function showChildrenCategories(namespace, href, parentid, hideChildren) {
     require(["SHARED/jquery"], function($) {
         var catId = "#" + namespace + "categoryId" + parentid;
         var linkCatId = "#" + namespace + "linkCatId" + parentid;
@@ -46,7 +46,7 @@ function showChildrenCategories(namespace, href, parentid) {
 
                 // Change show/hide link
                 $(linkCatId).attr("href", "javascript:hideChildrenCategories('" + namespace + "listChildrenId" + parentid + "');");
-                $(linkCatId).text("Hide Children");
+                $(linkCatId).text(hideChildren);
             },
             error: function(XMLHttpRequest, textStatus, errorThrown)
             {

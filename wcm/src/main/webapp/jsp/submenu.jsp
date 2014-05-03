@@ -24,13 +24,13 @@
 %>
 <div class="wcm-actions">
     <ul>
-        <li><a href="${newPostView}"><span class="glyphicon glyphicon-file margin-right margin-top"></span> New post</a></li>
-        <li><a href="${newCategoryView}"><span class="glyphicon glyphicon-tags margin-right margin-top"></span> New category</a></li>
-        <li><a href="${newUploadView}"><span class="glyphicon glyphicon-picture margin-right margin-top"></span> New upload</a></li>
+        <li><a href="${newPostView}"><span class="glyphicon glyphicon-file margin-right margin-top"></span> ${rsc.getString('submenu.new_post')}</a></li>
+        <li><a href="${newCategoryView}"><span class="glyphicon glyphicon-tags margin-right margin-top"></span> ${rsc.getString('submenu.new_category')}</a></li>
+        <li><a href="${newUploadView}"><span class="glyphicon glyphicon-picture margin-right margin-top"></span> ${rsc.getString('submenu.new_upload')}</a></li>
         <%
             if (isManager) {
         %>
-        <li><a href="${newTemplateView}"><span class="glyphicon glyphicon-th margin-right margin-top"></span> New template</a></li>
+        <li><a href="${newTemplateView}"><span class="glyphicon glyphicon-th margin-right margin-top"></span> ${rsc.getString('submenu.new_template')}</a></li>
         <%
             }
         %>

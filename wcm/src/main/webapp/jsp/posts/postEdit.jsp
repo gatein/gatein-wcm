@@ -41,12 +41,12 @@
         <img id="${n}uploads-preview-content" class="wcm-upload-image" src="" />
     </div>
     <div id="${n}post-select-upload" class="wcm-popup-categories wcm-dialog">
-        <div class="wcm-dialog-title">Select upload to Add</div>
+        <div class="wcm-dialog-title">${rsc.getString('post.select_upload')}</div>
         <a href="#" id="${n}close-post-select-upload" class="wcm-dialog-close"><span> </span></a>
         <div class="wcm-dialog-body">
             <div class="wcm-select left">
                 <select id="${n}selectFilterCategory" class="wcm-input">
-                    <option value="-1">All categories</option>
+                    <option value="-1">${rsc.getString('post.all_categories')}</option>
                     <%
                         if (listCategories != null) {
                             for (Category c : listCategories) {
@@ -60,9 +60,9 @@
             </div>
             <div class="wcm-post-filtername right">
                 <%
-                    String filterName = "Filter By Name";
+                    String filterName = ((ResourceBundle)pageContext.getAttribute("rsc")).getString("post.filter_by_name");
                 %>
-                <input id="${n}inputFilterName" class="wcm-input" value="<%= filterName %>" onfocus="if (this.value == 'Filter By Name') this.value=''" onblur="if (this.value == '') this.value='Filter By Name'" />
+                <input id="${n}inputFilterName" class="wcm-input" value="<%= filterName %>" onfocus="if (this.value == '${rsc.getString('post.filter_by_name')}') this.value=''" onblur="if (this.value == '') this.value='${rsc.getString('post.filter_by_name')}'" />
             </div>
             <div class="clear"></div>
             <div class="wcm-post-uploads" id="${n}listUploads">
@@ -82,28 +82,28 @@
     </form>
     <form id="${n}editPostForm" method="post" action="${editPostAction}"><input type="hidden" id="${n}postEditId" name="postEditId" value="<%= p.getId() %>" />
     <% } %>
-    <div class="wcm-newpost-title"><input id="${n}postTitle" name="postTitle" class="wcm-input" value="<%= p.getTitle() %>" <% if (canWrite) { %>onfocus="if (this.value == 'Post Title') this.value=''" onblur="if (this.value == '') this.value='Post Title'" <% } else { %>disabled<% } %> onchange="setPostModified()" /></div>
-    <div class="wcm-newpost-title"><textarea id="${n}postExcerpt" name="postExcerpt" class="wcm-input" <% if (canWrite) { %>onfocus="if (this.value == 'Summary / Excerpt') this.value=''" onblur="if (this.value == '') this.value='Summary / Excerpt'"  <% } else { %>disabled<% } %> onchange="setPostModified()" ><%= p.getExcerpt() %></textarea></div>
+    <div class="wcm-newpost-title"><input id="${n}postTitle" name="postTitle" class="wcm-input" value="<%= p.getTitle() %>" <% if (canWrite) { %>onfocus="if (this.value == '${rsc.getString('post.post_title')}') this.value=''" onblur="if (this.value == '') this.value='${rsc.getString('post.post_title')}'" <% } else { %>disabled<% } %> onchange="setPostModified()" /></div>
+    <div class="wcm-newpost-title"><textarea id="${n}postExcerpt" name="postExcerpt" class="wcm-input" <% if (canWrite) { %>onfocus="if (this.value == '${rsc.getString('post.summary_excerpt')}') this.value=''" onblur="if (this.value == '') this.value='${rsc.getString('post.summary_excerpt')}'"  <% } else { %>disabled<% } %> onchange="setPostModified()" ><%= p.getExcerpt() %></textarea></div>
     <div class="wcm-newtemplate">
         <span class="glyphicon glyphicon-globe margin-right margin-top"></span>
-        Locale: <div class="wcm-newtemplate-locale"><input id="${n}postLocale" name="postLocale" class="wcm-input" value="<%= p.getLocale() %>" <% if (!canWrite) { %>disabled<% } %> onchange="setPostModified()" /></div>
+        ${rsc.getString('post.locale')}: <div class="wcm-newtemplate-locale"><input id="${n}postLocale" name="postLocale" class="wcm-input" value="<%= p.getLocale() %>" <% if (!canWrite) { %>disabled<% } %> onchange="setPostModified()" /></div>
         <span class="glyphicon glyphicon-comment margin-right margin-top"></span>
-        Comments: <div class="wcm-newpost-comments">
+        ${rsc.getString('post.comments')}: <div class="wcm-newpost-comments">
                     <select id="${n}postCommentsStatus" name="postCommentsStatus" class="wcm-input" <% if (!canWrite) { %>disabled<% } %> onchange="setPostModified()">
-                        <option value="<%= Wcm.COMMENTS.ANONYMOUS%>" <% if (p.getCommentsStatus().equals(Wcm.COMMENTS.ANONYMOUS)) { %> selected <% } %>>Anonymous</option>
-                        <option value="<%= Wcm.COMMENTS.LOGGED%>" <% if (p.getCommentsStatus().equals(Wcm.COMMENTS.LOGGED)) { %> selected <% } %>>Logged</option>
-                        <option value="<%= Wcm.COMMENTS.NO_COMMENTS%>" <% if (p.getCommentsStatus().equals(Wcm.COMMENTS.NO_COMMENTS)) { %> selected <% } %>>No Comments</option>
+                        <option value="<%= Wcm.COMMENTS.ANONYMOUS%>" <% if (p.getCommentsStatus().equals(Wcm.COMMENTS.ANONYMOUS)) { %> selected <% } %>>${rsc.getString('post.anonymous')}</option>
+                        <option value="<%= Wcm.COMMENTS.LOGGED%>" <% if (p.getCommentsStatus().equals(Wcm.COMMENTS.LOGGED)) { %> selected <% } %>>${rsc.getString('post.logged')}</option>
+                        <option value="<%= Wcm.COMMENTS.NO_COMMENTS%>" <% if (p.getCommentsStatus().equals(Wcm.COMMENTS.NO_COMMENTS)) { %> selected <% } %>>${rsc.getString('post.no_comments')}</option>
                     </select>
                   </div>
         <span class="glyphicon glyphicon-share margin-right margin-top"></span>
-        Status:  <div class="wcm-newpost-status">
+        ${rsc.getString('post.status')}:  <div class="wcm-newpost-status">
                     <select id="${n}postStatus" name="postStatus" class="wcm-input" <% if (!canWrite) { %>disabled<% } %> onchange="setPostModified()">
-                        <option value="<%= Wcm.POSTS.DRAFT %>" <% if (p.getPostStatus().equals(Wcm.POSTS.DRAFT)) { %> selected <% } %>>Draft</option>
-                        <option value="<%= Wcm.POSTS.PUBLISHED %>" <% if (p.getPostStatus().equals(Wcm.POSTS.PUBLISHED)) { %> selected <% } %>>Published</option>
+                        <option value="<%= Wcm.POSTS.DRAFT %>" <% if (p.getPostStatus().equals(Wcm.POSTS.DRAFT)) { %> selected <% } %>>${rsc.getString('post.draft')}</option>
+                        <option value="<%= Wcm.POSTS.PUBLISHED %>" <% if (p.getPostStatus().equals(Wcm.POSTS.PUBLISHED)) { %> selected <% } %>>${rsc.getString('post.published')}</option>
                     </select>
                  </div>
         <span class="glyphicon glyphicon-sort margin-right margin-top"></span>
-        Version: <div class="wcm-newpost-versions">
+        ${rsc.getString('post.version')}: <div class="wcm-newpost-versions">
                     <select id="${n}postVersions" name="postVersions" class="wcm-input" <% if (!canWrite) { %>disabled<% } %> onchange="changeVersionPost('${n}');">
                         <%
                             List<Long> versions = (List<Long>)request.getAttribute("versions");
@@ -122,7 +122,7 @@
                         %>
                     </select>
                   </div>
-        <% if (canWrite) { %><a href="javascript:saveUpdatePost('${n}');" class="button" title="Save Post">Save Post</a><% } %>
+        <% if (canWrite) { %><a href="javascript:saveUpdatePost('${n}');" class="button" title="Save Post">${rsc.getString('post.save_post')}</a><% } %>
     </div>
     <script type="text/javascript" src="<%=renderResponse.encodeURL(renderRequest.getContextPath() + "/js/ckeditor/ckeditor.js") %>"></script>
     <input id="${n}urlShowPostUploadsEvent" type="hidden" value="${showPostUploadsEvent}" />
@@ -131,10 +131,12 @@
         CKEDITOR.on( 'instanceCreated', function( event ) {
             editor = event.editor;
             editor.portalnamespace='${n}';
+            editor.filter_by_name='${rsc.getString('post.filter_by_name')}';
             editor.on( 'configLoaded', function() {
                editor.config.removePlugins = 'stylescombo';
+               editor.config.language = '<%= renderRequest.getLocale().getLanguage() %>';
             });
-            checkExit('${n}', editor, '<%= p.getId() %>', '<%= unlockPostEvent %>&event=<%= Wcm.EVENTS.UNLOCK_POST %>');
+            checkExit('${n}', editor, '<%= p.getId() %>', '<%= unlockPostEvent %>&event=<%= Wcm.EVENTS.UNLOCK_POST %>', '${rsc.getString('post.pending')}');
         });
         <% if (!canWrite) { %>
         CKEDITOR.on( 'currentInstance', function() {

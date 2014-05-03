@@ -34,7 +34,7 @@ function showSelectUploadsPost(namespace, editor) {
         var selecfilterid = "#" + namespace + "selectFilterCategory";
         var inputfilterid = "#" + namespace + "inputFilterName";
 
-        $(inputfilterid).val('Filter By Name');
+        $(inputfilterid).val(editor.filter_by_name);
         $(selecfilterid)[0].selectedIndex = 0;
 
         // Events
@@ -104,9 +104,8 @@ function filterCategoryUploadsPost(namespace, editor) {
         var href= $("#" + namespace + "urlShowPostUploadsEvent").val();
         var uploadsid = "#" + namespace + "listUploads";
 
-        $(filterinputid).val('Filter By Name');
+        $(filterinputid).val(editor.filter_by_name);
 
-        console.log("filterCategoryUploadsPost() value: " + $(filterselectid).val());
         $.ajax({
             type: "POST",
             url: href + "&namespace=" + namespace + "&filterCategoryId=" + $(filterselectid).val(),
@@ -150,7 +149,6 @@ function filterNameUploadsPost(namespace, editor) {
 
         $(filterselectid)[0].selectedIndex = 0;
 
-        console.log("filterNameUploadsPost() value: " + $(filterinputid).val());
         $.ajax({
             type: "POST",
             url: href + "&namespace=" + namespace + "&filterName=" + $(filterinputid).val(),

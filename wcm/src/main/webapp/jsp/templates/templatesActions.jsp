@@ -31,14 +31,14 @@
 <div class="wcm-posts-actions">
     <div class="wcm-checkbox left">
         <input type="checkbox" value="0" id="${n}selectAll" name="selectAll" onchange="selectAllTemplates('${n}')" />
-        <label for="${n}selectAll" title="Select All"></label>
+        <label for="${n}selectAll" title="${rsc.getString('templatesActions.select_all')}"></label>
     </div>
 
     <form id="${n}deleteSelectedTemplateForm" method="post" action="${deleteSelectedTemplateAction}">
         <input type="hidden" id="${n}deleteSelectedListId" name="deleteSelectedListId" />
     </form>
     <div class="left margin-left">
-        <a href="javascript:deleteSelectedTemplates('${n}');" class="button" title="Delete selected"><span class="glyphicon glyphicon-trash"></span></a>
+        <a href="javascript:deleteSelectedTemplates('${n}', '${rsc.getString('templatesActions.delete_selected_templates')}');" class="button" title="${rsc.getString('templatesActions.delete_selected')}"><span class="glyphicon glyphicon-trash"></span></a>
     </div>
 
     <form id="${n}addSelectedCategoryTemplateForm" method="post" action="${addSelectedCategoryTemplateAction}">
@@ -46,7 +46,7 @@
         <input type="hidden" id="${n}addCategoryTemplateId" name="addCategoryTemplateId" />
     </form>
     <div class="margin-center">
-        <a href="#" onclick="showSelectedCategoriesTemplates('${n}', this.id)" class="button" title="Assign Category" id="${n}assign-category"><span class="glyphicon glyphicon-tag"></span></a>
+        <a href="#" onclick="showSelectedCategoriesTemplates('${n}', this.id)" class="button" title="${rsc.getString('templatesActions.assign_category')}" id="${n}assign-category"><span class="glyphicon glyphicon-tag"></span></a>
     </div>
 
     <%  ViewMetadata metadata = (ViewMetadata)portletSession.getAttribute("metadata");
@@ -60,7 +60,7 @@
     </form>
     <div class="wcm-select margin-left">
         <select id="${n}selectFilterCategory" class="wcm-input" onchange="showFilterCategoriesTemplates('${n}')">
-            <option value="-1">All categories</option>
+            <option value="-1">${rsc.getString('templatesActions.all_categories')}</option>
             <%
                 if (listCategories != null) {
                     for (Category c : listCategories) {
@@ -74,20 +74,20 @@
     </div>
     <div class="wcm-post-filtername margin-left">
         <%
-            String filterName = "Filter By Name";
+            String filterName = ((ResourceBundle)pageContext.getAttribute("rsc")).getString("templatesActions.filter_by_name");
             if (metadata != null && metadata.isFilterName()) filterName = metadata.getName();
         %>
-        <input id="${n}inputFilterName" class="wcm-input margin-left-cat" value="<%= filterName %>" onfocus="if (this.value == 'Filter By Name') this.value=''" onblur="if (this.value == '') this.value='Filter By Name'" onkeypress="showFilterNameTemplates(event, '${n}')" />
+        <input id="${n}inputFilterName" class="wcm-input margin-left-cat" value="<%= filterName %>" onfocus="if (this.value == '${rsc.getString('templatesActions.filter_by_name')}') this.value=''" onblur="if (this.value == '') this.value='${rsc.getString('templatesActions.filter_by_name')}'" onkeypress="showFilterNameTemplates(event, '${n}')" />
     </div>
     <%
         if (metadata != null && ((metadata.getToIndex() + 1) < metadata.getTotalIndex())) {
     %>
-    <a href="${rightTemplatesAction}" class="button right" title="Older entries"><span class="glyphicon glyphicon-chevron-right"></span></a>
+    <a href="${rightTemplatesAction}" class="button right" title="${rsc.getString('templatesActions.older_entries')}"><span class="glyphicon glyphicon-chevron-right"></span></a>
     <%
         }
         if (metadata != null && ((metadata.getFromIndex() +1) >= Wcm.VIEWS.MAX_PER_PAGE)) {
     %>
-    <a href="${leftTemplatesAction}" class="button right" title="Newer entries"><span class="glyphicon glyphicon-chevron-left"></span></a>
+    <a href="${leftTemplatesAction}" class="button right" title="${rsc.getString('templatesActions.older_entries')}"><span class="glyphicon glyphicon-chevron-left"></span></a>
     <%
         }
         if (metadata != null) {
@@ -103,7 +103,7 @@
 </form>
 
 <div id="${n}templates-categories" class="wcm-popup-categories wcm-dialog">
-    <div class="wcm-dialog-title">Select category to Add</div>
+    <div class="wcm-dialog-title">${rsc.getString('templatesActions.select_category')}</div>
     <a href="#" id="${n}close-posts-categories" class="wcm-dialog-close"><span> </span></a>
     <div class="wcm-dialog-body">
         <div class="wcm-select left">
@@ -119,18 +119,18 @@
                 %>
             </select>
         </div>
-        <a href="#" class="button right" title="Assign Category" id="${n}assign-single-category"><span class="glyphicon glyphicon-tag"></span></a>
+        <a href="#" class="button right" title="${rsc.getString('templatesActions.assign_category')}" id="${n}assign-single-category"><span class="glyphicon glyphicon-tag"></span></a>
         <div class="clear"></div>
     </div>
 </div>
 
 <div id="${n}templates-relationships" class="wcm-popup-categories wcm-dialog">
-    <div id="${n}templates-relationships-title" class="wcm-dialog-title">Relationships</div>
+    <div id="${n}templates-relationships-title" class="wcm-dialog-title">${rsc.getString('templatesActions.relationships')}</div>
     <a href="#" id="${n}close-templates-relationships" class="wcm-dialog-close"><span> </span></a>
     <div class="wcm-dialog-body wcm-relationships-select">
         <div class="wcm-select left margin-right">
             <select id="${n}selectFilterCategoryRelationships" class="wcm-input">
-                <option value="-1">All categories</option>
+                <option value="-1">${rsc.getString('templatesActions.all_categories')}</option>
                 <%
                     if (listCategories != null) {
                         for (Category c : listCategories) {
@@ -144,9 +144,9 @@
         </div>
         <div class="wcm-post-filtername left">
             <%
-                filterName = "Filter By Name";
+                filterName = ((ResourceBundle)pageContext.getAttribute("rsc")).getString("templatesActions.filter_by_name");
             %>
-            <input id="${n}inputFilterNameRelationships" class="wcm-input margin-left-cat" value="<%= filterName %>" onfocus="if (this.value == 'Filter By Name') this.value=''" onblur="if (this.value == '') this.value='Filter By Name'" />
+            <input id="${n}inputFilterNameRelationships" class="wcm-input margin-left-cat" value="<%= filterName %>" onfocus="if (this.value == '${rsc.getString('templatesActions.filter_by_name')}') this.value=''" onblur="if (this.value == '') this.value='${rsc.getString('templatesActions.filter_by_name')}'" />
         </div>
         <div class="clear"></div>
     </div>

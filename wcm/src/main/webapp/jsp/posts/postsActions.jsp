@@ -28,14 +28,14 @@
 <div class="wcm-posts-actions">
     <div class="wcm-checkbox left">
         <input type="checkbox" value="0" id="${n}selectAll" name="selectAll" onchange="selectAllPosts('${n}')" />
-        <label for="${n}selectAll" title="Select All"></label>
+        <label for="${n}selectAll" title="${rsc.getString('postsActions.select_all')}"></label>
     </div>
 
     <form id="${n}deleteSelectedPostForm" method="post" action="${deleteSelectedPostAction}">
         <input type="hidden" id="${n}deleteSelectedListId" name="deleteSelectedListId" />
     </form>
     <div class="left margin-left">
-        <a href="javascript:deleteSelectedPosts('${n}');" class="button" title="Delete selected"><span class="glyphicon glyphicon-trash"></span></a>
+        <a href="javascript:deleteSelectedPosts('${n}', '${rsc.getString('postsActions.delete_selected_posts')}');" class="button" title="${rsc.getString('postsActions.delete_selected')}"><span class="glyphicon glyphicon-trash"></span></a>
     </div>
 
     <form id="${n}addSelectedCategoryPostForm" method="post" action="${addSelectedCategoryPostAction}">
@@ -47,9 +47,9 @@
         <input type="hidden" id="${n}publishStates" name="publishStates" />
     </form>
     <div class="margin-center">
-        <a href="#" onclick="showSelectedCategoriesPosts('${n}', this.id)" class="button" title="Assign Category" id="${n}assign-category"><span class="glyphicon glyphicon-tag"></span></a>
-        <a href="javascript:publishPosts('${n}', '<%= Wcm.POSTS.PUBLISHED %>');" class="button" title="Publish"><span class="glyphicon glyphicon-thumbs-up"></span></a>
-        <a href="javascript:publishPosts('${n}', '<%= Wcm.POSTS.DRAFT %>');" class="button" title="Draft"><span class="glyphicon glyphicon-thumbs-down"></span></a>
+        <a href="#" onclick="showSelectedCategoriesPosts('${n}', this.id)" class="button" title="${rsc.getString('postsActions.assign_category')}" id="${n}assign-category"><span class="glyphicon glyphicon-tag"></span></a>
+        <a href="javascript:publishPosts('${n}', '<%= Wcm.POSTS.PUBLISHED %>');" class="button" title="${rsc.getString('postsActions.publish')}"><span class="glyphicon glyphicon-thumbs-up"></span></a>
+        <a href="javascript:publishPosts('${n}', '<%= Wcm.POSTS.DRAFT %>');" class="button" title="${rsc.getString('postsActions.draft')}"><span class="glyphicon glyphicon-thumbs-down"></span></a>
     </div>
 
     <%  ViewMetadata metadata = (ViewMetadata)portletSession.getAttribute("metadata");
@@ -63,7 +63,7 @@
     </form>
     <div class="wcm-select margin-left">
         <select id="${n}selectFilterCategory" class="wcm-input" onchange="showFilterCategoriesPosts('${n}')">
-            <option value="-1">All categories</option>
+            <option value="-1">${rsc.getString('postsActions.all_categories')}</option>
             <%
                 if (listCategories != null) {
                     for (Category c : listCategories) {
@@ -77,20 +77,20 @@
     </div>
     <div class="wcm-post-filtername margin-left">
         <%
-            String filterName = "Filter By Name";
+            String filterName = ((ResourceBundle)pageContext.getAttribute("rsc")).getString("postsActions.filter_by_name");
             if (metadata != null && metadata.isFilterName()) filterName = metadata.getName();
         %>
-        <input id="${n}inputFilterName" class="wcm-input margin-left-cat" value="<%= filterName %>" onfocus="if (this.value == 'Filter By Name') this.value=''" onblur="if (this.value == '') this.value='Filter By Name'" onkeypress="showFilterNamePosts(event, '${n}')" />
+        <input id="${n}inputFilterName" class="wcm-input margin-left-cat" value="<%= filterName %>" onfocus="if (this.value == '${rsc.getString('postsActions.filter_by_name')}') this.value=''" onblur="if (this.value == '') this.value='${rsc.getString('postsActions.filter_by_name')}'" onkeypress="showFilterNamePosts(event, '${n}')" />
     </div>
     <%
         if (metadata != null && ((metadata.getToIndex() + 1) < metadata.getTotalIndex())) {
     %>
-    <a href="${rightPostsAction}" class="button right" title="Older entries"><span class="glyphicon glyphicon-chevron-right"></span></a>
+    <a href="${rightPostsAction}" class="button right" title="${rsc.getString('postsActions.older_entries')}"><span class="glyphicon glyphicon-chevron-right"></span></a>
     <%
         }
         if (metadata != null && ((metadata.getFromIndex() +1) >= Wcm.VIEWS.MAX_PER_PAGE)) {
     %>
-    <a href="${leftPostsAction}" class="button right" title="Newer entries"><span class="glyphicon glyphicon-chevron-left"></span></a>
+    <a href="${leftPostsAction}" class="button right" title="${rsc.getString('postsActions.newer_entries')}"><span class="glyphicon glyphicon-chevron-left"></span></a>
     <%
         }
         if (metadata != null) {
@@ -106,7 +106,7 @@
 </form>
 
 <div id="${n}posts-categories" class="wcm-popup-categories wcm-dialog">
-    <div class="wcm-dialog-title">Select category to Add</div>
+    <div class="wcm-dialog-title">${rsc.getString('postsActions.select_category')}</div>
     <a href="#" id="${n}close-posts-categories" class="wcm-dialog-close"><span> </span></a>
     <div class="wcm-dialog-body">
         <div class="wcm-select left">
@@ -124,7 +124,7 @@
                 %>
             </select>
         </div>
-        <a href="#" class="button right" title="Assign Category" id="${n}assign-single-category"><span class="glyphicon glyphicon-tag"></span></a>
+        <a href="#" class="button right" title="${rsc.getString('postsActions.assign_category')}" id="${n}assign-single-category"><span class="glyphicon glyphicon-tag"></span></a>
         <div class="clear"></div>
     </div>
 </div>
@@ -136,7 +136,7 @@
     <a href="#" id="${n}close-posts-acls" class="wcm-dialog-close"><span> </span></a>
     <div class="wcm-dialog-body">
         <div class="wcm-acl-new">
-            New ACL:
+            ${rsc.getString('postsActions.new_acl')}
 
             <div class="wcm-acl-type"><select id="${n}aclType" name="aclType" class="wcm-input wcm-acl-type-input">
                 <option value="<%= Wcm.ACL.WRITE %>">WRITE</option>
@@ -156,7 +156,7 @@
                     }
                 %>
             </select></div>
-            <a href="javascript:;" onclick="addAcl('${n}', '${addAclPostEvent}')" id="${n}addAclButton" class="button" title="Add ACL"><span class="glyphicon glyphicon-plus"></span></a>
+            <a href="javascript:;" onclick="addAcl('${n}', '${addAclPostEvent}')" id="${n}addAclButton" class="button" title="${rsc.getString('postsActions.add_acl')}"><span class="glyphicon glyphicon-plus"></span></a>
         </div>
 
         <div class="wcm-acl-attached" id="${n}posts-acls-attached">
@@ -166,7 +166,7 @@
 </div>
 
 <div id="${n}posts-comments" class="wcm-popup-categories wcm-dialog">
-    <div id="${n}posts-comments-title" class="wcm-dialog-title">Comments</div>
+    <div id="${n}posts-comments-title" class="wcm-dialog-title">${rsc.getString('postsActions.comments')}</div>
     <a href="#" id="${n}close-posts-comments" class="wcm-dialog-close"><span> </span></a>
     <div class="wcm-dialog-body" id="${n}post-comments-list">
 
@@ -174,12 +174,12 @@
 </div>
 
 <div id="${n}posts-relationships" class="wcm-popup-categories wcm-dialog">
-    <div id="${n}posts-relationships-title" class="wcm-dialog-title">Relationships</div>
+    <div id="${n}posts-relationships-title" class="wcm-dialog-title">${rsc.getString('postsActions.relationships')}</div>
     <a href="#" id="${n}close-posts-relationships" class="wcm-dialog-close"><span> </span></a>
     <div class="wcm-dialog-body wcm-relationships-select">
         <div class="wcm-select left margin-right">
             <select id="${n}selectFilterCategoryRelationships" class="wcm-input">
-                <option value="-1">All categories</option>
+                <option value="-1">${rsc.getString('postsActions.all_categories')}</option>
                 <%
                     if (listCategories != null) {
                         for (Category c : listCategories) {
@@ -193,9 +193,9 @@
         </div>
         <div class="wcm-post-filtername left">
             <%
-                filterName = "Filter By Name";
+                filterName = ((ResourceBundle)pageContext.getAttribute("rsc")).getString("postsActions.filter_by_name");
             %>
-            <input id="${n}inputFilterNameRelationships" class="wcm-input margin-left-cat" value="<%= filterName %>" onfocus="if (this.value == 'Filter By Name') this.value=''" onblur="if (this.value == '') this.value='Filter By Name'" />
+            <input id="${n}inputFilterNameRelationships" class="wcm-input margin-left-cat" value="<%= filterName %>" onfocus="if (this.value == '${rsc.getString('postsActions.filter_by_name')}') this.value=''" onblur="if (this.value == '') this.value='${rsc.getString('postsActions.filter_by_name')}'" />
         </div>
         <div class="clear"></div>
     </div>

@@ -33,18 +33,18 @@
     <%@include file="../menu.jsp"%>
     <%@include file="../submenu.jsp"%>
     <%
-        List<Category> listCategories = (List<Category>)portletSession.getAttribute("categories");
+        List<Category> listCategories = (List<Category>)request.getAttribute("categories");
     %>
     <div id="${n}uploads-preview" class="wcm-upload-preview">
         <img id="${n}uploads-preview-content" class="wcm-upload-image" src="" />
     </div>
     <div id="${n}post-select-upload" class="wcm-popup-categories wcm-dialog">
-        <div class="wcm-dialog-title">Select upload to Add</div>
+        <div class="wcm-dialog-title">${rsc.getString('template.select_upload')}</div>
         <a href="#" id="${n}close-post-select-upload" class="wcm-dialog-close"><span> </span></a>
         <div class="wcm-dialog-body">
             <div class="wcm-select left">
                 <select id="${n}selectFilterCategory" class="wcm-input">
-                    <option value="-1">All categories</option>
+                    <option value="-1">${rsc.getString('template.all_categories')}</option>
                     <%
                         if (listCategories != null) {
                             for (Category c : listCategories) {
@@ -58,9 +58,9 @@
             </div>
             <div class="wcm-post-filtername right">
                 <%
-                    String filterName = "Filter By Name";
+                    String filterName = ((ResourceBundle)pageContext.getAttribute("rsc")).getString("template.filter_by_name");
                 %>
-                <input id="${n}inputFilterName" class="wcm-input" value="<%= filterName %>" onfocus="if (this.value == 'Filter By Name') this.value=''" onblur="if (this.value == '') this.value='Filter By Name'" />
+                <input id="${n}inputFilterName" class="wcm-input" value="<%= filterName %>" onfocus="if (this.value == '${rsc.getString('template.filter_by_name')}') this.value=''" onblur="if (this.value == '') this.value='${rsc.getString('template.filter_by_name')}'" />
             </div>
             <div class="clear"></div>
             <div class="wcm-post-uploads" id="${n}listUploads">
@@ -69,11 +69,11 @@
     </div>
 
     <form id="${n}newTemplateForm" method="post" action="${newTemplateAction}">
-    <div class="wcm-newpost-title"><input id="${n}templateName" name="templateName" class="wcm-input" value="Template Name" onfocus="if (this.value == 'Template Name') this.value=''" onblur="if (this.value == '') this.value='Template Name'"/></div>
+    <div class="wcm-newpost-title"><input id="${n}templateName" name="templateName" class="wcm-input" value="${rsc.getString('template.template_name')}" onfocus="if (this.value == '${rsc.getString('template.template_name')}') this.value=''" onblur="if (this.value == '') this.value='${rsc.getString('template.template_name')}'"/></div>
     <div class="wcm-newtemplate">
         <span class="glyphicon glyphicon-globe margin-right margin-top"></span>
-        Locale: <div class="wcm-newtemplate-locale"><input id="${n}templateLocale" name="templateLocale" class="wcm-input" value="<%= renderRequest.getLocale().getLanguage() %>"/></div>
-        <a href="javascript:saveNewTemplate('${n}');" class="button" title="Save Template">Save Template</a>
+        ${rsc.getString('template.locale')}: <div class="wcm-newtemplate-locale"><input id="${n}templateLocale" name="templateLocale" class="wcm-input" value="<%= renderRequest.getLocale().getLanguage() %>"/></div>
+        <a href="javascript:saveNewTemplate('${n}', '${rsc.getString('template.templates')}', '${rsc.getString('template.msgEmpty')}', '${rsc.getString('template.template_name')}');" class="button" title="${rsc.getString('template.save_template')}">${rsc.getString('template.save_template')}</a>
     </div>
     <script type="text/javascript" src="<%=renderResponse.encodeURL(renderRequest.getContextPath() + "/js/ckeditor/ckeditor.js") %>"></script>
     <input id="${n}urlShowPostUploadsEvent" type="hidden" value="${showPostUploadsEvent}" />
@@ -81,7 +81,9 @@
         CKEDITOR.on( 'instanceCreated', function( event ) {
             var editor = event.editor;
             editor.portalnamespace='${n}';
+            editor.filter_by_name='${rsc.getString('template.filter_by_name')}';
             editor.config.enterMode = CKEDITOR.ENTER_BR;
+            editor.config.language = '<%= renderRequest.getLocale().getLanguage() %>';
         });
     </script>
     <textarea class="ckeditor" id="${n}templateContent" name="templateContent"></textarea>

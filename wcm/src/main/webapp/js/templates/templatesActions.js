@@ -77,9 +77,9 @@ function showFilterCategoriesById(namespace, id) {
 }
 
 
-function deleteTemplate(namespace, templateid) {
+function deleteTemplate(namespace, templateid, msg) {
     require(["SHARED/jquery"], function($) {
-        if (confirm("Confirm delete Template ID [" + templateid + "] ?")) {
+        if (confirm(msg + templateid + "}) ?")) {
             $("#" + namespace + "deleteTemplateId").val(templateid);
             $("#" + namespace + "deleteTemplateForm").submit();
         }
@@ -141,13 +141,13 @@ function selectAllTemplates(namespace) {
     });
 }
 
-function deleteSelectedTemplates(namespace) {
+function deleteSelectedTemplates(namespace, msg) {
     require(["SHARED/jquery"], function($) {
         var listTemplateId = "#" + namespace + "listTemplateId"
         var selectedId = "#" + namespace + "deleteSelectedListId";
         var deleteSelectedFormId = "#" + namespace + "deleteSelectedTemplateForm";
         if ($(listTemplateId).val().length > 0) {
-            if (confirm("Confirm delete Template Selected ID [" + $(listTemplateId).val() + "] ?")) {
+            if (confirm(msg + $(listTemplateId).val() + "}) ?")) {
                 $(selectedId).val( $(listTemplateId).val() );
                 $(deleteSelectedFormId).submit();
             }
@@ -220,7 +220,6 @@ function showRelationshipsTemplate(namespace, link, href, templateId, hrefClose)
         $(id).css('left', w - $(document).scrollLeft());
         $(id).fadeIn(100);
 
-        $(inputfilterid).val('Filter By Name');
         $(selecfilterid)[0].selectedIndex = 0;
 
         // Events

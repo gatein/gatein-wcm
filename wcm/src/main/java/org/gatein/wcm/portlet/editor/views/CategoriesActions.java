@@ -276,6 +276,7 @@ public class CategoriesActions {
                 }
                 newAcl.setPrincipal(aclWcmGroup);
                 propagateAddAcl(category,newAcl, userWcm);
+                category = wcm.findCategory(category.getId(), userWcm);
             } else {
                 category = null;
             }

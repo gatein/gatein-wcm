@@ -82,7 +82,7 @@ function removeLock(namespace, href, lockid, locktype) {
             },
             error: function(XMLHttpRequest, textStatus, errorThrown)
             {
-                alert("Problem accessing showLocks()");
+                alert("Problem accessing removeLock()");
             }
         });
     });

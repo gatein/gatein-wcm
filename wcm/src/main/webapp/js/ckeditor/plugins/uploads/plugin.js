@@ -1,5 +1,8 @@
 CKEDITOR.plugins.add( 'uploads', {
 
+    // Available language codes
+    lang : ['en', 'es'],
+
     // Register the icons. They must match command names.
     icons: 'uploads',
 
@@ -17,7 +20,7 @@ CKEDITOR.plugins.add( 'uploads', {
 
         // Create the toolbar button that executes the above command.
         editor.ui.addButton( 'uploads', {
-            label: 'Select Upload',
+            label: editor.lang.uploads.button,
             command: 'uploadsDialog'
         });
 

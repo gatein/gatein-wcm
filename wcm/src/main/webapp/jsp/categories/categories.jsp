@@ -45,33 +45,33 @@
                 for (Category c : list) {
                     boolean canWrite = userWcm.canWrite(c);
                     String typeIcon = "bookmark";
-                    String type = "Category";
+                    String type = ((ResourceBundle)pageContext.getAttribute("rsc")).getString("categories.category");
                     String color = "green";
                     if (c.getType() == CATEGORIES.FOLDER) {
                         typeIcon = "folder-open";
-                        type = "Folder";
+                        type = ((ResourceBundle)pageContext.getAttribute("rsc")).getString("categories.folder");
                         color = "blue";
                     }
                     if (c.getType() == CATEGORIES.TAG) {
                         typeIcon = "tag";
-                        type = "Tag";
+                        type = ((ResourceBundle)pageContext.getAttribute("rsc")).getString("categories.tag");
                         color = "red";
                     }
          %>
         <li>
             <div id="${n}categoryId<%= c.getId()%>">
                 <div class="wcm-category-title"><span class="glyphicon glyphicon-<%= typeIcon %> margin-right wcm-<%= color%> wcm-category-icon"></span> <%= c.getName() %>&nbsp;<span class="wcm-category-type">(<%= type %>)</span></div>
-                <div class="wcm-category-actions"><% if (canWrite) { %><a href="<%= editCategoryView %>&editid=<%= c.getId() %>">Edit</a> | <a href="javascript:deleteCategory('${n}', <%= c.getId() %>)">Delete</a> | <a href="javascript:;" onclick="javascript:showSingleAclCategory('${n}', this.id, '${showCategoryAclsEvent}', '<%= c.getId() %>', '${categoriesView}');" id="${n}addAcl<%= c.getId() %>">Security</a> | <% } %>
+                <div class="wcm-category-actions"><% if (canWrite) { %><a href="<%= editCategoryView %>&editid=<%= c.getId() %>">${rsc.getString('categories.edit')}</a> | <a href="javascript:deleteCategory('${n}', <%= c.getId() %>)">${rsc.getString('categories.delete')}</a> | <a href="javascript:;" onclick="javascript:showSingleAclCategory('${n}', this.id, '${showCategoryAclsEvent}', '<%= c.getId() %>', '${categoriesView}');" id="${n}addAcl<%= c.getId() %>">${rsc.getString('categories.security')}</a> | <% } %>
                     <%
                         if (c.getNumChildren() > 0) {
                     %>
-                     <a href="javascript:showChildrenCategories('${n}', '${showCategoriesChildrenEvent}', <%= c.getId() %>);" id="${n}linkCatId<%= c.getId() %>">Show Children(<%= c.getNumChildren() %>)</a> |
+                     <a href="javascript:showChildrenCategories('${n}', '${showCategoriesChildrenEvent}', <%= c.getId() %>, '${rsc.getString('categories.hide_children')}');" id="${n}linkCatId<%= c.getId() %>">${rsc.getString('categories.show_children')}(<%= c.getNumChildren() %>)</a> |
                     <%
                         }
                     %>
-                     <a href="${filterCategoryPostsAction}&filterCategoryId=<%= c.getId()%>" title="Show Posts"><span class="glyphicon glyphicon-file margin-right margin-left-cat"></span></a>
-                    | <a href="${filterCategoryUploadsAction}&filterCategoryId=<%= c.getId()%>" title="Show Uploads"><span class="glyphicon glyphicon-picture margin-right margin-left-cat"></span></a>
-                    <% if (isManager) { %>| <a href="${filterCategoryTemplatesAction}&filterCategoryId=<%= c.getId()%>" title="Show Templates"><span class="glyphicon glyphicon-th margin-right margin-left-cat"></span></a>  <% } %>
+                     <a href="${filterCategoryPostsAction}&filterCategoryId=<%= c.getId()%>" title="${rsc.getString('categories.show_posts')}"><span class="glyphicon glyphicon-file margin-right margin-left-cat"></span></a>
+                    | <a href="${filterCategoryUploadsAction}&filterCategoryId=<%= c.getId()%>" title="${rsc.getString('categories.show_uploads')}"><span class="glyphicon glyphicon-picture margin-right margin-left-cat"></span></a>
+                    <% if (isManager) { %>| <a href="${filterCategoryTemplatesAction}&filterCategoryId=<%= c.getId()%>" title="${rsc.getString('categories.show_templates')}"><span class="glyphicon glyphicon-th margin-right margin-left-cat"></span></a>  <% } %>
                     </div>
             </div>
         </li>
@@ -88,7 +88,7 @@
     <a href="#" id="${n}close-categories-acls" class="wcm-dialog-close"><span> </span></a>
     <div class="wcm-dialog-body">
         <div class="wcm-acl-new">
-            New ACL:
+            ${rsc.getString('categories.new_acl')}
 
             <div class="wcm-acl-type"><select id="${n}aclType" name="aclType" class="wcm-input wcm-acl-type-input">
                 <option value="<%= Wcm.ACL.WRITE %>">WRITE</option>
@@ -108,7 +108,7 @@
                     }
                 %>
             </select></div>
-            <a href="javascript:;" onclick="addAcl('${n}', '${addAclCategoryEvent}')" id="${n}addAclButton" class="button" title="Add ACL"><span class="glyphicon glyphicon-plus"></span></a>
+            <a href="javascript:;" onclick="addAcl('${n}', '${addAclCategoryEvent}')" id="${n}addAclButton" class="button" title="${rsc.getString('categories.add_acl')}"><span class="glyphicon glyphicon-plus"></span></a>
         </div>
 
         <div class="wcm-acl-attached" id="${n}categories-acls-attached">

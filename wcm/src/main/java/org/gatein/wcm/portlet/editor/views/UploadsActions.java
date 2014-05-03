@@ -533,6 +533,7 @@ public class UploadsActions {
                     upload.getAcls().add(newAcl);
                     newAcl.setUpload(upload);
                     wcm.update(upload, userWcm);
+                    upload = wcm.findUpload(upload.getId(), userWcm);
                 }
             } else {
                 upload = null;

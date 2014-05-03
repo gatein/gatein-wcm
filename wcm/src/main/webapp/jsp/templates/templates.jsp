@@ -60,7 +60,7 @@
                         }
                     %>
                     </div>
-                    <div class="wcm-post-actions"><a href="${editTemplateView}&editid=<%= t.getId() %>">Edit</a> | <a href="javascript:deleteTemplate('${n}', <%= t.getId() %>)">Delete</a> | <a href="javascript:;" onclick="javascript:showSingleCategoriesTemplate('${n}', this.id, '<%= t.getId() %>');" id="${n}addCategory<%= t.getId() %>" >Category</a> | <a href="javascript:;" onclick="javascript:showRelationshipsTemplate('${n}', this.id, '${showTemplateRelationshipsEvent}', '<%= t.getId() %>', '${templatesView}');" id="${n}addRelationShip<%= t.getId() %>">Relationships</a></div>
+                    <div class="wcm-post-actions"><a href="${editTemplateView}&editid=<%= t.getId() %>">${rsc.getString('templates.edit')}</a> | <a href="javascript:deleteTemplate('${n}', <%= t.getId() %>, '${rsc.getString('templates.delete_template')}')">${rsc.getString('templates.delete')}</a> | <a href="javascript:;" onclick="javascript:showSingleCategoriesTemplate('${n}', this.id, '<%= t.getId() %>');" id="${n}addCategory<%= t.getId() %>" >${rsc.getString('templates.category')}</a> | <a href="javascript:;" onclick="javascript:showRelationshipsTemplate('${n}', this.id, '${showTemplateRelationshipsEvent}', '<%= t.getId() %>', '${templatesView}');" id="${n}addRelationShip<%= t.getId() %>">${rsc.getString('templates.relationships')}</a></div>
                 </div>
             </td>
             <td class="row-author"><%= t.getUser() %></td>
