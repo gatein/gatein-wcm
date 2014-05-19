@@ -53,17 +53,64 @@ CKEDITOR.on( 'instanceReady', function( ev )
 
     var dtd = CKEDITOR.dtd;
 
-    for ( var e in CKEDITOR.tools.extend( {'wcm-list':1,
-                                           'wcm-param-list':1,
-                                           'wcm-single':1,
-                                           'wcm-param-single':1,
-                                           'wcm-file-list':1,
-                                           'wcm-content':1,
-                                           'wcm-cat-list':1,
-                                           'wcm-categories':1,
-                                           'wcm-comments':1,
-                                           'wcm-form-comments':1,
-                                           'wcm-form-content':1}, dtd.$block) )
+    // Block elements
+    var blocks = CKEDITOR.tools.extend( {'wcm-list':1,
+        'wcm-param-list':1,
+        'wcm-single':1,
+        'wcm-param-single':1,
+        'wcm-file-list':1,
+        'wcm-content':1,
+        'wcm-cat-list':1,
+        'wcm-categories':1,
+        'wcm-comments':1,
+        'wcm-form-comments':1,
+        'wcm-form-content':1}, dtd.$block);
+
+    // Inline elements
+    var inline = CKEDITOR.tools.extend( {'wcm-author':1,
+        'wcm-created':1,
+        'wcm-description':1,
+        'wcm-excerpt':1,
+        'wcm-filename':1,
+        'wcm-img':1,
+        'wcm-iter':1,
+        'wcm-link':1,
+        'wcm-mimetype':1,
+        'wcm-title':1,
+        'wcm-cat-name':1,
+        'wcm-cat-type':1,
+        'wcm-param-name':1,
+        'wcm-comment-content':1,
+        'wcm-comment-author':1,
+        'wcm-comment-created':1,
+        'wcm-form-author':1,
+        'wcm-form-email':1,
+        'wcm-form-url':1,
+        'wcm-form-button':1}, dtd.$inline );
+
+    // Self closing elements
+    dtd.$empty['wcm-param-name'] = 1;
+    dtd.$empty['wcm-img'] = 1;
+    dtd.$empty['wcm-title'] = 1;
+    dtd.$empty['wcm-excerpt'] = 1;
+    dtd.$empty['wcm-created'] = 1;
+    dtd.$empty['wcm-author'] = 1;
+    dtd.$empty['wcm-content'] = 1;
+    dtd.$empty['wcm-filename'] = 1;
+    dtd.$empty['wcm-mimetype'] = 1;
+    dtd.$empty['wcm-description'] = 1;
+    dtd.$empty['wcm-cat-name'] = 1;
+    dtd.$empty['wcm-cat-type'] = 1;
+    dtd.$empty['wcm-comment-content'] = 1;
+    dtd.$empty['wcm-comment-author'] = 1;
+    dtd.$empty['wcm-comment-created'] = 1;
+    dtd.$empty['wcm-form-content'] = 1;
+    dtd.$empty['wcm-form-author'] = 1;
+    dtd.$empty['wcm-form-email'] = 1;
+    dtd.$empty['wcm-form-url'] = 1;
+    dtd.$empty['wcm-form-button'] = 1;
+
+    for ( var e in blocks )
     {
         ev.editor.dataProcessor.writer.setRules( e, {
             indent : true,
@@ -73,26 +120,7 @@ CKEDITOR.on( 'instanceReady', function( ev )
             breakBeforeClose : true
         });
     }
-    for ( var e in CKEDITOR.tools.extend( {'wcm-author':1,
-                                           'wcm-created':1,
-                                           'wcm-description':1,
-                                           'wcm-excerpt':1,
-                                           'wcm-filename':1,
-                                           'wcm-img':1,
-                                           'wcm-iter':1,
-                                           'wcm-link':1,
-                                           'wcm-mimetype':1,
-                                           'wcm-title':1,
-                                           'wcm-cat-name':1,
-                                           'wcm-cat-type':1,
-                                           'wcm-param-name':1,
-                                           'wcm-comment-content':1,
-                                           'wcm-comment-author':1,
-                                           'wcm-comment-created':1,
-                                           'wcm-form-author':1,
-                                           'wcm-form-email':1,
-                                           'wcm-form-url':1,
-                                           'wcm-form-button':1}, dtd.$inline ) )
+    for ( var e in inline )
     {
         ev.editor.dataProcessor.writer.setRules( e, {
             indent : true,
@@ -102,5 +130,7 @@ CKEDITOR.on( 'instanceReady', function( ev )
             breakBeforeClose : false
         });
     }
+
+    // Self closing elements
 
 });

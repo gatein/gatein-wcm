@@ -526,7 +526,6 @@ public class WcmTags {
      */
     public void tagWcmImg(StringBuilder template, Post post, boolean canWrite) {
         StringBuilder tag = extractTag("wcm-img", template);
-        String inside = insideTag("wcm-img", template);
         Map<String, String> properties = propertiesTag(tag);
         String output = "";
         int index = 0;
@@ -559,7 +558,6 @@ public class WcmTags {
      */
     public void tagWcmTitle(StringBuilder template, Post post, boolean canWrite) {
         StringBuilder tag = extractTag("wcm-title", template);
-        String inside = insideTag("wcm-title", template);
         Map<String, String> properties = propertiesTag(tag);
         StringBuilder output = new StringBuilder();
         if (properties.containsKey("max-length")) {
