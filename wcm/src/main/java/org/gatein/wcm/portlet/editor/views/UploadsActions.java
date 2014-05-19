@@ -127,7 +127,7 @@ public class UploadsActions {
             }
             Upload updateUpload = wcm.findUpload(new Long(editUploadId), userWcm);
             if (updateUpload != null) {
-                if (file != null && file.getSize() > 0 && !file.getName().equals("")) {
+                if (file != null && file.getSize() > 0 && file.getName().length() > 0) {
                     updateUpload.setFileName(file.getName());
                     updateUpload.setMimeType(file.getContentType());
                     updateUpload.setDescription(description);
@@ -230,7 +230,7 @@ public class UploadsActions {
                 viewMetadata.setFilterCategory(false);
             } else {
                 if (!viewMetadata.getName().equals(filterName)) {
-                    if (filterName.equals("")) {
+                    if (filterName.length() == 0) {
                         viewMetadata.setFilterName(false);
                     } else {
                         viewMetadata.setName(filterName);
@@ -488,7 +488,7 @@ public class UploadsActions {
         String uploadId = request.getParameter("uploadid");
         try {
             Upload upload = null;
-            if (uploadId != null && !"".equals(uploadId) && namespace != null && !"".equals(namespace)) {
+            if (uploadId != null && uploadId.length() > 0 && namespace != null && namespace.length() > 0) {
                 upload = wcm.findUpload(new Long(uploadId), userWcm);
                 if (!userWcm.canWrite(upload)) upload = null;
             }

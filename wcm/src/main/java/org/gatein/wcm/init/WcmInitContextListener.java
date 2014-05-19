@@ -70,7 +70,7 @@ public class WcmInitContextListener implements ServletContextListener {
 
      */
     private String processSystemProperty(String value) {
-        if (value == null || value.equals("")) return value;
+        if (value == null || value.length() == 0) return value;
         String out = value.trim();
         int first = 0;
         while (first > -1) {
@@ -92,7 +92,7 @@ public class WcmInitContextListener implements ServletContextListener {
             ${system.variable:defaultvalue}
      */
     private String processVariable(String variable) {
-        if (variable == null || variable.equals("")) return variable;
+        if (variable == null || variable.length() == 0) return variable;
         String clean = variable.substring(2, variable.length() - 1); // Cleaning ${ and }
         String out = null;
         if (clean.split(":").length == 2) {

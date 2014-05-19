@@ -360,7 +360,7 @@ public class WcmApiServiceBean implements WcmApiService {
             org.gatein.wcm.domain.Comment c = new org.gatein.wcm.domain.Comment();
             c.setContent(comment.getContent());
             if (userWcm == null || userWcm.getUsername().equals("anonymous")) {
-                c.setAuthor(comment.getAuthor().equals("")?"anonymous":comment.getAuthor());
+                c.setAuthor(comment.getAuthor().length() == 0?"anonymous":comment.getAuthor());
                 c.setAuthorEmail(comment.getAuthorEmail());
                 c.setAuthorUrl(comment.getAuthorUrl());
             } else {

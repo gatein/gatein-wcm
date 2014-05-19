@@ -244,7 +244,7 @@ public class CategoriesActions {
         String categoryId = request.getParameter("categoryid");
         try {
             Category category = null;
-            if (categoryId != null && !"".equals(categoryId) && namespace != null && !"".equals(namespace)) {
+            if (categoryId != null && categoryId.length() > 0 && namespace != null && namespace.length() > 0) {
                 category = wcm.findCategory(new Long(categoryId), userWcm);
                 if (!userWcm.canWrite(category)) category = null;
             }

@@ -200,7 +200,7 @@ public class WcmServiceImpl implements WcmService {
 
     private List<Post> localeFilter(List<Post> list, String locale) throws Exception {
         if (list == null) return list;
-        if (locale == null || "".equals(locale)) return list;
+        if (locale == null || locale.length() == 0) return list;
         List<Post> filtered = new ArrayList<Post>();
         for (Post p : list) {
             if (p.getLocale() == null || p.getLocale().equals(locale)) {
@@ -318,12 +318,12 @@ public class WcmServiceImpl implements WcmService {
     public List<Category> findChildren(String path, Character type, UserWcm user) throws WcmException {
         List<Category> children = null;
         if (user == null) return null;
-        if (path == null || "".equals(path)) path = "/";
+        if (path == null || path.length() == 0) path = "/";
         try {
             String name = child(path);
             List<Category> parents = null;
             Category parent = null;
-            if (name != null && !"".equals(name)) {
+            if (name != null && name.length() > 0) {
                 parents = em.createNamedQuery("listCategoriesName", Category.class)
                             .setParameter("name", name)
                             .getResultList();
@@ -361,12 +361,12 @@ public class WcmServiceImpl implements WcmService {
     @Override
     public Category findCategory(String path, UserWcm user) throws WcmException {
         if (user == null) return null;
-        if (path == null || "".equals(path)) path = "/";
+        if (path == null || path.length() == 0) path = "/";
         Category output = null;
         try {
             String name = child(path);
             List<Category> candidates = null;
-            if (name != null && !"".equals(name)) {
+            if (name != null && name.length() > 0) {
                 candidates = em.createNamedQuery("listCategoriesName", Category.class)
                         .setParameter("name", name)
                         .getResultList();
@@ -387,9 +387,9 @@ public class WcmServiceImpl implements WcmService {
     }
 
     private boolean hasPath(Category c, String path) {
-        if (path == null || "".equals(path)) return false;
+        if (path == null || path.length() == 0) return false;
         if (c.getName().equals(child(path))) {
-            if (c.getParent() == null && "".equals(parent(path))) {
+            if (c.getParent() == null && parent(path).length() == 0) {
                 return true;
             } else {
                 return hasPath(c.getParent(), parent(path));
@@ -1926,13 +1926,13 @@ public class WcmServiceImpl implements WcmService {
      *  Aux functions to extract path for categories
      */
     private String child(String path) {
-        if (path == null || "".equals(path)) return path;
+        if (path == null || path.length() == 0) return path;
         if (path.indexOf("/") == -1) return path;
         return path.substring(path.lastIndexOf("/") + 1);
     }
 
     private String parent(String path) {
-        if (path == null || "".equals(path)) return path;
+        if (path == null || path.length() == 0) return path;
         if (path.indexOf("/") == -1) return "";
         return path.substring(0, path.lastIndexOf("/"));
     }

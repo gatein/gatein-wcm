@@ -66,7 +66,7 @@
             <%
                 String filterName = ((ResourceBundle)pageContext.getAttribute("rsc")).getString("post.filter_by_name");
             %>
-            <input id="${n}inputFilterName" class="wcm-input" value="<%= filterName %>" onfocus="if (this.value == 'Filter By Name') this.value=''" onblur="if (this.value == '') this.value='Filter By Name'" />
+            <input id="${n}inputFilterName" class="wcm-input" value="<%= filterName %>" onfocus="if (this.value == '<%= filterName %>') this.value=''" onblur="if (this.value == '') this.value='<%= filterName %>'" />
         </div>
         <div class="clear"></div>
         <div class="wcm-post-uploads" id="${n}listUploads">

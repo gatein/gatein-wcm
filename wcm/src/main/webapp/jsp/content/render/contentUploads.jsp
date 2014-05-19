@@ -44,7 +44,7 @@
     </portlet:resourceURL>
     <li data-id="<%= u.getId() %>" data-mimetype="<%= (u.getMimeType() != null ? u.getMimeType():"") %>" data-filename="<%= u.getFileName() %>">
         <%= u.getFileName() %>
-        <span class="wcm-blue"><%=(u.getDescription()!=null && !u.getDescription().equals("")?"(" + u.getDescription() + ")":"")%></span>
+        <span class="wcm-blue"><%=(u.getDescription()!=null && u.getDescription().length() > 0?new StringBuilder().append("(").append(u.getDescription()).append(")").toString():"")%></span>
         <a href="#" id="${n}upload<%= u.getId() %>" <% if (u.getMimeType() != null && u.getMimeType().startsWith("image")) { %>onmouseover="showPreview('<%= n %>', this.id, '/wcm/rs/u/<%= u.getId() %>');" onmouseout="hidePreview('<%= n %>', this.id, '${downloadUploadEvent}');" <% } %>><span class="wcm-upload-mimetype"><%= u.getMimeType() %></span></a> <% if (u.getMimeType() != null && u.getMimeType().startsWith("image")) { %><span class="wcm-upload-mimetype glyphicon glyphicon-eye-open margin-top"></span><% } %>
     </li>
 <%

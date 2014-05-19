@@ -85,9 +85,9 @@ public class RenderActions {
         Category catParameter = null;
 
         // Validation if post id or category id is valid, if not we forward to the main template of the portlet
-        if (urlParams.containsKey("post") && postTemplateId != null && !"".equals(postTemplateId) && !"-1".equals(postTemplateId)) {
+        if (urlParams.containsKey("post") && postTemplateId != null && postTemplateId.length() > 0 && !"-1".equals(postTemplateId)) {
             postParameter = getPostParameter(urlParams, userWcm);
-        } else if (urlParams.containsKey("category") && categoryTemplateId != null && !"".equals(categoryTemplateId) && !"-1".equals(categoryTemplateId))  {
+        } else if (urlParams.containsKey("category") && categoryTemplateId != null && categoryTemplateId.length() > 0 && !"-1".equals(categoryTemplateId))  {
             catParameter = getCategoryParameter(urlParams, userWcm);
         }
 
@@ -138,7 +138,7 @@ public class RenderActions {
         } else {
 
             // Processing main template
-            if (mainTemplateId != null && !"".equals(mainTemplateId) && !"-1".equals(mainTemplateId)) {
+            if (mainTemplateId != null && mainTemplateId.length() > 0 && !"-1".equals(mainTemplateId)) {
                 // Template
                 template = getTemplate(mainTemplateId, userWcm);
 
@@ -197,7 +197,7 @@ public class RenderActions {
      */
     private List<Object> getContentAttached(String listContentAttached, UserWcm userWcm) {
         List<Object> contentAttached = null;
-        if (listContentAttached != null && !listContentAttached.equals("")) {
+        if (listContentAttached != null && listContentAttached.length() > 0) {
             try {
                 String[] listIds = listContentAttached.split(",");
                 contentAttached = new ArrayList<Object>();
@@ -265,9 +265,9 @@ public class RenderActions {
         Main process method
      */
     private String processTemplate(boolean canWrite, Template template, Post postParameter, Category catParameter, List<Object> contentAttached, UserWcm userWcm) {
-        String processedTemplate = null;
+        StringBuilder processedTemplate = new StringBuilder();
         if (template != null) {
-            processedTemplate = template.getContent();
+            processedTemplate.append(template.getContent());
             boolean foundTag = false;
             int indexList = 0;
             int indexPost = 0;
@@ -275,7 +275,7 @@ public class RenderActions {
                 // <wcm-cat-list> to prevent order in nested with wcm-list
                 if (tags.hasTag("wcm-list", processedTemplate)) {
                     // Check explicit order for content in the template
-                    String tag = tags.extractTag("wcm-list", processedTemplate);
+                    StringBuilder tag = tags.extractTag("wcm-list", processedTemplate);
                     Map<String, String> properties = tags.propertiesTag(tag);
                     int customIndex = -1;
                     if (properties.containsKey("index")) {
@@ -298,11 +298,11 @@ public class RenderActions {
                             listPosts = getPostsFromCategory(contentAttached, indexList, userWcm);
                         }
                     }
-                    processedTemplate = tags.tagWcmList("wcm-list", processedTemplate, listPosts, this.urlParams, userWcm);
+                    tags.tagWcmList("wcm-list", processedTemplate, listPosts, this.urlParams, userWcm);
                     indexList++;
                 } else if (tags.hasTag("wcm-single", processedTemplate)) {
                     // Check explicit order for content in the template
-                    String tag = tags.extractTag("wcm-single", processedTemplate);
+                    StringBuilder tag = tags.extractTag("wcm-single", processedTemplate);
                     Map<String, String> properties = tags.propertiesTag(tag);
                     int customIndex = -1;
                     if (properties.containsKey("index")) {
@@ -320,19 +320,19 @@ public class RenderActions {
                         // Default order
                         post = getPost(contentAttached, indexPost, userWcm);
                     }
-                    processedTemplate = tags.tagWcmSingle("wcm-single", processedTemplate, post, this.urlParams, false, userWcm);
+                    tags.tagWcmSingle("wcm-single", processedTemplate, post, this.urlParams, false, userWcm);
                     indexPost++;
                 } else if (tags.hasTag("wcm-param-single", processedTemplate)) {
-                    processedTemplate = tags.tagWcmSingle("wcm-param-single", processedTemplate, postParameter, this.urlParams, canWrite, userWcm);
+                    tags.tagWcmSingle("wcm-param-single", processedTemplate, postParameter, this.urlParams, canWrite, userWcm);
                 } else if (tags.hasTag("wcm-param-list", processedTemplate)) {
                     List<Post> listPosts = getPostsFromCategory(catParameter, userWcm);
-                    processedTemplate = tags.tagWcmList("wcm-param-list", processedTemplate, listPosts, this.urlParams, userWcm);
+                    tags.tagWcmList("wcm-param-list", processedTemplate, listPosts, this.urlParams, userWcm);
                 } else if (tags.hasTag("wcm-param-name", processedTemplate)) {
                     // Used to render category name pased as parameter
-                    processedTemplate = tags.tagWcmParamName("wcm-param-name", processedTemplate, catParameter);
+                    tags.tagWcmParamName("wcm-param-name", processedTemplate, catParameter);
                 } else if (tags.hasTag("wcm-file-list", processedTemplate)) {
                     // Check explicit order for content in the template
-                    String tag = tags.extractTag("wcm-file-list", processedTemplate);
+                    StringBuilder tag = tags.extractTag("wcm-file-list", processedTemplate);
                     Map<String, String> properties = tags.propertiesTag(tag);
                     int customIndex = -1;
                     if (properties.containsKey("index")) {
@@ -355,22 +355,22 @@ public class RenderActions {
                             listUploads = getUploadsFromCategory(contentAttached, indexList, userWcm);
                         }
                     }
-                    processedTemplate = tags.tagWcmFileList("wcm-file-list", processedTemplate, listUploads, this.urlParams, userWcm);
+                    tags.tagWcmFileList("wcm-file-list", processedTemplate, listUploads, this.urlParams, userWcm);
                     indexList++;
                 } else if (tags.hasTag("wcm-cat-list", processedTemplate)) {
                     // Absolute cat link
-                    String tag = tags.extractTag("wcm-cat-list", processedTemplate);
+                    StringBuilder tag = tags.extractTag("wcm-cat-list", processedTemplate);
                     Map<String, String> properties = tags.propertiesTag(tag);
                     String parent = properties.containsKey("parent") ? properties.get("parent") : "/";
                     String type = properties.containsKey("type") ? properties.get("type") : "all";
                     List<Category> categories = getCategoriesFromParameters(parent, type, userWcm);
-                    processedTemplate = tags.tagWcmCatList("wcm-cat-list", processedTemplate, categories, this.urlParams);
+                    tags.tagWcmCatList("wcm-cat-list", processedTemplate, categories, this.urlParams);
                 } else {
                     foundTag = true;
                 }
             }
         }
-        return processedTemplate;
+        return processedTemplate.toString();
     }
 
     /*
@@ -590,9 +590,9 @@ public class RenderActions {
         String filterName = request.getParameter("filterName");
         try {
             List<Upload> uploads = null;
-            if (filterCategoryId != null && !filterCategoryId.equals("") && !filterCategoryId.equals("-1")) {
+            if (filterCategoryId != null && filterCategoryId.length() > 0 && !filterCategoryId.equals("-1")) {
                 uploads = wcm.findUploads(new Long(filterCategoryId), userWcm);
-            } else if (filterName != null && !filterName.equals("")) {
+            } else if (filterName != null && filterName.length() > 0) {
                 uploads = wcm.findUploads(filterName, userWcm);
             } else {
                 uploads = wcm.findUploads(userWcm);
@@ -615,59 +615,59 @@ public class RenderActions {
         String original = request.getParameter("original");
         String newData = request.getParameter("newData");
         try {
-            if (postId != null && !"".equals(postId) && contentType != null && original != null && newData != null) {
+            if (postId != null && postId.length() > 0 && contentType != null && original != null && newData != null) {
                 Post post = wcm.findPost(new Long(postId), userWcm);
                 if (post != null) {
                     if (contentType.equals("title")) {
-                        if ("".equals(post.getTitle())) {
+                        if (post.getTitle().length() == 0) {
                             post.setTitle(newData);
                         } else {
-                            String newTitle = "";
-                            if ("".equals(original)) {
-                                newTitle = post.getTitle() + newData;
+                            StringBuilder newTitle = new StringBuilder();
+                            if (original.length() == 0) {
+                                newTitle.append(post.getTitle()).append(newData);
                             } else {
-                                newTitle = post.getTitle().replace(original, newData);
+                                newTitle.append(post.getTitle().replace(original, newData));
                             }
-                            post.setTitle(newTitle);
+                            post.setTitle(newTitle.toString());
                         }
                         wcm.update(post, userWcm);
                     } else if (contentType.equals("excerpt")) {
-                        if ("".equals(post.getExcerpt())) {
+                        if (post.getExcerpt().length() == 0) {
                             post.setExcerpt(newData);
                         } else {
-                            String newExcerpt = "";
-                            if ("".equals(original)) {
-                                newExcerpt = post.getExcerpt() + newData;
+                            StringBuilder newExcerpt = new StringBuilder();
+                            if (original.length() == 0) {
+                                newExcerpt.append(post.getExcerpt()).append(newData);
                             } else {
-                                newExcerpt = post.getExcerpt().replace(original, newData);
+                                newExcerpt.append(post.getExcerpt().replace(original, newData));
                             }
-                            post.setExcerpt(newExcerpt);
+                            post.setExcerpt(newExcerpt.toString());
                         }
                         wcm.update(post, userWcm);
                     } else if (contentType.equals("image")) {
-                        if ("".equals(post.getContent())) {
+                        if (post.getContent().length() == 0) {
                             post.setContent(newData);
                         } else {
-                            String newContent = "";
-                            if ("".equals(original)) {
-                                newContent = post.getContent() + newData;
+                            StringBuilder newContent = new StringBuilder();
+                            if (original.length() == 0) {
+                                newContent.append(post.getContent()).append(newData);
                             } else {
-                                newContent = tags.replace(post.getContent(), original, newData);
+                                newContent.append(tags.replace(post.getContent(), original, newData));
                             }
-                            post.setContent(newContent);
+                            post.setContent(newContent.toString());
                         }
                         wcm.update(post, userWcm);
                     } else if (contentType.equals("content")) {
-                        if ("".equals(post.getContent())) {
+                        if (post.getContent().length() == 0) {
                             post.setContent(newData);
                         } else {
-                            String newContent = "";
-                            if ("".equals(original)) {
-                                newContent = post.getContent() + newData;
+                            StringBuilder newContent = new StringBuilder();
+                            if (original.length() == 0) {
+                                newContent.append(post.getContent()).append(newData);
                             } else {
-                                newContent = tags.replace(newData);
+                                newContent.append(tags.replace(newData));
                             }
-                            post.setContent(newContent);
+                            post.setContent(newContent.toString());
                             wcm.update(post, userWcm);
                         }
                     } else {
@@ -695,7 +695,7 @@ public class RenderActions {
             Comment c = new Comment();
             c.setContent(content);
             if (userWcm == null || userWcm.getUsername().equals("anonymous")) {
-                c.setAuthor(author.equals("")?"anonymous":author);
+                c.setAuthor(author.length() == 0?"anonymous":author);
                 c.setAuthorEmail(email);
                 c.setAuthorUrl(url);
             } else {

@@ -206,7 +206,7 @@ public class PostsActions {
                 viewMetadata.setFilterCategory(false);
             } else {
                 if (!viewMetadata.getName().equals(filterName)) {
-                    if (filterName.equals("")) {
+                    if (filterName.length() == 0) {
                         viewMetadata.setFilterName(false);
                     } else {
                         viewMetadata.setName(filterName);
@@ -471,9 +471,9 @@ public class PostsActions {
         String filterName = request.getParameter("filterName");
         try {
             List<Upload> uploads = null;
-            if (filterCategoryId != null && !filterCategoryId.equals("") && !filterCategoryId.equals("-1")) {
+            if (filterCategoryId != null && filterCategoryId.length() > 0 && !filterCategoryId.equals("-1")) {
                 uploads = wcm.findUploads(new Long(filterCategoryId), userWcm);
-            } else if (filterName != null && !filterName.equals("")) {
+            } else if (filterName != null && filterName.length() > 0) {
                 uploads = wcm.findUploads(filterName, userWcm);
             } else {
                 uploads = wcm.findUploads(userWcm);
@@ -495,7 +495,7 @@ public class PostsActions {
         String postId = request.getParameter("postid");
         try {
             Post post = null;
-            if (postId != null && !"".equals(postId) && namespace != null && !"".equals(namespace)) {
+            if (postId != null && postId.length() > 0 && namespace != null && namespace.length() > 0) {
                 post = wcm.findPost(new Long(postId), userWcm);
                 if (!userWcm.canWrite(post)) post = null;
             }
@@ -699,7 +699,7 @@ public class PostsActions {
             List<Post> posts = null;
             if (filterCategoryId != null && !"-1".equals(filterCategoryId)) {
                 posts = wcm.findPosts(new Long(filterCategoryId), userWcm);
-            } else if (filterName != null && !"".equals(filterName)) {
+            } else if (filterName != null && filterName.length() > 0) {
                 posts = wcm.findPosts(filterName, userWcm);
             } else {
                 posts = wcm.findPosts(userWcm);
@@ -735,7 +735,7 @@ public class PostsActions {
             List<Post> posts = null;
             if (filterCategoryId != null && !"-1".equals(filterCategoryId)) {
                 posts = wcm.findPosts(new Long(filterCategoryId), userWcm);
-            } else if (filterName != null && !"".equals(filterName) && !"Filter By Name".equals(filterName)) {
+            } else if (filterName != null && filterName.length() > 0) {
                 posts = wcm.findPosts(filterName, userWcm);
             } else {
                 posts = wcm.findPosts(userWcm);
@@ -774,7 +774,7 @@ public class PostsActions {
             List<Post> posts = null;
             if (filterCategoryId != null && !"-1".equals(filterCategoryId)) {
                 posts = wcm.findPosts(new Long(filterCategoryId), userWcm);
-            } else if (filterName != null && !"".equals(filterName) && !"Filter By Name".equals(filterName)) {
+            } else if (filterName != null && filterName.length() > 0) {
                 posts = wcm.findPosts(filterName, userWcm);
             } else {
                 posts = wcm.findPosts(userWcm);

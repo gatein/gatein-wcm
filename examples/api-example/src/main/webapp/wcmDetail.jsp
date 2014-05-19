@@ -99,7 +99,7 @@
     <%
         String skipImg = WcmUtils.extractImg(detail.getContent(), 0);
         String content = detail.getContent();
-        if (!"".equals(skipImg)) {
+        if (skipImg.length() > 0) {
             content = content.replace(skipImg, "");
         }
     %>

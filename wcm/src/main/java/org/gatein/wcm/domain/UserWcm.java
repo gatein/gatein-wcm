@@ -91,7 +91,7 @@ final public class UserWcm implements Serializable {
      */
     public boolean checkWcmGroup(String group) {
         if (group == null) return false;
-        if ("".equals(group)) return false;
+        if (group.length() == 0) return false;
         return writeGroups.contains(group);
     }
 

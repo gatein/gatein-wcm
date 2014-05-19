@@ -56,7 +56,7 @@ public class WcmUtils {
                 found = -1;
             }
         }
-        if (!"".equals(output)) {
+        if (output.length() > 0) {
             i = output.indexOf("src=");
             j = output.indexOf(" ", i);
             output = output.substring(i + 5, j - 1);

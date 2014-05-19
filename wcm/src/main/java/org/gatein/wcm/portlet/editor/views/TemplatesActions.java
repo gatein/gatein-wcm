@@ -198,7 +198,7 @@ public class TemplatesActions {
                 viewMetadata.setFilterCategory(false);
             } else {
                 if (!viewMetadata.getName().equals(filterName)) {
-                    if (filterName.equals("")) {
+                    if (filterName.length() == 0) {
                         viewMetadata.setFilterName(false);
                     } else {
                         viewMetadata.setName(filterName);
@@ -428,7 +428,7 @@ public class TemplatesActions {
             List<Template> templates = null;
             if (filterCategoryId != null && !"-1".equals(filterCategoryId)) {
                 templates = wcm.findTemplates(new Long(filterCategoryId), userWcm);
-            } else if (filterName != null && !"".equals(filterName)) {
+            } else if (filterName != null && filterName.length() > 0) {
                 templates = wcm.findTemplates(filterName, userWcm);
             } else {
                 templates = wcm.findTemplates(userWcm);
@@ -464,7 +464,7 @@ public class TemplatesActions {
             List<Template> templates = null;
             if (filterCategoryId != null && !"-1".equals(filterCategoryId)) {
                 templates = wcm.findTemplates(new Long(filterCategoryId), userWcm);
-            } else if (filterName != null && !"".equals(filterName) && !"Filter By Name".equals(filterName)) {
+            } else if (filterName != null && filterName.length() > 0) {
                 templates = wcm.findTemplates(filterName, userWcm);
             } else {
                 templates = wcm.findTemplates(userWcm);
@@ -503,7 +503,7 @@ public class TemplatesActions {
             List<Template> templates = null;
             if (filterCategoryId != null && !"-1".equals(filterCategoryId)) {
                 templates = wcm.findTemplates(new Long(filterCategoryId), userWcm);
-            } else if (filterName != null && !"".equals(filterName) && !"Filter By Name".equals(filterName)) {
+            } else if (filterName != null && filterName.length() > 0) {
                 templates = wcm.findTemplates(filterName, userWcm);
             } else {
                 templates = wcm.findTemplates(userWcm);

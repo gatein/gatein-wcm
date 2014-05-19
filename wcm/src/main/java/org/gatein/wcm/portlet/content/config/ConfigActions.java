@@ -107,7 +107,7 @@ public class ConfigActions {
             listContentAttached = request.getPreferences().getValue("listContentAttached", null);
             request.getPortletSession().setAttribute("listContentAttached", listContentAttached);
         }
-        if (listContentAttached != null && !listContentAttached.equals("")) {
+        if (listContentAttached != null && listContentAttached.length() > 0) {
             try {
                 String[] listIds = listContentAttached.split(",");
                 List<Object> output = new ArrayList<Object>();
@@ -139,16 +139,16 @@ public class ConfigActions {
         String categoryTemplateId = request.getParameter("categoryTemplateId");
         String localeRelationships = request.getParameter("localeRelationships");
 
-        if (mainTemplateId != null && !mainTemplateId.equals("")) {
+        if (mainTemplateId != null && mainTemplateId.length() > 0) {
             request.getPreferences().setValue("mainTemplateId", mainTemplateId);
         }
-        if (postTemplateId != null && !postTemplateId.equals("")) {
+        if (postTemplateId != null && postTemplateId.length() > 0) {
             request.getPreferences().setValue("postTemplateId", postTemplateId);
         }
-        if (categoryTemplateId != null && !categoryTemplateId.equals("")) {
+        if (categoryTemplateId != null && categoryTemplateId.length() > 0) {
             request.getPreferences().setValue("categoryTemplateId", categoryTemplateId);
         }
-        if (localeRelationships != null && !localeRelationships.equals("")) {
+        if (localeRelationships != null && localeRelationships.length() > 0) {
             request.getPreferences().setValue("localeRelationships", localeRelationships);
         }
         String listContentAttached = (String)request.getPortletSession().getAttribute("listContentAttached");

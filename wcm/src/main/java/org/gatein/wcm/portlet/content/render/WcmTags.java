@@ -46,12 +46,19 @@ public class WcmTags {
         this.namespace = namespace;
     }
 
-    /*
-        <wcm-list> / <wcm-param-list> tag processing
+    /**
+     * <wcm-list> / <wcm-param-list> tag processing
+     *
+     * Searchs for <wcm-list> or <wcm-param-list> tags inside a template and replaces it with a combined list of posts.
+     *
+     * @param tagWcmList Tag to search, it should be "wcm-list" or "wcm-param-list" text.
+     * @param initialTemplate Template where to search and replace.
+     * @param listPosts List of posts to combine in the tag.
+     * @param params Optional parameters to include in the tag processing.
+     * @param userWcm User processing template.
      */
-    public String tagWcmList(String tagWcmList, String initialTemplate, List<Post> listPosts, Map<String, String> params, UserWcm userWcm) {
-        String processedTemplate = "";
-        String tag = extractTag(tagWcmList, initialTemplate);
+    public void tagWcmList(String tagWcmList, StringBuilder initialTemplate, List<Post> listPosts, Map<String, String> params, UserWcm userWcm) {
+        StringBuilder tag = extractTag(tagWcmList, initialTemplate);
         this.urlParams = params;
 
         if (tag != null && listPosts != null) {
@@ -90,48 +97,54 @@ public class WcmTags {
                 }
             }
             int size = to - from;
-            String outputList = "<";
+            StringBuilder outputList = new StringBuilder("<");
             if (size == 1) {
-                outputList += "div";
+                outputList.append("div");
             } else {
-                outputList += "ul";
+                outputList.append("ul");
             }
             if (properties.containsKey("id")) {
-                outputList += " id=\"" + properties.get("id") + "\"";
+                outputList.append(" id=\"").append(properties.get("id")).append("\"");
             }
             if (properties.containsKey("class")) {
-                outputList += " class=\"" + properties.get("class") + "\"";
+                outputList.append(" class=\"").append(properties.get("class")).append("\"");
             }
 
-            outputList += " >";
+            outputList.append(" >");
             if (listPosts != null) {
                 for (int i = from; i < to; i++) {
                     Post p = listPosts.get(i);
-                    if (size > 1) outputList += "<li>";
-                    outputList += combine(inside, p, i, false, userWcm);
-                    if (size > 1) outputList += "</li>";
+                    if (size > 1) outputList.append("<li>");
+                    outputList.append(combine(inside, p, i, false, userWcm));
+                    if (size > 1) outputList.append("</li>");
                 }
             }
-            outputList += "</";
+            outputList.append("</");
             if (size == 1) {
-                outputList += "div";
+                outputList.append("div");
             } else {
-                outputList += "ul";
+                outputList.append("ul");
             }
-            outputList += ">";
-            processedTemplate = initialTemplate.replace(tag, outputList);
+            outputList.append(">");
+            replaceAll(initialTemplate, tag, outputList);
         } else if (tag != null && listPosts == null) {
-            processedTemplate = initialTemplate.replace(tag, "<div></div>");
+            replaceAll(initialTemplate, tag, "<div></div>");
         }
-        return processedTemplate;
     }
 
-    /*
-        <wcm-file-list> tag processing
+    /**
+     * <wcm-file-list> tag processing
+     *
+     * Searchs for <wcm-file-list> tags inside a template and replaces it with a combined list of uploads.
+     *
+     * @param tagWcmFileList Tag to search, it should be "wcm-file-list" text.
+     * @param initialTemplate Template where to search and replace.
+     * @param listUploads List of uploads to combine in the tag.
+     * @param params Optional parameters to include in the tag processing.
+     * @param userWcm User processing template.
      */
-    public String tagWcmFileList(String tagWcmFileList, String initialTemplate, List<Upload> listUploads, Map<String, String> params, UserWcm userWcm) {
-        String processedTemplate = "";
-        String tag = extractTag(tagWcmFileList, initialTemplate);
+    public void tagWcmFileList(String tagWcmFileList, StringBuilder initialTemplate, List<Upload> listUploads, Map<String, String> params, UserWcm userWcm) {
+        StringBuilder tag = extractTag(tagWcmFileList, initialTemplate);
         this.urlParams = params;
 
         if (tag != null && listUploads != null) {
@@ -170,48 +183,53 @@ public class WcmTags {
                 }
             }
             int size = to - from;
-            String outputList = "<";
+            StringBuilder outputList = new StringBuilder("<");
             if (size == 1) {
-                outputList += "div";
+                outputList.append("div");
             } else {
-                outputList += "ul";
+                outputList.append("ul");
             }
             if (properties.containsKey("id")) {
-                outputList += " id=\"" + properties.get("id") + "\"";
+                outputList.append(" id=\"").append(properties.get("id")).append("\"");
             }
             if (properties.containsKey("class")) {
-                outputList += " class=\"" + properties.get("class") + "\"";
+                outputList.append(" class=\"").append(properties.get("class")).append("\"");
             }
 
-            outputList += " >";
+            outputList.append(" >");
             if (listUploads != null) {
                 for (int i = from; i < to; i++) {
                     Upload u = listUploads.get(i);
-                    if (size > 1) outputList += "<li>";
-                    outputList += combineUpload(inside, u, i);
-                    if (size > 1) outputList += "</li>";
+                    if (size > 1) outputList.append("<li>");
+                    outputList.append(combineUpload(inside, u, i));
+                    if (size > 1) outputList.append("</li>");
                 }
             }
-            outputList += "</";
+            outputList.append("</");
             if (size == 1) {
-                outputList += "div";
+                outputList.append("div");
             } else {
-                outputList += "ul";
+                outputList.append("ul");
             }
-            outputList += ">";
-            processedTemplate = initialTemplate.replace(tag, outputList);
+            outputList.append(">");
+            replaceAll(initialTemplate, tag, outputList.toString());
         } else if (tag != null && listUploads == null) {
-            processedTemplate = initialTemplate.replace(tag, "<div></div>");
+            replaceAll(initialTemplate, tag, "<div></div>");
         }
-        return processedTemplate;
     }
 
-    /*
-        <wcm-cat-list> tag processing
+    /**
+     * <wcm-cat-list> tag processing
+     *
+     * Searchs for <wcm-cat-list> tags inside a template and replaces it with a combined list of categories.
+     *
+     * @param tagWcmList Tag to search, it should be "wcm-cat-list" text.
+     * @param initialTemplate Template where to search and replace.
+     * @param listCategories List of categories to combine in the tag.
+     * @param params Optional parameters to include in the tag processing.
      */
-    public String tagWcmCatList(String tagWcmList, String initialTemplate, List<Category> listCategories, Map<String, String> params) {
-        String processedTemplate = "";
-        String tag = extractTag(tagWcmList, initialTemplate);
+    public void tagWcmCatList(String tagWcmList, StringBuilder initialTemplate, List<Category> listCategories, Map<String, String> params) {
+        StringBuilder tag = extractTag(tagWcmList, initialTemplate);
         this.urlParams = params;
 
         if (tag != null && listCategories != null) {
@@ -250,76 +268,83 @@ public class WcmTags {
                 }
             }
             int size = to - from;
-            String outputList = "<";
+            StringBuilder outputList = new StringBuilder("<");
             if (size == 1) {
-                outputList += "div";
+                outputList.append("div");
             } else {
-                outputList += "ul";
+                outputList.append("ul");
             }
             if (properties.containsKey("id")) {
-                outputList += " id=\"" + properties.get("id") + "\"";
+                outputList.append(" id=\"").append(properties.get("id")).append("\"");
             }
             if (properties.containsKey("class")) {
-                outputList += " class=\"" + properties.get("class") + "\"";
+                outputList.append(" class=\"").append(properties.get("class")).append("\"");
             }
 
-            outputList += " >";
+            outputList.append(" >");
             if (listCategories != null) {
                 for (int i = from; i < to; i++) {
                     Category c = listCategories.get(i);
-                    if (size > 1) outputList += "<li>";
-                    outputList += combineCategory(inside, c, i);
-                    if (size > 1) outputList += "</li>";
+                    if (size > 1) outputList.append("<li>");
+                    outputList.append(combineCategory(inside, c, i));
+                    if (size > 1) outputList.append("</li>");
                 }
             }
-            outputList += "</";
+            outputList.append("</");
             if (size == 1) {
-                outputList += "div";
+                outputList.append("div");
             } else {
-                outputList += "ul";
+                outputList.append("ul");
             }
-            outputList += ">";
-            processedTemplate = initialTemplate.replace(tag, outputList);
+            outputList.append(">");
+            replaceAll(initialTemplate, tag, outputList.toString());
         } else if (tag != null && listCategories == null) {
-            processedTemplate = initialTemplate.replace(tag, "<div></div>");
+            replaceAll(initialTemplate, tag, "<div></div>");
         }
-        return processedTemplate;
     }
 
-    /*
-        <wcm-single> / <wcm-param-single> tag processing
+    /**
+     * <wcm-single> / <wcm-param-single> tag processing
+     *
+     * Searchs for <wcm-single> or <wcm-param-single> tags inside a template and replaces it with a single post.
+     *
+     * @param tagWcmSingle Tag to search, it should be "wcm-single" or "wcm-param-single" text.
+     * @param initialTemplate Template where to search and replace.
+     * @param post Post to combine in the tag.
+     * @param params Optional parameters to include in the tag processing.
+     * @param canWrite Indicates if this post is rendered in edit mode.
      */
-    public String tagWcmSingle(String tagWcmSingle, String initialTemplate, Post post, Map<String, String> params, boolean canWrite, UserWcm userWcm) {
-        String processedTemplate = null;
-        String tag = extractTag(tagWcmSingle, initialTemplate);
+    public void tagWcmSingle(String tagWcmSingle, StringBuilder initialTemplate, Post post, Map<String, String> params, boolean canWrite, UserWcm userWcm) {
+        StringBuilder tag = extractTag(tagWcmSingle, initialTemplate);
         this.urlParams = params;
 
         if (tag != null) {
             String inside = insideTag(tagWcmSingle, tag);
             String outputSingle = combine(inside, post, 0, canWrite, userWcm);
-            processedTemplate = initialTemplate.replace(tag, outputSingle);
+            replaceAll(initialTemplate, tag, outputSingle);
         } else {
-            processedTemplate = initialTemplate.replace(tag, "<div></div>");
+            replaceAll(initialTemplate, tag, "<div></div>");
         }
-        return processedTemplate;
     }
 
-    /*
-        <wcm-param-name> tag processing
+    /**
+     * <wcm-param-name> tag processing
+     *
+     * Searchs for <wcm-param-name> tags inside a template and replaces it with a single category.
+     *
+     * @param tagWcmParamName Tag to search, it should be "wcm-param-name" text.
+     * @param initialTemplate Template where to search and replace.
+     * @param cat Category to combine in the tag.
      */
-    public String tagWcmParamName(String tagWcmParamName, String initialTemplate, Category cat) {
-        String processedTemplate = initialTemplate;
-        String tag = extractTag(tagWcmParamName, initialTemplate);
-
+    public void tagWcmParamName(String tagWcmParamName, StringBuilder initialTemplate, Category cat) {
+        StringBuilder tag = extractTag(tagWcmParamName, initialTemplate);
         if (tag != null) {
             String output = "";
             if (cat != null && cat.getName() != null) {
                 output = cat.getName();
             }
-            processedTemplate = initialTemplate.replace(tag, output);
+            replaceAll(initialTemplate, tag, output);
         }
-
-        return processedTemplate;
     }
 
     /*
@@ -328,35 +353,35 @@ public class WcmTags {
     public String combine(String template, Post post, int iteration, boolean canWrite, UserWcm userWcm) {
         if (post == null) return "";
         boolean foundTag = false;
-        String output = template;
+        StringBuilder output = new StringBuilder(template);
         while (!foundTag) {
             if (hasTag("wcm-categories", output)) {
-                output = tagWcmCategories(output, post);
+                tagWcmCategories(output, post);
             } else if (hasTag("wcm-link", output)) {
-                output = tagWcmLink(output, post);
+                tagWcmLink(output, post);
             } else if (hasTag("wcm-img", output)) {
-                output = tagWcmImg(output, post, canWrite);
+                tagWcmImg(output, post, canWrite);
             } else if (hasTag("wcm-title", output)) {
-                output = tagWcmTitle(output, post, canWrite);
+                tagWcmTitle(output, post, canWrite);
             } else if (hasTag("wcm-excerpt", output)) {
-                output = tagWcmExcerpt(output, post, canWrite);
+                tagWcmExcerpt(output, post, canWrite);
             } else if (hasTag("wcm-iter", output)) {
-                output = tagWcmIter(output, iteration);
+                tagWcmIter(output, iteration);
             } else if (hasTag("wcm-created", output)) {
-                output = tagWcmCreated(output, post);
+                tagWcmCreated(output, post);
             } else if (hasTag("wcm-author", output)) {
-                output = tagWcmAuthor(output, post);
+                tagWcmAuthor(output, post);
             } else if (hasTag("wcm-content", output)) {
-                output = tagWcmContent(output, post, canWrite);
+                tagWcmContent(output, post, canWrite);
             } else if (hasTag("wcm-comments", output)) {
-                output = tagWcmComments(output, post);
+                tagWcmComments(output, post);
             } else if (hasTag("wcm-form-comments", output)) {
-                output = tagWcmFormComments(output, post, userWcm);
+                tagWcmFormComments(output, post, userWcm);
             } else {
                 foundTag = true;
             }
         }
-        return output;
+        return output.toString();
     }
 
     /*
@@ -365,27 +390,27 @@ public class WcmTags {
     public String combineUpload(String template, Upload upload, int iteration) {
         if (upload == null) return "";
         boolean foundTag = false;
-        String output = template;
+        StringBuilder output = new StringBuilder(template);
         while (!foundTag) {
             if (hasTag("wcm-link", output)) {
-                output = tagWcmLink(output, upload);
+                tagWcmLink(output, upload);
             } else if (hasTag("wcm-filename", output)) {
-                output = tagWcmFileName(output, upload);
+                tagWcmFileName(output, upload);
             } else if (hasTag("wcm-iter", output)) {
-                output = tagWcmIter(output, iteration);
+                tagWcmIter(output, iteration);
             } else if (hasTag("wcm-created", output)) {
-                output = tagWcmCreated(output, upload);
+                tagWcmCreated(output, upload);
             } else if (hasTag("wcm-author", output)) {
-                output = tagWcmAuthor(output, upload);
+                tagWcmAuthor(output, upload);
             } else if (hasTag("wcm-mimetype", output)) {
-                output = tagWcmMimeType(output, upload);
+                tagWcmMimeType(output, upload);
             } else if (hasTag("wcm-description", output)) {
-                output = tagWcmDescription(output, upload);
+                tagWcmDescription(output, upload);
             } else {
                 foundTag = true;
             }
         }
-        return output;
+        return output.toString();
     }
 
     /*
@@ -394,28 +419,28 @@ public class WcmTags {
     public String combineCategory(String template, Category category, int iteration) {
         if (category == null) return "";
         boolean foundTag = false;
-        String output = template;
+        StringBuilder output = new StringBuilder(template);
         while (!foundTag) {
             if (hasTag("wcm-link", output)) {
-                output = tagWcmLink(output, category);
+                tagWcmLink(output, category);
             } else if (hasTag("wcm-cat-name", output)) {
-                output = tagWcmCatName(output, category);
+                tagWcmCatName(output, category);
             } else if (hasTag("wcm-iter", output)) {
-                output = tagWcmIter(output, iteration);
+                tagWcmIter(output, iteration);
             } else if (hasTag("wcm-cat-type", output)) {
-                output = tagWcmCatType(output, category);
+                tagWcmCatType(output, category);
             } else {
                 foundTag = true;
             }
         }
-        return output;
+        return output.toString();
     }
 
     /*
         <wcm-link> tag processing
      */
-    public String tagWcmLink(String template, Post post) {
-        String tag = extractTag("wcm-link", template);
+    public void tagWcmLink(StringBuilder template, Post post) {
+        StringBuilder tag = extractTag("wcm-link", template);
         String inside = insideTag("wcm-link", template);
         Map<String, String> properties = propertiesTag(tag);
 
@@ -425,27 +450,27 @@ public class WcmTags {
         if (properties.containsKey("index") && properties.get("index").equals("disable")) {
             postUrl="";
         }
-        String output = "<a";
+        StringBuilder output = new StringBuilder("<a");
         if (properties.containsKey("href")) {
-            output += " href=\"" + properties.get("href") + (!"".equals(postUrl)?"/" + postUrl:"") + "\"";
+            output.append(" href=\"").append(properties.get("href")).append((postUrl.length()>0?"/" + postUrl:"")).append("\"");
         } else {
             String page = urlParams.get("page");
             if (urlParams.containsKey("post") || urlParams.containsKey("category")) {
                 page = "../../../" + page;
             }
-            output += " href=\"" + page + (!"".equals(postUrl)?"/" + postUrl:"") + "\"";
+            output.append(" href=\"").append(page).append((postUrl.length()>0?"/" + postUrl:"")).append("\"");
         }
         if (properties.containsKey("class")) {
-            output += " class=\"" + properties.get("class") + "\"";
+            output.append(" class=\"").append(properties.get("class")).append("\"");
         }
-        output += ">";
-        output += inside;
-        output += "</a>";
-        return template.replace(tag, output);
+        output.append(">");
+        output.append(inside);
+        output.append("</a>");
+        replaceAll(template, tag, output);
     }
 
-    public String tagWcmLink(String template, Category category) {
-        String tag = extractTag("wcm-link", template);
+    public void tagWcmLink(StringBuilder template, Category category) {
+        StringBuilder tag = extractTag("wcm-link", template);
         String inside = insideTag("wcm-link", template);
         Map<String, String> properties = propertiesTag(tag);
 
@@ -455,52 +480,52 @@ public class WcmTags {
         if (properties.containsKey("index") && properties.get("index").equals("disable")) {
             categoryUrl="";
         }
-        String output = "<a";
+        StringBuilder output = new StringBuilder("<a");
         if (properties.containsKey("href")) {
-            output += " href=\"" + properties.get("href") + (!"".equals(categoryUrl)?"/" + categoryUrl:"") + "\"";
+            output.append(" href=\"").append(properties.get("href")).append((categoryUrl.length()>0?"/" + categoryUrl:"")).append("\"");
         } else {
             String page = urlParams.get("page");
             if (urlParams.containsKey("post") || urlParams.containsKey("category")) {
                 page = "../../../" + page;
             }
-            output += " href=\"" + page + (!"".equals(categoryUrl)?"/" + categoryUrl:"") + "\"";
+            output.append(" href=\"").append(page).append((!"".equals(categoryUrl)?"/" + categoryUrl:"")).append("\"");
         }
         if (properties.containsKey("class")) {
-            output += " class=\"" + properties.get("class") + "\"";
+            output.append(" class=\"").append(properties.get("class")).append("\"");
         }
-        output += ">";
-        output += inside;
-        output += "</a>";
-        return template.replace(tag, output);
+        output.append(">");
+        output.append(inside);
+        output.append("</a>");
+        replaceAll(template, tag, output);
     }
 
-    public String tagWcmLink(String template, Upload upload) {
-        String tag = extractTag("wcm-link", template);
+    public void tagWcmLink(StringBuilder template, Upload upload) {
+        StringBuilder tag = extractTag("wcm-link", template);
         String inside = insideTag("wcm-link", template);
         Map<String, String> properties = propertiesTag(tag);
 
         String uploadUrl = "/wcm/rs/u/" + upload.getId();
 
-        String output = "<a";
+        StringBuilder output = new StringBuilder("<a");
         if (properties.containsKey("target")) {
-            output += " target=\"" + properties.get("target") + "\"";
+            output.append(" target=\"").append(properties.get("target")).append("\"");
         }
         if (properties.containsKey("class")) {
-            output += " class=\"" + properties.get("class") + "\"";
+            output.append(" class=\"").append(properties.get("class")).append("\"");
         }
-        output += " href=\"" + uploadUrl + "\" ";
-        output += ">";
-        output += inside;
-        output += "</a>";
-        return template.replace(tag, output);
+        output.append(" href=\"").append(uploadUrl).append("\" ");
+        output.append(">");
+        output.append(inside);
+        output.append("</a>");
+        replaceAll(template, tag, output);
     }
 
 
     /*
         <wcm-img> tag processing
      */
-    public String tagWcmImg(String template, Post post, boolean canWrite) {
-        String tag = extractTag("wcm-img", template);
+    public void tagWcmImg(StringBuilder template, Post post, boolean canWrite) {
+        StringBuilder tag = extractTag("wcm-img", template);
         String inside = insideTag("wcm-img", template);
         Map<String, String> properties = propertiesTag(tag);
         String output = "";
@@ -526,17 +551,17 @@ public class WcmTags {
         if (canWrite) {
             output = "<p contenteditable=\"true\" class=\"wcm-content-edit\" data-post-id=\"" + post.getId() + "\" data-post-attr=\"image\">" + output + "</p>";
         }
-        return template.replace(tag, output);
+        replaceAll(template, tag, output);
     }
 
     /*
         <wcm-title> tag processing
      */
-    public String tagWcmTitle(String template, Post post, boolean canWrite) {
-        String tag = extractTag("wcm-title", template);
+    public void tagWcmTitle(StringBuilder template, Post post, boolean canWrite) {
+        StringBuilder tag = extractTag("wcm-title", template);
         String inside = insideTag("wcm-title", template);
         Map<String, String> properties = propertiesTag(tag);
-        String output = "";
+        StringBuilder output = new StringBuilder();
         if (properties.containsKey("max-length")) {
             int max = 100;
             try {
@@ -545,27 +570,30 @@ public class WcmTags {
                 // Default value if exception happens
             }
             if (max < post.getTitle().length())
-                output = substringWord(post.getTitle(), max) + " ...";
+                output.append(substringWord(post.getTitle(), max)).append(" ...");
             else
-                output = post.getTitle();
+                output.append(post.getTitle());
         } else {
-            output = post.getTitle();
+            output.append(post.getTitle());
         }
         // Editing tags
         if (canWrite) {
-            output = "<p contenteditable=\"true\" class=\"wcm-content-edit\" data-post-id=\"" + post.getId() + "\" data-post-attr=\"title\">" + output + "</p>";
+            output = new StringBuilder("<p contenteditable=\"true\" class=\"wcm-content-edit\" data-post-id=\"")
+                    .append(post.getId())
+                    .append("\" data-post-attr=\"title\">")
+                    .append(output)
+                    .append("</p>");
         }
-        return template.replace(tag, output);
+        replaceAll(template, tag, output);
     }
 
     /*
         <wcm-excerpt> tag processing
      */
-    public String tagWcmExcerpt(String template, Post post, boolean canWrite) {
-        String tag = extractTag("wcm-excerpt", template);
-        String inside = insideTag("wcm-excerpt", template);
+    public void tagWcmExcerpt(StringBuilder template, Post post, boolean canWrite) {
+        StringBuilder tag = extractTag("wcm-excerpt", template);
         Map<String, String> properties = propertiesTag(tag);
-        String output = "";
+        StringBuilder output = new StringBuilder();
         if (properties.containsKey("max-length")) {
             int max = 100;
             try {
@@ -574,24 +602,28 @@ public class WcmTags {
                 // Default value if exception happens
             }
             if (max < post.getExcerpt().length())
-                output = substringWord(post.getExcerpt(), max) + " ...";
+                output.append(substringWord(post.getExcerpt(), max)).append(" ...");
             else
-                output = post.getExcerpt();
+                output.append(post.getExcerpt());
         } else {
-            output = post.getExcerpt();
+            output.append(post.getExcerpt());
         }
         // Editing tags
         if (canWrite) {
-            output = "<p contenteditable=\"true\" data-post-id=\"" + post.getId() + "\" data-post-attr=\"excerpt\">" + output + "</p>";
+            output = new StringBuilder("<p contenteditable=\"true\" data-post-id=\"")
+                    .append(post.getId())
+                    .append("\" data-post-attr=\"excerpt\">")
+                    .append(output)
+                    .append("</p>");
         }
-        return template.replace(tag, output);
+        replaceAll(template, tag, output);
     }
 
     /*
         <wcm-iter> tag processing
      */
-    public String tagWcmIter(String template, int iteration) {
-        String tag = extractTag("wcm-iter", template);
+    public void tagWcmIter(StringBuilder template, int iteration) {
+        StringBuilder tag = extractTag("wcm-iter", template);
         String inside = insideTag("wcm-iter", template);
         Map<String, String> properties = propertiesTag(tag);
         int i = -1;
@@ -602,61 +634,60 @@ public class WcmTags {
                 // Default value if exception happens
             }
             if (iteration == i) {
-                return template.replace(tag, inside);
+                replaceAll(template, tag, inside);
+                return;
             }
         } else if (properties.containsKey("par")) {
             if ("true".equals(properties.get("par")) && (i%2 == 0)) {
-                return template.replace(tag, inside);
+                replaceAll(template, tag, inside);
+                return;
             }
         }
-        return template.replace(tag, "");
+        replaceAll(template, tag, "");
     }
 
     /*
         <wcm-created> tag processing
      */
-    public String tagWcmCreated(String template, Object object) {
-        String tag = extractTag("wcm-created", template);
-        String inside = insideTag("wcm-created", template);
+    public void tagWcmCreated(StringBuilder template, Object object) {
+        StringBuilder tag = extractTag("wcm-created", template);
         Map<String, String> properties = propertiesTag(tag);
-        String output = "";
+        StringBuilder output = new StringBuilder();
         if (properties.containsKey("format")) {
             try {
                 SimpleDateFormat custom = new SimpleDateFormat(properties.get("format"));
                 if (object instanceof Post) {
-                    output = custom.format(((Post)object).getCreated().getTime());
+                    output.append(custom.format(((Post)object).getCreated().getTime()));
                 } else if (object instanceof Upload) {
-                    output = custom.format(((Upload)object).getCreated().getTime());
+                    output.append(custom.format(((Upload)object).getCreated().getTime()));
                 }
 
             } catch (Exception e) {
                 log.warning("Error parsing date with format " + properties.get("format"));
+                output = new StringBuilder();
             }
-            output = "";
         } else {
             if (object instanceof Post) {
-                output = ParseDates.parse(((Post)object).getCreated());
+                output.append(ParseDates.parse(((Post)object).getCreated()));
             } else if (object instanceof Upload) {
-                output = ParseDates.parse(((Upload)object).getCreated());
+                output.append(ParseDates.parse(((Upload)object).getCreated()));
             }
         }
-        return template.replace(tag, output);
+        replaceAll(template, tag, output);
     }
 
     /*
         <wcm-author> tag processing
      */
-    public String tagWcmAuthor(String template, Object object) {
-        String tag = extractTag("wcm-author", template);
-        String inside = insideTag("wcm-author", template);
-        Map<String, String> properties = propertiesTag(tag);
+    public void tagWcmAuthor(StringBuilder template, Object object) {
+        StringBuilder tag = extractTag("wcm-author", template);
         String output = "";
         if (object instanceof Post) {
             output = ((Post)object).getAuthor();
         } else if (object instanceof Upload) {
             output = ((Upload)object).getUser();
         }
-        return template.replace(tag, output);
+        replaceAll(template, tag, output);
     }
 
     /*
@@ -664,42 +695,44 @@ public class WcmTags {
         skipImages is a list of indexes of images in the content.
         We can combine <wcm-content skipimages="0"> if we want to use <wcm-img index="0"> and I don't want to repeat the same image
      */
-    public String tagWcmContent(String template, Post post, boolean canWrite) {
-        String tag = extractTag("wcm-content", template);
-        String inside = insideTag("wcm-content", template);
+    public void tagWcmContent(StringBuilder template, Post post, boolean canWrite) {
+        StringBuilder tag = extractTag("wcm-content", template);
         Map<String, String> properties = propertiesTag(tag);
-        String output = "";
+        StringBuilder output = new StringBuilder();
         if (properties.containsKey("skipimages")) {
             try {
-                output = post.getContent();
+                output.append(post.getContent());
                 String[] skipImages = properties.get("skipimages").split(",");
                 for (int i=0; i<skipImages.length; i++) {
                     int iImage = new Integer(skipImages[i]).intValue();
-                    String image = extractImg(output, iImage, false);
+                    String image = extractImg(output.toString(), iImage, false);
                     String imageNotVisible = notVisibleImg(image);
-                    output = output.replace(image, imageNotVisible);
+                    replaceAll(output, image, imageNotVisible);
                 }
             } catch (Exception e) {
                 log.warning("Error parsing content with skipImages " + properties.get("skipImages"));
             }
         } else {
-            output = post.getContent();
+            output.append(post.getContent());
         }
         // Editing tags
         if (canWrite) {
-            output = "<div contenteditable=\"true\" data-post-id=\"" + post.getId() + "\" data-post-attr=\"content\">" + output + "</div>";
+            output = new StringBuilder("<div contenteditable=\"true\" data-post-id=\"")
+                    .append(post.getId())
+                    .append("\" data-post-attr=\"content\">")
+                    .append(output)
+                    .append("</div>");
         }
-        return template.replace(tag, output);
+        replaceAll(template, tag, output);
     }
 
     /*
         <wcm-filename> tag processing
      */
-    public String tagWcmFileName(String template, Upload upload) {
-        String tag = extractTag("wcm-filename", template);
-        String inside = insideTag("wcm-filename", template);
+    public void tagWcmFileName(StringBuilder template, Upload upload) {
+        StringBuilder tag = extractTag("wcm-filename", template);
         Map<String, String> properties = propertiesTag(tag);
-        String output = "";
+        StringBuilder output = new StringBuilder();
         if (properties.containsKey("max-length")) {
             int max = 100;
             try {
@@ -708,23 +741,22 @@ public class WcmTags {
                 // Default value if exception happens
             }
             if (max < upload.getFileName().length())
-                output = substringWord(upload.getFileName(), max) + " ...";
+                output.append(substringWord(upload.getFileName(), max)).append(" ...");
             else
-                output = upload.getFileName();
+                output.append(upload.getFileName());
         } else {
-            output = upload.getFileName();
+            output.append(upload.getFileName());
         }
-        return template.replace(tag, output);
+        replaceAll(template, tag, output);
     }
 
     /*
         <wcm-mimetype> tag processing
      */
-    public String tagWcmMimeType(String template, Upload upload) {
-        String tag = extractTag("wcm-mimetype", template);
-        String inside = insideTag("wcm-mimetype", template);
+    public void tagWcmMimeType(StringBuilder template, Upload upload) {
+        StringBuilder tag = extractTag("wcm-mimetype", template);
         Map<String, String> properties = propertiesTag(tag);
-        String output = "";
+        StringBuilder output = new StringBuilder();
         if (properties.containsKey("max-length")) {
             int max = 100;
             try {
@@ -733,23 +765,22 @@ public class WcmTags {
                 // Default value if exception happens
             }
             if (max < upload.getMimeType().length())
-                output = substringWord(upload.getMimeType(), max) + " ...";
+                output.append(substringWord(upload.getMimeType(), max)).append(" ...");
             else
-                output = upload.getMimeType();
+                output.append(upload.getMimeType());
         } else {
-            output = upload.getMimeType();
+            output.append(upload.getMimeType());
         }
-        return template.replace(tag, output);
+        replaceAll(template, tag, output);
     }
 
     /*
         <wcm-description> tag processing
      */
-    public String tagWcmDescription(String template, Upload upload) {
-        String tag = extractTag("wcm-description", template);
-        String inside = insideTag("wcm-description", template);
+    public void tagWcmDescription(StringBuilder template, Upload upload) {
+        StringBuilder tag = extractTag("wcm-description", template);
         Map<String, String> properties = propertiesTag(tag);
-        String output = "";
+        StringBuilder output = new StringBuilder();
         if (properties.containsKey("max-length")) {
             int max = 100;
             try {
@@ -758,23 +789,22 @@ public class WcmTags {
                 // Default value if exception happens
             }
             if (max < upload.getDescription().length())
-                output = substringWord(upload.getDescription(), max) + " ...";
+                output.append(substringWord(upload.getDescription(), max)).append(" ...");
             else
-                output = upload.getDescription();
+                output.append(upload.getDescription());
         } else {
-            output = upload.getDescription();
+            output.append(upload.getDescription());
         }
-        return template.replace(tag, output);
+        replaceAll(template, tag, output);
     }
 
     /*
         <wcm-cat-name> tag processing
      */
-    public String tagWcmCatName(String template, Category category) {
-        String tag = extractTag("wcm-cat-name", template);
-        String inside = insideTag("wcm-cat-name", template);
+    public void tagWcmCatName(StringBuilder template, Category category) {
+        StringBuilder tag = extractTag("wcm-cat-name", template);
         Map<String, String> properties = propertiesTag(tag);
-        String output = "";
+        StringBuilder output = new StringBuilder();
         if (properties.containsKey("max-length")) {
             int max = 100;
             try {
@@ -783,20 +813,20 @@ public class WcmTags {
                 // Default value if exception happens
             }
             if (max < category.getName().length())
-                output = substringWord(category.getName(), max) + " ...";
+                output.append(substringWord(category.getName(), max)).append(" ...");
             else
-                output = category.getName();
+                output.append(category.getName());
         } else {
-            output = category.getName();
+            output.append(category.getName());
         }
-        return template.replace(tag, output);
+        replaceAll(template, tag, output);
     }
 
     /*
         <wcm-cat-type> tag processing
      */
-    public String tagWcmCatType(String template, Category category) {
-        String tag = extractTag("wcm-cat-type", template);
+    public void tagWcmCatType(StringBuilder template, Category category) {
+        StringBuilder tag = extractTag("wcm-cat-type", template);
         String output = "";
         if (category.getType().equals(Wcm.CATEGORIES.FOLDER)) {
             output = "Folder";
@@ -805,15 +835,14 @@ public class WcmTags {
         } else if (category.getType().equals(Wcm.CATEGORIES.TAG)) {
             output = "Tag";
         }
-        return template.replace(tag, output);
+        replaceAll(template, tag, output);
     }
 
     /*
         <wcm-categories> tag processing
      */
-    public String tagWcmCategories(String template, Post post) {
-        String processedTemplate = "";
-        String tag = extractTag("wcm-categories", template);
+    public void tagWcmCategories(StringBuilder template, Post post) {
+        StringBuilder tag = extractTag("wcm-categories", template);
         Set<Category> setCategories = post.getCategories();
         if (tag != null && setCategories != null) {
             String inside = insideTag("wcm-categories", tag);
@@ -861,49 +890,47 @@ public class WcmTags {
                 }
             }
             int size = to - from;
-            String outputList = "<";
+            StringBuilder outputList = new StringBuilder("<");
             if (size == 1) {
-                outputList += "div";
+                outputList.append("div");
             } else {
-                outputList += "ul";
+                outputList.append("ul");
             }
             if (properties.containsKey("id")) {
-                outputList += " id=\"" + properties.get("id") + "\"";
+                outputList.append(" id=\"").append(properties.get("id")).append("\"");
             }
             if (properties.containsKey("class")) {
-                outputList += " class=\"" + properties.get("class") + "\"";
+                outputList.append(" class=\"").append(properties.get("class")).append("\"");
             }
 
-            outputList += " >";
+            outputList.append(" >");
             if (setCategories != null) {
                 Category[] categories = setCategories.toArray(new Category[setCategories.size()]);
                 for (int i = from; i < to; i++) {
                     Category c = categories[i];
-                    if (size > 1) outputList += "<li>";
-                    outputList += combineCategory(inside, c, i);
-                    if (size > 1) outputList += "</li>";
+                    if (size > 1) outputList.append("<li>");
+                    outputList.append(combineCategory(inside, c, i));
+                    if (size > 1) outputList.append("</li>");
                 }
             }
-            outputList += "</";
+            outputList.append("</");
             if (size == 1) {
-                outputList += "div";
+                outputList.append("div");
             } else {
-                outputList += "ul";
+                outputList.append("ul");
             }
-            outputList += ">";
-            processedTemplate = template.replace(tag, outputList);
+            outputList.append(">");
+            replaceAll(template, tag, outputList);
         } else if (tag != null && setCategories == null) {
-            processedTemplate = template.replace(tag, "<div></div>");
+            replaceAll(template, tag, "<div></div>");
         }
-        return processedTemplate;
     }
 
     /*
         <wcm-comments> tag processing
      */
-    public String tagWcmComments(String template, Post post) {
-        String processedTemplate = "";
-        String tag = extractTag("wcm-comments", template);
+    public void tagWcmComments(StringBuilder template, Post post) {
+        StringBuilder tag = extractTag("wcm-comments", template);
         Set<Comment> setComments = post.getComments();
         if (tag != null && setComments != null && !post.getCommentsStatus().equals(Wcm.COMMENTS.NO_COMMENTS)) {
             String inside = insideTag("wcm-comments", tag);
@@ -942,43 +969,42 @@ public class WcmTags {
                 }
             }
             int size = to - from;
-            String outputList = "<";
+            StringBuilder outputList = new StringBuilder("<");
             if (size == 1) {
-                outputList += "div";
+                outputList.append("div");
             } else {
-                outputList += "ul";
+                outputList.append("ul");
             }
             if (properties.containsKey("id")) {
-                outputList += " id=\"" + properties.get("id") + "\"";
+                outputList.append(" id=\"").append(properties.get("id")).append("\"");
             }
             if (properties.containsKey("class")) {
-                outputList += " class=\"" + properties.get("class") + "\"";
+                outputList.append(" class=\"").append(properties.get("class")).append("\"");
             }
 
-            outputList += " >";
+            outputList.append(" >");
             if (setComments != null) {
                 Comment[] comments = setComments.toArray(new Comment[setComments.size()]);
                 for (int i = from; i < to; i++) {
                     Comment c = comments[i];
                     if (c.getStatus().equals(Wcm.COMMENT.PUBLIC)) {
-                        if (size > 1) outputList += "<li>";
-                        outputList += combineComment(inside, c, i);
-                        if (size > 1) outputList += "</li>";
+                        if (size > 1) outputList.append("<li>");
+                        outputList.append(combineComment(inside, c, i));
+                        if (size > 1) outputList.append("</li>");
                     }
                 }
             }
-            outputList += "</";
+            outputList.append("</");
             if (size == 1) {
-                outputList += "div";
+                outputList.append("div");
             } else {
-                outputList += "ul";
+                outputList.append("ul");
             }
-            outputList += ">";
-            processedTemplate = template.replace(tag, outputList);
+            outputList.append(">");
+            replaceAll(template, tag, outputList);
         } else if (tag != null && setComments == null) {
-            processedTemplate = template.replace(tag, "<div></div>");
+            replaceAll(template, tag,  "<div></div>");
         }
-        return processedTemplate;
     }
 
     /*
@@ -987,69 +1013,71 @@ public class WcmTags {
     public String combineComment(String template, Comment comment, int iteration) {
         if (comment == null) return "";
         boolean foundTag = false;
-        String output = template;
+        StringBuilder output = new StringBuilder(template);
         while (!foundTag) {
             if (hasTag("wcm-comment-content", output)) {
-                output = tagWcmCommentContent(output, comment);
+                tagWcmCommentContent(output, comment);
             } else if (hasTag("wcm-comment-author", output)) {
-                output = tagWcmCommentAuthor(output, comment);
+                tagWcmCommentAuthor(output, comment);
             } else if (hasTag("wcm-iter", output)) {
-                output = tagWcmIter(output, iteration);
+                tagWcmIter(output, iteration);
             } else if (hasTag("wcm-comment-created", output)) {
-                output = tagWcmCommentCreated(output, comment);
+                tagWcmCommentCreated(output, comment);
             } else {
                 foundTag = true;
             }
         }
-        return output;
+        return output.toString();
     }
 
     /*
         <wcm-comment-content> tag processing
      */
-    public String tagWcmCommentContent(String template, Comment comment) {
-        String tag = extractTag("wcm-comment-content", template);
+    public void tagWcmCommentContent(StringBuilder template, Comment comment) {
+        StringBuilder tag = extractTag("wcm-comment-content", template);
         String output = "";
         if (comment.getContent() != null)
             output = comment.getContent();
-        return template.replace(tag, output);
+        replaceAll(template, tag, output);
     }
 
     /*
         <wcm-comment-created> tag processing
      */
-    public String tagWcmCommentCreated(String template, Comment comment) {
-        String tag = extractTag("wcm-comment-created", template);
+    public void tagWcmCommentCreated(StringBuilder template, Comment comment) {
+        StringBuilder tag = extractTag("wcm-comment-created", template);
         String output = "";
         if (comment.getCreated() != null)
             output = ParseDates.parse(comment.getCreated());
-        return template.replace(tag, output);
+        replaceAll(template, tag, output);
     }
 
     /*
         <wcm-comment-author> tag processing
      */
-    public String tagWcmCommentAuthor(String template, Comment comment) {
-        String tag = extractTag("wcm-comment-author", template);
+    public void tagWcmCommentAuthor(StringBuilder template, Comment comment) {
+        StringBuilder tag = extractTag("wcm-comment-author", template);
         String output = "";
         if (comment.getAuthor() != null)
             output = comment.getAuthor();
-        return template.replace(tag, output);
+        replaceAll(template, tag, output);
     }
 
     /*
         <wcm-form-comments> tag processing
      */
-    public String tagWcmFormComments(String template, Post post, UserWcm userWcm) {
-        String tag = extractTag("wcm-form-comments", template);
+    public void tagWcmFormComments(StringBuilder template, Post post, UserWcm userWcm) {
+        StringBuilder tag = extractTag("wcm-form-comments", template);
         Map<String, String> properties = propertiesTag(tag);
 
         String type = properties.containsKey("type") ? properties.get("type") : null;
         if (type != null && type.equals("anonymous") && !post.getCommentsStatus().equals(Wcm.COMMENTS.ANONYMOUS)) {
-            return template.replace(tag, "");
+            replaceAll(template, tag, "");
+            return;
         }
         if (type != null && type.equals("logged") && !post.getCommentsStatus().equals(Wcm.COMMENTS.LOGGED)) {
-            return template.replace(tag, "");
+            replaceAll(template, tag, "");
+            return;
         }
 
         boolean noComments = post.getCommentsStatus().equals(Wcm.COMMENTS.NO_COMMENTS);
@@ -1057,14 +1085,17 @@ public class WcmTags {
         boolean userAnonymous = userWcm.getUsername().equals("anonymous");
 
         if (noComments) {
-            return template.replace(tag, "");
+            replaceAll(template, tag, "");
+            return;
         } else {
             if (!postAnonymous && userAnonymous) {
-                return template.replace(tag, "");
+                replaceAll(template, tag, "");
+                return;
             } else {
                 String inside = insideTag("wcm-form-comments", tag);
                 String output = combineCommentForm(inside, post, userWcm);
-                return template.replace(tag, output);
+                replaceAll(template, tag, output);
+                return;
             }
         }
     }
@@ -1076,117 +1107,149 @@ public class WcmTags {
         if (post == null) return "";
         boolean foundTag = false;
         boolean postAnonymous = post.getCommentsStatus().equals(Wcm.COMMENTS.ANONYMOUS);
-        boolean userAnonymous = userWcm.getUsername().equals("anonymous");
-        String output = template;
+        StringBuilder output = new StringBuilder(template);
         while (!foundTag) {
             if (hasTag("wcm-form-content", output)) {
-                output = tagWcmCommentsFormContent(output);
+                tagWcmCommentsFormContent(output);
             } else if (postAnonymous && hasTag("wcm-form-author", output)) {
-                output = tagWcmCommentsFormAuthor(output);
+                tagWcmCommentsFormAuthor(output);
             } else if (postAnonymous && hasTag("wcm-form-email", output)) {
-                output = tagWcmCommentsFormEmail(output);
+                tagWcmCommentsFormEmail(output);
             } else if (postAnonymous && hasTag("wcm-form-url", output)) {
-                output = tagWcmCommentsFormUrl(output);
+                tagWcmCommentsFormUrl(output);
             } else if (hasTag("wcm-form-button",  output)) {
-                output = tagWcmCommentsFormButton(output, post);
+                tagWcmCommentsFormButton(output, post);
             } else {
                 foundTag = true;
             }
         }
-        return output;
+        return output.toString();
     }
 
     /*
         <wcm-form-content> tag processing
      */
-    public String tagWcmCommentsFormContent(String template) {
-        String tag = extractTag("wcm-form-content", template);
+    public void tagWcmCommentsFormContent(StringBuilder template) {
+        StringBuilder tag = extractTag("wcm-form-content", template);
         Map<String, String> properties = propertiesTag(tag);
         String inputClass = "";
         if (properties.containsKey("class")) {
             inputClass = " class=\"" + properties.get("class") + "\"";
         }
-        String output = "<textarea id=\"" + this.namespace + "-content\"" + inputClass + "></textarea>";
-        return template.replace(tag, output);
+        StringBuilder output = new StringBuilder("<textarea id=\"")
+                                .append(this.namespace)
+                                .append("-content\"")
+                                .append(inputClass)
+                                .append("></textarea>");
+        replaceAll(template, tag, output);
     }
 
     /*
         <wcm-form-author> tag processing
      */
-    public String tagWcmCommentsFormAuthor(String template) {
-        String tag = extractTag("wcm-form-author", template);
+    public void tagWcmCommentsFormAuthor(StringBuilder template) {
+        StringBuilder tag = extractTag("wcm-form-author", template);
         Map<String, String> properties = propertiesTag(tag);
         String inputClass = "";
         if (properties.containsKey("class")) {
             inputClass = " class=\"" + properties.get("class") + "\"";
         }
-        String output = "<input id=\"" + this.namespace + "-author\"" + inputClass + " />";
-        return template.replace(tag, output);
+        StringBuilder output = new StringBuilder("<input id=\"")
+                                .append(this.namespace)
+                                .append("-author\"")
+                                .append(inputClass)
+                                .append(" />");
+        replaceAll(template, tag, output);
     }
 
     /*
         <wcm-form-email> tag processing
      */
-    public String tagWcmCommentsFormEmail(String template) {
-        String tag = extractTag("wcm-form-email", template);
+    public void tagWcmCommentsFormEmail(StringBuilder template) {
+        StringBuilder tag = extractTag("wcm-form-email", template);
         Map<String, String> properties = propertiesTag(tag);
         String inputClass = "";
         if (properties.containsKey("class")) {
             inputClass = " class=\"" + properties.get("class") + "\"";
         }
-        String output = "<input id=\"" + this.namespace + "-email\"" + inputClass + " />";
-        return template.replace(tag, output);
+        StringBuilder output = new StringBuilder("<input id=\"")
+                                .append(this.namespace)
+                                .append("-email\"")
+                                .append(inputClass)
+                                .append(" />");
+        replaceAll(template, tag, output);
     }
 
     /*
         <wcm-form-url> tag processing
      */
-    public String tagWcmCommentsFormUrl(String template) {
-        String tag = extractTag("wcm-form-url", template);
+    public void tagWcmCommentsFormUrl(StringBuilder template) {
+        StringBuilder tag = extractTag("wcm-form-url", template);
         Map<String, String> properties = propertiesTag(tag);
         String inputClass = "";
         if (properties.containsKey("class")) {
             inputClass = " class=\"" + properties.get("class") + "\"";
         }
-        String output = "<input id=\"" + this.namespace + "-url\"" + inputClass + " />";
-        return template.replace(tag, output);
+        StringBuilder output = new StringBuilder("<input id=\"")
+                                .append(this.namespace)
+                                .append("-url\"")
+                                .append(inputClass)
+                                .append(" />");
+        replaceAll(template, tag, output);
     }
 
     /*
         <wcm-form-button> tag processing
      */
-    public String tagWcmCommentsFormButton(String template, Post post) {
-        String tag = extractTag("wcm-form-button", template);
+    public void tagWcmCommentsFormButton(StringBuilder template, Post post) {
+        StringBuilder tag = extractTag("wcm-form-button", template);
         String inside = insideTag("wcm-form-button", template);
         Map<String, String> properties = propertiesTag(tag);
         String inputClass = "";
         if (properties.containsKey("class")) {
             inputClass = " class=\"" + properties.get("class") + "\"";
         }
-        String output = "<a id=\"" + this.namespace + "-addComment\" " + inputClass + " href=\"javascript:;\" onclick=\"wcmAddComment('" + this.namespace + "', '" + post.getId() + "');\">" + inside + "</a>";
-        return template.replace(tag, output);
+        StringBuilder output = new StringBuilder("<a id=\"")
+                                .append(this.namespace)
+                                .append("-addComment\" ")
+                                .append(inputClass)
+                                .append(" href=\"javascript:;\" onclick=\"wcmAddComment('")
+                                .append(this.namespace)
+                                .append("', '")
+                                .append(post.getId())
+                                .append("');\">")
+                                .append(inside)
+                                .append("</a>");
+        replaceAll(template, tag, output);
     }
 
     /*
         Aux functions to manipulate tags
      */
-    public boolean hasTag(String tag, String template) {
-        if (template == null || template.equals("")) return false;
-        return (template.indexOf("<" + tag) > -1);
+
+    /*
+        Checks if a specific tag is present in a template
+     */
+    public boolean hasTag(String tagName, StringBuilder template) {
+        if (template == null || template.length() == 0) return false;
+        return (template.indexOf("<" + tagName) > -1);
     }
 
-    public String extractTag(String tag, String template) {
-        String output = "";
-        int i = template.indexOf("<" + tag);
+    /*
+        Extracts a tag from a template
+     */
+    public StringBuilder extractTag(String tagName, StringBuilder template) {
+        StringBuilder output = new StringBuilder();
+        int i = template.indexOf("<" + tagName);
         if (i != -1) {
             int j = template.indexOf(">", i);
             // Check if we are in <tag /> or <tag></tag>
             if (j > 0 && template.charAt(j-1) == '/') {
-                output = template.substring(i, j + 1);
+                output.append(template.substring(i, j + 1));
             } else {
-                j = template.indexOf("</" + tag + ">", i);
+                j = template.indexOf("</" + tagName + ">", i);
                 if (j>-1) {
-                    output = template.substring(i, j + ("</" + tag + ">").length());
+                    output.append(template.substring(i, j + ("</" + tagName + ">").length()));
                 }
             }
         }
@@ -1232,20 +1295,29 @@ public class WcmTags {
         return output;
     }
 
-    public Map<String, String> propertiesTag(String template) {
+    /*
+        Extracts properties from a previously extracted tag
+     */
+    public Map<String, String> propertiesTag(StringBuilder tag) {
         Map<String, String> output = new HashMap<String, String>();
-        if (template != null) {
-            int start = template.indexOf(" ");
+        if (tag != null) {
+            int start = tag.indexOf(" ");
             int i = start;
             int j = 0;
             while (j != -1) {
                 // Look property name
-                j = template.indexOf("=", i);
+                j = tag.indexOf("=", i);
                 if (j != -1) {
-                    String name = template.substring(i, j).trim();
-                    i = template.indexOf("\"", j);
-                    j = template.indexOf("\"", i+1);
-                    String value = template.substring(i+1, j);
+                    String name = tag.substring(i, j).trim();
+                    i = tag.indexOf("\"", j);
+                    if (i < 0) {
+                        i = tag.indexOf("'", j);
+                    }
+                    j = tag.indexOf("\"", i+1);
+                    if (j < 0) {
+                        j = tag.indexOf("'", i+1);
+                    }
+                    String value = tag.substring(i+1, j);
                     i = j+1;
                     output.put(name, value);
                 }
@@ -1254,11 +1326,14 @@ public class WcmTags {
         return output;
     }
 
-    public String insideTag(String tag, String template) {
+    /*
+        Returns inner content of a tag
+     */
+    public String insideTag(String tagName, StringBuilder template) {
         String output = "";
-        int i = template.indexOf("<" + tag);
+        int i = template.indexOf("<" + tagName);
         i = template.indexOf(">", i);
-        int j = template.indexOf("</" + tag + ">", i);
+        int j = template.indexOf("</" + tagName + ">", i);
         if (i>-1 && j>-1) {
             output = template.substring(i+1, j);
         }
@@ -1272,7 +1347,7 @@ public class WcmTags {
 
         if (oldData.indexOf("class=\"wcm-skip\"") != -1) {
             oldData = oldData.replaceAll("class=\"wcm-skip\"", "");
-        } else if (newData.indexOf("wcm-skip") != -1) {
+        } else if (oldData.indexOf("wcm-skip") != -1) {
             oldData = oldData.replaceAll("wcm-skip", "");
         }
 
@@ -1309,6 +1384,36 @@ public class WcmTags {
         return newData;
     }
 
+    // Replace aux method for StringBuilder arguments
+    public void replaceAll(StringBuilder target, String oldData, String newData) {
+        if (target == null || oldData == null || newData == null) return;
+        int i = target.indexOf(oldData);
+        while (i > 0) {
+            target.replace(i, i + oldData.length(), newData);
+            i = target.indexOf(oldData);
+        }
+    }
+
+    public void replaceAll(StringBuilder target, StringBuilder oldData, StringBuilder newData) {
+        if (target == null || oldData == null || newData == null) return;
+        String strOldData = oldData.toString();
+        int i = target.indexOf(strOldData);
+        while (i > 0) {
+            target.replace(i, i + oldData.length(), newData.toString());
+            i = target.indexOf(strOldData);
+        }
+    }
+
+    public void replaceAll(StringBuilder target, StringBuilder oldData, String newData) {
+        if (target == null || oldData == null || newData == null) return;
+        String strOldData = oldData.toString();
+        int i = target.indexOf(strOldData);
+        while (i > 0) {
+            target.replace(i, i + oldData.length(), newData);
+            i = target.indexOf(strOldData);
+        }
+    }
+
     public String notVisibleImg(String img) {
         if (img.indexOf("class") > -1) {
             img = img.replaceAll("class=[\"''](.*)[\"']", "class=\"$1 wcm-skip\"");
@@ -1331,7 +1436,7 @@ public class WcmTags {
     }
 
     private String substringWord(String html, int index) {
-        if (html == null || "".equals(html)) return html;
+        if (html == null || html.length() == 0) return html;
         if (index > html.length()) return html;
         int i = html.indexOf(" ", index);
         if (i == -1) i = index - 1;
