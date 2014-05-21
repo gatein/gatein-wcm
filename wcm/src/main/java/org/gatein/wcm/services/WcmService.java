@@ -765,4 +765,14 @@ public interface WcmService {
      * @throws WcmException
      */
     Map<Long, Object> findLocksObjects(List<Lock> locks, UserWcm user) throws WcmAuthorizationException, WcmException;
+
+    /**
+     * Performs an export of repository and returns a file name pointing to a .zip format.
+     *
+     * @param user UserWcm who performs operation
+     * @return File name under Wcm.UPLOADS.TMP_DIR with export result
+     * @throws WcmAuthorizationException
+     * @throws WcmException
+     */
+    String export(UserWcm user) throws WcmAuthorizationException, WcmException;
 }

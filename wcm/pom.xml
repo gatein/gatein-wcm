@@ -74,6 +74,12 @@
         <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>${version.commons-io}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>org.gatein.wcm</groupId>
       <artifactId>wcm-api</artifactId>
       <version>${version.wcm}</version>

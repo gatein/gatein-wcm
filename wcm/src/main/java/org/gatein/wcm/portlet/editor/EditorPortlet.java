@@ -442,6 +442,9 @@ public class EditorPortlet extends GenericPortlet {
             } else if (event.equals(Wcm.EVENTS.REMOVE_LOCK)) {
                 // Remove lock
                 url = manager.eventRemoveLock(request, response, userWcm);
+            } else if (event.equals(Wcm.EVENTS.EXPORT)) {
+                // Export repository in .zip format
+                url = manager.eventExport(request, response, userWcm);
             } else {
                 // No default view.
             }

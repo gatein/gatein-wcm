@@ -42,6 +42,9 @@
         <div class="wcm-manager-locks">
             <span class="glyphicon glyphicon-lock margin-right margin-top"></span> <a href="javascript:;" onclick="showLocks('${n}', '${showLocksEvent}', '${managerView}');">${rsc.getString('manager.locks')}</a>
         </div>
+        <div class="wcm-manager-locks margin-top">
+            <span class="glyphicon glyphicon-download-alt margin-right margin-top "></span> <a href="${exportEvent}">Export</a>
+        </div>
     </div>
 
 </div>

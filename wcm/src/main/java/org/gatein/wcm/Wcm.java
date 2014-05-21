@@ -301,6 +301,7 @@ public interface Wcm {
         static final String UNLOCK_TEMPLATE = "unlocktemplate";
         static final String SHOW_LOCKS = "showlocks";
         static final String REMOVE_LOCK = "removelock";
+        static final String EXPORT = "export";
     }
 
     /**

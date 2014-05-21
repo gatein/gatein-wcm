@@ -255,6 +255,10 @@
 <portlet:resourceURL var="removeLockEvent">
     <portlet:param name="event" value="<%= Wcm.EVENTS.REMOVE_LOCK %>" />
 </portlet:resourceURL>
+<portlet:resourceURL var="exportEvent">
+    <portlet:param name="event" value="<%= Wcm.EVENTS.EXPORT %>" />
+</portlet:resourceURL>
+
 
 
 

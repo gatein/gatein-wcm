@@ -58,7 +58,7 @@ public class WcmApiServiceBean implements WcmApiService {
      */
     @Override
     public List<Category> findRootCategories(String user) throws Exception {
-        UserWcm userWcm = null;
+        UserWcm userWcm;
         if (user == null || (user != null && ANONYMOUS.equals(user))) {
             userWcm = new UserWcm(ANONYMOUS);
         } else {

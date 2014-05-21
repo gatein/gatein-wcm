@@ -38,6 +38,7 @@ public class ParseDates {
 
     static SimpleDateFormat today = new SimpleDateFormat("HH:mm:ss z");
     static SimpleDateFormat other = new SimpleDateFormat("d MMM yyyy");
+    static SimpleDateFormat now = new SimpleDateFormat("yyyyMMddHHmmss");
 
     public static String parse(Calendar cal) {
         if (cal == null) return "";
@@ -57,5 +58,20 @@ public class ParseDates {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public static String parseForFile(Calendar cal) {
+        if (cal == null) return "";
+        try {
+            return now.format(cal.getTime());
+        } catch (Exception e) {
+            log.warning("Error parsing cal: " + cal + ". Error: " + e.toString());
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static String parseNow() {
+        return parseForFile(Calendar.getInstance());
     }
 }

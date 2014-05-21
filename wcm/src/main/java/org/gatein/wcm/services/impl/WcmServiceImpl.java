@@ -26,16 +26,20 @@ package org.gatein.wcm.services.impl;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.ejb.Schedule;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.apache.commons.io.IOUtils;
 import org.gatein.wcm.Wcm;
 import org.gatein.wcm.WcmAuthorizationException;
 import org.gatein.wcm.WcmException;
@@ -43,6 +47,7 @@ import org.gatein.wcm.WcmLockException;
 import org.gatein.wcm.domain.*;
 import org.gatein.wcm.portlet.util.ParseDates;
 import org.gatein.wcm.services.WcmService;
+import org.gatein.wcm.services.impl.export.ExportBuilder;
 
 /**
  * Implementation of WcmService public API.
@@ -1900,6 +1905,81 @@ public class WcmServiceImpl implements WcmService {
         } catch (Exception e) {
             throw new WcmException(e);
         }
+    }
+
+    /**
+     * @see WcmService#export(org.gatein.wcm.domain.UserWcm)
+     */
+    public String export(UserWcm user) throws WcmAuthorizationException, WcmException {
+        if (user == null) {
+            throw new WcmException("Illegal export() invocation");
+        }
+        if (!user.isManager()) {
+            throw new WcmAuthorizationException("findLocksObjects() is an operation for managers.");
+        }
+        // Zip Name
+        String now = ParseDates.parseNow();
+        String zipName = System.getProperty(Wcm.UPLOADS.TMP_DIR) + "/gatein-wcm-export-" + now + ".zip";
+        ZipOutputStream zos = null;
+        FileInputStream in = null;
+
+        try {
+            zos = new ZipOutputStream(new FileOutputStream(zipName));
+
+            // Perform export
+            ExportBuilder builder = new ExportBuilder();
+
+            List<Category> rCategories = em.createNamedQuery("listAllCategories", Category.class).getResultList();
+            List<Comment> rComments = em.createNamedQuery("listAllComments", Comment.class).getResultList();
+            List<Post> rPosts = em.createNamedQuery("listAllPosts", Post.class).getResultList();
+            List<PostHistory> rPostsHistory = em.createNamedQuery("listAllPostHistory", PostHistory.class).getResultList();
+            List<Relationship> rRelationships = em.createNamedQuery("listAllRelationships", Relationship.class).getResultList();
+            List<Acl> rAcls = em.createNamedQuery("listAllAcls", Acl.class).getResultList();
+            List<Template> rTemplates = em.createNamedQuery("listAllTemplates", Template.class).getResultList();
+            List<TemplateHistory> rTemplatesHistory = em.createNamedQuery("listAllTemplateHistory", TemplateHistory.class).getResultList();
+            List<Upload> rUploads = em.createNamedQuery("listAllUploads", Upload.class).getResultList();
+            List<UploadHistory> rUploadsHistory = em.createNamedQuery("listAllUploadHistory", UploadHistory.class).getResultList();
+
+            StringBuilder export =builder
+                    .add(rCategories)
+                   .add(rComments)
+                   .add(rPosts)
+                   .add(rPostsHistory)
+                   .add(rRelationships)
+                   .add(rAcls)
+                   .add(rTemplates)
+                   .add(rTemplatesHistory)
+                   .add(rUploads)
+                   .add(rUploadsHistory)
+                   .build();
+
+            // Copy export file.
+            ZipEntry zipEntry = new ZipEntry("gatein-wcm.xml");
+            zos.putNextEntry(zipEntry);
+            IOUtils.write(export, zos, "UTF-8");
+            // Copy uploads folder
+            File dirUploads = new File(System.getProperty(Wcm.UPLOADS.FOLDER));
+            if (dirUploads != null) {
+                File[] uploads = dirUploads.listFiles();
+                for (int i=0; i < uploads.length; i++) {
+                    in = new FileInputStream(uploads[i]);
+                    zipEntry = new ZipEntry("uploads/" + uploads[i].getName());
+                    zos.putNextEntry(zipEntry);
+                    IOUtils.copy(in, zos);
+                    in.close();
+                }
+            }
+            zos.close();
+
+        } catch (Exception e) {
+            log.warning("Error exporting file. " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(in);
+            IOUtils.closeQuietly(zos);
+        }
+
+        return zipName;
     }
 
     @Schedule(hour="*", minute = "*/" + Wcm.TIMEOUTS.TIMER)

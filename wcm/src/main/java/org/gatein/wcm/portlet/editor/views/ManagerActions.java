@@ -23,6 +23,11 @@
 
 package org.gatein.wcm.portlet.editor.views;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -31,6 +36,7 @@ import javax.inject.Inject;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.gatein.wcm.domain.Lock;
 import org.gatein.wcm.domain.UserWcm;
 import org.gatein.wcm.services.PortalService;
@@ -87,5 +93,37 @@ public class ManagerActions {
             e.printStackTrace();
         }
         return "/jsp/manager/managerLocks.jsp";
+    }
+
+    public String eventExport(ResourceRequest request, ResourceResponse response, UserWcm userWcm) {
+        FileInputStream in = null;
+        OutputStream out = null;
+        try {
+            String zipName = wcm.export(userWcm);
+            File zip = new File(zipName);
+
+            response.setContentType("application/zip");
+            response.setProperty("Content-disposition", "attachment; filename=" + zip.getName());
+
+            out = response.getPortletOutputStream();
+            if (zip.exists()) {
+                in = new FileInputStream(zip);
+                IOUtils.copy(in, out);
+            } else {
+                throw new Exception("File name: " + zipName + " doesn't exist");
+            }
+
+            out.flush();
+            out.close();
+            in.close();
+        } catch (Exception e) {
+            log.warning("Error generating export file. " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(in);
+            IOUtils.closeQuietly(out);
+        }
+        // Return null as this specific event will generate a .zip response
+        return null;
     }
 }

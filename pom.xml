@@ -18,6 +18,7 @@
     <version.exo.kernel.container>2.4.4-GA</version.exo.kernel.container>
     <version.exo.core.component.organization.api>2.5.4-GA</version.exo.core.component.organization.api>
     <version.commons-fileupload>1.2.1</version.commons-fileupload>
+    <version.commons-io>2.4</version.commons-io>
 
     <version.maven-compiler-plugin>2.3.2</version.maven-compiler-plugin>
     <version.source>1.7</version.source>

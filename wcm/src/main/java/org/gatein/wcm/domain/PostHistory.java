@@ -50,7 +50,8 @@ import javax.persistence.TemporalType;
 @Cacheable
 @NamedQueries({
         @NamedQuery(name = "maxPostVersion", query = "select max(ph.version) from PostHistory ph where ph.id = :postid"),
-        @NamedQuery(name = "versionsPost", query = "select ph.version from PostHistory ph where ph.id = :postid order by ph.version desc")
+        @NamedQuery(name = "versionsPost", query = "select ph.version from PostHistory ph where ph.id = :postid order by ph.version desc"),
+        @NamedQuery(name = "listAllPostHistory", query = "from PostHistory ph order by ph.id")
 })
 final public class PostHistory implements Serializable {
 
