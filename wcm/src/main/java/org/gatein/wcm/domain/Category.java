@@ -60,7 +60,8 @@ import javax.persistence.Transient;
 		@NamedQuery(name = "listCategoriesName", query = "from Category c where upper(c.name) like upper(:name) order by c.parent.id, c.type, c.name, c.id"),
 		@NamedQuery(name = "listCategoriesType", query = "from Category c where c.type = :type order by c.parent.id, c.type, c.name, c.id"),
 		@NamedQuery(name = "listCategoriesChildren", query = "from Category c where c.parent is not null and c.parent.id = :id order by c.type, c.name, c.id"),
-        @NamedQuery(name = "listRootCategories", query = "from Category c where c.parent is null order by c.type, c.name, c.id")
+        @NamedQuery(name = "listRootCategories", query = "from Category c where c.parent is null order by c.type, c.name, c.id"),
+        @NamedQuery(name = "deleteAllCategories", query = "delete from Category c")
 })
 final public class Category implements Serializable {
 

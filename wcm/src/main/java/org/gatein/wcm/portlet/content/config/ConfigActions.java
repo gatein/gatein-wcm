@@ -117,10 +117,14 @@ public class ConfigActions {
                     String id = contentId.split("_")[0];
                     if (type.equals("C")) {
                         Category c = wcm.findCategory(new Long(id), userWcm);
-                        output.add(c);
+                        if (c != null) {
+                            output.add(c);
+                        }
                     } else {
                         Post p = wcm.findPost(new Long(id), userWcm);
-                        output.add(p);
+                        if (p != null) {
+                            output.add(p);
+                        }
                     }
                 }
                 request.setAttribute("listAttachedContent", output);

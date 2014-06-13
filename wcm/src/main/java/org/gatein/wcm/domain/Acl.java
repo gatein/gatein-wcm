@@ -47,7 +47,8 @@ import javax.persistence.Table;
 @Table(name = "wcm_security_acl")
 @Cacheable
 @NamedQueries({
-        @NamedQuery(name = "listAllAcls", query = "from Acl a")
+        @NamedQuery(name = "listAllAcls", query = "from Acl a"),
+        @NamedQuery(name = "deleteAllAcls", query = "delete from Acl a")
 })
 final public class Acl implements Serializable {
 

@@ -50,7 +50,8 @@ import javax.persistence.TemporalType;
 @NamedQueries({
         @NamedQuery(name = "maxTemplateVersion", query = "select max(th.version) from TemplateHistory th where th.id = :templateid"),
         @NamedQuery(name = "versionsTemplate", query = "select th.version from TemplateHistory th where th.id = :templateid order by th.version desc"),
-        @NamedQuery(name = "listAllTemplateHistory", query = "from TemplateHistory th order by th.id")
+        @NamedQuery(name = "listAllTemplateHistory", query = "from TemplateHistory th order by th.id"),
+        @NamedQuery(name = "deleteAllTemplateHistory", query = "delete from TemplateHistory th")
 })
 final public class TemplateHistory implements Serializable {
 

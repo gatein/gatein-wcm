@@ -52,7 +52,8 @@ import javax.persistence.Table;
         @NamedQuery(name = "listRelationships", query = "select r from Relationship r where r.originId = :originId and r.type = :type order by r.originId, r.key"),
         @NamedQuery(name = "listPostsRelationships", query = "select p from Relationship r, Post p where p.id = r.aliasId and r.originId = :originId and r.type = :type order by r.originId, r.key"),
         @NamedQuery(name = "listTemplatesRelationships", query = "select t from Relationship r, Template t where t.id = r.aliasId and r.originId = :originId and r.type = :type order by r.originId, r.key"),
-        @NamedQuery(name = "listAllRelationships", query = "from Relationship r")
+        @NamedQuery(name = "listAllRelationships", query = "from Relationship r"),
+        @NamedQuery(name = "deleteAllRelationships", query = "delete from Relationship r")
 })
 final public class Relationship implements Serializable {
 	

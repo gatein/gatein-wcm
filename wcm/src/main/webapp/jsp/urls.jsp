@@ -194,6 +194,10 @@
 <portlet:actionURL var="changeVersionTemplateAction">
     <portlet:param name="action" value="<%= Wcm.ACTIONS.CHANGE_VERSION_TEMPLATE %>" />
 </portlet:actionURL>
+<portlet:actionURL var="newImportAction">
+    <portlet:param name="action" value="<%= Wcm.ACTIONS.NEW_IMPORT %>" />
+</portlet:actionURL>
+
 <% // Event URL %>
 <portlet:resourceURL var="showCategoriesChildrenEvent">
     <portlet:param name="event" value="<%= Wcm.EVENTS.SHOW_CATEGORIES_CHILDREN %>" />

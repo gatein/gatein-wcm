@@ -264,6 +264,7 @@ public interface Wcm {
         static final String CHANGE_VERSION_POST = "changeversionpost";
         static final String CHANGE_VERSION_UPLOAD = "changeversionupload";
         static final String CHANGE_VERSION_TEMPLATE = "changeversiontemplate";
+        static final String NEW_IMPORT = "newimport";
     }
 
     /**
@@ -373,6 +374,29 @@ public interface Wcm {
         static final int LOCKS = (System.getProperty("wcm.timeout.locks") == null ? 20 : new Integer(System.getProperty("wcm.timeout.locks")));
     }
 
+    /**
+     * Defines specific options for import task
+     */
+    interface IMPORT {
+        /**
+         * Defines specific import strategies for WCM repository
+         */
+        interface STRATEGY {
+            /**
+             * Deletes current repository and creates a new one with the import file
+             */
+            static final Character NEW = 'C';
+            /**
+             * Overwrite current repository with entries defined in the import file
+             */
+            static final Character OVERWRITE = 'O';
+            /**
+             * Updates only new items from the import file
+             */
+            static final Character UPDATE = 'U';
+
+        }
+    }
     /**
      * Defines constant for debug mode
      */

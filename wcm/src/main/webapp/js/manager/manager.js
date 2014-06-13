@@ -87,3 +87,51 @@ function removeLock(namespace, href, lockid, locktype) {
         });
     });
 }
+
+function showImport(namespace, hrefClose) {
+    require(["SHARED/jquery"], function($) {
+        // Show popup
+        var id = "#" + namespace + "manager-import";
+
+        // Open comments in the center
+        var w = (($(window).width() - 980)/2);
+        if (w < 0) w = 100;
+        else w = w + 100;
+        $(id).css('top',  200 - $(document).scrollTop());    // Fixed at the beginning of
+        $(id).css('left', w - $(document).scrollLeft());
+        $(id).fadeIn(100);
+
+        var closeid = "#" + namespace + "close-manager-import";
+        $(closeid).click(function (e) {
+            e.preventDefault();
+            $(id).hide();
+            window.location.assign(hrefClose);
+        });
+    });
+}
+
+function showImportFile(namespace) {
+    require(["SHARED/jquery"], function($) {
+        var importId = "#" + namespace + "importFile";
+        var importNameId = "#" + namespace + "importFileName";
+        if ($._data($(importId)[0], "events") === undefined) {
+            $(importId).change(function () {
+                $(importNameId).text( $(importId).val() );
+            });
+        }
+        $(importId).click();
+    });
+}
+
+function saveNewImport(namespace, msgEmpty, imports) {
+    require(["SHARED/jquery"], function($) {
+        var formId = "#" + namespace + "newImportForm";
+        var importId = "#" + namespace + "importFile";
+
+        if ($(importId).val() == '') {
+            showMsg(namespace, msgEmpty, imports);
+        } else {
+            $(formId).submit();
+        }
+    });
+}

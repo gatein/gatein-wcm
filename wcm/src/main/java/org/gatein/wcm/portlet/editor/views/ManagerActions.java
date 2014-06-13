@@ -33,10 +33,18 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.portlet.PortletFileUpload;
 import org.apache.commons.io.IOUtils;
+import org.gatein.wcm.Wcm;
+import org.gatein.wcm.WcmException;
 import org.gatein.wcm.domain.Lock;
 import org.gatein.wcm.domain.UserWcm;
 import org.gatein.wcm.services.PortalService;
@@ -99,7 +107,9 @@ public class ManagerActions {
         FileInputStream in = null;
         OutputStream out = null;
         try {
-            String zipName = wcm.export(userWcm);
+            log.info("WCM Export: STARTED");
+
+            String zipName = wcm.exportRepository(userWcm);
             File zip = new File(zipName);
 
             response.setContentType("application/zip");
@@ -116,6 +126,8 @@ public class ManagerActions {
             out.flush();
             out.close();
             in.close();
+
+            log.info("WCM Export: FINISHED");
         } catch (Exception e) {
             log.warning("Error generating export file. " + e.getMessage());
             e.printStackTrace();
@@ -125,5 +137,40 @@ public class ManagerActions {
         }
         // Return null as this specific event will generate a .zip response
         return null;
+    }
+
+    public String actionNewImport(ActionRequest request, ActionResponse response, UserWcm userWcm) {
+        log.info("WCM Import: STARTED");
+
+        String tmpDir = System.getProperty(Wcm.UPLOADS.TMP_DIR);
+        FileItemFactory factory = new DiskFileItemFactory(Wcm.UPLOADS.MAX_FILE_SIZE, new File(tmpDir));
+        PortletFileUpload importUpload = new PortletFileUpload(factory);
+        try {
+            List<FileItem> items = importUpload.parseRequest(request);
+            FileItem file = null;
+            String importStrategy = String.valueOf(Wcm.IMPORT.STRATEGY.NEW);
+            for (FileItem item : items) {
+                if (!item.isFormField()) {
+                    file = item;
+                } else {
+                    importStrategy = item.getString();
+                }
+            }
+            // .zip validation
+            if (file != null && file.getContentType() != null && !"application/zip".equalsIgnoreCase(file.getContentType())) {
+                throw new WcmException("File: " + file.getName() + " is not application/zip.");
+            }
+            //
+            log.info("Importing ... " + file.getName() + " with strategy " + importStrategy);
+            wcm.importRepository(file.getInputStream(), importStrategy.charAt(0), userWcm);
+        } catch(Exception e) {
+            log.warning("Error importing file");
+            e.printStackTrace();
+            response.setRenderParameter("errorWcm", "Error importing file: " + e.toString());
+        }
+
+        log.info("WCM Import: FINISHED");
+
+        return Wcm.VIEWS.MANAGER;
     }
 }

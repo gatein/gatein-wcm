@@ -74,4 +74,19 @@ public class ParseDates {
     public static String parseNow() {
         return parseForFile(Calendar.getInstance());
     }
+
+    public static Calendar parseFromFile(String cal) {
+        if (cal == null) return null;
+        java.util.Date date = null;
+        Calendar out = null;
+        try {
+            date = now.parse(cal);
+            out = Calendar.getInstance();
+            out.setTime(date);
+        } catch(Exception e) {
+            log.warning("Error parsing cal: " + cal + ". Error: " + e.toString());
+            e.printStackTrace();
+        }
+        return out;
+    }
 }

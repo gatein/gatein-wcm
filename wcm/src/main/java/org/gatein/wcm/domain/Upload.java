@@ -56,7 +56,8 @@ import javax.persistence.TemporalType;
 @Cacheable
 @NamedQueries({
 	@NamedQuery(name = "listUploadsFileName", query = "from Upload u where upper(u.fileName) like :fileName or upper(u.description) like :description order by u.modified desc"),
-    @NamedQuery(name = "listAllUploads", query = "from Upload u order by u.modified desc")
+    @NamedQuery(name = "listAllUploads", query = "from Upload u order by u.modified desc"),
+    @NamedQuery(name = "deleteAllUploads", query = "delete from Upload u")
 })
 final public class Upload implements Serializable {
 	

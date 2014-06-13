@@ -61,6 +61,7 @@ import org.gatein.wcm.Wcm;
 		@NamedQuery(name = "listPostsName", query = "from Post p where upper(p.title) like :title order by p.modified desc"),
         @NamedQuery(name = "listAllPosts", query = "from Post p order by p.modified desc"),
         @NamedQuery(name = "listPostsCategory", query = "from Post p order by p.modified desc"),
+        @NamedQuery(name = "deleteAllPosts", query = "delete from Post p")
 })
 final public class Post implements Serializable {
 

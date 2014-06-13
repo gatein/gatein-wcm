@@ -54,7 +54,8 @@ import javax.persistence.TemporalType;
 @Cacheable
 @NamedQueries({
         @NamedQuery(name = "listTemplatesName", query = "from Template t where upper(t.name) like :name order by t.modified desc"),
-        @NamedQuery(name = "listAllTemplates", query = "from Template t order by t.modified desc")
+        @NamedQuery(name = "listAllTemplates", query = "from Template t order by t.modified desc"),
+        @NamedQuery(name = "deleteAllTemplates", query = "delete from Template")
 })
 final public class Template implements Serializable {
 

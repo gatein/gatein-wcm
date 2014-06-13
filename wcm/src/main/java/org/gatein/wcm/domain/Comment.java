@@ -46,7 +46,8 @@ import javax.persistence.Table;
 @Table(name = "wcm_comments")
 @Cacheable
 @NamedQueries({
-        @NamedQuery(name = "listAllComments", query = "from Comment c order by c.id, c.post.id")
+        @NamedQuery(name = "listAllComments", query = "from Comment c order by c.id, c.post.id"),
+        @NamedQuery(name = "deleteAllComments", query = "delete from Comment c")
 })
 final public class Comment implements Serializable {
 

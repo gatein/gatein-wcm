@@ -34,6 +34,33 @@
     </div>
 </div>
 
+<div id="${n}manager-import" class="wcm-popup-categories wcm-dialog">
+    <div id="${n}manager-import-title" class="wcm-dialog-title">${rsc.getString('manager.import')}</div>
+    <a href="#" id="${n}close-manager-import" class="wcm-dialog-close"><span> </span></a>
+
+    <form id="${n}newImportForm" method="post" enctype="multipart/form-data" action="${newImportAction}">
+        <div class="wcm-newupload">
+            <span class="glyphicon glyphicon-paperclip margin-right margin-top"></span>
+            <a href="javascript:showImportFile('${n}');" class="button" title="${rsc.getString('manager.import_file')}">${rsc.getString('manager.import_file')}</a>
+            <input type="file" id="${n}importFile" name="importFile" class="wcm-newupload-file" />
+            <div class="wcm-newupload-name" id="${n}importFileName"></div>
+            <a href="javascript:saveNewImport('${n}', '${rsc.getString('manager.empty_import')}', '${rsc.getString('manager.import')}');" class="button" title="${rsc.getString('manager.save_import')}">${rsc.getString('manager.save_import')}</a>
+        </div>
+        <div class="wcm-newupload">
+            <span class="glyphicon glyphicon-pushpin margin-right margin-top"></span>
+            <label for="${n}importStrategy">${rsc.getString('manager.import_strategy')}</label>
+            <div class="wcm-manager-strategy">
+                <select id="${n}importStrategy" name="importStrategy" class="wcm-input">
+                    <option value="<%= Wcm.IMPORT.STRATEGY.NEW%>" selected>${rsc.getString('manager.import_new')}</option>
+                    <option value="<%= Wcm.IMPORT.STRATEGY.OVERWRITE%>">${rsc.getString('manager.import_overwrite')}</option>
+                    <option value="<%= Wcm.IMPORT.STRATEGY.UPDATE%>">${rsc.getString('manager.import_update')}</option>
+                </select>
+            </div>
+        </div>
+    </form>
+
+</div>
+
 <div class="container">
     <%@include file="../menu.jsp"%>
     <%@include file="../submenu.jsp"%>
@@ -42,8 +69,11 @@
         <div class="wcm-manager-locks">
             <span class="glyphicon glyphicon-lock margin-right margin-top"></span> <a href="javascript:;" onclick="showLocks('${n}', '${showLocksEvent}', '${managerView}');">${rsc.getString('manager.locks')}</a>
         </div>
-        <div class="wcm-manager-locks margin-top">
-            <span class="glyphicon glyphicon-download-alt margin-right margin-top "></span> <a href="${exportEvent}">Export</a>
+        <div class="wcm-manager-locks margin-top-block">
+            <span class="glyphicon glyphicon-download margin-right margin-top "></span> <a href="${exportEvent}">${rsc.getString('manager.export')}</a>
+        </div>
+        <div class="wcm-manager-locks margin-top-block">
+            <span class="glyphicon glyphicon-upload margin-right margin-top "></span> <a href="javascript:;" onclick="showImport('${n}', '${managerView}');">${rsc.getString('manager.import')}</a>
         </div>
     </div>
 

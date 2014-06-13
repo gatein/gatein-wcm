@@ -774,5 +774,14 @@ public interface WcmService {
      * @throws WcmAuthorizationException
      * @throws WcmException
      */
-    String export(UserWcm user) throws WcmAuthorizationException, WcmException;
+    String exportRepository(UserWcm user) throws WcmAuthorizationException, WcmException;
+
+    /**
+     *
+     * @param importFile
+     * @param strategy
+     * @param user UserWcm who performs operation
+     */
+    void importRepository(InputStream importFile, Character strategy, UserWcm user) throws WcmAuthorizationException, WcmException;
+
 }

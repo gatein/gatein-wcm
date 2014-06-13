@@ -28,17 +28,25 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import java.util.zip.ZipInputStream;
 
 import javax.ejb.Schedule;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.gatein.wcm.Wcm;
 import org.gatein.wcm.WcmAuthorizationException;
@@ -48,6 +56,7 @@ import org.gatein.wcm.domain.*;
 import org.gatein.wcm.portlet.util.ParseDates;
 import org.gatein.wcm.services.WcmService;
 import org.gatein.wcm.services.impl.export.ExportBuilder;
+import org.gatein.wcm.services.impl.export.ImportParser;
 
 /**
  * Implementation of WcmService public API.
@@ -564,7 +573,7 @@ public class WcmServiceImpl implements WcmService {
         if (id == null) return null;
         try {
             Post p = em.find(Post.class, id);
-            if (p.getLocale() != null && !p.getLocale().equals(locale)) {
+            if (p != null && p.getLocale() != null && !p.getLocale().equals(locale)) {
                 RelationshipPK pk = new RelationshipPK();
                 pk.setOriginId(id);
                 pk.setKey(locale);
@@ -1367,7 +1376,7 @@ public class WcmServiceImpl implements WcmService {
         if (id == null) return null;
         try {
             Template t = em.find(Template.class, id);
-            if (t.getLocale() != null && !t.getLocale().equals(locale)) {
+            if (t != null && t.getLocale() != null && !t.getLocale().equals(locale)) {
                 RelationshipPK pk = new RelationshipPK();
                 pk.setOriginId(id);
                 pk.setKey(locale);
@@ -1908,14 +1917,14 @@ public class WcmServiceImpl implements WcmService {
     }
 
     /**
-     * @see WcmService#export(org.gatein.wcm.domain.UserWcm)
+     * @see WcmService#exportRepository(org.gatein.wcm.domain.UserWcm)
      */
-    public String export(UserWcm user) throws WcmAuthorizationException, WcmException {
+    public String exportRepository(UserWcm user) throws WcmAuthorizationException, WcmException {
         if (user == null) {
-            throw new WcmException("Illegal export() invocation");
+            throw new WcmException("Illegal exportRepository() invocation");
         }
         if (!user.isManager()) {
-            throw new WcmAuthorizationException("findLocksObjects() is an operation for managers.");
+            throw new WcmAuthorizationException("exportRepository() is an operation for managers.");
         }
         // Zip Name
         String now = ParseDates.parseNow();
@@ -1970,16 +1979,791 @@ public class WcmServiceImpl implements WcmService {
                 }
             }
             zos.close();
-
         } catch (Exception e) {
             log.warning("Error exporting file. " + e.getMessage());
             e.printStackTrace();
+            throw new WcmException(e);
         } finally {
             IOUtils.closeQuietly(in);
             IOUtils.closeQuietly(zos);
         }
 
         return zipName;
+    }
+
+    public void importRepository(InputStream importFile, Character strategy, UserWcm user) throws WcmAuthorizationException, WcmException {
+        if (user == null) {
+            throw new WcmException("Illegal importRepository() invocation");
+        }
+        if (!user.isManager()) {
+            throw new WcmAuthorizationException("importRepository() is an operation for managers.");
+        }
+        if (importFile == null) {
+            throw new WcmException("InputStream cannot be null");
+        }
+
+        // Target folder for uploads
+        String targetFolder;
+        if (System.getProperty(Wcm.UPLOADS.FOLDER) == null) {
+            targetFolder = System.getProperty(Wcm.UPLOADS.DEFAULT) + "/wcm/uploads";
+        } else {
+            targetFolder = System.getProperty(Wcm.UPLOADS.FOLDER);
+        }
+
+        // Unzip in a temporal location
+        String temporalFolder = System.getProperty(Wcm.UPLOADS.TMP_DIR) + "/import-" + UUID.randomUUID();
+        File output = new File(temporalFolder);
+        if (!output.exists()) {
+            output.mkdirs();
+        }
+        try {
+            unzip(new ZipInputStream(importFile), output);
+        } catch (Exception e) {
+            throw new WcmException("Error extracting file " + e.getMessage());
+        }
+
+        // Parse gatein-wcm.xml file
+        String gateinWcm = temporalFolder + "/gatein-wcm.xml";
+        File gateinWcmFile = new File(gateinWcm);
+        if (!gateinWcmFile.exists()) {
+            throw new WcmException("Not gatein-wcm.xml file found in .zip");
+        }
+
+        String uploadsFolder = temporalFolder + "/uploads";
+        File uploadsFolderFile = new File(uploadsFolder);
+        if (!uploadsFolderFile.exists()) {
+            throw new WcmException("Not uploads folder found in .zip");
+        }
+
+        ImportParser importParser;
+        try {
+            importParser = new ImportParser(temporalFolder);
+        } catch (Exception e) {
+            throw new WcmException("Error initializing parser " + e.getMessage());
+        }
+
+        try {
+            importParser.parse();
+        } catch (Exception e) {
+            throw new WcmException("Error parsing import file: " + e.getMessage());
+        }
+
+        // Update collections
+        // Copy uploads images into data location
+        if (strategy.equals(Wcm.IMPORT.STRATEGY.NEW)) {
+            try {
+                deleteAllRepository();
+            } catch (Exception e) {
+                throw new WcmException("Error deleting all repository " + e.getMessage());
+            }
+        }
+        try {
+            Map<Long, Long> mCategories = updateCategories(importParser.getCategories(), strategy);
+            Map<Long, Long> mComments = updateComments(importParser.getComments(), strategy);
+            Map<Long, Long> mPosts = updatePosts(importParser.getPosts(), strategy);
+            Map<Long, Long> mTemplates = updateTemplates(importParser.getTemplates(), strategy);
+            Map<Long, Long> mUploads = updateUploads(importParser.getUploads(), strategy, uploadsFolder, targetFolder);
+            Map<Long, Long> mAcls = updateSecurity(importParser.getAcls(), strategy);
+
+            updatePostsHistory(importParser.getPostsHistory(), strategy, mPosts);
+            updateTemplatesHistory(importParser.getTemplatesHistory(), strategy, mTemplates);
+            updateUploadsHistory(importParser.getUploadsHistory(), strategy, uploadsFolder, targetFolder, mUploads);
+
+            updateRelationships(importParser.getRelationships(), strategy, mPosts, mTemplates);
+            updateCategoriesParent(importParser.getCategoriesParent(), mCategories);
+            updateCategoriesPosts(importParser.getCategoriesPosts(), mCategories, mPosts);
+            updateCategoriesTemplates(importParser.getCategoriesTemplates(), mCategories, mTemplates);
+            updateCategoriesUploads(importParser.getCategoriesUploads(), mCategories, mUploads);
+
+            updateCommentsPost(importParser.getCommentsPost(), mComments, mPosts);
+
+            updateAclCategories(importParser.getAclsCategories(), mAcls, mCategories);
+            updateAclPosts(importParser.getAclsPosts(), mAcls, mPosts);
+            updateAclUploads(importParser.getAclsUploads(), mAcls, mUploads);
+
+            updateUploadsLinks(mUploads);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new WcmException("Error upading repository " + e.getMessage());
+        }
+
+    }
+
+    /*
+        Deletes all repository for a new and clean import.
+     */
+    private void deleteAllRepository() throws Exception {
+        String[] queries = {
+            "deleteAllAcls",
+            "deleteAllCategories",
+            "deleteAllComments",
+            "deleteAllPosts",
+            "deleteAllPostHistory",
+            "deleteAllRelationships",
+            "deleteAllTemplates",
+            "deleteAllTemplateHistory",
+            "deleteAllUploads",
+            "deleteAllUploadHistory"
+        };
+
+        for (String query : queries) {
+            try {
+                em.createNamedQuery(query).executeUpdate();
+            } catch (Exception e) {
+                log.warning("Error executing query: " + query);
+                throw e;
+            }
+        }
+
+        em.clear();
+
+        // Delete uploads
+        String uploads = System.getProperty(Wcm.UPLOADS.FOLDER);
+        File folder = new File(uploads);
+        if (folder.exists() && folder.isDirectory()) {
+            File[] files = folder.listFiles();
+            for (File f : files) {
+                f.delete();
+            }
+        }
+    }
+
+    private Map<Long, Long> updateCategories(List<Category> categories,
+                                        Character strategy)
+            throws Exception {
+        Map<Long, Long> mCategories = new HashMap<Long, Long>();
+
+        for (Category newC : categories) {
+            Category oldC = em.find(Category.class, newC.getId());
+            if (oldC == null) {
+                Long importId, newId;
+
+                importId = newC.getId();
+                newC = em.merge(newC);
+                newId = newC.getId();
+                // We are trying to import a previous detached object and EM can return a new ID
+                // We need to maintain a table with new IDs to update references in next objects
+                mCategories.put(importId, newId);
+            } else {
+                if (!strategy.equals(Wcm.IMPORT.STRATEGY.UPDATE)) {
+                    oldC.setName(newC.getName());
+                    oldC.setType(newC.getType());
+
+                    em.merge(oldC);
+                    // Existing object with same ID, but we will add it to the table to use a similiar process for processing
+                    mCategories.put(oldC.getId(), oldC.getId());
+                }
+            }
+        }
+
+        return mCategories;
+    }
+
+    private Map<Long, Long> updateComments(List<Comment> comments,
+                                      Character strategy)
+            throws Exception {
+        Map<Long, Long> mComments = new HashMap<Long, Long>();
+
+        for (Comment newC : comments) {
+            Comment oldC = em.find(Comment.class, newC.getId());
+            if (oldC == null) {
+                Long importId, newId;
+
+                importId = newC.getId();
+                newC = em.merge(newC);
+                newId = newC.getId();
+
+                mComments.put(importId, newId);
+            } else {
+                if (!strategy.equals(Wcm.IMPORT.STRATEGY.UPDATE)) {
+                    oldC.setAuthor(newC.getAuthor());
+                    oldC.setAuthorEmail(newC.getAuthorEmail());
+                    oldC.setAuthorUrl(newC.getAuthorUrl());
+                    oldC.setContent(newC.getContent());
+                    oldC.setCreated(newC.getCreated());
+                    oldC.setStatus(newC.getStatus());
+
+                    em.merge(oldC);
+                    mComments.put(oldC.getId(), oldC.getId());
+                }
+            }
+        }
+
+        return mComments;
+    }
+
+    private Map<Long, Long> updatePosts(List<Post> posts,
+                                   Character strategy)
+            throws Exception {
+        Map<Long, Long> mPosts = new HashMap<Long, Long>();
+
+        for (Post newP : posts) {
+            Post oldP = em.find(Post.class, newP.getId());
+            if (oldP == null) {
+                Long importId, newId;
+
+                importId = newP.getId();
+                newP = em.merge(newP);
+                newId = newP.getId();
+
+                mPosts.put(importId, newId);
+            } else {
+                if (!strategy.equals(Wcm.IMPORT.STRATEGY.UPDATE)) {
+                    oldP.setAuthor(newP.getAuthor());
+                    oldP.setContent(newP.getContent());
+                    oldP.setCreated(newP.getCreated());
+                    oldP.setCommentsStatus(newP.getCommentsStatus());
+                    oldP.setExcerpt(newP.getExcerpt());
+                    oldP.setLocale(newP.getLocale());
+                    oldP.setModified(newP.getModified());
+                    oldP.setPostStatus(newP.getPostStatus());
+                    oldP.setTitle(newP.getTitle());
+                    oldP.setVersion(newP.getVersion());
+
+                    em.merge(oldP);
+                    mPosts.put(oldP.getId(), oldP.getId());
+                }
+            }
+        }
+
+        return mPosts;
+    }
+
+    private List<PostHistoryPK> updatePostsHistory(List<PostHistory> posts,
+                                          Character strategy,
+                                          Map<Long, Long> mPosts)
+            throws Exception {
+        List<PostHistoryPK> mPostsHistory = new ArrayList<PostHistoryPK>();
+
+        for (PostHistory newP : posts) {
+            // Update ID reference
+            Long newId = mPosts.get(newP.getId());
+            if (newId == null) newId = newP.getId();
+            newP.setId(newId);
+
+            PostHistoryPK pk = new PostHistoryPK();
+            pk.setId(newP.getId());
+            pk.setVersion(newP.getVersion());
+            PostHistory oldP = em.find(PostHistory.class, pk);
+            if (oldP == null) {
+                em.persist(newP);
+                mPostsHistory.add(pk);
+            } else {
+                if (!strategy.equals(Wcm.IMPORT.STRATEGY.UPDATE)) {
+                    oldP.setAuthor(newP.getAuthor());
+                    oldP.setContent(newP.getContent());
+                    oldP.setCreated(newP.getCreated());
+                    oldP.setDeleted(newP.getDeleted());
+                    oldP.setExcerpt(newP.getExcerpt());
+                    oldP.setLocale(newP.getLocale());
+                    oldP.setModified(newP.getModified());
+                    oldP.setPostStatus(newP.getPostStatus());
+                    oldP.setTitle(newP.getTitle());
+                    oldP.setVersion(newP.getVersion());
+
+                    em.merge(oldP);
+                    mPostsHistory.add(pk);
+                }
+            }
+        }
+
+        return mPostsHistory;
+    }
+
+    private List<RelationshipPK> updateRelationships(List<Relationship> relationships,
+                                           Character strategy,
+                                           Map<Long, Long> mPosts,
+                                           Map<Long, Long> mTemplates)
+            throws Exception {
+        List<RelationshipPK> mRelationships = new ArrayList<RelationshipPK>();
+
+        for (Relationship newR : relationships) {
+            if (newR.getType().equals(Wcm.RELATIONSHIP.POST)) {
+                newR.setOriginId(mPosts.get(newR.getOriginId()));
+                if (newR.getAliasId() != null) {
+                    newR.setAliasId(mPosts.get(newR.getAliasId()));
+                }
+            } else {
+                newR.setOriginId(mTemplates.get(newR.getOriginId()));
+                if (newR.getAliasId() != null) {
+                    newR.setAliasId(mTemplates.get(newR.getAliasId()));
+                }
+            }
+
+            RelationshipPK pk = new RelationshipPK();
+            pk.setKey(newR.getKey());
+            pk.setOriginId(newR.getOriginId());
+            pk.setType(newR.getType());
+            Relationship oldR = em.find(Relationship.class, pk);
+            if (oldR == null) {
+                em.persist(newR);
+                mRelationships.add(pk);
+            } else {
+                if (!strategy.equals(Wcm.IMPORT.STRATEGY.UPDATE)) {
+                    oldR.setKey(newR.getKey());
+                    oldR.setType(newR.getType());
+                    oldR.setAliasId(newR.getAliasId());
+                    oldR.setOriginId(newR.getOriginId());
+
+                    em.merge(oldR);
+                    mRelationships.add(pk);
+                }
+            }
+        }
+
+        return mRelationships;
+    }
+
+    private Map<Long, Long> updateSecurity(List<Acl> acls,
+                                      Character strategy)
+            throws Exception {
+        Map<Long, Long> mAcls = new HashMap<Long, Long>();
+
+        for (Acl newA : acls) {
+            Acl oldA = em.find(Acl.class, newA.getId());
+            if (oldA == null) {
+                Long importId, newId;
+
+                importId = newA.getId();
+                newA = em.merge(newA);
+                newId = newA.getId();
+
+                mAcls.put(importId, newId);
+            } else {
+                if (!strategy.equals(Wcm.IMPORT.STRATEGY.UPDATE)) {
+                    oldA.setPrincipal(newA.getPrincipal());
+                    oldA.setPermission(newA.getPermission());
+
+                    em.merge(oldA);
+                    mAcls.put(oldA.getId(), oldA.getId());
+                }
+            }
+        }
+        return mAcls;
+    }
+
+    private Map<Long, Long> updateTemplates(List<Template> templates,
+                                       Character strategy)
+            throws Exception {
+        Map<Long, Long> mTemplates = new HashMap<Long, Long>();
+
+        for (Template newT : templates) {
+            Template oldT = em.find(Template.class, newT.getId());
+            if (oldT == null) {
+                Long importId, newId;
+
+                importId = newT.getId();
+                newT = em.merge(newT);
+                newId = newT.getId();
+
+                mTemplates.put(importId, newId);
+            } else {
+                if (!strategy.equals(Wcm.IMPORT.STRATEGY.UPDATE)) {
+                    oldT.setCreated(newT.getCreated());
+                    oldT.setContent(newT.getContent());
+                    oldT.setLocale(newT.getLocale());
+                    oldT.setModified(newT.getModified());
+                    oldT.setName(newT.getName());
+                    oldT.setUser(newT.getUser());
+                    oldT.setVersion(newT.getVersion());
+
+                    em.merge(oldT);
+                    mTemplates.put(oldT.getId(), oldT.getId());
+                }
+            }
+        }
+
+        return mTemplates;
+    }
+
+    private List<TemplateHistoryPK> updateTemplatesHistory(List<TemplateHistory> templates,
+                                              Character strategy,
+                                              Map<Long, Long> mTemplates)
+            throws Exception {
+        List<TemplateHistoryPK> mTemplatesHistory = new ArrayList<TemplateHistoryPK>();
+
+        for (TemplateHistory newT : templates) {
+            // Update ID reference
+            Long newId = mTemplates.get(newT.getId());
+            if (newId == null) newId = newT.getId();
+            newT.setId(newId);
+
+            TemplateHistoryPK pk = new TemplateHistoryPK();
+            pk.setId(newT.getId());
+            pk.setVersion(newT.getVersion());
+            TemplateHistory oldT = em.find(TemplateHistory.class, pk);
+            if (oldT == null) {
+                em.persist(newT);
+                mTemplatesHistory.add(pk);
+            } else {
+                if (!strategy.equals(Wcm.IMPORT.STRATEGY.UPDATE)) {
+                    oldT.setCreated(newT.getCreated());
+                    oldT.setContent(newT.getContent());
+                    oldT.setDeleted(newT.getDeleted());
+                    oldT.setLocale(newT.getLocale());
+                    oldT.setModified(newT.getModified());
+                    oldT.setName(newT.getName());
+                    oldT.setUser(newT.getUser());
+                    oldT.setVersion(newT.getVersion());
+
+                    em.merge(oldT);
+                    mTemplatesHistory.add(pk);
+                }
+            }
+        }
+
+        return mTemplatesHistory;
+    }
+
+    private Map<Long, Long> updateUploads(List<Upload> uploads,
+                                     Character strategy,
+                                     String uploadsFolder,
+                                     String targetFolder)
+            throws Exception {
+        Map<Long, Long> mUploads = new HashMap<Long, Long>();
+
+        for (Upload newU : uploads) {
+            Upload oldU = em.find(Upload.class, newU.getId());
+            String tempPath = uploadsFolder + "/" + newU.getStoredName();
+            String newPath = targetFolder + "/" + newU.getStoredName();
+            if (oldU == null) {
+                Long importId, newId;
+
+                importId = newU.getId();
+                newU = em.merge(newU);
+                newId = newU.getId();
+
+                mUploads.put(importId, newId);
+                moveFile(tempPath, newPath);
+            } else {
+                if (!strategy.equals(Wcm.IMPORT.STRATEGY.UPDATE)) {
+                    oldU.setCreated(newU.getCreated());
+                    oldU.setDescription(newU.getDescription());
+                    oldU.setFileName(newU.getFileName());
+                    oldU.setMimeType(newU.getMimeType());
+                    oldU.setModified(newU.getModified());
+                    oldU.setStoredName(newU.getStoredName());
+                    oldU.setUser(newU.getUser());
+                    oldU.setVersion(newU.getVersion());
+
+                    em.merge(oldU);
+                    mUploads.put(oldU.getId(), oldU.getId());
+                    moveFile(tempPath, newPath);
+                }
+            }
+        }
+
+        return mUploads;
+    }
+
+    private List<UploadHistoryPK> updateUploadsHistory(List<UploadHistory> uploads,
+                                            Character strategy,
+                                            String uploadsFolder,
+                                            String targetFolder,
+                                            Map<Long, Long> mUploads)
+            throws Exception {
+        List<UploadHistoryPK> mUploadsHistory = new ArrayList<UploadHistoryPK>();
+
+        for (UploadHistory newU : uploads) {
+            // Update ID reference
+            Long newId = mUploads.get(newU.getId());
+            if (newId == null) newId = newU.getId();
+            newU.setId(newId);
+
+            UploadHistoryPK pk = new UploadHistoryPK();
+            pk.setId(newU.getId());
+            pk.setVersion(newU.getVersion());
+            UploadHistory oldU = em.find(UploadHistory.class, pk);
+            String tempPath = uploadsFolder + "/" + newU.getStoredName();
+            String newPath = targetFolder + "/" + newU.getStoredName();
+            if (oldU == null) {
+                em.persist(newU);
+                mUploadsHistory.add(pk);
+                moveFile(tempPath, newPath);
+            } else {
+                if (!strategy.equals(Wcm.IMPORT.STRATEGY.UPDATE)) {
+                    oldU.setCreated(newU.getCreated());
+                    oldU.setDeleted(newU.getDeleted());
+                    oldU.setDescription(newU.getDescription());
+                    oldU.setFileName(newU.getFileName());
+                    oldU.setMimeType(newU.getMimeType());
+                    oldU.setModified(newU.getModified());
+                    oldU.setStoredName(newU.getStoredName());
+                    oldU.setUser(newU.getUser());
+                    oldU.setVersion(newU.getVersion());
+
+                    em.merge(oldU);
+                    mUploadsHistory.add(pk);
+                    moveFile(tempPath, newPath);
+                }
+            }
+        }
+
+        return mUploadsHistory;
+    }
+
+    private void updateCategoriesParent(Map<Long, Long> categoriesParent,
+                                        Map<Long,Long> categoriesModified)
+            throws Exception {
+        if (categoriesParent == null || categoriesModified == null)
+            throw new IllegalArgumentException();
+
+        Set<Long> categories = categoriesParent.keySet();
+
+        for (Long catId : categories) {
+            Long parentId = categoriesParent.get(catId);
+            if (parentId != null && categoriesModified.get(catId) != null) {
+                // Convert old IDs to new IDs to link objects with parents
+                catId = categoriesModified.get(catId);
+                parentId = categoriesModified.get(parentId);
+                // Validates if current state is correct
+                Category cat = em.find(Category.class, catId);
+                if (cat.getParent() == null || !cat.getParent().getId().equals(parentId)) {
+                    Category parent = em.find(Category.class, parentId);
+                    cat.setParent(parent);
+                    em.merge(cat);
+                }
+            }
+        }
+    }
+
+    private void updateCategoriesPosts(List<ImportParser.CategoryPost> categoriesPosts,
+                                       Map<Long, Long> categoriesModified,
+                                       Map<Long, Long> postsModified)
+            throws Exception {
+        if (categoriesPosts == null || categoriesModified == null || postsModified == null)
+            throw new IllegalArgumentException();
+
+        for (ImportParser.CategoryPost catPost : categoriesPosts) {
+            Long catId = catPost.category;
+            Long postId = catPost.post;
+            if (categoriesModified.get(catId) != null || postsModified.get(postId) != null) {
+                // Convert old IDs to new IDs to link objects with parents
+                postId = postsModified.get(postId);
+                catId = categoriesModified.get(catId);
+
+                Post post = em.find(Post.class, postId);
+                Category cat = em.find(Category.class, catId);
+                if (!cat.getPosts().contains(post)) {
+                    post.getCategories().add(cat);
+                    cat.getPosts().add(post);
+                    em.merge(post);
+                    em.merge(cat);
+                }
+            }
+        }
+    }
+
+    private void updateCategoriesTemplates(List<ImportParser.CategoryTemplate> categoriesTemplates,
+                                           Map<Long, Long> categoriesModified,
+                                           Map<Long, Long> templatesModified)
+            throws Exception {
+        if (categoriesTemplates == null || categoriesModified == null || templatesModified == null)
+            throw new IllegalArgumentException();
+
+        for (ImportParser.CategoryTemplate catTemplate : categoriesTemplates) {
+            Long catId = catTemplate.category;
+            Long tempId = catTemplate.template;
+            if (categoriesModified.get(catId) != null || templatesModified.get(tempId) != null) {
+                // Convert old IDs to new IDs to link objects with parents
+                tempId = templatesModified.get(tempId);
+                catId = categoriesModified.get(catId);
+
+                Template temp = em.find(Template.class, tempId);
+                Category cat = em.find(Category.class, catId);
+                if (!cat.getTemplates().contains(temp)) {
+                    temp.getCategories().add(cat);
+                    cat.getTemplates().add(temp);
+                    em.merge(temp);
+                    em.merge(cat);
+                }
+            }
+        }
+
+    }
+
+    private void updateCategoriesUploads(List<ImportParser.CategoryUpload> categoriesUploads,
+                                         Map<Long, Long> categoriesModified,
+                                         Map<Long, Long> uploadsModified)
+            throws Exception {
+        if (categoriesUploads == null || categoriesModified == null || uploadsModified == null)
+            throw new IllegalArgumentException();
+
+        for (ImportParser.CategoryUpload catUpload : categoriesUploads) {
+            Long catId = catUpload.category;
+            Long upId = catUpload.upload;
+            if (categoriesModified.get(catId) != null || uploadsModified.get(upId) != null) {
+                // Convert old IDs to new IDs to link objects with parents
+                upId = uploadsModified.get(upId);
+                catId = categoriesModified.get(catId);
+
+                Upload upload = em.find(Upload.class, upId);
+                Category cat = em.find(Category.class, catId);
+                if (!cat.getUploads().contains(upload)) {
+                    upload.getCategories().add(cat);
+                    cat.getUploads().add(upload);
+                    em.merge(upload);
+                    em.merge(cat);
+                }
+            }
+        }
+
+    }
+
+    private void updateCommentsPost(Map<Long, Long> commentsPost,
+                                    Map<Long, Long> commentsModified,
+                                    Map<Long, Long> postsModified)
+            throws Exception {
+        if (commentsPost == null || commentsModified == null || postsModified == null)
+            throw new IllegalArgumentException();
+
+        Set<Long> keys = commentsPost.keySet();
+        for (Long commentId : keys) {
+            Long postId = commentsPost.get(commentId);
+            if (commentsModified.get(commentId) != null|| postsModified.get(postId) != null) {
+                // Convert old IDs to new IDs to link objects with parents
+                commentId = commentsModified.get(commentId);
+                postId = postsModified.get(postId);
+
+                Post post = em.find(Post.class, postId);
+                Comment comment = em.find(Comment.class, commentId);
+                if (!post.getComments().contains(comment)) {
+                    post.getComments().add(comment);
+                    comment.setPost(post);
+                    em.merge(post);
+                    em.merge(comment);
+                }
+            }
+        }
+    }
+
+    private void updateAclCategories(Map<Long, Long> aclCategories,
+                                     Map<Long, Long> aclsModified,
+                                     Map<Long, Long> categoriesModified)
+            throws Exception {
+        if (aclCategories == null || aclsModified == null || categoriesModified == null)
+            throw new IllegalArgumentException();
+
+        Set<Long> keys = aclCategories.keySet();
+        for (Long aclId : keys) {
+            Long categoryId = aclCategories.get(aclId);
+            if (aclsModified.get(aclId) != null || categoriesModified.get(categoryId) != null) {
+                // Convert old IDs to new IDs to link objects with parents
+                aclId = aclsModified.get(aclId);
+                categoryId = categoriesModified.get(categoryId);
+
+                Acl acl = em.find(Acl.class, aclId);
+                Category category = em.find(Category.class, categoryId);
+                if (!category.getAcls().contains(acl)) {
+                    category.getAcls().add(acl);
+                    acl.setCategory(category);
+                    em.merge(category);
+                    em.merge(acl);
+                }
+            }
+        }
+
+    }
+
+    private void updateAclPosts(Map<Long, Long> aclPosts,
+                                Map<Long, Long> aclsModified,
+                                Map<Long, Long> postsModified)
+            throws Exception {
+        if (aclPosts == null || aclsModified == null || postsModified == null)
+            throw new IllegalArgumentException();
+
+        Set<Long> keys = aclPosts.keySet();
+        for (Long aclId : keys) {
+            Long postId = aclPosts.get(aclId);
+            if (aclsModified.get(aclId) != null || postsModified.get(postId) != null) {
+                // Convert old IDs to new IDs to link objects with parents
+                aclId = aclsModified.get(aclId);
+                postId = postsModified.get(postId);
+
+                Acl acl = em.find(Acl.class, aclId);
+                Post post = em.find(Post.class, postId);
+                if (!post.getAcls().contains(acl)) {
+                    post.getAcls().add(acl);
+                    acl.setPost(post);
+                    em.merge(post);
+                    em.merge(acl);
+                }
+            }
+        }
+    }
+
+    private void updateAclUploads(Map<Long, Long> aclUploads,
+                                  Map<Long, Long> aclsModified,
+                                  Map<Long, Long> uploadsModified)
+            throws Exception {
+        if (aclUploads == null || aclsModified == null || uploadsModified == null)
+            throw new IllegalArgumentException();
+
+        Set<Long> keys = aclUploads.keySet();
+        for (Long aclId : keys) {
+            Long uploadId = aclUploads.get(aclId);
+            if (aclsModified.get(aclId) != null || uploadsModified.get(uploadId) != null) {
+                // Convert old IDs to new IDs to link objects with parents
+                aclId = aclsModified.get(aclId);
+                uploadId = uploadsModified.get(uploadId);
+
+                Acl acl = em.find(Acl.class, aclId);
+                Upload upload = em.find(Upload.class, uploadId);
+                if (!upload.getAcls().contains(acl)) {
+                    upload.getAcls().add(acl);
+                    acl.setUpload(upload);
+                    em.merge(upload);
+                    em.merge(acl);
+                }
+            }
+        }
+    }
+
+    private void updateUploadsLinks(Map<Long, Long> mUploads)
+            throws Exception {
+        if (mUploads == null || mUploads.size() == 0) {
+            return;
+        }
+        // Update Posts
+        List<Post> rPosts = em.createNamedQuery("listAllPosts", Post.class).getResultList();
+        for (Post p : rPosts) {
+            if (updateUploadsLinks(p, mUploads)) {
+                em.merge(p);
+            }
+        }
+        // Update PostsHistory
+        List<PostHistory> rPostsHistory = em.createNamedQuery("listAllPostHistory", PostHistory.class).getResultList();
+        for (PostHistory p : rPostsHistory) {
+            if (updateUploadsLinks(p, mUploads)) {
+                em.merge(p);
+            }
+        }
+        // Update Templates
+        List<Template> rTemplates = em.createNamedQuery("listAllTemplates", Template.class).getResultList();
+        for (Template t : rTemplates) {
+            if (updateUploadsLinks(t, mUploads)) {
+                em.merge(t);
+            }
+        }
+        // Update TemplatesHistory
+        List<TemplateHistory> rTemplatesHistory = em.createNamedQuery("listAllTemplateHistory", TemplateHistory.class).getResultList();
+        for (TemplateHistory t : rTemplatesHistory) {
+            if (updateUploadsLinks(t, mUploads)) {
+                em.merge(t);
+            }
+        }
+    }
+
+    private void moveFile(String oldPath, String newPath) {
+        try {
+            File oldF = new File(oldPath);
+            File newF = new File(newPath);
+            if (!newF.exists()) {
+                FileUtils.moveFile(oldF, newF);
+            }
+        } catch (Exception e) {
+            log.warning("Error trying to move upload: " + oldPath + " to " + newPath + ". Msg: " + e.getMessage()) ;
+        }
     }
 
     @Schedule(hour="*", minute = "*/" + Wcm.TIMEOUTS.TIMER)
@@ -2015,5 +2799,149 @@ public class WcmServiceImpl implements WcmService {
         if (path == null || path.length() == 0) return path;
         if (path.indexOf("/") == -1) return "";
         return path.substring(0, path.lastIndexOf("/"));
+    }
+
+    /*
+     * Aux function to unzip in a folder
+     */
+    private void unzip(ZipInputStream zis, File output) throws IOException {
+        if (zis == null || output == null) return;
+        ZipEntry entry;
+        OutputStream os = null;
+        try {
+            while ((entry = zis.getNextEntry()) != null) {
+                File entryFile = new File(output, entry.getName());
+                if (entry.isDirectory()) {
+                    if (!entryFile.exists()) {
+                        entryFile.mkdirs();
+                    }
+                } else {
+                    if (entryFile.getParentFile() != null && !entryFile.getParentFile().exists()) {
+                        entryFile.getParentFile().mkdirs();
+                    }
+                    if (!entryFile.exists()) {
+                        entryFile.createNewFile();
+                    }
+                    os = new FileOutputStream(entryFile);
+                    IOUtils.copy(zis, os);
+                    os.close();
+                }
+            }
+            zis.close();
+        } finally {
+            IOUtils.closeQuietly(zis);
+            IOUtils.closeQuietly(os);
+        }
+    }
+
+    private boolean updateUploadsLinks(Object o, Map<Long, Long> mUploads) {
+        if (o instanceof Post) {
+            Post p = (Post)o;
+            String modified = changeLinks(p.getContent(), mUploads);
+            if (modified != null) {
+                p.setContent(modified);
+                return true;
+            } else {
+                return false;
+            }
+        } else if (o instanceof PostHistory) {
+            PostHistory p = (PostHistory)o;
+            String modified = changeLinks(p.getContent(), mUploads);
+            if (modified != null) {
+                p.setContent(modified);
+                return true;
+            } else {
+                return false;
+            }
+        } else if (o instanceof Template) {
+            Template t = (Template)o;
+            String modified = changeLinks(t.getContent(), mUploads);
+            if (modified != null) {
+                t.setContent(modified);
+                return true;
+            } else {
+                return false;
+            }
+        } else if (o instanceof TemplateHistory) {
+            TemplateHistory t = (TemplateHistory)o;
+            String modified = changeLinks(t.getContent(), mUploads);
+            if (modified != null) {
+                t.setContent(modified);
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    private String changeLinks(String doc, Map<Long, Long> mUploads) {
+        if (doc == null || doc.length() == 0) {
+            return doc;
+        }
+
+        int length = doc.length();
+        int i = 0;
+        int startToken = -1;
+        int finishToken = -1;
+        boolean finish = false;
+        boolean modified = false;
+        StringBuilder output = new StringBuilder();
+
+        while (!finish) {
+            boolean found = false;
+            Character ch = doc.charAt(i);
+            // Checks if there is a pattern under present position
+            if (ch.equals('r') &&
+                ((i+1) < length) && doc.charAt(i+1) == 's' &&
+                ((i+2) < length) && doc.charAt(i+2) == '/' &&
+                ((i+3) < length) && doc.charAt(i+3) == 'u' &&
+                ((i+4) < length) && doc.charAt(i+4) == '/') {
+                // Search end of token
+                boolean numbers = true;
+                startToken = i;
+                finishToken = i + 5;
+                while (numbers) {
+                    if (finishToken < length &&
+                        doc.charAt(finishToken) >= '0' &&
+                        doc.charAt(finishToken) <= '9') {
+                        finishToken++;
+                    } else {
+                        numbers = false;
+                    }
+                }
+                if (finishToken < length) {
+                    String token = doc.substring(startToken, finishToken);
+                    int index = -1;
+                    try {
+                        index = new Integer(token.substring(5, token.length()));
+                    } catch (Exception e) {
+                        // Not a number
+                    }
+                    if (index > -1) {
+                        Long newIndex = mUploads.get(new Long(index));
+                        if (newIndex != null) {
+                            output.append("rs/u/" + newIndex);
+                            found = true;
+                            modified = true;
+                            i = finishToken - 1; // To read end quotes
+                        }
+                    }
+                }
+            }
+            if (!found) {
+                output.append(ch);
+            }
+            i++;
+            if (i >= length) {
+                finish = true;
+            }
+        }
+
+        if (modified) {
+            return output.toString();
+        } else {
+            return null;
+        }
     }
 }

@@ -331,6 +331,9 @@ public class EditorPortlet extends GenericPortlet {
             } else if (action.equals(Wcm.ACTIONS.PUBLISH_POSTS))  {
                 // Publish posts action
                 view = posts.actionPublishPosts(request, response, userWcm);
+            } else if (action.equals(Wcm.ACTIONS.NEW_IMPORT)) {
+                // New Import
+                view = manager.actionNewImport(request, response, userWcm);
             } else {
                 // View parameter doesn't modified by actions
             }

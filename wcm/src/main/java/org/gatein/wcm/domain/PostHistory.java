@@ -51,7 +51,8 @@ import javax.persistence.TemporalType;
 @NamedQueries({
         @NamedQuery(name = "maxPostVersion", query = "select max(ph.version) from PostHistory ph where ph.id = :postid"),
         @NamedQuery(name = "versionsPost", query = "select ph.version from PostHistory ph where ph.id = :postid order by ph.version desc"),
-        @NamedQuery(name = "listAllPostHistory", query = "from PostHistory ph order by ph.id")
+        @NamedQuery(name = "listAllPostHistory", query = "from PostHistory ph order by ph.id"),
+        @NamedQuery(name = "deleteAllPostHistory", query = "delete from PostHistory ph")
 })
 final public class PostHistory implements Serializable {
 
