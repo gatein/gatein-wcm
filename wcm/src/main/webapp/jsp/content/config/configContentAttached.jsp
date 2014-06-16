@@ -39,7 +39,7 @@
         %>
         <li id="${n}attached<%= c.getId()%>_C"><span class="glyphicon glyphicon-tags margin-right margin-top"></span> <%= c.getName() %> <a href="#" onclick="deleteAttachment${n}('<%= c.getId()%>_C');"><span class="glyphicon glyphicon-remove middle"></span></a></li>
         <%
-                } else {
+                } else if (o instanceof Post) {
                     Post p = (Post)o;
         %>
         <li id="${n}attached<%= p.getId()%>_P"><span class="glyphicon glyphicon-file margin-right margin-top"></span> <%= p.getTitle() %> <a href="#" onclick="deleteAttachment${n}('<%= p.getId()%>_P');"><span class="glyphicon glyphicon-remove middle"></span></a></li>
