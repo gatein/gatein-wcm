@@ -36,7 +36,7 @@ import org.gatein.wcm.api.domain.Comment;
 import org.gatein.wcm.api.domain.Post;
 import org.gatein.wcm.api.domain.Upload;
 import org.gatein.wcm.domain.UserWcm;
-import org.gatein.wcm.portlet.util.ViewMetadata;
+import org.gatein.wcm.portlet.editor.views.ViewMetadata;
 import org.gatein.wcm.services.PortalService;
 import org.gatein.wcm.services.WcmService;
 import org.gatein.wcm.api.services.WcmApiService;

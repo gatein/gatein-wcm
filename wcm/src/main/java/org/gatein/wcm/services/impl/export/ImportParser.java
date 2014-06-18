@@ -43,7 +43,7 @@ import org.gatein.wcm.domain.Template;
 import org.gatein.wcm.domain.TemplateHistory;
 import org.gatein.wcm.domain.Upload;
 import org.gatein.wcm.domain.UploadHistory;
-import org.gatein.wcm.portlet.util.ParseDates;
+import org.gatein.wcm.util.ParseDates;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;

@@ -22,7 +22,7 @@
      * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
      */
 %>
-<%@ page import="org.gatein.wcm.portlet.util.ViewMetadata" %>
+<%@ page import="org.gatein.wcm.portlet.editor.views.ViewMetadata" %>
 <%@ page import="java.util.Set" %>
 <script type="text/javascript" src="<%=renderResponse.encodeURL(renderRequest.getContextPath() + "/js/posts/postsActions.js") %>"></script>
 <div class="wcm-posts-actions">

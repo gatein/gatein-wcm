@@ -30,7 +30,6 @@ import org.gatein.wcm.domain.Category;
 import org.gatein.wcm.domain.Relationship;
 import org.gatein.wcm.domain.Template;
 import org.gatein.wcm.domain.UserWcm;
-import org.gatein.wcm.portlet.util.ViewMetadata;
 import org.gatein.wcm.services.PortalService;
 import org.gatein.wcm.services.WcmService;
 

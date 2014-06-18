@@ -21,7 +21,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.gatein.wcm.portlet.util;
+package org.gatein.wcm.portlet.editor.views;
 
 import org.gatein.wcm.Wcm;
 import org.gatein.wcm.domain.Category;

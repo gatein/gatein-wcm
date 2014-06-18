@@ -24,7 +24,7 @@
 %>
 <%@ page import="org.gatein.wcm.domain.Category" %>
 <%@ page import="java.util.List" %>
-<%@ page import="org.gatein.wcm.portlet.util.ViewMetadata" %>
+<%@ page import="org.gatein.wcm.portlet.editor.views.ViewMetadata" %>
 <%@include file="../imports.jsp"%>
 <%@include file="../urls.jsp"%>
 

@@ -25,7 +25,7 @@ package org.gatein.wcm.portlet.content.render;
 
 import org.gatein.wcm.Wcm;
 import org.gatein.wcm.domain.*;
-import org.gatein.wcm.portlet.util.ParseDates;
+import org.gatein.wcm.util.ParseDates;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -1386,7 +1386,7 @@ public class WcmTags {
     public void replaceAll(StringBuilder target, String oldData, String newData) {
         if (target == null || oldData == null || newData == null) return;
         int i = target.indexOf(oldData);
-        while (i > 0) {
+        while (i > -1) {
             target.replace(i, i + oldData.length(), newData);
             i = target.indexOf(oldData);
         }
@@ -1396,7 +1396,7 @@ public class WcmTags {
         if (target == null || oldData == null || newData == null) return;
         String strOldData = oldData.toString();
         int i = target.indexOf(strOldData);
-        while (i > 0) {
+        while (i > -1) {
             target.replace(i, i + oldData.length(), newData.toString());
             i = target.indexOf(strOldData);
         }
@@ -1406,7 +1406,7 @@ public class WcmTags {
         if (target == null || oldData == null || newData == null) return;
         String strOldData = oldData.toString();
         int i = target.indexOf(strOldData);
-        while (i > 0) {
+        while (i > -1) {
             target.replace(i, i + oldData.length(), newData);
             i = target.indexOf(strOldData);
         }

@@ -27,7 +27,6 @@ import org.gatein.wcm.Wcm;
 import org.gatein.wcm.WcmException;
 import org.gatein.wcm.WcmLockException;
 import org.gatein.wcm.domain.*;
-import org.gatein.wcm.portlet.util.ViewMetadata;
 import org.gatein.wcm.services.PortalService;
 import org.gatein.wcm.services.WcmService;
 

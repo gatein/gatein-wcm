@@ -84,7 +84,11 @@
       <artifactId>wcm-api</artifactId>
       <version>${version.wcm}</version>
     </dependency>
-
+    <dependency>
+      <groupId>jmimemagic</groupId>
+      <artifactId>jmimemagic</artifactId>
+      <version>${version.jmimemagic}</version>
+    </dependency>
   </dependencies>
 
   <build>

@@ -25,7 +25,7 @@
 <%@ page import="org.gatein.wcm.domain.Category" %>
 <%@ page import="org.gatein.wcm.domain.UserWcm" %>
 <%@ page import="java.util.List" %>
-<%@ page import="org.gatein.wcm.portlet.util.ViewMetadata" %>
+<%@ page import="org.gatein.wcm.portlet.editor.views.ViewMetadata" %>
 <%@include file="../../imports.jsp"%>
 <portlet:resourceURL var="addCommentPost">
     <portlet:param name="event" value="<%= Wcm.EVENTS.ADD_COMMENT_POST %>" />

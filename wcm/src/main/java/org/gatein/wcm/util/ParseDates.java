@@ -21,7 +21,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.gatein.wcm.portlet.util;
+package org.gatein.wcm.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

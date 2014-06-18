@@ -23,7 +23,7 @@
      */
 %>
 <%@ page import="org.gatein.wcm.domain.Post" %>
-<%@ page import="org.gatein.wcm.portlet.util.ParseDates" %>
+<%@ page import="org.gatein.wcm.util.ParseDates" %>
 <%@ page import="java.util.List" %>
 <%@ page import="org.gatein.wcm.domain.Lock" %>
 <%@ page import="java.util.Map" %>

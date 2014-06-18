@@ -39,12 +39,8 @@ import java.util.zip.ZipInputStream;
 
 import javax.ejb.Schedule;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -53,7 +49,8 @@ import org.gatein.wcm.WcmAuthorizationException;
 import org.gatein.wcm.WcmException;
 import org.gatein.wcm.WcmLockException;
 import org.gatein.wcm.domain.*;
-import org.gatein.wcm.portlet.util.ParseDates;
+import org.gatein.wcm.util.FileAux;
+import org.gatein.wcm.util.ParseDates;
 import org.gatein.wcm.services.WcmService;
 import org.gatein.wcm.services.impl.export.ExportBuilder;
 import org.gatein.wcm.services.impl.export.ImportParser;
@@ -334,7 +331,7 @@ public class WcmServiceImpl implements WcmService {
         if (user == null) return null;
         if (path == null || path.length() == 0) path = "/";
         try {
-            String name = child(path);
+            String name = FileAux.child(path);
             List<Category> parents = null;
             Category parent = null;
             if (name != null && name.length() > 0) {
@@ -378,7 +375,7 @@ public class WcmServiceImpl implements WcmService {
         if (path == null || path.length() == 0) path = "/";
         Category output = null;
         try {
-            String name = child(path);
+            String name = FileAux.child(path);
             List<Category> candidates = null;
             if (name != null && name.length() > 0) {
                 candidates = em.createNamedQuery("listCategoriesName", Category.class)
@@ -402,11 +399,11 @@ public class WcmServiceImpl implements WcmService {
 
     private boolean hasPath(Category c, String path) {
         if (path == null || path.length() == 0) return false;
-        if (c.getName().equals(child(path))) {
-            if (c.getParent() == null && parent(path).length() == 0) {
+        if (c.getName().equals(FileAux.child(path))) {
+            if (c.getParent() == null && FileAux.parent(path).length() == 0) {
                 return true;
             } else {
-                return hasPath(c.getParent(), parent(path));
+                return hasPath(c.getParent(), FileAux.parent(path));
             }
         } else {
             return false;
@@ -2017,7 +2014,7 @@ public class WcmServiceImpl implements WcmService {
             output.mkdirs();
         }
         try {
-            unzip(new ZipInputStream(importFile), output);
+            FileAux.unzip(new ZipInputStream(importFile), output);
         } catch (Exception e) {
             throw new WcmException("Error extracting file " + e.getMessage());
         }
@@ -2082,6 +2079,8 @@ public class WcmServiceImpl implements WcmService {
             updateAclUploads(importParser.getAclsUploads(), mAcls, mUploads);
 
             updateUploadsLinks(mUploads);
+            updateFilesUploadsLinks(targetFolder, mUploads);
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new WcmException("Error upading repository " + e.getMessage());
@@ -2434,7 +2433,7 @@ public class WcmServiceImpl implements WcmService {
                 newId = newU.getId();
 
                 mUploads.put(importId, newId);
-                moveFile(tempPath, newPath);
+                FileAux.moveFile(tempPath, newPath);
             } else {
                 if (!strategy.equals(Wcm.IMPORT.STRATEGY.UPDATE)) {
                     oldU.setCreated(newU.getCreated());
@@ -2448,7 +2447,7 @@ public class WcmServiceImpl implements WcmService {
 
                     em.merge(oldU);
                     mUploads.put(oldU.getId(), oldU.getId());
-                    moveFile(tempPath, newPath);
+                    FileAux.moveFile(tempPath, newPath);
                 }
             }
         }
@@ -2479,7 +2478,7 @@ public class WcmServiceImpl implements WcmService {
             if (oldU == null) {
                 em.persist(newU);
                 mUploadsHistory.add(pk);
-                moveFile(tempPath, newPath);
+                FileAux.moveFile(tempPath, newPath);
             } else {
                 if (!strategy.equals(Wcm.IMPORT.STRATEGY.UPDATE)) {
                     oldU.setCreated(newU.getCreated());
@@ -2494,7 +2493,7 @@ public class WcmServiceImpl implements WcmService {
 
                     em.merge(oldU);
                     mUploadsHistory.add(pk);
-                    moveFile(tempPath, newPath);
+                    FileAux.moveFile(tempPath, newPath);
                 }
             }
         }
@@ -2754,18 +2753,6 @@ public class WcmServiceImpl implements WcmService {
         }
     }
 
-    private void moveFile(String oldPath, String newPath) {
-        try {
-            File oldF = new File(oldPath);
-            File newF = new File(newPath);
-            if (!newF.exists()) {
-                FileUtils.moveFile(oldF, newF);
-            }
-        } catch (Exception e) {
-            log.warning("Error trying to move upload: " + oldPath + " to " + newPath + ". Msg: " + e.getMessage()) ;
-        }
-    }
-
     @Schedule(hour="*", minute = "*/" + Wcm.TIMEOUTS.TIMER)
     void checkUnlocks() {
         try {
@@ -2786,59 +2773,11 @@ public class WcmServiceImpl implements WcmService {
         }
     }
 
-    /*
-     *  Aux functions to extract path for categories
-     */
-    private String child(String path) {
-        if (path == null || path.length() == 0) return path;
-        if (path.indexOf("/") == -1) return path;
-        return path.substring(path.lastIndexOf("/") + 1);
-    }
-
-    private String parent(String path) {
-        if (path == null || path.length() == 0) return path;
-        if (path.indexOf("/") == -1) return "";
-        return path.substring(0, path.lastIndexOf("/"));
-    }
-
-    /*
-     * Aux function to unzip in a folder
-     */
-    private void unzip(ZipInputStream zis, File output) throws IOException {
-        if (zis == null || output == null) return;
-        ZipEntry entry;
-        OutputStream os = null;
-        try {
-            while ((entry = zis.getNextEntry()) != null) {
-                File entryFile = new File(output, entry.getName());
-                if (entry.isDirectory()) {
-                    if (!entryFile.exists()) {
-                        entryFile.mkdirs();
-                    }
-                } else {
-                    if (entryFile.getParentFile() != null && !entryFile.getParentFile().exists()) {
-                        entryFile.getParentFile().mkdirs();
-                    }
-                    if (!entryFile.exists()) {
-                        entryFile.createNewFile();
-                    }
-                    os = new FileOutputStream(entryFile);
-                    IOUtils.copy(zis, os);
-                    os.close();
-                }
-            }
-            zis.close();
-        } finally {
-            IOUtils.closeQuietly(zis);
-            IOUtils.closeQuietly(os);
-        }
-    }
-
     private boolean updateUploadsLinks(Object o, Map<Long, Long> mUploads) {
         if (o instanceof Post) {
             Post p = (Post)o;
-            String modified = changeLinks(p.getContent(), mUploads);
-            if (modified != null) {
+            String modified = FileAux.changeLinks(p.getContent(), mUploads);
+            if (modified != null && modified.length() > 0) {
                 p.setContent(modified);
                 return true;
             } else {
@@ -2846,8 +2785,8 @@ public class WcmServiceImpl implements WcmService {
             }
         } else if (o instanceof PostHistory) {
             PostHistory p = (PostHistory)o;
-            String modified = changeLinks(p.getContent(), mUploads);
-            if (modified != null) {
+            String modified = FileAux.changeLinks(p.getContent(), mUploads);
+            if (modified != null && modified.length() > 0) {
                 p.setContent(modified);
                 return true;
             } else {
@@ -2855,8 +2794,8 @@ public class WcmServiceImpl implements WcmService {
             }
         } else if (o instanceof Template) {
             Template t = (Template)o;
-            String modified = changeLinks(t.getContent(), mUploads);
-            if (modified != null) {
+            String modified = FileAux.changeLinks(t.getContent(), mUploads);
+            if (modified != null && modified.length() > 0) {
                 t.setContent(modified);
                 return true;
             } else {
@@ -2864,8 +2803,8 @@ public class WcmServiceImpl implements WcmService {
             }
         } else if (o instanceof TemplateHistory) {
             TemplateHistory t = (TemplateHistory)o;
-            String modified = changeLinks(t.getContent(), mUploads);
-            if (modified != null) {
+            String modified = FileAux.changeLinks(t.getContent(), mUploads);
+            if (modified != null && modified.length() > 0) {
                 t.setContent(modified);
                 return true;
             } else {
@@ -2875,73 +2814,29 @@ public class WcmServiceImpl implements WcmService {
         return false;
     }
 
-    private String changeLinks(String doc, Map<Long, Long> mUploads) {
-        if (doc == null || doc.length() == 0) {
-            return doc;
-        }
+    private void updateFilesUploadsLinks(String targetFolder, Map<Long, Long> mUploads) {
 
-        int length = doc.length();
-        int i = 0;
-        int startToken = -1;
-        int finishToken = -1;
-        boolean finish = false;
-        boolean modified = false;
-        StringBuilder output = new StringBuilder();
+        if (targetFolder == null || targetFolder.length() == 0) return;
 
-        while (!finish) {
-            boolean found = false;
-            Character ch = doc.charAt(i);
-            // Checks if there is a pattern under present position
-            if (ch.equals('r') &&
-                ((i+1) < length) && doc.charAt(i+1) == 's' &&
-                ((i+2) < length) && doc.charAt(i+2) == '/' &&
-                ((i+3) < length) && doc.charAt(i+3) == 'u' &&
-                ((i+4) < length) && doc.charAt(i+4) == '/') {
-                // Search end of token
-                boolean numbers = true;
-                startToken = i;
-                finishToken = i + 5;
-                while (numbers) {
-                    if (finishToken < length &&
-                        doc.charAt(finishToken) >= '0' &&
-                        doc.charAt(finishToken) <= '9') {
-                        finishToken++;
-                    } else {
-                        numbers = false;
-                    }
-                }
-                if (finishToken < length) {
-                    String token = doc.substring(startToken, finishToken);
-                    int index = -1;
-                    try {
-                        index = new Integer(token.substring(5, token.length()));
-                    } catch (Exception e) {
-                        // Not a number
-                    }
-                    if (index > -1) {
-                        Long newIndex = mUploads.get(new Long(index));
-                        if (newIndex != null) {
-                            output.append("rs/u/" + newIndex);
-                            found = true;
-                            modified = true;
-                            i = finishToken - 1; // To read end quotes
-                        }
-                    }
+        File dir = new File(targetFolder);
+        if (!dir.isDirectory()) return;
+
+        File[] files = dir.listFiles();
+        for (File f : files) {
+            if (FileAux.isText(f)) {
+                // Update links
+                String path = f.getAbsolutePath();
+                String tmpPath = path + "." + UUID.randomUUID().toString();
+                File tmpFile = new File(tmpPath);
+                boolean result = FileAux.changeLinksOnFile(f, tmpFile, mUploads);
+                if (result) {
+                    f.delete();
+                    FileAux.moveFile(tmpPath, path);
+                } else {
+                    tmpFile.delete();
                 }
             }
-            if (!found) {
-                output.append(ch);
-            }
-            i++;
-            if (i >= length) {
-                finish = true;
-            }
-        }
-
-        if (modified) {
-            return output.toString();
-        } else {
-            return null;
         }
     }
+
 }

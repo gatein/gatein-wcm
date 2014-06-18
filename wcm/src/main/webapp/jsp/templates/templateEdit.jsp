@@ -23,7 +23,7 @@
      */
 %>
 <%@ page import="org.gatein.wcm.domain.Template" %>
-<%@ page import="org.gatein.wcm.portlet.util.ViewMetadata" %>
+<%@ page import="org.gatein.wcm.portlet.editor.views.ViewMetadata" %>
 <%@ page import="org.gatein.wcm.domain.Category" %>
 <%@ page import="java.util.List" %>
 <%@include file="../imports.jsp"%>

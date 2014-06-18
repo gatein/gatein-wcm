@@ -23,7 +23,7 @@
      */
 %>
 <%@ page import="org.gatein.wcm.domain.Upload" %>
-<%@ page import="org.gatein.wcm.portlet.util.ParseDates" %>
+<%@ page import="org.gatein.wcm.util.ParseDates" %>
 <%@include file="../imports.jsp"%>
 <%@include file="../urls.jsp"%>
 
