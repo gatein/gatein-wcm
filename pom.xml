@@ -10,16 +10,19 @@
   <properties>
     <version.wcm>2.2.0-SNAPSHOT</version.wcm>
     <version.javaee>1.0.0.Final</version.javaee>
-    <version.jboss.gatein.bom>1.0.1.Final</version.jboss.gatein.bom>
+    <version.jboss.gatein.bom>1.0.3.Final</version.jboss.gatein.bom>
 
     <version.junit>4.8.1</version.junit>
     <version.javaee-api>6.0</version.javaee-api>
     <version.pc-portlet>2.4.1.Final</version.pc-portlet>
+    <version.pc-federation>2.5.1.Final</version.pc-federation>
     <version.exo.kernel.container>2.4.4-GA</version.exo.kernel.container>
     <version.exo.core.component.organization.api>2.5.4-GA</version.exo.core.component.organization.api>
+    <version.exo.portal.component>3.8.2.Final</version.exo.portal.component>
+    <version.gatein-api>1.1.0.Final</version.gatein-api>
     <version.commons-fileupload>1.2.1</version.commons-fileupload>
     <version.commons-io>2.4</version.commons-io>
-    <version.jmimemagic>0.1.2</version.jmimemagic>
+    <version.commons-common>2.2.2.Final</version.commons-common>
 
     <version.maven-compiler-plugin>2.3.2</version.maven-compiler-plugin>
     <version.source>1.7</version.source>

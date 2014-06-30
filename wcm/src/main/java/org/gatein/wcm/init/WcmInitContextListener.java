@@ -60,6 +60,11 @@ public class WcmInitContextListener implements ServletContextListener {
             System.setProperty(name, value);
             log.info("Setting " + name + " = " + value);
         }
+
+        if (new Boolean(Wcm.INSTALL.AUTO)) {
+            WcmGateInConfigureService.initGateInConfiguration();
+        }
+
     }
 
     /*

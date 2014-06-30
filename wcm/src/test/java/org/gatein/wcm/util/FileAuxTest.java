@@ -48,6 +48,11 @@ public class FileAuxTest {
         String path = testReplaceFile.getPath();
         File f = new File(path);
         assertTrue(FileAux.isText(f));
+
+        URL testBinaryFile = getClass().getResource("/test-binary-file");
+        path = testBinaryFile.getPath();
+        f = new File(path);
+        assertFalse(FileAux.isText(f));
     }
 
     @Test

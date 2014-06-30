@@ -36,10 +36,32 @@ public interface Wcm {
     static final String CONFIGURATION_FILE = "wcm.properties";
 
     /**
-     * Defines relationship between GateIn user's groups and LW WCM subsystem.
-     * - There is a main wcm group, for example: /wcm, all users under this group has access to LW WCM subsystem.
-     * - Users with MANAGER membership in /wcm has administrator role in LW WCM subsystem.
-     * - Administrator role allows to manage template under LW WCM subsystem.
+     * This flag tells wcm.war application to create:
+     * - wcm groups
+     * - register wcm application
+     * - define wcm group navigation
+     */
+    interface INSTALL {
+        static final String AUTO = (System.getProperty("wcm.install.auto") == null ? "false" : (System.getProperty("wcm.install.auto").equals("true") ? "true" : "false") );
+    }
+
+    /**
+     * Defines constants about wcm.war application to automate configuration into GateIn
+     */
+    interface APPS {
+        static final String NAME = (System.getProperty("wcm.apps.name") == null ? "wcm" : System.getProperty("wcm.apps.name"));
+        static final String CONTENT = (System.getProperty("wcm.apps.content") == null ? "WcmContent" : System.getProperty("wcm.apps.content"));
+        static final String CONTENT_DISPLAY = (System.getProperty("wcm.apps.content.display") == null ? "WCM Content" : System.getProperty("wcm.apps.content.display"));
+        static final String EDITOR = (System.getProperty("wcm.apps.editor") == null ? "WcmEditor" : System.getProperty("wcm.apps.editor"));
+        static final String EDITOR_DISPLAY = (System.getProperty("wcm.apps.editor") == null ? "WCM Editor" : System.getProperty("wcm.apps.editor"));
+        static final String CATEGORY = (System.getProperty("wcm.apps.category") == null ? "WCM" : System.getProperty("wcm.apps.category"));
+    }
+
+    /**
+     * Defines relationship between GateIn user's groups and WCM subsystem.
+     * - There is a main wcm group, for example: /wcm, all users under this group has access to WCM subsystem.
+     * - Users with MANAGER membership in /wcm has administrator role in WCM subsystem.
+     * - Administrator role allows to manage template under WCM subsystem.
      * - Under /wcm group we can define other groups, like /wcm/theatre, /wcm/sporting, /wcm/concert.
      * - Groups under /wcm allos to define authorization about how can write content into LW WCM subsystem
      */
@@ -63,6 +85,10 @@ public interface Wcm {
          * Users
          */
         static final String LOST = (System.getProperty("wcm.groups.lost") == null ? "/wcm/lost" : System.getProperty("wcm.groups.lost"));
+        /**
+         * Default editor
+         */
+        static final String EDITOR = (System.getProperty("wcm.groups.editor") == null ? "/wcm/editor" : System.getProperty("wcm.groups.editor"));
 	}
 
     /**
@@ -397,8 +423,4 @@ public interface Wcm {
 
         }
     }
-    /**
-     * Defines constant for debug mode
-     */
-    static final boolean DEBUG = (System.getProperty("wcm.debug") == null || "false".equals(System.getProperty("wcm.debug"))? false : true);
 }

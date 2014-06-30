@@ -23,6 +23,7 @@
 
 package org.gatein.wcm.util;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -45,9 +46,6 @@ import java.util.zip.ZipInputStream;
 
 import javax.activation.MimetypesFileTypeMap;
 
-import net.sf.jmimemagic.Magic;
-import net.sf.jmimemagic.MagicMatch;
-import net.sf.jmimemagic.MagicParser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -65,7 +63,9 @@ public class FileAux {
         mimeTypesMap.addMimeTypes("text");
     }
 
-    private static Magic parser = new Magic();
+    private static final int MAX = 1000;
+    private static final double IS_TEXT_PROB = 0.95;
+
     /*
      *  Aux functions to extract path for categories
      */
@@ -128,15 +128,55 @@ public class FileAux {
 
     public static boolean isText(File file) {
         if (file == null) return false;
+        // Name detection
         String mimeType = mimeTypesMap.getContentType(file);
-        try {
-            Logger.getLogger(parser.getClass().getName()).setLevel(Level.SEVERE);
-            MagicMatch match = parser.getMagicMatch(file, true);
-            mimeType = match.getMimeType();
-        } catch (Exception e) {
-            // jMimeMagic can't find extension, using standard
-        }
         if (mimeType != null && mimeType.startsWith("text")) return true;
+
+        // Heuristic detection
+        InputStream is = null;
+        try {
+            is = new BufferedInputStream(new FileInputStream(file));
+
+            if (is.available() > MAX) {
+                byte[] read = new byte[MAX];
+                is.read(read);
+                int countChars = 0;
+                for (int i=0; i<read.length; i++) {
+                    if (probText(read[i])) {
+                        countChars++;
+                    }
+                }
+                double prob = (double)(countChars) / (double)(MAX);
+                return prob > IS_TEXT_PROB;
+            }
+            // mimeType = URLConnection.guessContentTypeFromStream(is);
+
+        } catch (Exception e) {
+            log.warning("Error trying to open " + file);
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (Exception ignored) { }
+            }
+
+        }
+
+        return false;
+    }
+
+    /*
+     * Heuristic, if byte has values:
+     * [0x09, 0x0A, 0x0C, 0x0D, 0x20-0x7E]
+     * is possible is a text file.
+     */
+    public static boolean probText(byte b) {
+        if (b == 0x09
+                || b == 0x0A
+                || b == 0x0D
+                || (b>= 0x20 && b<=0x7E)) {
+            return true;
+        }
         return false;
     }
 
